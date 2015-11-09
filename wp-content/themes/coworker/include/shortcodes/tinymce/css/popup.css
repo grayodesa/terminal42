@@ -1,0 +1,177 @@
+
+/* GLOBAL
+------------------------------------------------------- */
+#zilla-popup {
+	width: 560px;
+	font: 12px/20px 'Open Sans' ,Arial, Helvetica, sans-serif;
+	overflow: hidden;
+}
+
+/* form side */
+#zilla-sc-form-wrap {
+	width: 550px;
+	float: left;
+}
+#zilla-sc-form-wrap #zilla-sc-form-head {
+	width: 520px;
+	padding: 15px;
+	color: #555;
+	font-weight: bold;
+	line-height: 1;
+	background-color: #F9F9F9;
+	border-bottom: 1px solid #EEE;
+	font-size: 16px;
+}
+#zilla-popup.no_preview #zilla-sc-form-wrap #zilla-sc-form-head {
+	width: 530px;
+}
+#zilla-sc-form-wrap #zilla-sc-form {
+	width: 490px;
+	padding: 15px;
+}
+
+
+
+/* FORM
+------------------------------------------------------- */
+
+#zilla-sc-form-table {
+	width: 530px;
+}
+#zilla-sc-form-table tbody tr.form-row {
+	display: block;
+	padding: 5px 0;
+	border-bottom: solid 1px #eaeaea;
+}
+#zilla-sc-form-table tbody:last-child tr.form-row {
+	border-bottom: none;
+}
+#zilla-sc-form-table tbody tr.form-row .label {
+	width: 130px;
+	text-align: left;
+	vertical-align: top;
+	line-height: 35px;
+	padding-right: 20px;
+	font-size: 13px;
+	font-weight: bold;
+}
+#zilla-sc-form-table tbody tr.form-row .field {
+	width: 370px;
+}
+#zilla-sc-form-table tbody tr.form-row .zilla-insert {
+	color: #fff;
+}
+
+/* child rows, sortable */
+#zilla-sc-form-table .has-child #form-child-add {
+	display: block;
+	width: 520px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 0;
+	height: 30px;
+	line-height: 30px;
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: center;
+}
+#zilla-sc-form-table .has-child .child-clone-rows {
+	display: block;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row {
+	padding: 8px 15px;
+	background: #f7f7f7;
+	border: solid 1px #e0e0e0;
+	margin-bottom: 10px;
+	cursor: move;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+#zilla-sc-form-table .has-child .sortable-placeholder {
+	border: dashed 2px #e0e0e0;
+	margin-bottom: 10px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #f7f7f7;
+	height: 40px;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row .child-clone-row-form {
+	display: block;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row .child-clone-row-form .child-clone-row-form-row {
+	display: block;
+	padding: 10px 0;
+	border-bottom: solid 1px #ddd;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row .child-clone-row-form .child-clone-row-form-row .child-clone-row-label label {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 10px;
+	line-height: 1;
+	font-size: 13px;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row .child-clone-row-remove {
+	color: #FF0000;
+	padding: 1px;
+}
+#zilla-sc-form-table .has-child .child-clone-rows .child-clone-row .child-clone-row-remove:hover {
+	color: #fff;
+	background: #FF0000;
+}
+
+/* form elements */
+
+/* - all */
+#zilla-sc-form-table tbody tr.form-row .zilla-form-text,
+#zilla-sc-form-table tbody tr.form-row .zilla-form-textarea,
+#zilla-sc-form-table tbody tr.form-row .zilla-form-select {
+	width: 370px;
+	padding: 5px 10px;
+	background: #f7f7f7;
+	border: none;
+	border-left: solid 1px #ddd;
+	border-top: solid 1px #ddd;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-text,
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-textarea,
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-select {
+	background: #fff;
+	width: 485px;
+}
+
+#zilla-sc-form-table tbody tr.form-row .zilla-form-text.colorpicker-input { width: 370px; }
+
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-text.colorpicker-input { width: 485px; }
+
+/* - textarea */
+#zilla-sc-form-table tbody tr.form-row .zilla-form-textarea {
+	height: 120px;
+}
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-textarea {
+	height: 100px;
+}
+
+/* - select */
+#zilla-sc-form-table tbody tr.form-row .zilla-form-select {
+	display: block;
+}
+#zilla-sc-form-table tbody tr.form-row.has-child .zilla-form-select {
+	width: auto;
+}
+
+/* - desc */
+#zilla-sc-form-table tbody tr.form-row .field .zilla-form-desc,
+#zilla-sc-form-table tbody tr.form-row .child-clone-row-desc {
+	display: block;
+	font-size: 12px;
+	color: #AAA;
+	padding-top: 5px;
+}
+
+/* Hide outline on focus */
+#content_zilla_button { outline: none; }
+
+.colorpicker { z-index: 9999; }

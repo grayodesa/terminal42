@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /extended-docs/action~posterboard/
+Disallow: /extended-docs/action~agenda/
+Disallow: /extended-docs/action~oneday/
+Disallow: /extended-docs/action~month/
+Disallow: /extended-docs/action~week/
+Disallow: /extended-docs/action~stream/
+Disallow: /calendar/action~posterboard/
+Disallow: /calendar/action~agenda/
+Disallow: /calendar/action~oneday/
+Disallow: /calendar/action~month/
+Disallow: /calendar/action~week/
+Disallow: /calendar/action~stream/

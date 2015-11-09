@@ -1,0 +1,361 @@
+# Copyright (C) 2015 WP to Buffer
+# This file is distributed under the same license as the WP to Buffer package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP to Buffer 3.0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/wp-to-buffer\n"
+"POT-Creation-Date: 2015-09-09 16:52:34+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: _modules/dashboard/views/dashboard-nodata.php:14
+msgid ""
+"Thanks for using our plugins - why not check out some of our other amazing "
+"Premium WordPress Plugins?"
+msgstr ""
+
+#: _modules/dashboard/views/dashboard-nodata.php:15
+#: _modules/dashboard/views/dashboard.php:40
+msgid "Visit WP Cube"
+msgstr ""
+
+#: _modules/dashboard/views/dashboard.php:18
+msgid ""
+"Thanks for using our plugins - why not check out some of our other amazing "
+"Premium WordPress Plugins below?"
+msgstr ""
+
+#: _modules/dashboard/views/dashboard.php:33
+msgid "Visit the WP Cube Web Site"
+msgstr ""
+
+#: _modules/dashboard/views/dashboard.php:39
+msgid "Why not visit"
+msgstr ""
+
+#: _modules/dashboard/views/dashboard.php:39
+msgid "and check out some of our other amazing Premium WordPress Plugins?"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:5
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:16
+#: _modules/dashboard/views/sidebar-pro.php:23
+#: _modules/dashboard/views/sidebar-pro.php:28
+msgid "Support"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:16
+msgid "Access to one on one email support"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:17
+#: _modules/dashboard/views/sidebar-pro.php:27
+msgid "Documentation"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:17
+msgid "Detailed documentation on how to install and configure the plugin"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:18
+msgid "Updates"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:18
+msgid ""
+"Receive one click update notifications, right within your WordPress "
+"Adminstration panel"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:19
+msgid "Seamless Upgrade"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:19
+msgid "Retain all current settings when upgrading to Pro"
+msgstr ""
+
+#: _modules/dashboard/views/footer-upgrade.php:25
+msgid "Upgrade Now"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:10
+#: _modules/dashboard/views/sidebar-pro.php:10
+msgid "About"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:13
+msgid ""
+"Found this plugin useful? Donations to help with support and development are "
+"appreciated."
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:30
+msgid "Donate Now"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:40
+#: _modules/dashboard/views/sidebar-upgrade.php:10
+msgid "Keep Updated"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:43
+#: _modules/dashboard/views/sidebar-upgrade.php:13
+msgid ""
+"Subscribe to the newsletter and receive updates on our WordPress Plugins"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:49
+#: _modules/dashboard/views/sidebar-upgrade.php:19
+msgid "Email"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-donate.php:55
+#: _modules/dashboard/views/sidebar-upgrade.php:25
+msgid "Subscribe"
+msgstr ""
+
+#: _modules/dashboard/views/sidebar-pro.php:14
+msgid "Version"
+msgstr ""
+
+#: views/settings.php:3
+msgid "Settings"
+msgstr ""
+
+#: views/settings.php:20
+msgid "Authentication"
+msgstr ""
+
+#: views/settings.php:21
+msgid "Help"
+msgstr ""
+
+#: views/settings.php:46
+msgid "Buffer Authentication"
+msgstr ""
+
+#: views/settings.php:54
+msgid "Thanks - you've authenticated the plugin with your Buffer account."
+msgstr ""
+
+#: views/settings.php:61
+msgid "Disconnect Buffer Account"
+msgstr ""
+
+#: views/settings.php:70
+msgid "Access Token"
+msgstr ""
+
+#: views/settings.php:76
+msgid ""
+"You can obtain an access token to allow this Plugin to post updates to your "
+"Buffer account by"
+msgstr ""
+
+#: views/settings.php:77
+msgid "Registering an Application"
+msgstr ""
+
+#: views/settings.php:83
+msgid "You can set the other settings to anything."
+msgstr ""
+
+#: views/settings.php:93
+msgid "Publishing Defaults"
+msgstr ""
+
+#: views/settings.php:96
+msgid ""
+"For each Post Type, tick whether to send an update to Buffer when Publishing "
+"and/or Updating a Post."
+msgstr ""
+
+#: views/settings.php:125
+msgid "On Publish"
+msgstr ""
+
+#: views/settings.php:133
+msgid "On Update"
+msgstr ""
+
+#: views/settings.php:141
+msgid "Accounts"
+msgstr ""
+
+#: views/settings.php:156
+msgid "Error"
+msgstr ""
+
+#: views/settings.php:158
+msgid ""
+"We couldn't retrieve your accounts from Buffer. Please reload this Setting "
+"screen."
+msgstr ""
+
+#: views/settings.php:172
+msgid "Save"
+msgstr ""
+
+#: wp-to-buffer.php:57
+msgid "Pinterest"
+msgstr ""
+
+#: wp-to-buffer.php:58
+msgid "Post to your Pinterest boards"
+msgstr ""
+
+#: wp-to-buffer.php:61
+msgid "Separate Options per Social Network"
+msgstr ""
+
+#: wp-to-buffer.php:62
+msgid "Define different statuses for each Post Type and Social Network"
+msgstr ""
+
+#: wp-to-buffer.php:65
+msgid "Post, Author and Custom Meta Tags"
+msgstr ""
+
+#: wp-to-buffer.php:66
+msgid "Dynamically build status updates with Post, Author and Meta tags"
+msgstr ""
+
+#: wp-to-buffer.php:69
+msgid "Featured Images"
+msgstr ""
+
+#: wp-to-buffer.php:70
+msgid "Choose to display WordPress Featured Images with your status updates"
+msgstr ""
+
+#: wp-to-buffer.php:73
+msgid "Unlimited Statuses per Profile"
+msgstr ""
+
+#: wp-to-buffer.php:74
+msgid "Send your publish/update statuses any number of times"
+msgstr ""
+
+#: wp-to-buffer.php:77
+msgid "Individual Settings per Status"
+msgstr ""
+
+#: wp-to-buffer.php:78
+msgid "Each status update can have its own unique settings"
+msgstr ""
+
+#: wp-to-buffer.php:81
+msgid "Powerful Scheduling"
+msgstr ""
+
+#: wp-to-buffer.php:82
+msgid ""
+"Each status update can be added to the start/end of your Buffer queue, "
+"posted immediately or scheduled at a specific time"
+msgstr ""
+
+#: wp-to-buffer.php:85
+msgid "Conditional Publishing"
+msgstr ""
+
+#: wp-to-buffer.php:86
+msgid "Require taxonomy term(s) to be present for Posts to publish to Buffer"
+msgstr ""
+
+#: wp-to-buffer.php:89
+msgid "Individual Post Settings"
+msgstr ""
+
+#: wp-to-buffer.php:90
+msgid "Each Post can have its own Buffer settings"
+msgstr ""
+
+#: wp-to-buffer.php:93
+msgid "Detailed Logging"
+msgstr ""
+
+#: wp-to-buffer.php:94
+msgid "Logging can be enabled to troubleshoot occasional issues"
+msgstr ""
+
+#: wp-to-buffer.php:97
+msgid "WP-Cron"
+msgstr ""
+
+#: wp-to-buffer.php:98
+msgid ""
+"Optionally enable WP-Cron to send status updates via Cron, speeding up UI "
+"performance"
+msgstr ""
+
+#: wp-to-buffer.php:176
+msgid "Post added to Buffer successfully"
+msgstr ""
+
+#: wp-to-buffer.php:356
+msgid "Nonce field is missing. Settings NOT saved."
+msgstr ""
+
+#: wp-to-buffer.php:358
+msgid "Invalid nonce specified. Settings NOT saved."
+msgstr ""
+
+#: wp-to-buffer.php:368
+msgid ""
+"Oops - you've not quite copied your access token from Buffer correctly. It "
+"should start with 1/. Please try again."
+msgstr ""
+
+#: wp-to-buffer.php:370
+msgid ""
+"Oops - you've not quite copied your access token from Buffer correctly. It "
+"should not end with the word Edit. Please try again."
+msgstr ""
+
+#: wp-to-buffer.php:373
+msgid ""
+"Please enter an access token to use this plugin. You can obtain one by "
+"following the instructions below."
+msgstr ""
+
+#: wp-to-buffer.php:385
+msgid "Settings Updated."
+msgstr ""
+
+#: wp-to-buffer.php:405
+msgid "Some functionality on this screen may not work correctly."
+msgstr ""
+
+#: wp-to-buffer.php:436
+msgid "Invalid access token"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP to Buffer"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.wpcube.co.uk/plugins/wp-to-buffer-pro"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Send WordPress Pages, Posts or Custom Post Types to your Buffer (bufferapp."
+"com) account for scheduled publishing to social networks."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WP Cube"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.wpcube.co.uk"
+msgstr ""

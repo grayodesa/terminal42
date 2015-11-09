@@ -1,0 +1,11 @@
+#wp-to-buffer-title { background: url(../images/icons/large.png) center no-repeat; }
+
+/* Account Panel */
+.buffer-account { display: inline-block; width: 48px; height: 48px; margin: 0 10px 10px 0; border-radius: 4px; }
+.buffer-account img { cursor: pointer; }
+.buffer-account input { position: absolute; margin: -14px 0 0 0; }
+.buffer-account span { position: absolute; display: inline-block; width: 16px; height: 16px; margin: -18px 0 0 32px; }
+.buffer-account .facebook { background: url(../images/icons/facebook.png) top left no-repeat; }
+.buffer-account .twitter { background: url(../images/icons/twitter.png) top left no-repeat; }
+.buffer-account .linkedin { background: url(../images/icons/linkedin.png) top left no-repeat; }
+.buffer-account .google { background: url(../images/icons/google.png) top left no-repeat; }
