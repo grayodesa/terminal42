@@ -6,7 +6,7 @@
  * list widgets, facilitating a common appearance for each as standard.
  *
  * You can override this template in your own theme by creating a file at
- * [your-theme]/tribe-events/pro/widgets/modules/single-event.php
+ * [your-theme]/tribe-events/widgets/modules/single-widget.php
  *
  * @package TribeEventsCalendarPro
  *
@@ -37,17 +37,6 @@ $postDate = tribe_events_get_widget_event_post_date();
 
 		<?php do_action( 'tribe_events_list_widget_before_the_meta' ) ?>
 
-		<div class="duration">
-			<?php echo tribe_events_event_schedule_details(); ?>
-		</div>
-
-		<?php if ( isset( $cost ) && $cost && tribe_get_cost() != '' ) : ?>
-			<span class="tribe-events-divider">|</span>
-			<div class="tribe-events-event-cost">
-				<?php echo tribe_get_cost( null, true ); ?>
-			</div>
-		<?php endif ?>
-
 		<div class="vcard adr location">
 
 			<?php if ( isset( $venue ) && $venue && tribe_get_venue() != '' ): ?>
@@ -76,7 +65,7 @@ $postDate = tribe_events_get_widget_event_post_date();
 
 			<?php if ( isset( $organizer ) && $organizer && tribe_get_organizer() != '' ): ?>
 				<span class="tribe-organizer">
-					<?php esc_html_e( 'Organizer:', 'tribe-events-calendar-pro' ); ?>
+					<?php _e( 'Organizer:', 'tribe-events-calendar-pro' ); ?>
 					<?php echo tribe_get_organizer_link(); ?>
 				</span>
 			<?php endif ?>
