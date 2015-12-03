@@ -114,6 +114,7 @@ class RevSliderFront extends RevSliderBaseFront{
 		
 		add_action('wp_before_admin_bar_render', array('RevSliderFront', 'add_admin_menu_nodes'));
 		add_action('wp_footer', array('RevSliderFront', 'putAdminBarMenus'));
+		
 	}
 	
 	/**
@@ -127,7 +128,7 @@ class RevSliderFront extends RevSliderBaseFront{
 		<script>	
 			jQuery(document).ready(function() {			
 				
-				if (jQuery('#wp-admin-bar-revslider-default').length>0 && jQuery('.rev_slider_wrapper').length>0) {									
+				if (jQuery('#wp-admin-bar-revslider-default').length>0 && jQuery('.rev_slider_wrapper').length>0) {
 					var aliases = new Array();
 					jQuery('.rev_slider_wrapper').each(function() {
 						aliases.push(jQuery(this).data('alias'));
@@ -137,11 +138,11 @@ class RevSliderFront extends RevSliderBaseFront{
 							var li = jQuery(this),
 								t = jQuery.trim(li.find('.ab-item .rs-label').data('alias')); //text()
 								
-							if (jQuery.inArray(t,aliases)!=-1) {							
+							if (jQuery.inArray(t,aliases)!=-1) {
 							} else {
-								li.remove();							
+								li.remove();
 							}
-						});																				
+						});
 				} else {
 					jQuery('#wp-admin-bar-revslider').remove();
 				}
@@ -319,7 +320,7 @@ class RevSliderFront extends RevSliderBaseFront{
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			
 			$sql = "CREATE TABLE " .self::$table_prefix.RevSliderGlobals::TABLE_SLIDERS_NAME ." (
-					  type VARCHAR(191) NOT NULL
+					  type VARCHAR(191) NOT NULL,
 					  params MEDIUMTEXT NOT NULL
 					);";
 			dbDelta($sql);

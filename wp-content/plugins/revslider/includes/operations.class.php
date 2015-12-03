@@ -279,9 +279,9 @@ class RevSliderOperations extends RevSliderElementsBase{
 			
 		);
 		
-		$arrAnimations['custom'] = array('handle' => __('## Custom Animation ##', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['custom'] = array('handle' => __('## Custom Animation ##', 'revslider'));
 		$arrAnimations['v5s'] = array('handle' => '-----------------------------------');
-		$arrAnimations['v5'] = array('handle' => __('- VERSION 5.0 ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['v5'] = array('handle' => __('- VERSION 5.0 ANIMATIONS -', 'revslider'));
 		$arrAnimations['v5e'] = array('handle' => '-----------------------------------');
 		
 		$arrAnimations['LettersFlyInFromBottom'] = array('handle' => 'LettersFlyInFromBottom','params' => '{"movex":"inherit","movey":"[100%]","movez":"0","rotationx":"inherit","rotationy":"inherit","rotationz":"-35deg","scalex":"1","scaley":"1","skewx":"0","skewy":"0","captionopacity":"inherit","mask":"true","mask_x":"0px","mask_y":"0px","easing":"Power4.easeInOut","speed":"2000","split":"chars","splitdelay":"5"}', 'settings' => array('version' => '5.0'));
@@ -303,7 +303,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 		$arrAnimations['SmoothSlideFromBottom'] = array('handle' => 'SmoothSlideFromBottom','params' => '{"movex":"inherit","movey":"[100%]","movez":"0","rotationx":"0deg","rotationy":"0","rotationz":"0","scalex":"1","scaley":"1","skewx":"0","skewy":"0","captionopacity":"0","mask":"false","mask_x":"0px","mask_y":"[100%]","easing":"Power4.easeInOut","speed":"2000","split":"none","splitdelay":"5"}', 'settings' => array('version' => '5.0'));
   
 		$arrAnimations['v4s'] = array('handle' => '-----------------------------------');
-		$arrAnimations['v4'] = array('handle' => __('- VERSION 4.0 ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['v4'] = array('handle' => __('- VERSION 4.0 ANIMATIONS -', 'revslider'));
 		$arrAnimations['v4e'] = array('handle' => '-----------------------------------');		
 		$arrAnimations['noanim'] = array('handle' => 'No-Animation','params' => '{"movex":"inherit","movey":"inherit","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"inherit","scalex":"inherit","scaley":"inherit","skewx":"inherit","skewy":"inherit","captionopacity":"inherit","mask":"false","mask_x":"0","mask_y":"0","mask_speed":"500"}', 'settings' => array('version' => '5.0'));
 		$arrAnimations['tp-fade'] = array('handle' => 'Fade-In','params' => '{"movex":"inherit","movey":"inherit","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"inherit","scalex":"inherit","scaley":"inherit","skewx":"inherit","skewy":"inherit","captionopacity":"0","mask":"false","mask_x":"0","mask_y":"0","mask_speed":"0"}', 'settings' => array('version' => '5.0'));
@@ -324,7 +324,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 		
 		if($all){
 			$arrAnimations['vss'] = array('handle' => '--------------------------------------');
-			$arrAnimations['vs'] = array('handle' => __('- SAVED CUSTOM ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+			$arrAnimations['vs'] = array('handle' => __('- SAVED CUSTOM ANIMATIONS -', 'revslider'));
 			$arrAnimations['vse'] = array('handle' => '--------------------------------------');
 		
 			//$custom = RevSliderOperations::getCustomAnimations('customin');
@@ -349,10 +349,10 @@ class RevSliderOperations extends RevSliderElementsBase{
 	 */
 	public static function getArrEndAnimations($all = true){
 		$arrAnimations = array();
-		$arrAnimations['custom'] = array('handle' => __('## Custom Animation ##', REVSLIDER_TEXTDOMAIN));
-		$arrAnimations['auto'] = array('handle' => __('Automatic Reverse', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['custom'] = array('handle' => __('## Custom Animation ##', 'revslider'));
+		$arrAnimations['auto'] = array('handle' => __('Automatic Reverse', 'revslider'));
 		$arrAnimations['v5s'] = array('handle' => '-----------------------------------');
-		$arrAnimations['v5'] = array('handle' => __('- VERSION 5.0 ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['v5'] = array('handle' => __('- VERSION 5.0 ANIMATIONS -', 'revslider'));
 		$arrAnimations['v5e'] = array('handle' => '-----------------------------------');
 
 		$arrAnimations['BounceOut'] = array('handle' => 'BounceOut','params' => '{"movex":"inherit","movey":"inherit","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"0deg","scalex":"0.7","scaley":"0.7","skewx":"inherit","skewy":"inherit","captionopacity":"0","mask":"true","mask_x":"0","mask_y":"0","easing":"Back.easeIn","speed":"500","split":"none","splitdelay":"10"}', 'settings' => array('version' => '5.0'));
@@ -365,7 +365,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 		$arrAnimations['SmoothCropToBottom'] = array('handle' => 'SmoothCropToBottom','params' => '{"movex":"inherit","movey":"[175%]","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"inherit","scalex":"inherit","scaley":"inherit","skewx":"inherit","skewy":"inherit","captionopacity":"inherit","mask":"true","mask_x":"inherit","mask_y":"inherit","easing":"Power2.easeInOut","speed":"1000","split":"none","splitdelay":"10"}', 'settings' => array('version' => '5.0'));
  
 		$arrAnimations['v4s'] = array('handle' => '-----------------------------------');
-		$arrAnimations['v4'] = array('handle' => __('- VERSION 4.0 ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+		$arrAnimations['v4'] = array('handle' => __('- VERSION 4.0 ANIMATIONS -', 'revslider'));
 		$arrAnimations['v4e'] = array('handle' => '-----------------------------------');
 		$arrAnimations['noanimout'] = array('handle' => 'No-Out-Animation','params' => '{"movex":"inherit","movey":"inherit","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"inherit","scalex":"inherit","scaley":"inherit","skewx":"inherit","skewy":"inherit","captionopacity":"inherit","mask":"false","mask_x":"0","mask_y":"0","mask_speed":"500"}', 'settings' => array('version' => '5.0'));
 		$arrAnimations['fadeout'] = array('handle' => 'Fade-Out','params' => '{"movex":"inherit","movey":"inherit","movez":"inherit","rotationx":"inherit","rotationy":"inherit","rotationz":"inherit","scalex":"inherit","scaley":"inherit","skewx":"inherit","skewy":"inherit","captionopacity":"0","mask":"false","mask_x":"0","mask_y":"0","mask_speed":"0"}', 'settings' => array('version' => '5.0'));
@@ -385,7 +385,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 
 		if($all){
 			$arrAnimations['vss'] = array('handle' => '--------------------------------------');
-			$arrAnimations['vs'] = array('handle' => __('- SAVED CUSTOM ANIMATIONS -', REVSLIDER_TEXTDOMAIN));
+			$arrAnimations['vs'] = array('handle' => __('- SAVED CUSTOM ANIMATIONS -', 'revslider'));
 			$arrAnimations['vse'] = array('handle' => '--------------------------------------');
 			//$custom = RevSliderOperations::getCustomAnimations('customout');
 			$custom = RevSliderOperations::getCustomAnimationsFullPre('customout');
@@ -642,7 +642,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 
 		if(isset($animArray['opacity_'.$is]) && $animArray['opacity_'.$is] !== '' && $animArray['opacity_'.$is] !== 'inherit'){ //captionopacity
 			$retString.= 'opacity:';
-			$retString.= ($animArray['opacity_'.$is] == 0) ? 0 : $animArray['opacity_'.$is] / 100;
+			$retString.= (intval($animArray['opacity_'.$is]) > 1) ? $animArray['opacity_'.$is] / 100 : $animArray['opacity_'.$is];
 			$retString.= ';';
 		}
 		
@@ -721,26 +721,26 @@ class RevSliderOperations extends RevSliderElementsBase{
 		//Web Safe Fonts
 		$fonts = array(
 			// GOOGLE Loaded Fonts
-			array('type' => 'websafe', 'version' => __('Loaded Google Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Dont Show Me'),
+			array('type' => 'websafe', 'version' => __('Loaded Google Fonts', 'revslider'), 'label' => 'Dont Show Me'),
 
 			//Serif Fonts
-			array('type' => 'websafe', 'version' => __('Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Georgia, serif'),
-			array('type' => 'websafe', 'version' => __('Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Palatino Linotype", "Book Antiqua", Palatino, serif'),
-			array('type' => 'websafe', 'version' => __('Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Times New Roman", Times, serif'),
+			array('type' => 'websafe', 'version' => __('Serif Fonts', 'revslider'), 'label' => 'Georgia, serif'),
+			array('type' => 'websafe', 'version' => __('Serif Fonts', 'revslider'), 'label' => '"Palatino Linotype", "Book Antiqua", Palatino, serif'),
+			array('type' => 'websafe', 'version' => __('Serif Fonts', 'revslider'), 'label' => '"Times New Roman", Times, serif'),
 
 			//Sans-Serif Fonts
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Arial, Helvetica, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Arial Black", Gadget, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Comic Sans MS", cursive, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Impact, Charcoal, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Lucida Sans Unicode", "Lucida Grande", sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Tahoma, Geneva, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Trebuchet MS", Helvetica, sans-serif'),
-			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', REVSLIDER_TEXTDOMAIN), 'label' => 'Verdana, Geneva, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => 'Arial, Helvetica, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => '"Arial Black", Gadget, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => '"Comic Sans MS", cursive, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => 'Impact, Charcoal, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => '"Lucida Sans Unicode", "Lucida Grande", sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => 'Tahoma, Geneva, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => '"Trebuchet MS", Helvetica, sans-serif'),
+			array('type' => 'websafe', 'version' => __('Sans-Serif Fonts', 'revslider'), 'label' => 'Verdana, Geneva, sans-serif'),
 
 			//Monospace Fonts
-			array('type' => 'websafe', 'version' => __('Monospace Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Courier New", Courier, monospace'),
-			array('type' => 'websafe', 'version' => __('Monospace Fonts', REVSLIDER_TEXTDOMAIN), 'label' => '"Lucida Console", Monaco, monospace')
+			array('type' => 'websafe', 'version' => __('Monospace Fonts', 'revslider'), 'label' => '"Courier New", Courier, monospace'),
+			array('type' => 'websafe', 'version' => __('Monospace Fonts', 'revslider'), 'label' => '"Lucida Console", Monaco, monospace')
 		);
 		
 		/*if($slider !== false){
@@ -753,7 +753,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 					$font = $this->cleanFontStyle(stripslashes($curFont));
 					
 					if($font != false)
-						$font_custom[$key] = array('version' => __('Depricated Google Fonts', REVSLIDER_TEXTDOMAIN), 'label' => $font);
+						$font_custom[$key] = array('version' => __('Depricated Google Fonts', 'revslider'), 'label' => $font);
 					else
 						unset($font_custom[$key]);
 				}
@@ -764,7 +764,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 		include(RS_PLUGIN_PATH.'includes/googlefonts.php');
 		
 		foreach($googlefonts as $f => $val){
-			$fonts[] = array('type' => 'googlefont', 'version' => __('Google Fonts', REVSLIDER_TEXTDOMAIN), 'label' => $f, 'variants' => $val['variants'], 'subsets' => $val['subsets']);
+			$fonts[] = array('type' => 'googlefont', 'version' => __('Google Fonts', 'revslider'), 'label' => $f, 'variants' => $val['variants'], 'subsets' => $val['subsets']);
 		}
 
 		return $fonts;
@@ -1250,9 +1250,9 @@ class RevSliderOperations extends RevSliderElementsBase{
 		?>
 			<html>
 				<head>
-					<link rel='stylesheet' href='<?php echo $urlPlugin?>css/settings.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
-					<link rel='stylesheet' href='<?php echo $urlPlugin?>fonts/font-awesome/css/font-awesome.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
-					<link rel='stylesheet' href='<?php echo $urlPlugin?>fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
+					<link rel='stylesheet' href='<?php echo $urlPlugin; ?>css/settings.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
+					<link rel='stylesheet' href='<?php echo $urlPlugin; ?>fonts/font-awesome/css/font-awesome.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
+					<link rel='stylesheet' href='<?php echo $urlPlugin; ?>fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css?rev=<?php echo RevSliderGlobals::SLIDER_REVISION; ?>' type='text/css' media='all' />
 					<?php
 					$db = new RevSliderDB();
 
@@ -1289,7 +1289,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 					if($wpmlActive == true){
 						?>
 						<div style="margin-bottom:10px;text-align:center;">
-						<?php _e("Choose language",REVSLIDER_TEXTDOMAIN)?>: <?php echo $selectLangChoose?>
+						<?php _e("Choose language",'revslider'); ?>: <?php echo $selectLangChoose; ?>
 						</div>
 
 						<script type="text/javascript">
@@ -1351,7 +1351,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 			$success = $zip->open(RevSliderGlobals::$uploadsUrlExportZip, ZIPARCHIVE::CREATE | ZipArchive::OVERWRITE);
 			
 			if($success !== true){
-				echo __("No write permissions. Can't create zip file: ", REVSLIDER_TEXTDOMAIN).RevSliderGlobals::$uploadsUrlExportZip;
+				echo __("No write permissions. Can't create zip file: ", 'revslider').RevSliderGlobals::$uploadsUrlExportZip;
 				exit;
 			}
 		}else{
@@ -1366,7 +1366,7 @@ class RevSliderOperations extends RevSliderElementsBase{
 		
 		
 		if($sliderID == "empty_output"){
-			echo __("Wrong request!", REVSLIDER_TEXTDOMAIN);
+			echo __("Wrong request!", 'revslider');
 			exit;
 		}
 
@@ -1713,7 +1713,7 @@ ob_end_clean();
 			}
 			
 			$notice_text = "";
-			$notice_text .= __('Using this data is only allowed with a valid licence of the jQuery Slider Revolution Plugin, which can be found at CodeCanyon: http://codecanyon.net/item/slider-revolution-responsive-jquery-plugin/2580848?ref=themepunch', REVSLIDER_TEXTDOMAIN);
+			$notice_text .= __('Using this data is only allowed with a valid licence of the jQuery Slider Revolution Plugin, which can be found at CodeCanyon: http://codecanyon.net/item/slider-revolution-responsive-jquery-plugin/2580848?ref=themepunch', 'revslider');
 			
 			if(!$usepcl){
 				$zip->addFromString("NOTICE.txt", $notice_text); //add slider settings
@@ -1747,7 +1747,7 @@ ob_end_clean();
 	 */
 	public function loadingMessageOutput(){
 		?>
-		<div class="message_loading_preview"><?php _e("Loading Preview...",REVSLIDER_TEXTDOMAIN)?></div>
+		<div class="message_loading_preview"><?php _e("Loading Preview...",'revslider')?></div>
 		<?php
 	}
 
@@ -1889,8 +1889,6 @@ ob_end_clean();
 		$response = wp_remote_post('http://updates.themepunch.tools/activate.php', array(
 			'user-agent' => 'WordPress/'.$wp_version.'; '.get_bloginfo('url'),
 			'body' => array(
-				'name' => urlencode($data['username']),
-				'api' => urlencode($data['api_key']),
 				'code' => urlencode($data['code']),
 				'product' => urlencode('revslider')
 			)
@@ -1905,13 +1903,11 @@ ob_end_clean();
 
 		if($version_info == 'valid'){
 			update_option('revslider-valid', 'true');
-			update_option('revslider-api-key', $data['api_key']);
-			update_option('revslider-username', $data['username']);
 			update_option('revslider-code', $data['code']);
 
 			return true;
 		}elseif($version_info == 'exist'){
-			RevSliderFunctions::throwError(__('Purchase Code already registered!', REVSLIDER_TEXTDOMAIN));
+			RevSliderFunctions::throwError(__('Purchase Code already registered!', 'revslider'));
 		}else{
 			return false;
 		}
@@ -1921,15 +1917,11 @@ ob_end_clean();
 	public function doPurchaseDeactivation($data){
 		global $wp_version;
 
-		$key = get_option('revslider-api-key', '');
-		$name = get_option('revslider-username', '');
 		$code = get_option('revslider-code', '');
 
 		$response = wp_remote_post('http://updates.themepunch.tools/deactivate.php', array(
 			'user-agent' => 'WordPress/'.$wp_version.'; '.get_bloginfo('url'),
 			'body' => array(
-				'name' => urlencode($name),
-				'api' => urlencode($key),
 				'code' => urlencode($code),
 				'product' => urlencode('revslider')
 			)
@@ -2313,68 +2305,68 @@ ob_end_clean();
 		<span class="tp-clearfix" style="height:25px"></span>
 		
 		<!-- HEADER OF MONITORING -->
-		<span class="tp-monitor-performance-title"><?php echo __("Overall Slider Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+		<span class="tp-monitor-performance-title"><?php echo __("Overall Slider Performance",'revslider'); ?></span>
 		<span class="tp-monitor-performace-wrap">
 			<span id="image-performace-bar" style="width: %overall_performance%%" class="tp-monitor-performance-bar mo-%overall_color%-col"></span>
-			<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-			<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-			<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+			<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+			<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 		</span>
 		<span class="tp-clearfix" style="height:50px"></span>
 		
 		<span  class="tp-monitor-speed-table tp-monitor-single-speed">
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="umts-speed">%umtsspeed-single%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="dsl-speed">%dslspeed-single%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="t1-speed">%t1speed-single%</span>
 			</span>
 		</span>
 
 		<span  class="tp-monitor-speed-table tp-monitor-smart-speed">
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="umts-speed">%umtsspeed-smart%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="dsl-speed">%dslspeed-smart%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="t1-speed">%t1speed-smart%</span>
 			</span>
 		</span>
 
 		<span class="tp-monitor-speed-table tp-monitor-all-speed">
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed UMTS:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="umts-speed">%umtsspeed-all%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed DSL:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="dsl-speed">%dslspeed-all%</span>
 			</span>
 			<span class="tp-monitor-speed-cell">
-				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Load Speed T1:",'revslider'); ?></span>
 				<span class="tp-monitor-total-subsize" id="t1-speed">%t1speed-all%</span>
 			</span>
 		</span>
 
 		<span class="tp-clearfix" style="height:25px"></span>
 		<span style="float:left;width:165px">
-			<span class="tp-monitor-smalllabel"><?php echo __("Total Slider Size:",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-smalllabel"><?php echo __("Total Slider Size:",'revslider'); ?></span>
 			<span class="tp-monitor-fullsize">%overall_size%</span>
 			<a class="button-primary revblue tp-monitor-showdetails" data-target="#performance_overall_details" style="float:right; width:160px;vertical-align:top"><i class="eg-icon-chart-bar"></i>Show Full Statistics</a>
 		</span>
 		<span style="float:right; width:165px">
-			<span class="tp-monitor-smalllabel"><?php echo __("Preloaded Slides Size:",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-smalllabel"><?php echo __("Preloaded Slides Size:",'revslider'); ?></span>
 			<span class="tp-monitor-fullsize tp-monitor-single-speed">%firstslide_size%</span>
 			<span class="tp-monitor-fullsize tp-monitor-smart-speed">%smartslide_size%</span>
 			<span class="tp-monitor-fullsize tp-monitor-all-speed">%allslide_size%</span>		
@@ -2386,7 +2378,7 @@ ob_end_clean();
 		
 		<!-- THE IMAGE PERFORMANCE MESSING -->
 		<div id="monitor-problems" style="display:none">
-			<span class="tp-monitor-performance-title"><?php echo __("Need Some Attention",REVSLIDER_TEXTDOMAIN); ?></span>			
+			<span class="tp-monitor-performance-title"><?php echo __("Need Some Attention",'revslider'); ?></span>			
 			<span class="tp-clearfix" style="height:25px"></span>
 			<ul class="tp-monitor-list" id="monitor-problem-details" style="margin-bottom:15px;">
 			%issues%
@@ -2403,24 +2395,24 @@ ob_end_clean();
 		if(!empty($used_images)){
 			?>
 			<!-- THE IMAGE PERFORMANCE MESSING -->
-			<span class="tp-monitor-performance-title"><?php echo __("Image Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-performance-title"><?php echo __("Image Performance",'revslider'); ?></span>
 			<span class="tp-monitor-performace-wrap">
 				<span id="image-performace-bar" style="width: %image_performance%%" class="tp-monitor-performance-bar mo-%image_color%-col"></span>
-				<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+				<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+				<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 			</span>
 
 			<span class="tp-clearfix" style="height:35px"></span>
 
 			<!-- FULL SIZE OF SUBCATEGORY && SHOW/HIDE LIST -->
 			<span style="float:left;width:40%">
-				<span class="tp-monitor-smalllabel"><?php echo __("Images Loaded:",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Images Loaded:",'revslider'); ?></span>
 				<span class="tp-monitor-imageicon"></span>
 				<span id="image_sub_size" class="tp-monitor-total-subsize"><?php echo size_format($img_size,2); ?></span>
 				</span>
 			<span style="float:left;width:60%; text-align:right;">
-				<span class="tp-monitor-showdetails" data-target="#monitor-image-details" data-open="</span><?php echo __("Hide Details",REVSLIDER_TEXTDOMAIN); ?>" data-close="</span><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?></span></span>
+				<span class="tp-monitor-showdetails" data-target="#monitor-image-details" data-open="</span><?php echo __("Hide Details",'revslider'); ?>" data-close="</span><?php echo __("Show Details",'revslider'); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",'revslider'); ?></span></span>
 			</span>
 			<span class="tp-clearfix" style="height:15px"></span>
 			<!-- THE IMAGE LIST -->
@@ -2447,9 +2439,9 @@ ob_end_clean();
 							$_li .=   '<span class="tp-monitor-size">'.size_format($image['size'],0).'</span>';
 					}else{
 						if($image['id'] == 'external'){
-							$_li .=   '<span class="tp-monitor-neutral"></span><span class="tp-monitor-size">'.__('extern', REVSLIDER_TEXTDOMAIN).'</span>';
+							$_li .=   '<span class="tp-monitor-neutral"></span><span class="tp-monitor-size">'.__('extern', 'revslider').'</span>';
 						}else{
-							$_li .=   '<span class="tp-monitor-warning"></span><span class="tp-monitor-size">'.__('missing', REVSLIDER_TEXTDOMAIN).'</span>';
+							$_li .=   '<span class="tp-monitor-warning"></span><span class="tp-monitor-size">'.__('missing', 'revslider').'</span>';
 						}
 					}
 					
@@ -2490,29 +2482,29 @@ ob_end_clean();
 			<span class="tp-clearfix" style="height:25px"></span>
 			
 			<!-- THE VIDEO PERFORMANCE MESSING -->
-			<span class="tp-monitor-performance-title"><?php echo __("Video Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-performance-title"><?php echo __("Video Performance",'revslider'); ?></span>
 			<span class="tp-monitor-performace-wrap">
 				<span id="video-performace-bar" style="width:50%" class="tp-monitor-performance-bar mo-neutral-col"></span>
-				<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+				<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+				<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 			</span>
 			
 			<span class="tp-clearfix" style="height:35px"></span>
 
 			<!-- FULL SIZE OF SUBCATEGORY && SHOW/HIDE LIST -->
 			<span style="float:left;width:40%; display:block">				
-				<span class="tp-monitor-smalllabel"><?php echo __("Videos Loaded (max):",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-smalllabel"><?php echo __("Videos Loaded (max):",'revslider'); ?></span>
 				<?php if ($video_size>0) {?>				
 					<span class="tp-monitor-imageicon"></span>
 					<span id="video_sub_size" class="tp-monitor-total-subsize"><?php echo size_format($video_size,2); ?></span>
 				<?php } else {?>
 					<span class="tp-monitor-imageicon"></span>
-					<span class="tp-monitor-total-subsize"><?php echo __("Unknown",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="tp-monitor-total-subsize"><?php echo __("Unknown",'revslider'); ?></span>
 				<?php } ?>
 			</span>
 			<span style="float:left;width:60%; text-align:right;">
-				<span class="tp-monitor-showdetails" data-target="#monitor-video-details" data-open="</span><?php echo __("Hide Details",REVSLIDER_TEXTDOMAIN); ?>" data-close="</span><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?></span></span>
+				<span class="tp-monitor-showdetails" data-target="#monitor-video-details" data-open="</span><?php echo __("Hide Details",'revslider'); ?>" data-close="</span><?php echo __("Show Details",'revslider'); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",'revslider'); ?></span></span>
 			</span>
 			<span class="tp-clearfix" style="height:15px"></span>
 			
@@ -2530,9 +2522,9 @@ ob_end_clean();
 						$_li .= '<span class="tp-monitor-size">'.size_format($video['size'],0).'</span>';
 				}else{
 					if($video['id'] == 'external'){
-						$_li .= '<span class="tp-monitor-neutral"></span><span class="tp-monitor-size">'.__('extern', REVSLIDER_TEXTDOMAIN).'</span>';
+						$_li .= '<span class="tp-monitor-neutral"></span><span class="tp-monitor-size">'.__('extern', 'revslider').'</span>';
 					}else{
-						$_li .= '<span class="tp-monitor-warning"></span><span class="tp-monitor-size">'.__('missing', REVSLIDER_TEXTDOMAIN).'</span>';
+						$_li .= '<span class="tp-monitor-warning"></span><span class="tp-monitor-size">'.__('missing', 'revslider').'</span>';
 					}
 				}
 				
@@ -2567,23 +2559,23 @@ ob_end_clean();
 		<span class="tp-clearfix" style="height:25px"></span>
 
 		<!-- THE IMAGE PERFORMANCE MESSING -->
-		<span class="tp-monitor-performance-title"><?php echo __("CSS Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+		<span class="tp-monitor-performance-title"><?php echo __("CSS Performance",'revslider'); ?></span>
 		<span class="tp-monitor-performace-wrap">
 			<span id="image-performace-bar" style="width:%css_performance%%" class="tp-monitor-performance-bar mo-%css_color%-col"></span>
-			<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-			<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-			<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+			<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+			<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 		</span>
 
 		<span class="tp-clearfix" style="height:35px"></span>
 
 		<!-- FULL SIZE OF SUBCATEGORY && SHOW/HIDE LIST -->
 		<span style="float:left;width:40%">
-			<span class="tp-monitor-smalllabel"><?php echo __("CSS Loaded:",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-smalllabel"><?php echo __("CSS Loaded:",'revslider'); ?></span>
 			<span class="tp-monitor-cssicon"></span><span id="css_sub_size" class="tp-monitor-total-subsize">%css_size%</span>
 			</span>
 		<span style="float:left;width:60%; text-align:right;">
-			<span class="tp-monitor-showdetails" data-target="#monitor-CSS-details" data-open="</span><?php echo __("Hide Details",REVSLIDER_TEXTDOMAIN); ?>" data-close="</span><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?></span></span>
+			<span class="tp-monitor-showdetails" data-target="#monitor-CSS-details" data-open="</span><?php echo __("Hide Details",'revslider'); ?>" data-close="</span><?php echo __("Show Details",'revslider'); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",'revslider'); ?></span></span>
 		</span>
 		<span class="tp-clearfix" style="height:15px"></span>
 
@@ -2604,7 +2596,7 @@ ob_end_clean();
 		
 			$_li .= '<span class="tp-monitor-size">'.size_format($fs,0).'</span>';			
 			$_li .= '<span class="tp-monitor-file">';
-			$_li .= __('css/settings.css',REVSLIDER_TEXTDOMAIN);
+			$_li .= __('css/settings.css','revslider');
 			$_li .= '</span>';
 		
 			$_li .= '</li>';
@@ -2632,7 +2624,7 @@ ob_end_clean();
 	
 		$_li .= '<span class="tp-monitor-size">'.size_format(strlen($custom_css),0).'</span>';			
 		$_li .= '<span class="tp-monitor-file">';
-		$_li .= __('Static Styles',REVSLIDER_TEXTDOMAIN);
+		$_li .= __('Static Styles','revslider');
 		$_li .= '</span>';
 		
 		$_li .= '</li>';
@@ -2668,7 +2660,7 @@ ob_end_clean();
 		
 			$_li .=  '<span class="tp-monitor-size">'.size_format(strlen($styles),0).'</span>';			
 			$_li .=  '<span class="tp-monitor-file">';
-			$_li .=  __('Dynamic Styles',REVSLIDER_TEXTDOMAIN);
+			$_li .=  __('Dynamic Styles','revslider');
 			$_li .=  '</span>';
 			
 			$_li .=  '</li>';
@@ -2693,23 +2685,23 @@ ob_end_clean();
 			<span class="tp-clearfix" style="height:25px"></span>
 			
 			<!-- THE jQuery PERFORMANCE MESSING -->
-			<span class="tp-monitor-performance-title"><?php echo __("jQuery Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-performance-title"><?php echo __("jQuery Performance",'revslider'); ?></span>
 			<span class="tp-monitor-performace-wrap">
 				<span id="video-performace-bar" style="width:%js_performance%%" class="tp-monitor-performance-bar mo-%js_color%-col"></span>
-				<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+				<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+				<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 			</span>
 			
 			<span class="tp-clearfix" style="height:35px"></span>
 
 			<!-- FULL SIZE OF SUBCATEGORY && SHOW/HIDE LIST -->
 			<span style="float:left;width:40%; display:block">				
-				<span class="tp-monitor-smalllabel"><?php echo __("jQuery Loaded:",REVSLIDER_TEXTDOMAIN); ?></span>				
+				<span class="tp-monitor-smalllabel"><?php echo __("jQuery Loaded:",'revslider'); ?></span>				
 				<span class="tp-monitor-imageicon"></span><span id="jquery_sub_size" class="tp-monitor-total-subsize">%js_size%</span>				
 			</span>
 			<span style="float:left;width:60%; text-align:right;">
-				<span class="tp-monitor-showdetails" data-target="#monitor-jquery-details" data-open="</span><?php echo __("Hide Details",REVSLIDER_TEXTDOMAIN); ?>" data-close="</span><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?></span></span>
+				<span class="tp-monitor-showdetails" data-target="#monitor-jquery-details" data-open="</span><?php echo __("Hide Details",'revslider'); ?>" data-close="</span><?php echo __("Show Details",'revslider'); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",'revslider'); ?></span></span>
 			</span>
 			<span class="tp-clearfix" style="height:15px"></span>
 		
@@ -2774,23 +2766,23 @@ ob_end_clean();
 			<span class="tp-clearfix" style="height:25px"></span>
 			
 			<!-- THE Fonts PERFORMANCE MESSING -->
-			<span class="tp-monitor-performance-title"><?php echo __("Google Fonts Performance",REVSLIDER_TEXTDOMAIN); ?></span>
+			<span class="tp-monitor-performance-title"><?php echo __("Google Fonts Performance",'revslider'); ?></span>
 			<span class="tp-monitor-performace-wrap">
 				<span id="video-performace-bar" style="width:%font_performance%%" class="tp-monitor-performance-bar mo-%font_color%-col"></span>
-				<span class="tp-monitor-slow"><?php echo __("Slow",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-ok"><?php echo __("Ok",REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="tp-monitor-fast"><?php echo __("Fast",REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="tp-monitor-slow"><?php echo __("Slow",'revslider'); ?></span>
+				<span class="tp-monitor-ok"><?php echo __("Ok",'revslider'); ?></span>
+				<span class="tp-monitor-fast"><?php echo __("Fast",'revslider'); ?></span>
 			</span>
 			
 			<span class="tp-clearfix" style="height:35px"></span>
 
 			<!-- FULL SIZE OF SUBCATEGORY && SHOW/HIDE LIST -->
 			<span style="float:left;width:40%; display:block">				
-				<span class="tp-monitor-smalllabel"><?php echo __("Fonts Loaded:",REVSLIDER_TEXTDOMAIN); ?></span>				
+				<span class="tp-monitor-smalllabel"><?php echo __("Fonts Loaded:",'revslider'); ?></span>				
 				<span class="tp-monitor-jsicon"></span><span class="tp-monitor-total-subsize">%font_size%</span>				
 			</span>
 			<span style="float:left;width:60%; text-align:right;">
-				<span class="tp-monitor-showdetails" data-target="#monitor-fonts-details" data-open="</span><?php echo __("Hide Details",REVSLIDER_TEXTDOMAIN); ?>" data-close="</span><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",REVSLIDER_TEXTDOMAIN); ?></span></span>
+				<span class="tp-monitor-showdetails" data-target="#monitor-fonts-details" data-open="</span><?php echo __("Hide Details",'revslider'); ?>" data-close="</span><?php echo __("Show Details",'revslider'); ?>"><span class="tp-monitor-openclose"></span><span class="tp-show-inner-btn"><?php echo __("Show Details",'revslider'); ?></span></span>
 			</span>
 			<span class="tp-clearfix" style="height:15px"></span>
 		
@@ -6615,7 +6607,7 @@ $presets[] = array (
 	 **/
 	public static function add_preset_setting($data){
 		
-		if(!isset($data['settings']) || !isset($data['values'])) return __('Missing values to add preset', REVSLIDER_TEXTDOMAIN);
+		if(!isset($data['settings']) || !isset($data['values'])) return __('Missing values to add preset', 'revslider');
 		
 		$customer_presets = get_option('revslider_presets', array());
 		
@@ -6637,7 +6629,7 @@ $presets[] = array (
 	 **/
 	public static function remove_preset_setting($data){
 		
-		if(!isset($data['name'])) return __('Missing values to remove preset', REVSLIDER_TEXTDOMAIN);
+		if(!isset($data['name'])) return __('Missing values to remove preset', 'revslider');
 		
 		$customer_presets = get_option('revslider_presets', array());
 		
@@ -6661,7 +6653,7 @@ $presets[] = array (
 	 **/
 	public static function update_preset_setting($data){
 		
-		if(!isset($data['name'])) return __('Missing values to update preset', REVSLIDER_TEXTDOMAIN);
+		if(!isset($data['name'])) return __('Missing values to update preset', 'revslider');
 		
 		$customer_presets = get_option('revslider_presets', array());
 		

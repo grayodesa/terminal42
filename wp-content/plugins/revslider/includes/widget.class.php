@@ -12,8 +12,8 @@ class RevSliderWidget extends WP_Widget {
     public function __construct(){
     	
         // widget actual processes
-     	$widget_ops = array('classname' => 'widget_revslider', 'description' => __('Displays a revolution slider on the page',REVSLIDER_TEXTDOMAIN) );
-        parent::__construct('rev-slider-widget', __('Revolution Slider',REVSLIDER_TEXTDOMAIN), $widget_ops);
+     	$widget_ops = array('classname' => 'widget_revslider', 'description' => __('Displays a revolution slider on the page','revslider') );
+        parent::__construct('rev-slider-widget', __('Revolution Slider','revslider'), $widget_ops);
     }
  
     /**
@@ -27,7 +27,7 @@ class RevSliderWidget extends WP_Widget {
         }catch(Exception $e){}            
           
 		if(empty($arrSliders)){
-			echo __("No sliders found, Please create a slider",REVSLIDER_TEXTDOMAIN);
+			echo __("No sliders found, Please create a slider",'revslider');
 		}else{
 			
 			$field = "rev_slider";
@@ -58,18 +58,18 @@ class RevSliderWidget extends WP_Widget {
 			$fieldTitle_Name = $this->get_field_name( $fieldTitle );
 			
 			?>
-			<label for="<?php echo $fieldTitle_ID?>"><?php _e("Title",REVSLIDER_TEXTDOMAIN)?>:</label>
+			<label for="<?php echo $fieldTitle_ID?>"><?php _e("Title",'revslider')?>:</label>
 			<input type="text" name="<?php echo $fieldTitle_Name?>" id="<?php echo $fieldTitle_ID?>" value="<?php echo $title?>" class="widefat">
 			
 			<br><br>
 			
-			<?php _e("Choose Slider",REVSLIDER_TEXTDOMAIN)?>: <?php echo $select?>
+			<?php _e("Choose Slider",'revslider')?>: <?php echo $select?>
 			<div style="padding-top:10px;"></div>
 			
-			<label for="<?php echo $fieldID_check?>"><?php _e("Home Page Only",REVSLIDER_TEXTDOMAIN)?>:</label>
+			<label for="<?php echo $fieldID_check?>"><?php _e("Home Page Only",'revslider')?>:</label>
 			<input type="checkbox" name="<?php echo $fieldName_check?>" id="<?php echo $fieldID_check?>" <?php echo $checked?> >
 			<br><br>
-			<label for="<?php echo $fieldPages_ID?>"><?php _e("Pages: (example: 2,10)",REVSLIDER_TEXTDOMAIN)?></label>
+			<label for="<?php echo $fieldPages_ID?>"><?php _e("Pages: (example: 2,10)",'revslider')?></label>
 			<input type="text" name="<?php echo $fieldPages_Name?>" id="<?php echo $fieldPages_ID?>" value="<?php echo $pagesValue?>">
 			
 			<div style="padding-top:10px;"></div>

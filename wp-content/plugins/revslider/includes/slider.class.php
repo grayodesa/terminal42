@@ -56,9 +56,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 	}
 	
 	/**
-	 * 
 	 * init slider by db data
-	 * 
 	 */
 	public function initByDBData($arrData){
 		
@@ -70,7 +68,6 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$settings = (array)json_decode($settings);
 		
 		$this->settings = $settings;
-		
 		
 		$params = $arrData["params"];
 		$params = (array)json_decode($params);
@@ -190,15 +187,21 @@ class RevSliderSlider extends RevSliderElementsBase{
 	
 	
 	/**
+	 * set specific slider param
+	 * @since: 5.1.1
+	 */
+	public function setParam($param, $value){
+		$this->arrParams[$param] = $value;
+	}
+	
+	
+	/**
 	 * 
 	 * get parameter from params array. if no default, then the param is a must!
 	 */
 	function getParam($name,$default=null,$validateType = null,$title=""){
 		
 		if($default === null){
-			//if(!array_key_exists($name, $this->arrParams))
-			//	RevSliderFunctions::throwError("The param <b>$name</b> not found in slider params.");
-			
 			$default = "";
 		}
 		
@@ -673,11 +676,25 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$usedAnimations = array();
 		$usedImages = array();
 		$usedVideos = array();
+		$usedNavigations = array();
 		
 		$cfw = array();
 		if(!empty($arrSlides) && count($arrSlides) > 0) $cfw = array_merge($cfw, $arrSlides);
 		if(!empty($arrStaticSlide) && count($arrStaticSlide) > 0) $cfw = array_merge($cfw, $arrStaticSlide);
-
+		
+		
+		//remove image_id as it is not needed in export
+		if(!empty($arrSlides)){
+			foreach($arrSlides as $k => $s){
+				if(isset($arrSlides[$k]['params']['image_id'])) unset($arrSlides[$k]['params']['image_id']);
+			}
+		}
+		if(!empty($arrStaticSlide)){
+			foreach($arrStaticSlide as $k => $s){
+				if(isset($arrStaticSlide[$k]['params']['image_id'])) unset($arrStaticSlide[$k]['params']['image_id']);
+			}
+		}
+		
 		if(!empty($cfw) && count($cfw) > 0){
 			foreach($cfw as $key => $slide){
 				if(isset($slide['params']['image']) && $slide['params']['image'] != '') $usedImages[$slide['params']['image']] = true; //['params']['image'] background url
@@ -772,8 +789,18 @@ class RevSliderSlider extends RevSliderElementsBase{
 		
 		//$strExportAnim = serialize(RevSliderOperations::getFullCustomAnimations());
 		
-		$exportname =(!empty($this->alias)) ? $this->alias.'.zip' : "slider_export.zip";
+		$exportname = (!empty($this->alias)) ? $this->alias.'.zip' : "slider_export.zip";
 		
+		//add navigations if not default animation
+		if(isset($sliderParams['navigation_arrow_style'])) $usedNavigations[$sliderParams['navigation_arrow_style']] = true;
+		if(isset($sliderParams['navigation_bullets_style'])) $usedNavigations[$sliderParams['navigation_bullets_style']] = true;
+		if(isset($sliderParams['thumbnails_style'])) $usedNavigations[$sliderParams['thumbnails_style']] = true;
+		if(isset($sliderParams['tabs_style'])) $usedNavigations[$sliderParams['tabs_style']] = true;
+		$navs = false;
+		if(!empty($usedNavigations)){
+			$navs = RevSliderNavigation::export_navigation($usedNavigations);
+			if($navs !== false) $navs = serialize($navs);
+		}
 		
 		
 		$styles = '';
@@ -896,6 +923,14 @@ class RevSliderSlider extends RevSliderElementsBase{
 				if ($list == 0) { die("ERROR : '".$pclzip->errorInfo(true)."'"); }
 			}
 		}
+		if(strlen(trim($navs)) > 0){
+			if(!$usepcl){
+				$zip->addFromString("navigation.txt", $navs); //add dynamic styles
+			}else{
+				$list = $pclzip->add(array(array( PCLZIP_ATT_FILE_NAME => 'navigation.txt',PCLZIP_ATT_FILE_CONTENT => $navs)));
+				if ($list == 0) { die("ERROR : '".$pclzip->errorInfo(true)."'"); }
+			}
+		}
 		
 		$static_css = RevSliderOperations::getStaticCss();
 		if(trim($static_css) !== ''){
@@ -959,7 +994,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 	 * 
 	 * import slider from multipart form
 	 */
-	public function importSliderFromPost($updateAnim = true, $updateStatic = true, $exactfilepath = false, $is_template = false, $single_slide = false){
+	public function importSliderFromPost($updateAnim = true, $updateStatic = true, $exactfilepath = false, $is_template = false, $single_slide = false, $updateNavigation = true){
 		
 		try{
 			
@@ -976,10 +1011,10 @@ class RevSliderSlider extends RevSliderElementsBase{
 					case UPLOAD_ERR_OK:
 						break;
 					case UPLOAD_ERR_NO_FILE:
-						RevSliderFunctions::throwError(__('No file sent.', REVSLIDER_TEXTDOMAIN));
+						RevSliderFunctions::throwError(__('No file sent.', 'revslider'));
 					case UPLOAD_ERR_INI_SIZE:
 					case UPLOAD_ERR_FORM_SIZE:
-						RevSliderFunctions::throwError(__('Exceeded filesize limit.', REVSLIDER_TEXTDOMAIN));
+						RevSliderFunctions::throwError(__('Exceeded filesize limit.', 'revslider'));
 						
 					default:
 					break;
@@ -988,7 +1023,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 			}
 			
 			if(file_exists($filepath) == false)
-				RevSliderFunctions::throwError(__('Import file not found!!!', REVSLIDER_TEXTDOMAIN));
+				RevSliderFunctions::throwError(__('Import file not found!!!', 'revslider'));
 			
 			$importZip = false;
 			
@@ -999,23 +1034,46 @@ class RevSliderSlider extends RevSliderElementsBase{
 			$upload_dir = wp_upload_dir();
 			$d_path = $upload_dir['basedir'].'/rstemp/';
 			$unzipfile = unzip_file( $filepath, $d_path);
-			if ( $unzipfile ) {
+			
+			if( is_wp_error($unzipfile) ){
+				define('FS_METHOD', 'direct'); //lets try direct. 
+				
+				WP_Filesystem();  //WP_Filesystem() needs to be called again since now we use direct !
+				
+				//@chmod($filepath, 0775);
+				
+				$unzipfile = unzip_file( $filepath, $d_path);
+				if( is_wp_error($unzipfile) ){
+					$d_path = RS_PLUGIN_PATH.'rstemp/';
+					$unzipfile = unzip_file( $filepath, $d_path);
+					
+					if( is_wp_error($unzipfile) ){
+						$f = basename($filepath);
+						$d_path = str_replace($f, '', $filepath);
+						
+						$unzipfile = unzip_file( $filepath, $d_path);
+					}
+				}
+			}
+			
+			if( !is_wp_error($unzipfile) ){
 				$importZip = true; //raus damit..
 				
 				//read all files needed
 				$content = ( $wp_filesystem->exists( $d_path.'slider_export.txt' ) ) ? $wp_filesystem->get_contents( $d_path.'slider_export.txt' ) : '';
 				if($content == ''){
-					RevSliderFunctions::throwError(__('slider_export.txt does not exist!', REVSLIDER_TEXTDOMAIN));
+					RevSliderFunctions::throwError(__('slider_export.txt does not exist!', 'revslider'));
 				}
 				$animations = ( $wp_filesystem->exists( $d_path.'custom_animations.txt' ) ) ? $wp_filesystem->get_contents( $d_path.'custom_animations.txt' ) : '';
 				$dynamic = ( $wp_filesystem->exists( $d_path.'dynamic-captions.css' ) ) ? $wp_filesystem->get_contents( $d_path.'dynamic-captions.css' ) : '';
 				$static = ( $wp_filesystem->exists( $d_path.'static-captions.css' ) ) ? $wp_filesystem->get_contents( $d_path.'static-captions.css' ) : '';
+				$navigations = ( $wp_filesystem->exists( $d_path.'navigation.txt' ) ) ? $wp_filesystem->get_contents( $d_path.'navigation.txt' ) : '';
 				
 				$uid_check = ( $wp_filesystem->exists( $d_path.'info.cfg' ) ) ? $wp_filesystem->get_contents( $d_path.'info.cfg' ) : '';
 				
 				if($is_template !== false){
 					if($uid_check != $is_template){
-						return(array("success"=>false,"error"=>__('Please select the correct zip file, checksum failed!', REVSLIDER_TEXTDOMAIN)));
+						return(array("success"=>false,"error"=>__('Please select the correct zip file, checksum failed!', 'revslider')));
 					}
 				}else{ //someone imported a template base Slider, check if it is existing in Base Sliders, if yes, check if it was imported
 					if($uid_check !== ''){
@@ -1065,9 +1123,9 @@ class RevSliderSlider extends RevSliderElementsBase{
 						//and set the current customin-oldID and customout-oldID in slider params to new ID from $id
 						$content = str_replace(array('customin-'.$animation['id'].'"', 'customout-'.$animation['id'].'"'), array('customin-'.$anim_id.'"', 'customout-'.$anim_id.'"'), $content);	
 					}
-					dmp(__("animations imported!",REVSLIDER_TEXTDOMAIN));
+					dmp(__("animations imported!",'revslider'));
 				}else{
-					dmp(__("no custom animations found, if slider uses custom animations, the provided export may be broken...",REVSLIDER_TEXTDOMAIN));
+					dmp(__("no custom animations found, if slider uses custom animations, the provided export may be broken...",'revslider'));
 				}
 				
 				//overwrite/append static-captions.css
@@ -1128,21 +1186,46 @@ class RevSliderSlider extends RevSliderElementsBase{
 							$db->insert(RevSliderGlobals::$table_css, $arrInsert);
 						}
 					}
-					dmp(__("dynamic styles imported!",REVSLIDER_TEXTDOMAIN));
+					dmp(__("dynamic styles imported!",'revslider'));
 				}else{
-					dmp(__("no dynamic styles found, if slider uses dynamic styles, the provided export may be broken...",REVSLIDER_TEXTDOMAIN));
+					dmp(__("no dynamic styles found, if slider uses dynamic styles, the provided export may be broken...",'revslider'));
 				}
 				
-			}else{
-				if($is_template !== false){
-					$wp_filesystem->delete($d_path, true);
+				//update/insert custom animations
+				$navigations = @unserialize($navigations);
+				if(!empty($navigations)){
 					
-					return(array("success"=>false,"error"=>__('Please select the correct zip file', REVSLIDER_TEXTDOMAIN)));
-					RevSliderFunctions::throwError(__('unzipping failed', REVSLIDER_TEXTDOMAIN));
+					foreach($navigations as $key => $navigation){
+						$exist = $db->fetch(RevSliderGlobals::$table_navigation, "handle = '".$navigation['handle']."'");
+						unset($navigation['id']);
+						
+						$rh = $navigation["handle"];
+						if(!empty($exist)){ //create new navigation, get the ID
+							if($updateNavigation == "true"){ //overwrite navigation if exists
+								unset($navigation['handle']);
+								$db->update(RevSliderGlobals::$table_navigation, $navigation, array('handle' => $rh));
+								
+							}else{
+								//insert with new handle
+								$navigation["handle"] = $navigation['handle'].'-'.date('is');
+								$navigation["name"] = $navigation['name'].'-'.date('is');
+								$content = str_replace($rh.'"', $navigation["handle"].'"', $content);
+								$navigation["css"] = str_replace('.'.$rh, '.'.$navigation["handle"], $navigation["css"]); //change css class to the correct new class
+								$navi_id = $db->insert(RevSliderGlobals::$table_navigation, $navigation);
+								
+							}
+						}else{
+							$navi_id = $db->insert(RevSliderGlobals::$table_navigation, $navigation);
+						}
+					}
+					dmp(__("navigations imported!",'revslider'));
 				}
+			}else{
+				$message = $unzipfile->get_error_message();
 				
-				//get content array, we assume it is only the old slider_export.txt file
-				$content = ( $wp_filesystem->exists( $filepath ) ) ? $wp_filesystem->get_contents( $filepath ) : '';
+				$wp_filesystem->delete($d_path, true);
+				
+				return(array("success"=>false,"error"=>$message));
 			}
 			
 			//$content = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $content); //clear errors in string //deprecated in newest php version
@@ -1150,8 +1233,8 @@ class RevSliderSlider extends RevSliderElementsBase{
 			
 			$arrSlider = @unserialize($content);
 			if(empty($arrSlider)){
-				RevSliderFunctions::throwError(__('Wrong export slider file format! Please make sure that the uploaded file is either a zip file with a correct slider_export.txt in the root of it or an valid slider_export.txt file.', REVSLIDER_TEXTDOMAIN));
 				$wp_filesystem->delete($d_path, true);
+				RevSliderFunctions::throwError(__('Wrong export slider file format! Please make sure that the uploaded file is either a zip file with a correct slider_export.txt in the root of it or an valid slider_export.txt file.', 'revslider'));
 			}
 			
 			//update slider params
@@ -1228,6 +1311,9 @@ class RevSliderSlider extends RevSliderElementsBase{
 				
 				//convert params images:
 				if($importZip === true){ //we have a zip, check if exists
+					//remove image_id as it is not needed in import
+					if(isset($params['image_id'])) unset($params['image_id']);
+					
 					if(isset($params["image"])){
 						$params["image"] = RevSliderBase::check_file_in_zip($d_path, $params["image"], $sliderParams["alias"], $alreadyImported);
 						$params["image"] = RevSliderFunctionsWP::getImageUrlFromPath($params["image"]);
@@ -1432,6 +1518,8 @@ class RevSliderSlider extends RevSliderElementsBase{
 					$layers = $slide["layers"];
 					$settings = (isset($slide["settings"])) ? $slide["settings"] : '';
 					
+					//remove image_id as it is not needed in import
+					if(isset($params['image_id'])) unset($params['image_id']);
 					
 					//convert params images:
 					if(isset($params["image"])){
@@ -1442,7 +1530,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 								if($importZip === true){ //we have a zip, check if exists
 									$image = $wp_filesystem->exists( $d_path.'images/'.$params["image"] );
 									if(!$image){
-										echo $params["image"].__(' not found!<br>', REVSLIDER_TEXTDOMAIN);
+										echo $params["image"].__(' not found!<br>', 'revslider');
 									}else{
 										if(!isset($alreadyImported['images/'.$params["image"]])){
 											$importImage = RevSliderFunctionsWP::import_media($d_path.'images/'.$params["image"], $sliderParams["alias"].'/');
@@ -1625,7 +1713,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 					if($changed){
 						$return = $mslider->copySlideToSlider($single_slide);
 					}else{
-						return(array("success"=>false,"error"=>__('could not find correct Slide to copy, please try again.', REVSLIDER_TEXTDOMAIN),"sliderID"=>$sliderID));
+						return(array("success"=>false,"error"=>__('could not find correct Slide to copy, please try again.', 'revslider'),"sliderID"=>$sliderID));
 					}
 					
 				}else{
@@ -1789,7 +1877,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$add_to_slider = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableSliders WHERE id = %s", $sliderID), ARRAY_A);
 		
 		if(empty($add_to_slider))
-			return __('Slide could not be duplicated', REVSLIDER_TEXTDOMAIN);
+			return __('Slide could not be duplicated', 'revslider');
 		
 		//get last slide in slider for the order
 		$slide_order = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableSlides WHERE slider_id = %s ORDER BY slide_order DESC", $sliderID), ARRAY_A);
@@ -1798,7 +1886,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$slide_to_copy = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableSlides WHERE id = %s", $slideID), ARRAY_A);
 		
 		if(empty($slide_to_copy))
-			return __('Slide could not be duplicated', REVSLIDER_TEXTDOMAIN);
+			return __('Slide could not be duplicated', 'revslider');
 		
 		unset($slide_to_copy['id']); //remove the ID of Slide, as it will be a new Slide
 		$slide_to_copy['slider_id'] = $sliderID; //set the new Slider ID to the Slide
@@ -1806,7 +1894,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 		
 		$response = $wpdb->insert($tableSlides, $slide_to_copy);
 		
-		if($response === false) return __('Slide could not be copied', REVSLIDER_TEXTDOMAIN);
+		if($response === false) return __('Slide could not be copied', 'revslider');
 		
 		return true;
 	}
@@ -1931,7 +2019,22 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$this->validateInited();
 		$gf = array();
 		
+		$sl = new RevSliderSlide();
+		
 		$mslides = $this->getSlides(true);
+		
+		$staticID = $sl->getStaticSlideID($this->getID());
+		if($staticID !== false){
+			$msl = new RevSliderSlide();
+			if(strpos($staticID, 'static_') === false){
+				$staticID = 'static_'.$this->getID();
+			}
+			$msl->initByID($staticID);
+			if($msl->getID() !== ''){
+				$mslides = array_merge($mslides, array($msl));
+			}
+		}
+		
 		if(!empty($mslides)){
 			foreach($mslides as $ms){
 				$mf = $ms->getUsedFonts($full);
@@ -2021,7 +2124,26 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$sourceType = $this->getParam("source_type","gallery");
 		switch($sourceType){
 			case "posts":
-				$arrPosts = $this->getPostsFromCategories($publishedOnly);
+				//check where to get posts from
+				$sourceType = $this->getParam("fetch_type","cat_tag");
+				switch($sourceType){
+					case 'cat_tag':
+					default:
+						$arrPosts = $this->getPostsFromCategories($publishedOnly);
+					break;
+					case 'related':
+						$arrPosts = $this->getPostsFromRelated();
+					break;
+					case 'popular':
+						$arrPosts = $this->getPostsFromPopular();
+					break;
+					case 'recent':
+						$arrPosts = $this->getPostsFromRecent();
+					break;
+					case 'next_prev':
+						$arrPosts = $this->getPostsNextPrevious();
+					break;
+				}
 			break;
 			case "specific_posts":
 				$arrPosts = $this->getPostsFromSpecificList();
@@ -2079,15 +2201,15 @@ class RevSliderSlider extends RevSliderElementsBase{
 		switch($sourceType){
 			case "facebook":
 				$facebook = new RevSliderFacebook($this->getParam('facebook-transient','1200'));
-				//removed due album not working properly, will be added later on again
-				//if($this->getParam('facebook-type-source','timeline') == "album"){
-				//	$arrPosts = $facebook->get_photo_set_photos($this->getParam('facebook-album'),$this->getParam('facebook-count',10),$this->getParam('facebook-app-id'),$this->getParam('facebook-app-secret'));
-				//}else{
+				if($this->getParam('facebook-type-source','timeline') == "album"){
+					$arrPosts = $facebook->get_photo_set_photos($this->getParam('facebook-album'),$this->getParam('facebook-count',10),$this->getParam('facebook-app-id'),$this->getParam('facebook-app-secret'));
+				}
+				else{
 					$user_id = $facebook->get_user_from_url($this->getParam('facebook-page-url'));
 					$arrPosts = $facebook->get_photo_feed($user_id,$this->getParam('facebook-app-id'),$this->getParam('facebook-app-secret'),$this->getParam('facebook-count',10));
-					$additions['fb_type'] = 'timeline'; //SET TEMPORARY TO TIMELINE ALWAYS $this->getParam('facebook-type-source','timeline');
+					$additions['fb_type'] = $this->getParam('facebook-type-source','timeline');
 					$additions['fb_user_id'] = $user_id;
-				//}
+				}
 				
 				if(!empty($arrPosts)){
 					foreach($arrPosts as $k => $p){
@@ -2108,8 +2230,15 @@ class RevSliderSlider extends RevSliderElementsBase{
 			break;
 			case "instagram":
 				$instagram = new RevSliderInstagram($this->getParam('instagram-access-token'),$this->getParam('instagram-transient','1200'));
-				$search_user_id = $this->getParam('instagram-user-id');
-				$arrPosts = $instagram->get_public_photos($search_user_id,$this->getParam('instagram-count'));
+				if($this->getParam('instagram-type','user')!="hash"){
+					$search_user_id = $this->getParam('instagram-user-id');
+					$arrPosts = $instagram->get_public_photos($search_user_id,$this->getParam('instagram-count'));
+				}
+				else{
+					$search_hash_tag = $this->getParam('instagram-hash-tag');
+					$arrPosts = $instagram->get_tag_photos($search_hash_tag,$this->getParam('instagram-count'));
+				}
+				
 				$max_posts = $this->getParam('instagram-count', '33', self::FORCE_NUMERIC);
 				$max_allowed = 33;
 			break;
@@ -2193,7 +2322,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 		$templateKey = 0;
 		$numTemplates = count($slideTemplates);
 		
-		if(empty($arrPosts)) RevSliderFunctions::throwError(__('Failed to load Stream', REVSLIDER_TEXTDOMAIN));
+		if(empty($arrPosts)) RevSliderFunctions::throwError(__('Failed to load Stream', 'revslider'));
 		
 		foreach($arrPosts as $postData){
 			$slideTemplate = $slideTemplates[$templateKey];
@@ -2492,8 +2621,12 @@ class RevSliderSlider extends RevSliderElementsBase{
 		
 		switch($type){
 			case 'post':
-				$this->getSlidesFromPosts($publishedOnly);
-				$numSlides = count($this->arrSlides);
+				if($this->getParam('fetch_type', 'cat_tag') == 'next_prev'){
+					$numSlides = 2;
+				}else{
+					$this->getSlidesFromPosts($publishedOnly);
+					$numSlides = count($this->arrSlides);
+				}
 			break;
 			case 'facebook':
 				$numSlides = $this->getParam('facebook-count', count($this->arrSlides));
@@ -2547,7 +2680,8 @@ class RevSliderSlider extends RevSliderElementsBase{
 				$order_fav = true;
 			}
 		}
-		$where = "`type` != 'template'";
+		//$where = "`type` != 'template' ";
+		$where = "`type` != 'template' OR `type` IS NULL";
 		
 		$response = $this->db->fetch(RevSliderGlobals::$table_sliders,$where,$do_order,'',$order_direction);
 		
@@ -2802,6 +2936,215 @@ class RevSliderSlider extends RevSliderElementsBase{
 	
 	
 	/**
+	 * get related posts from current one
+	 * @since: 5.1.1
+	 */
+	public function getPostsFromRelated(){
+		$my_posts = array();
+		
+		$sortBy = $this->getParam("post_sortby",self::DEFAULT_POST_SORTBY);
+		$sortDir = $this->getParam("posts_sort_direction",self::DEFAULT_POST_SORTDIR);
+		$max_posts = $this->getParam("max_slider_posts","30");
+		if(empty($max_posts) || !is_numeric($max_posts))
+			$max_posts = -1;
+		
+		$post_id = get_the_ID();
+		
+		$tags_string = '';
+		$post_tags = get_the_tags();
+		
+		if ($post_tags) {
+			foreach ($post_tags as $post_tag) {
+				$tags_string .= $post_tag->slug . ',';
+			}
+		}
+		
+		$query = array(
+						'exclude' => $post_id,
+						'numberposts' => $max_posts,
+						'order' => $sortDir,
+						'tag' => $tags_string
+					  );
+					  
+		if(strpos($sortBy, "meta_num_") === 0){
+			$metaKey = str_replace("meta_num_", "", $sortBy);
+			$query["orderby"] = "meta_value_num";
+			$query["meta_key"] = $metaKey;
+		}else
+		if(strpos($sortBy, "meta_") === 0){
+			$metaKey = str_replace("meta_", "", $sortBy);
+			$query["orderby"] = "meta_value";
+			$query["meta_key"] = $metaKey;
+		}else
+			$query["orderby"] = $sortBy;
+		
+		$get_relateds = apply_filters('revslider_get_related_posts', $query, $post_id);
+		
+		$tag_related_posts = get_posts($get_relateds);		
+		
+		
+		if(count($tag_related_posts) < $max_posts){
+			$ignore = array();
+			foreach($tag_related_posts as $tag_related_post){
+				$ignore[] = $tag_related_post->ID;
+			}
+			$article_categories = get_the_category($post_id);
+			$category_string = '';
+			foreach($article_categories as $category) { 
+				$category_string .= $category->cat_ID . ',';
+			}
+			$max = $max_posts - count($tag_related_posts);
+			
+			$excl = implode(',', $ignore);
+			$query = array(
+							'exclude' => $excl,
+							'numberposts' => $max,
+							'category' => $category_string
+						  );
+						  
+			if(strpos($sortBy, "meta_num_") === 0){
+				$metaKey = str_replace("meta_num_", "", $sortBy);
+				$query["orderby"] = "meta_value_num";
+				$query["meta_key"] = $metaKey;
+			}else
+			if(strpos($sortBy, "meta_") === 0){
+				$metaKey = str_replace("meta_", "", $sortBy);
+				$query["orderby"] = "meta_value";
+				$query["meta_key"] = $metaKey;
+			}else
+				$query["orderby"] = $sortBy;
+			
+			$get_relateds = apply_filters('revslider_get_related_posts', $query, $post_id);
+			$cat_related_posts = get_posts($get_relateds);
+			
+			$tag_related_posts = $tag_related_posts + $cat_related_posts;
+		}
+		
+		foreach($tag_related_posts as $post){
+			$the_post = array();
+			
+			if(method_exists($post, "to_array"))
+				$the_post = $post->to_array();
+			else
+				$the_post = (array)$post;
+			
+			if($the_post['ID'] == $post_id) continue;
+			
+			$my_posts[] = $the_post;
+		}
+		
+		return $my_posts;
+	}
+	
+	
+	/**
+	 * get popular posts
+	 * @since: 5.1.1
+	 */
+	public function getPostsFromPopular($max_posts = false){
+		$post_id = get_the_ID();
+		
+		if($max_posts == false){
+			$max_posts = $this->getParam("max_slider_posts","30");
+			if(empty($max_posts) || !is_numeric($max_posts))
+				$max_posts = -1;
+		}else{
+			$max_posts = intval($max_posts);
+		}
+		$my_posts = array();
+		
+		$args = array(
+			'post_type' => 'any',
+			'posts_per_page' => $max_posts,
+			'suppress_filters' => 0,
+			'meta_key'    => '_thumbnail_id',
+			'orderby'     => 'comment_count',
+			'order'       => 'DESC'
+		);
+		
+		$args = apply_filters('revslider_get_popular_posts', $args, $post_id);
+		$posts = get_posts($args);
+		
+		foreach($posts as $post){
+		
+			if(method_exists($post, "to_array"))
+				$my_posts[] = $post->to_array();
+			else
+				$my_posts[] = (array)$post;
+		}
+		
+		return $my_posts;
+	}
+	
+	
+	/**
+	 * get recent posts
+	 * @since: 5.1.1
+	 */
+	public function getPostsFromRecent($max_posts = false){
+		$post_id = get_the_ID();
+		
+		if($max_posts == false){
+			$max_posts = $this->getParam("max_slider_posts","30");
+			if(empty($max_posts) || !is_numeric($max_posts))
+				$max_posts = -1;
+		}else{
+			$max_posts = intval($max_posts);
+		}
+		
+		$my_posts = array();
+		
+		$args = array(
+			'post_type' => 'any',
+			'posts_per_page' => $max_posts,
+			'suppress_filters' => 0,
+			'meta_key'    => '_thumbnail_id',
+			'orderby'     => 'date',
+			'order'       => 'DESC'
+		);
+		$args = apply_filters('revslider_get_latest_posts', $args, $post_id);
+		
+		$posts = get_posts($args);
+		
+		foreach($posts as $post){
+		
+			if(method_exists($post, "to_array"))
+				$my_posts[] = $post->to_array();
+			else
+				$my_posts[] = (array)$post;
+		}
+		
+		return $my_posts;
+	}
+	
+	/**
+	 * get recent posts
+	 * @since: 5.1.1
+	 */
+	public function getPostsNextPrevious(){
+		$my_posts = array();
+		
+		$startup_next_post = get_next_post();
+		if (!empty( $startup_next_post )){
+			if(method_exists($startup_next_post, "to_array"))
+				$my_posts[] = $startup_next_post->to_array();
+			else
+				$my_posts[] = (array)$startup_next_post;
+		}    
+
+		$startup_previous_post = get_previous_post();
+		if (!empty( $startup_previous_post )){
+			if(method_exists($startup_previous_post, "to_array"))
+				$my_posts[] = $startup_previous_post->to_array();
+			else
+				$my_posts[] = (array)$startup_previous_post;
+		}
+		
+		return $my_posts;
+	}
+	
+	
+	/**
 	 * get products from categories (by the slider params).
 	 * @since: 5.1.0
 	 */
@@ -2849,7 +3192,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 		
 		$strPosts = $this->getParam("posts_list","");
 		
-		$strPosts = apply_filters('revslider_set_posts_list', $strPosts);
+		$strPosts = apply_filters('revslider_set_posts_list', $strPosts, $this->getID());
 		
 		$slider_id = $this->getID();
 		

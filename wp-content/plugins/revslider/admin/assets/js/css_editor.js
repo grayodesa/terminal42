@@ -805,6 +805,14 @@ var UniteCssEditorRev = new function(){
 		
 		if(layer !== false){
 			switch(layer.type){
+				case 'image':
+					//add image classes
+					for(var key in arrCaptions){
+						if(arrCaptions[key]['type'] == 'image'){
+							use_captions.push(arrCaptions[key]);
+						}
+					}
+				break;
 				case 'button':
 					//add button classes
 					for(var key in arrCaptions){

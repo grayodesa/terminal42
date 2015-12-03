@@ -20,6 +20,7 @@
 
 jQuery(document).ready(function(){
 	UniteLayersRev.setGlobalAction(wp.template( "rs-action-layer-wrap" ));
+	UniteLayersRev.setGlobalSlideImport(wp.template( "rs-import-layer-wrap" ));
 });
 
 jQuery(document).ready(function(){
@@ -102,14 +103,19 @@ var UniteLayersRev = new function(){
 		unique_layer_id = 0,
 		add_meta_into = '',
 		global_action_template = null,
-		updateRevTimer = 0;
-
+		global_layer_import_template = null,
+		updateRevTimer = 0,
+		import_slides = {};
+		
 
 
 	t.ulff_core = 0;
 		
 	t.setGlobalAction = function (glfunc){
 		global_action_template = glfunc;
+	}
+	t.setGlobalSlideImport = function (glfunc){
+		global_layer_import_template = glfunc;
 	}
 	
 	t.arrLayers = arrLayers;
@@ -439,6 +445,8 @@ var UniteLayersRev = new function(){
 			jQuery("#jqueryui_error_message").show();
 		
 
+		jQuery('body').addClass("rs-layer-editor-view");
+		
 		g_slideTime = Number(slideTime);
 		u.init(g_slideTime);
 		container = jQuery(containerID);
@@ -813,8 +821,6 @@ var UniteLayersRev = new function(){
 
 		
 		function edit_content_current_layer(){
-			
-			
 
 			var layer = t.getCurrentLayer();
 			if(layer !== null){
@@ -832,7 +838,7 @@ var UniteLayersRev = new function(){
 					break;
 					case 'video':
 						var objVideoData = layer.video_data;
-												
+						
 						//open video dialog
 						UniteAdminRev.openVideoDialog(function(videoData){
 							//update video layer
@@ -845,14 +851,16 @@ var UniteLayersRev = new function(){
 							
 							scaleNormalVideo();
 						}, objVideoData);
-												
 					break;
 					case 'image':
 						UniteAdminRev.openAddImageDialog(rev_lang.select_layer_image,function(urlImage){
 							var objData = {};
 							objData.image_url = urlImage;
-							t.updateCurrentLayer(objData);										
-							redrawLayerHtml(selectedLayerSerial);			
+							t.updateCurrentLayer(objData);
+							
+							redrawLayerHtml(selectedLayerSerial);
+							
+							scaleNormal();
 						});	
 					break;
 					case 'shape':
@@ -876,6 +884,7 @@ var UniteLayersRev = new function(){
 		
 		// EDIT LAYER CONTENT FROM QUICK LIST		
 		jQuery('body').on('click','.button_change_image_source, .button_edit_layer, .button_change_video_settings, .button_reset_size, .button_edit_shape',function() {
+			jQuery(':focus').blur(); // Blur Focused Elements first
 			var b = jQuery(this),
 				serial = b.closest('.layer-toolbar-li').data('serial');
 			t.setLayerSelected(serial);		
@@ -886,6 +895,7 @@ var UniteLayersRev = new function(){
 		});
 
 		jQuery('body').on('click','.layer-title-with-icon',function() {
+			jQuery(':focus').blur(); // Blur Focused Elements first
 			var b = jQuery(this),
 				serial = b.closest('.layer-toolbar-li').data('serial');
 			t.setLayerSelected(serial);		
@@ -897,6 +907,7 @@ var UniteLayersRev = new function(){
 
 		//delete layer actions:
 		jQuery('body').on('click',".button_delete_layer, #button_delete_layer", function(){
+			jQuery(':focus').blur(); // Blur Focused Elements first
 			var b = jQuery(this);
 
 			if(b.hasClass("button-now-disabled")) return(false);
@@ -910,11 +921,15 @@ var UniteLayersRev = new function(){
 				
 				//delete selected layer
 				deleteCurrentLayer();
+				unselectLayers();
+			
+
 			}
 		});
 
 		//delete layer actions:
 		jQuery('body').on('click',".button_duplicate_layer, #button_duplicate_layer",function(){
+			jQuery(':focus').blur(); // Blur Focused Elements first
 			var b = jQuery(this);
 
 			if(b.hasClass("button-now-disabled")) return(false);
@@ -1681,6 +1696,15 @@ var UniteLayersRev = new function(){
 	}
 	
 	
+
+	t.showHideToggleContent = function(objLayer) {		
+		if (objLayer["toggle"]===true) {
+			jQuery('#layer_text_wrapper').addClass("withtoggle");
+		} else {
+			jQuery('#layer_text_wrapper').removeClass("withtoggle");
+		}
+	}
+
 	t.showHideContentEditor = function(show) {
 		if (show) {
 			jQuery('#button_edit_layer').hide();
@@ -1709,12 +1733,12 @@ var UniteLayersRev = new function(){
 			jQuery('#button_reset_size').hide();
 			jQuery('#button_change_video_settings').hide();
 			jQuery('#layer_text_wrapper').hide();
-			jQuery('#layer_text_wrapper').removeClass('currently_editing_txt');
-			
+			jQuery('#layer_text_wrapper').removeClass('currently_editing_txt');			
 		}
 		
 		var objLayer = selectedLayerSerial === -1 ? "" : t.getLayer(selectedLayerSerial);	
 		t.toolbarInPos(objLayer);
+		t.showHideToggleContent(objLayer);
 	}
 	
 	t.changeSlotBGs = function() {
@@ -2084,15 +2108,17 @@ var UniteLayersRev = new function(){
 			case "start_out":
 			case "start_video":
 			case "stop_video":
+			case "mute_video":
+			case "unmute_video":
+			case "toggle_video":
+			case "toggle_mute_video":
 				li.find('.action-target-layer').show();
 			break;
 			case "toggle_layer":
 				li.find('.action-target-layer').show();
 				li.find('.action-toggle_layer').show();
 			break;
-			case "toggle_video":
-				li.find('.action-target-layer').show();
-			break;
+
 			case "simulate_click":
 				li.find('.action-target-layer').show();
 			break;
@@ -2114,10 +2140,13 @@ var UniteLayersRev = new function(){
 		}
 		switch (value) {
 			case "toggle_video":
+			case "mute_video":
+			case "unmute_video":
+			case "toggle_mute_video":
 			case "start_video":
 			case "stop_video":
 				li.find('.action-target-layer').find('select[name="layer_target[]"] option').each(function(){
-					if(jQuery(this).data('mytype') !== 'video'){
+					if(jQuery(this).data('mytype') !== 'video' && jQuery(this).data('mytype') !== 'video-special'){
 						jQuery(this).hide();
 					}else{
 						jQuery(this).show();
@@ -2126,7 +2155,11 @@ var UniteLayersRev = new function(){
 			break;
 			default:
 				li.find('.action-target-layer').find('select[name="layer_target[]"] option').each(function(){
-					jQuery(this).show();
+					if(jQuery(this).data('mytype') !== 'video-special'){
+						jQuery(this).show();
+					}else{
+						jQuery(this).hide();
+					}
 				});
 			break;
 		}
@@ -2410,6 +2443,16 @@ var UniteLayersRev = new function(){
 			},150);
 		});
 
+		jQuery("#layer_text_toggle").keyup(function(){
+			clearTimeout(keyuprefresh);
+			var v = jQuery(this).val();
+			keyuprefresh = setTimeout(function() {						
+				updateLayerTextField("",jQuery('.sortlist li.ui-state-hover .tl-fullanim'),v);						
+				t.toolbarInPos();
+				t.updateLayerFromFields();
+			},150);
+		});
+
 		jQuery('.rev-visibility-on-sizes input').click(function(){
 			t.updateLayerFromFields();
 		});
@@ -2480,9 +2523,7 @@ var UniteLayersRev = new function(){
 							inp.val(cv+usuffix);
 					}
 				}
-			}
-			
-			
+			}						
 		});
 
 		jQuery('#clayer_start_time, #clayer_end_time, #clayer_start_speed, #clayer_end_speed').on("change blur", function() {
@@ -2512,6 +2553,12 @@ var UniteLayersRev = new function(){
 		jQuery('#timline-manual-closer').on('click',function() {
 			jQuery('#timline-manual-dialog').hide();
 		});
+
+		jQuery('body').on('focus','#layer_text, #layer_text_toggle',function() {		
+			jQuery('#layer_text').removeClass("lasteditedlayertext");
+			jQuery('#layer_text_toggle').removeClass("lasteditedlayertext");
+			jQuery(this).addClass("lasteditedlayertext")
+		})
 
 	}
 	
@@ -2700,6 +2747,384 @@ var UniteLayersRev = new function(){
 			});
 		});
 		
+		
+		jQuery('#button_add_layer_import').click(function(){
+			t.reset_import_layer();
+			
+			jQuery('#dialog_addimport').dialog({
+				minWidth: 830,
+				minHeight: 500,
+				modal: true,
+				dialogClass: 'tpdialogs'
+			});
+		});
+		
+		
+		/**
+		 * get slides plus layers of the selected slider
+		 * 
+		 **/
+		jQuery('#rs-import-layer-slider').change(function(){
+			var im_slider_id = jQuery(this).val();
+			if(im_slider_id == '-'){
+				t.reset_import_layer();
+				return false;
+			}else{
+				if(typeof(import_slides[im_slider_id]) == 'undefined'){ //get data for the im_slider_id
+					UniteAdminRev.ajaxRequest('get_import_slides_data', im_slider_id, function(response){
+						if(typeof(response.slides) !== 'undefined'){
+							import_slides[im_slider_id] = response.slides;
+							t.do_clear_layer_import();
+							t.do_clear_slide_import();
+							t.do_add_slide_import();
+							t.do_show_sliders_import();
+							return true;
+						}else{
+							alert(rev_lang.empty_data_retrieved_for_slider);
+							t.reset_import_layer();
+							return false;
+						}
+					});
+					return false;
+				}
+				t.do_clear_layer_import();
+				t.do_clear_slide_import();
+				t.do_add_slide_import();
+				t.do_show_sliders_import();
+			}
+		});
+		
+		jQuery('#rs-import-layer-type').change(function(){
+			t.do_clear_layer_import();
+			t.do_show_sliders_import();
+		});
+		
+		jQuery('#rs-import-layer-slide').change(function(){
+			t.do_clear_layer_import();
+			t.do_show_sliders_import();
+		});
+		
+		jQuery('body').on('click', '#rs-import-layer-holder li .import-layer-now', function(){
+			if(confirm(rev_lang.import_selected_layer)){
+				//import selected layer with the unique id clicked
+				var btn = jQuery(this),
+					li = btn.closest('li'),
+					slider_id = li.data('sliderid'),
+					slide_id = li.data('slideid'),
+					unique_layer = li.data('id'),
+					action_dependencies = li.data('actiondep');
+				
+				if(typeof(import_slides[slider_id]) == 'undefined') return false;
+				if(typeof(import_slides[slider_id][slide_id]) == 'undefined') return false;
+				
+				var layers_to_add = t.get_layers_to_add_through_actions(import_slides[slider_id][slide_id]['layers'], unique_layer);
+				
+				//get the data, then use it to add a new layer
+				if(layers_to_add.length > 0){
+					if(layers_to_add.length > 1 && confirm(rev_lang.import_all_layer_from_actions)){
+						var dependencies = [];
+						dependencies = t.get_action_dependencies(li, slide_id, dependencies);
+						
+						for(var lta in layers_to_add){
+							addLayer(layers_to_add[lta], true);
+							
+							li.addClass("layerimported");
+							btn.find('i').addClass("eg-icon-ok").removeClass("eg-icon-plus");
+							
+							for(var dkey in dependencies){
+								var cli = jQuery('#to-import-layer-id-'+slide_id+'-'+dependencies[dkey]);
+								if(!cli.hasClass('layerimported')){
+									cli.addClass('layerimported');
+									cli.find('.import-layer-now i').addClass("eg-icon-ok").removeClass("eg-icon-plus");
+								}
+							}
+							
+						}
+					}else{ //just need to add one layer, so take the first one
+						for(var lta in layers_to_add){
+							//remove actions of first layer that are connected to other layers
+							layers_to_add[lta] = t.remove_import_layer_actions(layers_to_add[lta]);
+							addLayer(layers_to_add[lta], true);
+							li.addClass("layerimported");
+							btn.find('i').addClass("eg-icon-ok").removeClass("eg-icon-plus");
+							break;
+						}
+					}
+				}
+			}
+		});
+		
+		
+		t.get_action_dependencies = function(li, slide_id, dependencies){
+			var action_dependencies = li.data('actiondep');
+			if(action_dependencies !== ''){
+				action_dependencies = action_dependencies.toString().split(',');
+
+				for(var adkey in action_dependencies){
+					if(action_dependencies[adkey] !== 'backgroundvideo' && action_dependencies[adkey] !== 'firstvideo' && jQuery.inArray(action_dependencies[adkey], dependencies) == -1){
+						
+						dependencies.push(action_dependencies[adkey]);
+						
+						var new_dep = t.get_action_dependencies(jQuery('#to-import-layer-id-'+slide_id+'-'+action_dependencies[adkey]), slide_id, dependencies);
+
+						for(var key in new_dep){
+							if(jQuery.inArray(new_dep[key], dependencies) == -1) dependencies.push(new_dep[key]);
+						}
+					}
+				}
+			}
+
+			return dependencies;
+		}
+
+		t.remove_import_layer_actions = function(layer){
+			var attr = ['tooltip_event', 'action', 'image_link', 'link_open_in', 'jump_to_slide', 'scrollunder_offset', 'actioncallback', 'layer_target', 'action_delay', 'link_type', 'toggle_layer_type', 'toggle_class'];
+			
+			if(typeof(layer['layer_action']) !== 'undefined' && typeof(layer['layer_action']['action']) !== 'undefined' && layer['layer_action']['action'].length > 0){
+				for(var lkey in layer['layer_action']['action']){
+					switch(layer['layer_action']['action'][lkey]){
+						case 'start_in':
+						case 'start_out':
+						case 'toggle_layer':
+						case 'start_video':
+						case 'stop_video':
+						case 'toggle_video':
+						case 'mute_video':
+						case 'unmute_video':
+						case 'toggle_mute_video':
+						case 'simulate_click':
+						case 'toggle_class':
+							for(var akey in attr){
+								if(typeof(layer['layer_action'][attr[akey]]) !== 'undefined' && typeof(layer['layer_action'][attr[akey]][lkey]) !== 'undefined') delete(layer['layer_action'][attr[akey]][lkey]);
+							}
+						break;
+					}
+				}
+			}
+			return layer;
+		}
+		
+		t.get_layers_to_add_through_actions = function(layers, unique_id){
+			var layers_to_add = [];
+			
+			layers_to_add = t.add_layer_to_queue_by_unique_id(layers, unique_id, layers_to_add);
+			
+			layers_to_add = t.check_actions_change_unique_ids(layers_to_add);
+			
+			return layers_to_add;
+		}
+		
+		t.add_layer_to_queue_by_unique_id = function(layers, unique_id, layers_to_add){
+			for(var key in layers){
+				if(layers[key]['unique_id'] == unique_id){
+					//remove the unique ID here, we need a new one
+					
+					layers_to_add.push(jQuery.extend(true, {}, layers[key]));
+					
+					if(typeof(layers[key]['layer_action']) !== 'undefined' && typeof(layers[key]['layer_action']['action']) !== 'undefined' && layers[key]['layer_action']['action'].length > 0){
+						var actions = layers[key]['layer_action'];
+						for(var lkey in actions['action']){
+							switch(actions['action'][lkey]){
+								case 'start_in':
+								case 'start_out':
+								case 'toggle_layer':
+								case 'start_video':
+								case 'stop_video':
+								case 'toggle_video':
+								case 'mute_video':
+								case 'unmute_video':
+								case 'toggle_mute_video':
+								case 'simulate_click':
+								case 'toggle_class':
+									//check layers
+									if(actions['layer_target'][lkey]){
+										var do_add = true;
+										for(var l in layers_to_add){
+											if(layers_to_add[l]['unique_id'] == actions['layer_target'][lkey]){
+												do_add = false;
+												break;
+											}
+										}
+										if(do_add){
+											for(var akey in layers){
+												if(layers[akey]['unique_id'] == actions['layer_target'][lkey]){
+													t.add_layer_to_queue_by_unique_id(layers, layers[akey]['unique_id'], layers_to_add);
+													//layers_to_add.push(jQuery.extend(true, {}, layers[akey]));
+													break;
+												}
+											}
+										}
+									}
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			return layers_to_add;
+		}
+		
+		t.check_actions_change_unique_ids = function(layers){
+			//map the old layer ids with the new one they get now
+			var map = {};
+			
+			for(var key in layers){
+				unique_layer_id++;
+				map[layers[key]['unique_id']] = unique_layer_id;
+				layers[key]['unique_id'] = unique_layer_id;
+			}
+			
+			//now change action layers connections to the new IDs
+			//remove the go to slide actions
+			for(var key in layers){
+				if(typeof(layers[key]['layer_action']) !== 'undefined' && typeof(layers[key]['layer_action']['action']) !== 'undefined' && layers[key]['layer_action']['action'].length > 0){
+					for(var lkey in layers[key]['layer_action']['layer_target']){
+						for(var l in map){
+							if(l == layers[key]['layer_action']['layer_target'][lkey]){
+								layers[key]['layer_action']['layer_target'][lkey] = map[l];
+								break;
+							}
+						}
+					}
+					for(var lkey in layers[key]['layer_action']['jump_to_slide']){
+						layers[key]['layer_action']['jump_to_slide'][lkey] = '-1';
+					}
+				}
+			}
+			
+			return layers;
+		}
+		
+		t.reset_import_layer = function(){
+			jQuery('#rs-import-layer-slider option[value="-"]').attr('selected', true);
+			jQuery('#rs-import-layer-slide option[value="-"]').attr('selected', true);
+			jQuery('#rs-import-layer-type option[value="-"]').attr('selected', true);
+		}
+		
+		/**
+		 * add slides to dropdown
+		 **/
+		t.do_add_slide_import = function(){
+			var im_slider_id = jQuery('#rs-import-layer-slider option:selected').val();
+			if(im_slider_id == '-' || typeof(import_slides[im_slider_id]) == 'undefined') return false;
+			
+			for(var key in import_slides[im_slider_id]){
+				jQuery('#rs-import-layer-slide').append(jQuery('<option></option>').val(key).text('Slide: '+import_slides[im_slider_id][key]['params']['title']));
+			}
+		}
+		
+		t.do_clear_slide_import = function(){
+			jQuery('#rs-import-layer-slide option').each(function(){
+				if(jQuery(this).val() !== 'all' && jQuery(this).val() !== '-') jQuery(this).remove();
+			});
+		}
+		
+		t.do_clear_layer_import = function(){
+			jQuery('#rs-import-layer-holder').html('');
+		}
+		
+		t.do_show_sliders_import = function(){
+			var im_slider_id = jQuery('#rs-import-layer-slider option:selected').val();
+			var im_slide_id = jQuery('#rs-import-layer-slide option:selected').val();
+			var im_slide_type = jQuery('#rs-import-layer-type option:selected').val();
+			
+			if(im_slider_id == '-') return false;
+			
+			if(typeof(import_slides[im_slider_id]) == 'undefined') return false;			
+			for(var key in import_slides[im_slider_id]){				
+				if(im_slide_id == 'all' || im_slide_id == '-' || im_slide_id == key){
+					if (import_slides[im_slider_id][key]['layers'].length>0)
+					jQuery('#rs-import-layer-holder').append('<li class="layer-import-slide-seperator">Slide Title - '+import_slides[im_slider_id][key].params.title+'</li>')
+
+					for(var lkey in import_slides[im_slider_id][key]['layers']){
+
+						if(im_slide_type == 'all' || im_slide_type == '-' || im_slide_type == import_slides[im_slider_id][key]['layers'][lkey]['type']){
+							
+							var action_string = [];
+							action_string = t.get_action_string_dependencies(import_slides[im_slider_id][key]['layers'][lkey], im_slide_id, action_string, import_slides[im_slider_id][key]['layers']);
+							
+							var has_action = 'off';
+							if(typeof(import_slides[im_slider_id][key]['layers'][lkey]['layer_action']) !== 'undefined' && typeof(import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['action']) !== 'undefined' && import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['action'].length > 0){
+								for(var akey in import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['action']){
+									switch(import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['action'][akey]){
+										case 'start_in':
+										case 'start_out':
+										case 'toggle_layer':
+										case 'start_video':
+										case 'stop_video':
+										case 'toggle_video':
+										case 'mute_video':
+										case 'unmute_video':
+										case 'toggle_mute_video':
+										case 'simulate_click':
+										case 'toggle_class':
+											action_string.push(import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['layer_target'][akey]);
+										break;
+									}
+								}
+								has_action = 'on';
+							}
+							
+							var content = global_layer_import_template({
+								'withaction': has_action,
+								'action_layers': action_string,
+								'type': import_slides[im_slider_id][key]['layers'][lkey]['type'],
+								'alias': import_slides[im_slider_id][key]['layers'][lkey]['alias'],
+								'width': import_slides[im_slider_id][key]['layers'][lkey]['width'],
+								'height': import_slides[im_slider_id][key]['layers'][lkey]['height'],
+								'unique_id': import_slides[im_slider_id][key]['layers'][lkey]['unique_id'],
+								'slider_id': im_slider_id,
+								'slide_id': key
+							});
+							
+							jQuery('#rs-import-layer-holder').append(content);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		
+		t.get_action_string_dependencies = function(layer, slide_id, action_string, layers){
+			
+			if(typeof(layer['layer_action']) !== 'undefined' && typeof(layer['layer_action']['action']) !== 'undefined' && layer['layer_action']['action'].length > 0){
+				for(var akey in layer['layer_action']['action']){
+					switch(layer['layer_action']['action'][akey]){
+						case 'start_in':
+						case 'start_out':
+						case 'toggle_layer':
+						case 'start_video':
+						case 'stop_video':
+						case 'toggle_video':
+						case 'mute_video':
+						case 'unmute_video':
+						case 'toggle_mute_video':
+						case 'simulate_click':
+						case 'toggle_class':
+							if(typeof(layer['layer_action']['layer_target']) !== 'undefined' && typeof(layer['layer_action']['layer_target'][akey]) !== 'undefined' && layer['layer_action']['layer_target'][akey] !== 'backgroundvideo' && layer['layer_action']['layer_target'][akey] !== 'firstvideo' && jQuery.inArray(layer['layer_action']['layer_target'][akey], action_string) == -1){
+								action_string.push(layer['layer_action']['layer_target'][akey]);
+								
+								for(var lkey in layers){
+									if(layers[lkey]['unique_id'] == layer['layer_action']['layer_target'][akey]){
+										
+										var new_action = t.get_action_string_dependencies(layers[lkey], slide_id, action_string, layers);
+										for(var key in new_action){
+											if(jQuery.inArray(new_action[key], action_string) == -1) action_string.push(new_action[key]);
+										}
+										break;
+									}
+								}
+
+							}
+						break;
+					}
+				}
+			}
+			
+			return action_string;
+		}
 		
 		jQuery('body').on('click', '.addbutton-examples-wrapper a.rev-btn', function(){
 			//get values for buttons
@@ -3621,7 +4046,7 @@ var UniteLayersRev = new function(){
 		
 		if(!layer){
 			return false;
-			UniteAdminRev.showErrorMessage("getLayer error, Layer with serial: "+serial+" not found");
+			//UniteAdminRev.showErrorMessage("getLayer error, Layer with serial: "+serial+" not found");
 		}else{
 			//modify some data
 			layer.speed = Number(layer.speed);
@@ -3637,8 +4062,8 @@ var UniteLayersRev = new function(){
 	t.getCurrentLayer = function(){
 		if(selectedLayerSerial == -1){
 			return false;
-			UniteAdminRev.showErrorMessage(rev_lang.sel_layer_not_set);
-			return(null);
+			//UniteAdminRev.showErrorMessage(rev_lang.sel_layer_not_set);
+			//return(null);
 		}
 		return t.getLayer(selectedLayerSerial);
 	}
@@ -3660,7 +4085,7 @@ var UniteLayersRev = new function(){
 			type = objLayer.type;
 
 
-		var zIndex = Number(objLayer.order)+1;
+		var zIndex = Number(objLayer.order)+100;
 
 		var style = "z-index:"+zIndex+";position:absolute;";
 		var stylerot ="";
@@ -4352,7 +4777,7 @@ var UniteLayersRev = new function(){
 		
 		objLayer.style = jQuery.trim(objLayer.style);
 		if(isInit == false && objLayer.type == "text" && (!objLayer.style || objLayer.style == "")){
-			objLayer.style = getFirstStyle();
+			//objLayer.style = getFirstStyle();
 			do_style_reset = true;
 		}
 
@@ -4548,7 +4973,7 @@ var UniteLayersRev = new function(){
 		if(objLayer['deformation']['font-family'] == undefined){
 			objLayer['deformation']['font-family'] = "";
 		}else{
-			if(sgfamilies.indexOf(objLayer['deformation']['font-family']) == -1){
+			if(objLayer['deformation']['font-family'] !== '' && sgfamilies.indexOf(objLayer['deformation']['font-family']) == -1){
 				sgfamilies.push(objLayer['deformation']['font-family']);
 			}
 		}
@@ -4879,20 +5304,23 @@ var UniteLayersRev = new function(){
 	}
 
 
+	
 	/**
-	 * duplicate layer, set it a little aside of the layer position
+	 * call "duplicateLayer" function with selected serial
 	 */
-	var duplicateLayer = function(serial){
-		
-		var obj = arrLayers[serial];
+	var duplicateCurrentLayer = function(){		
+		if(selectedLayerSerial == -1)
+			return(false);
+
+		var obj = arrLayers[selectedLayerSerial];
 		var obj2 = jQuery.extend(true, {}, obj);	//duplicate object
+		
 		t.getVal(objLayer, 'top');
 
 		obj2 = t.setVal(obj2, 'left', t.getVal(obj2, 'left')+5);
 		obj2 = t.setVal(obj2, 'top', t.getVal(obj2, 'top')+5);
 		obj2.order = undefined;
-		obj2.time = undefined;
-
+		obj2.time = undefined;		
 		addLayer(obj2);		
 		initDisallowCaptionsOnClick();
 		var key;
@@ -4900,18 +5328,7 @@ var UniteLayersRev = new function(){
 			key = k;
 		});
 		
-		t.setLayerSelected(key);
-		
-	}
-
-
-	/**
-	 * call "duplicateLayer" function with selected serial
-	 */
-	var duplicateCurrentLayer = function(){		
-		if(selectedLayerSerial == -1)
-			return(false);
-		duplicateLayer(selectedLayerSerial);		
+		t.setLayerSelected(key);		
 	}
 
 	
@@ -5256,6 +5673,10 @@ var UniteLayersRev = new function(){
 
 		objUpdate.style = jQuery("#layer_caption").val();			
 		objUpdate['hover'] = jQuery('#hover_allow')[0].checked;
+		objUpdate['toggle'] = jQuery('#toggle_allow')[0].checked;
+
+		objUpdate['toggle_use_hover'] = jQuery('#toggle_use_hover')[0].checked;
+		
 		
 		objUpdate['visible-desktop'] = jQuery('#visible-desktop')[0].checked;
 		objUpdate['visible-notebook'] = jQuery('#visible-notebook')[0].checked;
@@ -5268,6 +5689,7 @@ var UniteLayersRev = new function(){
 		objUpdate['image-size'] = jQuery('#layer-image-size option:selected').val();
 				
 		objUpdate.text = jQuery("#layer_text").val();
+		objUpdate.texttoggle = jQuery("#layer_text_toggle").val() || "";
 		
 		objUpdate.alias = jQuery('#layer_sort_'+selectedLayerSerial+" .timer-layer-text").val();
 
@@ -5511,6 +5933,7 @@ var UniteLayersRev = new function(){
 		
 		//deformation hover part start
 		if(objUpdate['deformation-hover'] == undefined || jQuery.isEmptyObject(objUpdate['deformation-hover'])) objUpdate['deformation-hover'] = {};		
+		objUpdate['deformation-hover']['color'] = jQuery('#hover_layer_color_s').val();
 		objUpdate['deformation-hover']['color-transparency'] = jQuery('#hover_css_font-transparency').val();
 		objUpdate['deformation-hover']['text-decoration'] = jQuery('#hover_css_text-decoration option:selected').val();
 		objUpdate['deformation-hover']['background-color'] = jQuery('#hover_css_background-color').val();
@@ -5608,7 +6031,8 @@ var UniteLayersRev = new function(){
 				
 
 		//update object - Write back changes in ObjArray
-		t.updateCurrentLayer(objUpdate, ['layer_action']);				
+		t.updateCurrentLayer(objUpdate, ['layer_action']);	
+		t.showHideToggleContent(objUpdate);			
 
 		//update html layers
 		updateHtmlLayersFromObject();
@@ -5833,6 +6257,9 @@ var UniteLayersRev = new function(){
 			}
 		}
 		RevSliderSettings.onoffStatus(jQuery('#hover_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_use_hover'));
+		
 		
 		if(objLayer.deformation != undefined){
 			jQuery('#css_font-family').val(objLayer['deformation']['font-family']);
@@ -5998,7 +6425,15 @@ var UniteLayersRev = new function(){
 		
 		jQuery('#layer_caption').val(objLayer.style);
 
-		jQuery('#layer_text').val(UniteAdminRev.stripslashes(objLayer.text));				
+		jQuery('#layer_text').val(UniteAdminRev.stripslashes(objLayer.text));	
+		
+		if (objLayer.texttoggle!=undefined) 
+			jQuery('#layer_text_toggle').val(UniteAdminRev.stripslashes(objLayer.texttoggle));		
+		else 			
+			jQuery('#layer_text_toggle').val("");
+		
+
+		
 		jQuery('#layer_text').data('new_content',false)
 		jQuery('#layer_alt_option option[value="'+objLayer.alt_option+'"]').attr('selected', 'selected');
 		jQuery('#layer_alt').val(objLayer.alt);
@@ -6012,6 +6447,20 @@ var UniteLayersRev = new function(){
 			jQuery('#hover_allow').prop("checked", false);
 			jQuery('#idle-hover-swapper').hide();
 		}
+
+		if(objLayer['toggle'] == 'true' || objLayer['toggle'] == true){
+			jQuery('#toggle_allow').prop("checked", true);			
+		}else{
+			jQuery('#toggle_allow').prop("checked", false);			
+		}
+
+		if(objLayer['toggle_use_hover'] == 'true' || objLayer['toggle_use_hover'] == true){
+			jQuery('#toggle_use_hover').prop("checked", true);			
+		}else{
+			jQuery('#toggle_use_hover').prop("checked", false);			
+		}
+
+
 		
 		if(objLayer['visible-notebook'] == 'true' || objLayer['visible-notebook'] == true)
 			jQuery('#visible-notebook').prop('checked',true);
@@ -6042,6 +6491,8 @@ var UniteLayersRev = new function(){
 		jQuery('#layer-image-size option[value="'+objLayer['image-size']+'"]').attr('selected', 'selected');
 		
 		RevSliderSettings.onoffStatus(jQuery('#hover_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_use_hover'));
 		RevSliderSettings.onoffStatus(jQuery('#visible-desktop'));
 		RevSliderSettings.onoffStatus(jQuery('#visible-notebook'));
 		RevSliderSettings.onoffStatus(jQuery('#visible-tablet'));
@@ -6109,7 +6560,6 @@ var UniteLayersRev = new function(){
 		jQuery("#layer_loop_angle").val(objLayer.loop_angle);
 		jQuery("#layer_loop_radius").val(objLayer.loop_radius);
 		
-		
 		jQuery("#layer_html_tag option[value='"+objLayer.html_tag+"']").attr('selected', 'selected');
 		jQuery("#parallax_layer_ddd_zlevel option[value='"+objLayer.parallax_layer_ddd_zlevel+"']").attr('selected', 'selected');
 		
@@ -6121,8 +6571,6 @@ var UniteLayersRev = new function(){
 			jQuery('#masking-start').removeAttr("checked");
 			jQuery('.mask-start-settings').hide();
 		}
-		
-		
 
 		if(objLayer.mask_end == "true" || objLayer.mask_end == true) {
 			jQuery('#masking-end').attr("checked", true);
@@ -6133,13 +6581,9 @@ var UniteLayersRev = new function(){
 			jQuery('.mask-end-settings').hide();
 		}
 	
-		
-
 		RevSliderSettings.onoffStatus(jQuery('#masking-start'));		
 		RevSliderSettings.onoffStatus(jQuery('#masking-end'));
 		
-
-
 		jQuery("#mask_anim_xstart").val(objLayer.mask_x_start);
 		jQuery("#mask_anim_ystart").val(objLayer.mask_y_start);
 		jQuery("#mask_speed").val(objLayer.mask_speed_start);
@@ -6362,6 +6806,7 @@ var UniteLayersRev = new function(){
 	 */
 	var unselectLayers = function(){
 		
+
 		unselectHtmlLayers();
 		jQuery('.quicksortlayer.selected').removeClass("selected");
 		u.unselectSortboxItems();
@@ -6488,6 +6933,9 @@ var UniteLayersRev = new function(){
 						case 'stop_video':
 						case 'toggle_layer':
 						case 'toggle_video':
+						case 'mute_video':
+						case 'unmute_video':
+						case 'toggle_mute_video':
 						case 'simulate_click':
 						case 'toggle_class':
 							
@@ -6670,6 +7118,10 @@ var UniteLayersRev = new function(){
 		
 		jQuery('select[name="layer_target[]"], select[name="no_layer_target[]"]').each(function(k){
 			jQuery(this).html('');
+			
+			jQuery(this).append(jQuery('<option data-mytype="video-special"></option>').val('backgroundvideo').text(rev_lang.background_video));
+			jQuery(this).append(jQuery('<option data-mytype="video-special"></option>').val('firstvideo').text(rev_lang.active_video));
+			
 			for(var key in clayers){
 				jQuery(this).append(jQuery('<option data-mytype="'+clayers[key].type+'"></option>').val(clayers[key]['unique_id']).text(clayers[key].alias));
 			}
@@ -6714,18 +7166,16 @@ var UniteLayersRev = new function(){
 	/**
 	 * set layer selected representation
 	 */
-	t.setLayerSelected = function(serial){
+	t.setLayerSelected = function(serial,videoRefresh){
 		
-		if(selectedLayerSerial == serial)
+		if(selectedLayerSerial == serial && !videoRefresh)
 			return(false);
-							
+		
 		u.resetIdleSelector();
 
 		jQuery('.quicksortlayer.selected').removeClass("selected");
 		jQuery('#layer_quicksort_'+serial).addClass("selected");
 		
-		
-
 		jQuery('.timer-layer-text:focus').blur();
 
 		t.remove_layer_actions();
@@ -6776,8 +7226,6 @@ var UniteLayersRev = new function(){
 
 		jQuery('#the_current-editing-layer-title').removeClass("nolayerselectednow");
 
-		
-	
 		/*if(objLayer.type == 'no_edit'){
 			
 		}*/
@@ -6841,6 +7289,7 @@ var UniteLayersRev = new function(){
 			break;
 		}
 		
+
 		//do specific operations depends on type
 		switch(objLayer.type){
 			case "video":	//show edit video button
@@ -7083,6 +7532,8 @@ var UniteLayersRev = new function(){
 			jQuery('#idle-hover-swapper').hide();
 		}
 		RevSliderSettings.onoffStatus(jQuery('#hover_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_allow'));
+		RevSliderSettings.onoffStatus(jQuery('#toggle_use_hover'));
 
 		//hide autocomplete
 		jQuery("#layer_caption").catcomplete("close");

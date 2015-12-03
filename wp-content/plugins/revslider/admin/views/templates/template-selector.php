@@ -14,25 +14,25 @@ $all_slider = $tmp_slider->getArrSliders();
 <!-- THE TEMPLATE AREA -->
 <div id="template_area">
 	<div id="template_header_part">
-		<h2><span class="revlogo-mini" style="margin-right:15px;"></span><?php _e('Slider Template Library', REVSLIDER_TEXTDOMAIN); ?></h2>
+		<h2><span class="revlogo-mini" style="margin-right:15px;"></span><?php _e('Slider Template Library', 'revslider'); ?></h2>
 		
 		<div id="close-template"></div>
 		
 		<div class="revolution-template-switcher">
-			<span data-showgroup="revolution-basic-templates" class="revolution-templatebutton selected"><?php _e('Revolution Base', REVSLIDER_TEXTDOMAIN); ?></span>
-			<span data-showgroup="revolution-all-slides-templates" class="revolution-templatebutton"><?php _e('All Slides', REVSLIDER_TEXTDOMAIN); ?></span>
-			<span data-showgroup="revolution-customer-templates" class="revolution-templatebutton" style="border-right:none"><?php _e('Templates', REVSLIDER_TEXTDOMAIN); ?></span>						
-			<span data-showgroup="revolution-premium-templates" class="revolution-templatebutton premium-templatebutton"><i class="eg-icon-basket"></i><?php _e('Premium Sliders', REVSLIDER_TEXTDOMAIN); ?></span>
-			<span class="rs-reload-shop"><i class="eg-icon-arrows-ccw"></i><?php _e('Check for new Templates', REVSLIDER_TEXTDOMAIN); ?></span>
+			<span data-showgroup="revolution-basic-templates" class="revolution-templatebutton selected"><?php _e('Revolution Base', 'revslider'); ?></span>
+			<span data-showgroup="revolution-all-slides-templates" class="revolution-templatebutton"><?php _e('All Slides', 'revslider'); ?></span>
+			<span data-showgroup="revolution-customer-templates" class="revolution-templatebutton" style="border-right:none"><?php _e('Templates', 'revslider'); ?></span>						
+			<span data-showgroup="revolution-premium-templates" class="revolution-templatebutton premium-templatebutton"><i class="eg-icon-basket"></i><?php _e('Premium Sliders', 'revslider'); ?></span>
+			<span class="rs-reload-shop"><i class="eg-icon-arrows-ccw"></i><?php _e('Check for new Templates', 'revslider'); ?></span>
 		</div>
 
-		<div class="revolution-template-subtitle"><?php _e('Add Single Slide', REVSLIDER_TEXTDOMAIN); ?>
+		<div class="revolution-template-subtitle"><?php _e('Add Single Slide', 'revslider'); ?>
 			<div class="revolution-filters" style="display: inline-block;">
 				<span style="display:inline-block;width:40px;"></span>
-				<span class="template_filter_button selected" data-type="temp_all"><?php _e('SHOW ALL', REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="template_filter_button" data-type="temp_slider"><?php _e('SLIDER', REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="template_filter_button" data-type="temp_carousel"><?php _e('CAROUSEL', REVSLIDER_TEXTDOMAIN); ?></span>
-				<span class="template_filter_button" data-type="temp_hero"><?php _e('HERO', REVSLIDER_TEXTDOMAIN); ?></span>
+				<span class="template_filter_button selected" data-type="temp_all"><?php _e('SHOW ALL', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_slider"><?php _e('SLIDER', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_carousel"><?php _e('CAROUSEL', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_hero"><?php _e('HERO', 'revslider'); ?></span>
 			</div>
 		</div>
 	</div>
@@ -424,7 +424,7 @@ if(!isset($rs_disable_template_script)){
 </script>
 
 <!-- Import template slider dialog -->
-<div id="dialog_import_template_slide" title="<?php _e("Import Template Slide",REVSLIDER_TEXTDOMAIN); ?>" class="dialog_import_template_slide" style="display:none">
+<div id="dialog_import_template_slide" title="<?php _e("Import Template Slide",'revslider'); ?>" class="dialog_import_template_slide" style="display:none">
 	<form action="<?php echo RevSliderBase::$url_ajax; ?>" enctype="multipart/form-data" method="post">
 		<input type="hidden" name="action" value="revslider_ajax_action">
 		<input type="hidden" name="client_action" value="import_slide_template_slidersview">
@@ -434,23 +434,23 @@ if(!isset($rs_disable_template_script)){
 		<input type="hidden" name="slider_id" class="rs-slider-id" value="">
 		<input type="hidden" name="redirect_id" class="rs-slide-id" value="">
 		
-		<p><?php _e('Please select the corresponding zip file from the download packages import folder called', REVSLIDER_TEXTDOMAIN); ?>:</p>
+		<p><?php _e('Please select the corresponding zip file from the download packages import folder called', 'revslider'); ?>:</p>
 		<p class="filetoimport"><b><span class="rs-zip-name"></span></b></p>
 		<p class="import-file-wrapper"><input type="file" size="60" name="import_file" class="input_import_slider"></p>
-		<span style="margin-top:45px;display:block"><input type="submit" class="rs-import-slider-button button-primary revblue tp-be-button" value="<?php _e("Import Template Slide",REVSLIDER_TEXTDOMAIN); ?>"></span>
+		<span style="margin-top:45px;display:block"><input type="submit" class="rs-import-slider-button button-primary revblue tp-be-button" value="<?php _e("Import Template Slide",'revslider'); ?>"></span>
 		<span class="tp-clearfix"></span>
-		<span style="font-weight: 700;"><?php _e("Note: style templates will be updated if they exist!",REVSLIDER_TEXTDOMAIN); ?></span><br><br>
+		<span style="font-weight: 700;"><?php _e("Note: style templates will be updated if they exist!",'revslider'); ?></span><br><br>
 		<table style="display: none;">
 			<tr>
-				<td><?php _e("Custom Animations:",REVSLIDER_TEXTDOMAIN); ?></td>
-				<td><input type="radio" name="update_animations" value="true" checked="checked"> <?php _e("overwrite",REVSLIDER_TEXTDOMAIN); ?></td>
-				<td><input type="radio" name="update_animations" value="false"> <?php _e("append",REVSLIDER_TEXTDOMAIN); ?></td>
+				<td><?php _e("Custom Animations:",'revslider'); ?></td>
+				<td><input type="radio" name="update_animations" value="true" checked="checked"> <?php _e("overwrite",'revslider'); ?></td>
+				<td><input type="radio" name="update_animations" value="false"> <?php _e("append",'revslider'); ?></td>
 			</tr>
 			<tr>
-				<td><?php _e("Static Styles:",REVSLIDER_TEXTDOMAIN); ?></td>
-				<td><input type="radio" name="update_static_captions" value="true"> <?php _e("overwrite",REVSLIDER_TEXTDOMAIN); ?></td>
-				<td><input type="radio" name="update_static_captions" value="false"> <?php _e("append",REVSLIDER_TEXTDOMAIN); ?></td>
-				<td><input type="radio" name="update_static_captions" value="none" checked="checked"> <?php _e("ignore",REVSLIDER_TEXTDOMAIN); ?></td>
+				<td><?php _e("Static Styles:",'revslider'); ?></td>
+				<td><input type="radio" name="update_static_captions" value="true"> <?php _e("overwrite",'revslider'); ?></td>
+				<td><input type="radio" name="update_static_captions" value="false"> <?php _e("append",'revslider'); ?></td>
+				<td><input type="radio" name="update_static_captions" value="none" checked="checked"> <?php _e("ignore",'revslider'); ?></td>
 			</tr>
 		</table>		
 		
@@ -458,8 +458,8 @@ if(!isset($rs_disable_template_script)){
 </div>
 
 
-<div id="dialog_import_template_slide_from" title="<?php _e("Import Template Slide",REVSLIDER_TEXTDOMAIN); ?>" class="dialog_import_template_slide_from" style="display:none">
-	<?php _e('Import Slide from local or from ThemePunch online server?', REVSLIDER_TEXTDOMAIN); ?>
+<div id="dialog_import_template_slide_from" title="<?php _e("Import Template Slide",'revslider'); ?>" class="dialog_import_template_slide_from" style="display:none">
+	<?php _e('Import Slide from local or from ThemePunch online server?', 'revslider'); ?>
 	<form action="<?php echo RevSliderBase::$url_ajax; ?>" enctype="multipart/form-data" method="post" name="rs-import-slide-template-from-server" id="rs-import-slide-template-from-server">
 		<input type="hidden" name="action" value="revslider_ajax_action">
 		<input type="hidden" name="client_action" value="import_slide_online_template_slidersview">

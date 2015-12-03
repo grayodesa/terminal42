@@ -272,7 +272,7 @@ if ( isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 			var resend = 0;
 			if (save_parent.find('input[name="resend"]').is(':checked') ) { resend=1;}
 			var app_id = save_parent.find('input[name="app_id"]').val();
-			var data = {action: 'inline_edit_save', user:user, name:name, email:email, phone:phone, address:address,city:city, service:service, worker:worker, price:price, date:date, time:time, note:note, status:status, resend:resend, app_id: app_id, nonce: '<?php echo wp_create_nonce() ?>'};	       	 	   							
+			var data = {action: 'inline_edit_save', user:user, name:name, email:email, phone:phone, address:address,city:city, service:service, worker:worker, price:price, date:date, time:time, note:note, status:status, resend:resend, app_id: app_id, nonce: '<?php echo wp_create_nonce() ?>'};
 			$(document).trigger('app-appointment-inline_edit-save_data', [data, save_parent]);
 			$.post(ajaxurl, data, function(response) {
 				save_parent.find(".waiting").hide();

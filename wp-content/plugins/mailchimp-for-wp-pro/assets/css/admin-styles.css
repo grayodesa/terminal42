@@ -126,26 +126,26 @@ label {
 }
 
 /* reports */
-#mc4wp-graph{ 
-	width:100%; 
-	height:300px; 
-	background: white; 
+#mc4wp-graph{
+	width:100%;
+	height:300px;
+	background: white;
 }
 
-#mc4wp-graph-range-options, 
-#mc4wp-graph-custom-range-options{ 
-	float:left; 
+#mc4wp-graph-range-options,
+#mc4wp-graph-custom-range-options{
+	float:left;
 }
 
-#mc4wp-graph-custom-range-options span{ 
-	float: left; 
-	margin-right: 6px; 
-	height: 24px; 
-	line-height: 24px; 
+#mc4wp-graph-custom-range-options span{
+	float: left;
+	margin-right: 6px;
+	height: 24px;
+	line-height: 24px;
 }
 
-#mc4wp-graph-summary p{ 
-	font-weight:bold; 
+#mc4wp-graph-summary p{
+	font-weight:bold;
 }
 
 #mc4wp-graph-line-toggles label{
@@ -157,11 +157,11 @@ label {
 
 
 .logitems .column-email{
-	width:20%; 
+	width:20%;
 }
 
 .logitems .column-method{
-	width:8%; 
+	width:8%;
 }
 
 .wp-list-table.forms #ID,

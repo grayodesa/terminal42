@@ -31,8 +31,6 @@ delete_option('revslider-latest-version');
 delete_option('revslider-update-check-short');
 delete_option('revslider-update-check');
 delete_option('revslider_update_info');
-delete_option('revslider-api-key');
-delete_option('revslider-username');
 delete_option('revslider-code');
 delete_option('revslider-valid');
 delete_option('revslider-valid-notice');

@@ -68,6 +68,14 @@ class RevSliderPluginUpdate {
 			self::change_general_settings_5_0_7();
 			self::set_version($version);
 		}
+		
+		
+		if(version_compare($version, '5.1.1', '<')){
+			$version = '5.1.1';
+			
+			self::change_slide_settings_5_1_1();
+			self::set_version($version);
+		}
 	}
 	
 	
@@ -963,6 +971,63 @@ class RevSliderPluginUpdate {
 					
 					$settings['version'] = '5.0.7';
 					$slider->updateSetting(array('version' => '5.0.7'));
+				}
+
+			}
+		}
+	}
+	
+	
+	/**
+	 * change image id of all slides to 5.1.1
+	 * @since 5.1.1
+	 */
+	public static function change_slide_settings_5_1_1($sliders = false){
+		$sr = new RevSlider();
+		$sl = new RevSliderSlide();
+		//$operations = new RevSliderOperations();
+		if($sliders === false){ //do it on all Sliders
+			$sliders = $sr->getArrSliders(false);
+		}else{
+			$sliders = array($sliders);
+		}
+		
+		if(!empty($sliders) && is_array($sliders)){
+			foreach($sliders as $slider){
+				$slides = $slider->getSlides();
+				$staticID = $sl->getStaticSlideID($slider->getID());
+				if($staticID !== false){
+					$msl = new RevSliderSlide();
+					if(strpos($staticID, 'static_') === false){
+						$staticID = 'static_'.$slider->getID();
+					}
+					$msl->initByID($staticID);
+					if($msl->getID() !== ''){
+						$slides = array_merge($slides, array($msl));
+					}
+				}
+				
+				if(!empty($slides) && is_array($slides)){
+					foreach($slides as $slide){
+						//get image url, then get the image id and save it in image_id
+						
+						$image_id = $slide->getParam('image_id', '');
+						$image = $slide->getParam('image', '');
+						
+						$ml_id = '';
+						if($image !== ''){
+							$ml_id = RevSliderFunctionsWP::get_image_id_by_url($image);
+						}
+						if($image == '' && $image_id == '') continue; //if we are a video and have no cover image, do nothing
+						
+						if($ml_id !== false && $ml_id !== $image_id){
+							$urlImage = wp_get_attachment_image_src($ml_id, 'full');
+
+							$slide->setParam('image_id', $ml_id);
+							$slide->saveParams();
+						}
+						
+					}
 				}
 
 			}

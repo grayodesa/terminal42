@@ -50,8 +50,8 @@ class RevSliderWooCommerce{
 	 */
 	public static function getCustomPostTypes(){
 		$arr = array();
-		$arr["product"] = __("Product", REVSLIDER_TEXTDOMAIN);
-		$arr["product_variation"] = __("Product Variation", REVSLIDER_TEXTDOMAIN);
+		$arr["product"] = __("Product", 'revslider');
+		$arr["product_variation"] = __("Product Variation", 'revslider');
 		
 		return($arr);
 	}
@@ -132,12 +132,12 @@ class RevSliderWooCommerce{
 	public static function getArrSortBy(){
 		
 		$arrSortBy = array();
-		$arrSortBy[self::SORTBY_REGULAR_PRICE] = __("Regular Price", REVSLIDER_TEXTDOMAIN);
-		$arrSortBy[self::SORTBY_SALE_PRICE] = __("Sale Price", REVSLIDER_TEXTDOMAIN);
-		$arrSortBy[self::SORTBY_NUMSALES] = __("Number Of Sales", REVSLIDER_TEXTDOMAIN);
-		$arrSortBy[self::SORTBY_FEATURED] = __("Featured Products", REVSLIDER_TEXTDOMAIN);
-		$arrSortBy[self::SORTBY_SKU] = __("SKU", REVSLIDER_TEXTDOMAIN);
-		$arrSortBy[self::SORTBY_STOCK] = __("Stock Quantity", REVSLIDER_TEXTDOMAIN);
+		$arrSortBy[self::SORTBY_REGULAR_PRICE] = __("Regular Price", 'revslider');
+		$arrSortBy[self::SORTBY_SALE_PRICE] = __("Sale Price", 'revslider');
+		$arrSortBy[self::SORTBY_NUMSALES] = __("Number Of Sales", 'revslider');
+		$arrSortBy[self::SORTBY_FEATURED] = __("Featured Products", 'revslider');
+		$arrSortBy[self::SORTBY_SKU] = __("SKU", 'revslider');
+		$arrSortBy[self::SORTBY_STOCK] = __("Stock Quantity", 'revslider');
 		
 		return($arrSortBy);
 	}

@@ -3,7 +3,7 @@
 Plugin Name: Appointments+
 Description: Lets you accept appointments from front end and manage or create them from admin side
 Plugin URI: http://premium.wpmudev.org/project/appointments-plus/
-Version: 1.5.2
+Version: 1.5.4
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Textdomain: appointments
@@ -32,9 +32,11 @@ if ( !class_exists( 'Appointments' ) ) {
 
 class Appointments {
 
-	var $version = "1.5.2";
+	var $version = "1.5.4";
 
 	function __construct() {
+
+		include_once( 'includes/helpers.php' );
 
 		$this->plugin_dir = plugin_dir_path(__FILE__);
 		$this->plugin_url = plugins_url(basename(dirname(__FILE__)));
@@ -174,7 +176,7 @@ class Appointments {
 		$this->salt = $salt;
 
 		// Deal with zero-priced appointments auto-confirm
-		if ('yes' == $this->options['payment_required'] && !empty($this->options['allow_free_autoconfirm'])) {
+		if ( isset( $this->options['payment_required'] ) && 'yes' == $this->options['payment_required'] && !empty($this->options['allow_free_autoconfirm'])) {
 			if (!defined('APP_CONFIRMATION_ALLOW_FREE_AUTOCONFIRM')) define('APP_CONFIRMATION_ALLOW_FREE_AUTOCONFIRM', true);
 		}
 	}
@@ -272,7 +274,7 @@ class Appointments {
 	 * @return integer
 	 */
 	function get_first_service_id() {
-		$min = wp_cache_get( 'min_service_id' );
+		$min = wp_cache_get( 'min_service_id', 'appointments_services' );
 		if ( false === $min ) {
 			$services = $this->get_services();
 			if ( $services ) {
@@ -281,7 +283,7 @@ class Appointments {
 					if ( $service->ID < $min )
 						$min = $service->ID;
 				}
-				wp_cache_set( 'min_service_id', $min );
+				wp_cache_set( 'min_service_id', $min, 'appointments_services' );
 			}
 			else
 				$min = 0; // No services ?? - Not possible but let's be safe
@@ -317,20 +319,7 @@ class Appointments {
 		return 0;
 	}
 
-	/**
-	 * Get all services
-	 * @param order_by: ORDER BY clause for mysql
-	 * @return array of objects
-	 */
-	function get_services( $order_by="ID" ) {
-		$order_by = $this->sanitize_order_by( $order_by );
-		$services = wp_cache_get( 'all_services_' . $order_by );
-		if ( false === $services ) {
-			$services = $this->db->get_results("SELECT * FROM " . $this->services_table . " ORDER BY ". esc_sql($order_by) ." " );
-			wp_cache_set( 'all_services_' . $order_by, $services );
-		}
-		return $services;
-	}
+
 
 	 /**
 	 * Allow only certain order_by clauses
@@ -351,21 +340,19 @@ class Appointments {
 	 * @return object
 	 */
 	function get_service( $ID ) {
-		$service = wp_cache_get( 'service_'. $ID );
-		if ( false === $service ) {
-			$services = $this->get_services();
-			if ( $services ) {
-				foreach ( $services as $s ) {
-					if ( $s->ID == $ID ) {
-						$service = $s;
-						break;
-					}
+		$service = false;
+		$services = $this->get_services();
+		if ( $services ) {
+			foreach ( $services as $s ) {
+				if ( $s->ID == $ID ) {
+					$service = $s;
+					break;
 				}
-				wp_cache_set( 'service_'. $ID, $service );
 			}
-			else
-				$service = null;
 		}
+		else
+			$service = null;
+
 		return $service;
 	}
 
@@ -376,19 +363,16 @@ class Appointments {
 	 * @return array of objects
 	 */
 	function get_services_by_worker( $w ) {
-		$services_by_worker = wp_cache_get( 'services_by_worker_' . $w );
-		if ( false === $services_by_worker ) {
-			$services_by_worker = array();
-			$worker = $this->get_worker( $w );
-			if ( $worker && is_object( $worker ) ) {
-				$services_provided = $this->_explode( $worker->services_provided );
-				asort( $services_provided ); // Sort by service ID from low to high
-				foreach( $services_provided as $service_id ) {
-					$services_by_worker[] = $this->get_service( $service_id );
-				}
+		$services_by_worker = array();
+		$worker = $this->get_worker( $w );
+		if ( $worker && is_object( $worker ) ) {
+			$services_provided = $this->_explode( $worker->services_provided );
+			asort( $services_provided ); // Sort by service ID from low to high
+			foreach( $services_provided as $service_id ) {
+				$services_by_worker[] = $this->get_service( $service_id );
 			}
-			wp_cache_set( 'services_by_worker_' . $w , $services_by_worker );
 		}
+
 		return $services_by_worker;
 	}
 
@@ -400,7 +384,16 @@ class Appointments {
 	function get_workers( $order_by="ID" ) {
         $order_by = apply_filters( 'app_get_workers_orderby', $order_by );
 		$order_by = $this->sanitize_order_by( $order_by );
-		$workers = wp_cache_get( 'all_workers_' . str_replace( ' ', '_', $order_by ) );
+
+		$orderby_cache_key = 'appointments_workers_orderby';
+		$results_cache_key = 'appointments_workers_results';
+
+		$cached_orderby = wp_cache_get( $orderby_cache_key, 'appointments_workers' );
+		if ( $cached_orderby != $order_by ) {
+			appointments_delete_workers_cache();
+		}
+
+		$workers = wp_cache_get( $results_cache_key, 'appointments_workers' );
 		if ( false === $workers ) {
 			// Sorting by name requires special case
 			if ( stripos( $order_by, 'name' ) !== false ) {
@@ -413,9 +406,37 @@ class Appointments {
 			}
 			else
 				$workers = $this->db->get_results("SELECT * FROM " . $this->workers_table . " ORDER BY ". esc_sql($order_by) ." " );
-			wp_cache_set( 'all_workers_' . str_replace( ' ', '_', $order_by ), $workers );
+
+			wp_cache_set( $orderby_cache_key, $order_by, 'appointments_workers' );
+			wp_cache_set( $results_cache_key, $workers, 'appointments_workers' );
 		}
 		return $workers;
+	}
+
+	/**
+	 * Get all services
+	 * @param order_by: ORDER BY clause for mysql
+	 * @return array of objects
+	 */
+	function get_services( $order_by="ID" ) {
+		$order_by = $this->sanitize_order_by( $order_by );
+
+		$orderby_cache_key = 'appointments_services_orderby';
+		$results_cache_key = 'appointments_services_results';
+
+		$cached_orderby = wp_cache_get( $orderby_cache_key, 'appointments_services' );
+		if ( $cached_orderby != $order_by ) {
+			appointments_delete_services_cache();
+		}
+
+		$services = wp_cache_get( $results_cache_key, 'appointments_services' );
+		if ( false === $services ) {
+			$services = $this->db->get_results("SELECT * FROM " . $this->services_table . " ORDER BY ". esc_sql($order_by) ." " );
+			wp_cache_set( $orderby_cache_key, $order_by, 'appointments_services' );
+			wp_cache_set( $results_cache_key, $services, 'appointments_services' );
+		}
+
+		return $services;
 	}
 
 	/**
@@ -498,12 +519,13 @@ class Appointments {
 	 */
 	function get_work_break( $l, $w, $stat ) {
 		$work_break = null;
-		$work_breaks = wp_cache_get( 'work_breaks_'. $l . '_' . $w );
-
+		$cache_key = 'appointments_work_breaks-' . $l . '-' . $w;
+		$work_breaks = wp_cache_get( $cache_key );
 		if ( false === $work_breaks ) {
 			$work_breaks = $this->db->get_results( $this->db->prepare("SELECT * FROM {$this->wh_table} WHERE worker=%d AND location=%d", $w, $l) );
-			wp_cache_set( 'work_breaks_'. $l . '_' . $w, $work_breaks );
+			wp_cache_set( $cache_key, $work_breaks );
 		}
+
 		if ( $work_breaks ) {
 			foreach ( $work_breaks as $wb ) {
 				if ( $wb->status == $stat ) {
@@ -546,11 +568,8 @@ class Appointments {
 	function get_app( $app_id ) {
 		if ( !$app_id )
 			return false;
-		$app = wp_cache_get( 'app_'. $app_id );
-		if ( false === $app ) {
-			$app = $this->db->get_row( $this->db->prepare("SELECT * FROM {$this->app_table} WHERE ID=%d", $app_id) );
-			wp_cache_set( 'app_'. $app_id, $app );
-		}
+
+		$app = $this->db->get_row( $this->db->prepare("SELECT * FROM {$this->app_table} WHERE ID=%d", $app_id) );
 		return $app;
 	}
 
@@ -561,7 +580,7 @@ class Appointments {
 	 * @return array of objects
 	 */
 	function get_reserve_apps( $l, $s, $w, $week=0 ) {
-		$apps = wp_cache_get( 'reserve_apps_'. $l . '_' . $s . '_' . $w . '_' . $week );
+		$apps = false;
 		if ( false === $apps ) {
 			$location = $l ? "location='" . $this->db->escape($location) . "' AND" : '';
 			if ( 0 == $week ) {
@@ -588,7 +607,6 @@ class Appointments {
 // return all kinds of irrelevant data (appointments passed LONG time ago).
 // End @FIX
 			}
-			wp_cache_set( 'reserve_apps_'. $l . '_' . $s . '_' . $w . '_' . $week, $apps );
 		}
 		return $apps;
 	}
@@ -599,7 +617,7 @@ class Appointments {
 	 * @return array of objects
 	 */
 	function get_reserve_apps_by_worker( $l, $w, $week=0 ) {
-		$apps = wp_cache_get( 'reserve_apps_by_worker_'. $l . '_' . $w . '_' . $week );
+		$apps = false;
 		if ( false === $apps ) {
 			$services = $this->get_services();
 			if ( $services ) {
@@ -610,7 +628,6 @@ class Appointments {
 						$apps = array_merge( $apps, $apps_worker );
 				}
 			}
-			wp_cache_set( 'reserve_apps_by_worker_'. $l . '_' . $w . '_' . $week, $apps );
 		}
 		return $apps;
 	}
@@ -622,7 +639,6 @@ class Appointments {
 	 * @return array of objects
 	 */
 	function get_reserve_apps_by_service( $l, $s, $week=0 ) {
-		$apps = wp_cache_get( 'reserve_apps_by_service_'. $l . '_' . $s . '_' . $week );
 		if ( false === $apps ) {
 			$workers = $this->get_workers_by_service( $s );
 			$apps = array();
@@ -641,7 +657,6 @@ class Appointments {
 			// Remove duplicates
 			$apps = $this->array_unique_object_by_ID( $apps );
 
-			wp_cache_set( 'reserve_apps_by_service_'. $l . '_' . $s . '_' . $week, $apps );
 		}
 		return $apps;
 	}
@@ -909,7 +924,7 @@ class Appointments {
 	 * @return integer
 	 */
 	function get_capacity() {
-		$capacity = wp_cache_get( 'capacity_'. $this->service );
+		$capacity = false;
 		if ( false === $capacity ) {
 			// If no worker is defined, capacity is always 1
 			$count = count( $this->get_workers() );
@@ -930,7 +945,6 @@ class Appointments {
 				else
 					$capacity = 1; // No service ?? - Not possible but let's be safe
 			}
-			wp_cache_set( 'capacity_'. $this->service, $capacity );
 		}
 		return apply_filters( 'app_get_capacity', $capacity, $this->service, $this->worker );
 	}
@@ -1762,10 +1776,13 @@ class Appointments {
 	 */
 	function gcal( $service, $start, $end, $php=false, $address, $city ) {
 		// Find time difference from Greenwich as GCal asks UTC
-		$tdif = current_time('timestamp') - time();
+
 		$text = sprintf(__('%s Appointment', 'appointments'), $this->get_service_name($service));
 
 		if (!$php) $text = esc_js( $text );
+
+		$gmt_start = get_gmt_from_date( date( 'Y-m-d H:i:s', $start ), "Ymd\THis\Z" );
+		$gmt_end = get_gmt_from_date( date( 'Y-m-d H:i:s', $end ), "Ymd\THis\Z" );
 
 		$location = isset($this->options["gcal_location"]) && '' != trim($this->options["gcal_location"])
 			? esc_js(str_replace(array('ADDRESS', 'CITY'), array($address, $city), $this->options["gcal_location"]))
@@ -1775,7 +1792,7 @@ class Appointments {
 		$param = array(
 			'action' => 'TEMPLATE',
 			'text' => $text,
-			'dates' => date("Ymd\THis\Z", $start - $tdif) . "/" . date("Ymd\THis\Z", $end - $tdif),
+			'dates' => $gmt_start . "/" . $gmt_end,
 			'sprop' => 'website:' . home_url(),
 			'location' => $location
 		);
@@ -3556,6 +3573,8 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 						array( '%d', '%d', '%s', '%s' )
 						);
 				}
+
+
 			}
 			if ( $result || $result2 ) {
 				$message = sprintf( __('%s edited his working hours.', 'appointments'), $this->get_worker_name( $profileuser_id ) );
@@ -5179,7 +5198,7 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		if ( !session_id() )
 			@session_start();
 
-		$page = add_menu_page('Appointments', __('Appointments','appointments'), App_Roles::get_capability('manage_options', App_Roles::CTX_PAGE_APPOINTMENTS),  'appointments', array(&$this,'appointment_list'),'div');
+		$page = add_menu_page('Appointments', __('Appointments','appointments'), App_Roles::get_capability('manage_options', App_Roles::CTX_PAGE_APPOINTMENTS),  'appointments', array(&$this,'appointment_list'),'dashicons-clock');
 		add_submenu_page('appointments', __('Transactions','appointments'), __('Transactions','appointments'), App_Roles::get_capability('manage_options', App_Roles::CTX_PAGE_TRANSACTIONS), "app_transactions", array(&$this,'transactions'));
 		add_submenu_page('appointments', __('Settings','appointments'), __('Settings','appointments'), App_Roles::get_capability('manage_options', App_Roles::CTX_PAGE_SETTINGS), "app_settings", array(&$this,'settings'));
 		add_submenu_page('appointments', __('Shortcodes','appointments'), __('Shortcodes','appointments'), App_Roles::get_capability('manage_options', App_Roles::CTX_PAGE_SHORTCODES), "app_shortcodes", array(&$this,'shortcodes_page'));
@@ -5347,6 +5366,8 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 				}
 				if ( $result )
 					add_action( 'admin_notices', array ( &$this, 'saved' ) );
+
+				appointments_delete_work_breaks_cache( $location, $this->worker );
 			}
 		}
 		// Save Exceptions
@@ -5388,6 +5409,8 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 				}
 				if ( $result )
 					add_action( 'admin_notices', array ( &$this, 'saved' ) );
+
+				appointments_delete_exceptions_cache( $location, $this->worker );
 			}
 		}
 		// Save Services
@@ -5446,6 +5469,9 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			}
 			if( $result )
 				add_action( 'admin_notices', array ( &$this, 'saved' ) );
+
+
+			appointments_delete_services_cache();
 		}
 		// Save Workers
 		if ( isset($_POST["action_app"]) && 'save_workers' == $_POST["action_app"] && is_array( $_POST["workers"] ) ) {
@@ -6935,7 +6961,7 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 	}
 
 	function transactions () {
-		App_Template::admin_transactions_list($type);
+		App_Template::admin_transactions_list();
 	}
 
 	function mytransactions ($type = 'past') {

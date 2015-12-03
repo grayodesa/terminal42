@@ -29,13 +29,13 @@ class RevSliderEventsManager {
 	 */
 	public static function getArrFilterTypes(){
 		
-			$arrEventsSort = array("none" => __("All Events",REVSLIDER_TEXTDOMAIN),
-								   "today" => __("Today",REVSLIDER_TEXTDOMAIN),
-								   "tomorrow"=>__("Tomorrow",REVSLIDER_TEXTDOMAIN),
-								   "future"=>__("Future",REVSLIDER_TEXTDOMAIN),
-								   "past"=>__("Past",REVSLIDER_TEXTDOMAIN),
-								   "month"=>__("This Month",REVSLIDER_TEXTDOMAIN),
-								   "nextmonth"=>__("Next Month",REVSLIDER_TEXTDOMAIN)
+			$arrEventsSort = array("none" => __("All Events",'revslider'),
+								   "today" => __("Today",'revslider'),
+								   "tomorrow"=>__("Tomorrow",'revslider'),
+								   "future"=>__("Future",'revslider'),
+								   "past"=>__("Past",'revslider'),
+								   "month"=>__("This Month",'revslider'),
+								   "nextmonth"=>__("Next Month",'revslider')
 			);
 			
 		return($arrEventsSort);
@@ -165,8 +165,8 @@ class RevSliderEventsManager {
 	 */
 	public static function getArrSortBy(){
 		$arrSortBy = array();
-		$arrSortBy["event_start_date"] = __("Event Start Date",REVSLIDER_TEXTDOMAIN);
-		$arrSortBy["event_end_date"] = __("Event End Date",REVSLIDER_TEXTDOMAIN);
+		$arrSortBy["event_start_date"] = __("Event Start Date",'revslider');
+		$arrSortBy["event_end_date"] = __("Event End Date",'revslider');
 		return($arrSortBy);			
 	}
 	

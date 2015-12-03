@@ -269,7 +269,6 @@ class MC4WP_Form {
 		// add HTML that's needed for AJAX
 		if( $this->settings['ajax'] ) {
 			$response_html .= '<div class="mc4wp-response"></div>';
-			$hidden_fields .= '<span class="mc4wp-ajax-loader" style="display: none;"></span>';
 		}
 
 		// generate before & after HTML

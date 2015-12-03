@@ -1,6 +1,6 @@
 /**************************************************************************
  * jquery.themepunch.revolution.js - jQuery Plugin for Revolution Slider
- * @version: 5.1 (20.10.2015)
+ * @version: 5.1.4 (25.11.2015)
  * @requires jQuery v1.7 or later (tested on 1.9)
  * @author ThemePunch
 **************************************************************************/
@@ -282,7 +282,7 @@
 					return this.each(function() {
 						var container=jQuery(this);
 						if (container!=undefined && container.length>0 && jQuery('body').find('#'+container.attr('id')).length>0)
-							jQuery('body,html').animate({scrollTop:(container.offset().top+(opt.li[0].height())-oy)+"px"},{duration:400});
+							jQuery('body,html').animate({scrollTop:(container.offset().top+(container.height())-oy)+"px"},{duration:400});
 					})
 				},
 
@@ -734,6 +734,28 @@ jQuery.extend(true, _R, {
 					if (_R.stopVideo) _R.stopVideo(_nc,opt);
 				});
 		}
+	},
+
+	unToggleState : function(a) {			
+		if (a!=undefined && a.length>0)
+			jQuery.each(a,function(i,layer) {
+				layer.removeClass("rs-toggle-content-active");
+			});		
+	},
+
+	toggleState : function(a) {
+		if (a!=undefined && a.length>0)
+			jQuery.each(a,function(i,layer) {
+				layer.addClass("rs-toggle-content-active");
+			});
+	},
+	lastToggleState : function(a) {
+		var state = 0;
+		if (a!=undefined && a.length>0)
+			jQuery.each(a,function(i,layer) {
+				state = layer.hasClass("rs-toggle-content-active");
+			});
+		return state;
 	}
 
 });
@@ -1204,8 +1226,12 @@ var initSlider = function (container,opt) {
 				an = _nc.data('autoplayonlyfirsttime'),
 				ap = _nc.data('autoplay');
 
+
 			if (_nc.hasClass("tp-static-layer") && _R.handleStaticLayers)
 				_R.handleStaticLayers(_nc,opt);
+
+			var pom = _nc.data('noposteronmobile') || _nc.data('noPosterOnMobile') ||  _nc.data('posteronmobile') || _nc.data('posterOnMobile') || _nc.data('posterOnMObile');
+			_nc.data('noposteronmobile',pom);
 
 			// FIX VISIBLE IFRAME BUG IN SAFARI
 			var iff = 0;
@@ -1351,6 +1377,7 @@ var initSlider = function (container,opt) {
 		if (container.find('.tp-bannertimer').length===0) container.append('<div class="tp-bannertimer" style="visibility:hidden"></div>');
 		container.find('.tp-bannertimer').css({'width':'0%'});
 		container.find('.tp-bannertimer').data('opt',opt);
+
 		
 		// PREPARE THE SLIDES
 		opt.ul.css({'display':'block'});
@@ -2009,7 +2036,12 @@ var swapSlide = function(container,opt) {
 	opt.tonpause = true;
 	container.trigger('stoptimer');
 	opt.cd=0;
-	container.find('.tp-loader').css({display:"block"});
+	if (opt.spinner==="off")
+		container.find('.tp-loader').css({display:"none"});
+	else
+		container.find('.tp-loader').css({display:"block"});
+
+	
 	loadImages(nextli,opt,1);
 
 
@@ -2024,7 +2056,8 @@ var swapSlide = function(container,opt) {
 				_nc.data('bgvideo',1);
 				_R.manageVideoLayer(_nc,opt);
 			}
-			_nc.append('<div class="rs-fullvideo-cover"></div>')
+			if (_nc.find('.rs-fullvideo-cover').length==0)
+				_nc.append('<div class="rs-fullvideo-cover"></div>')
 		});
 		swapSlideProgress(opt,defimg,container)
 	});			
@@ -2288,6 +2321,8 @@ var letItFree = function(container,opt,nextsh,actsh,nextli,actli,mtl) {
 	data.prevslide = actli;
 	container.trigger('revolution.slide.onchange',data);
 	container.trigger('revolution.slide.onafterswap',data);	
+
+	opt.duringslidechange = false;
 	//if (_R.callStaticDDDParallax) _R.callStaticDDDParallax(container,opt,nextli);		
 	
 }
@@ -2332,12 +2367,12 @@ var countDown = function(container,opt) {
 	var bt=container.find('.tp-bannertimer');
 
 	// LISTENERS  //container.trigger('stoptimer');
-	container.on('stoptimer',function() {
-		
+	container.on('stoptimer',function() {		
 		var bt = jQuery(this).find('.tp-bannertimer');
 		bt.data('tween').pause();
 		if (opt.disableProgressBar=="on") bt.css({visibility:"hidden"});
 		opt.sliderstatus = "paused";
+		_R.unToggleState(opt.slidertoggledby);
 	});
 
 
@@ -2350,6 +2385,7 @@ var countDown = function(container,opt) {
 			}
 
 			if (opt.disableProgressBar=="on") bt.css({visibility:"hidden"});
+			_R.toggleState(opt.slidertoggledby);
 	});
 
 
@@ -2364,6 +2400,7 @@ var countDown = function(container,opt) {
 			opt.sliderstatus = "playing";
 		}
 		if (opt.disableProgressBar=="on") bt.css({visibility:"hidden"});
+		_R.toggleState(opt.slidertoggledby);
 	});
 
 	container.on('nulltimer',function() {

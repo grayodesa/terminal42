@@ -47,7 +47,7 @@ class RevSliderWpml{
 		$response = array();
 		
 		if($getAllCode == true)
-			$response["all"] = __("All Languages",REVSLIDER_TEXTDOMAIN);
+			$response["all"] = __("All Languages",'revslider');
 		
 		foreach($arrLangs as $code=>$arrLang){
 			$name = $arrLang["native_name"];
@@ -189,7 +189,7 @@ class RevSliderWpml{
 		$langs = self::getArrLanguages();
 		
 		if($code == "all")
-			return(__("All Languages", REVSLIDER_TEXTDOMAIN));
+			return(__("All Languages", 'revslider'));
 		
 		if(array_key_exists($code, $langs))
 			return($langs[$code]);

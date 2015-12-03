@@ -28,7 +28,7 @@ var RevSliderAdmin = new function(){
 
 			}
 
-			UniteAdminRev.ajaxRequest(ajaxAction ,data);
+			UniteAdminRev.ajaxRequest(ajaxAction, data);
 		});
 	}
 	
@@ -246,7 +246,36 @@ var RevSliderAdmin = new function(){
 
 		updateCatByPostTypes("post_types","post_category");
 		updateCatByPostTypes("product_types","product_category");
-
+		
+		jQuery('#fetch_type').change(function(){
+			jQuery('.rs-post-type-wrap').hide();
+			jQuery('.rs-post-order-setting').show();
+			jQuery('#post_sortby_row').show();
+			
+			switch(jQuery(this).val()){
+				case 'cat_tag':
+					jQuery('.rs-post-type-wrap').show();
+				break;
+				case 'related':
+				break;
+				case 'popular':
+					//only max post
+					jQuery('.rs-post-order-setting').hide();
+				break;
+				case 'recent':
+					//only max post
+					jQuery('.rs-post-order-setting').hide();
+				break;
+				case 'next_prev':
+					jQuery('#post_sortby_row').hide();
+				break;
+				default:
+				break;
+			}
+			
+		});
+		jQuery('#fetch_type option:selected').change();
+		
 		jQuery("input[name='source_type']").click(function(){ //check for post click
 			if(jQuery(this).val() == 'posts'){ //jQuery(this).val() == 'specific_posts' ||
 				jQuery('#toolbox_wrapper').hide();
@@ -278,6 +307,12 @@ var RevSliderAdmin = new function(){
 				jQuery('#layout-preshow').show();
 				
 			}
+			if(jQuery(this).val() == 'specific_posts'){
+				jQuery('#fetch_type option[value="cat_tag"]').attr('selected', 'selected');
+				jQuery('#fetch_type option:selected').change();
+			}else{
+				jQuery('#fetch_type option:selected').change();
+			}
 			
 			jQuery('.rs-settings-wrapper').hide();
 			if(jQuery(this).val() == 'posts' || jQuery(this).val() == 'specific_posts' ||  jQuery(this).val() == 'woocommerce'){
@@ -301,9 +336,8 @@ var RevSliderAdmin = new function(){
 			}else{
 				jQuery('#rs-post-settings-wrapper').hide();
 				jQuery('#rs-'+jQuery(this).val()+'-settings-wrapper').show();
-				if(jQuery(this).val()=="facebook"){
-					jQuery('select[name="facebook-type-source"]').change();
-				}
+				if(jQuery(this).val()=="facebook") jQuery('select[name="facebook-type-source"]').change();
+				if(jQuery(this).val()=="instagram") jQuery('select[name="instagram-type"]').change();
 				if(jQuery("select[name=flickr-type]").val()=='photosets' && jQuery('input[name=source_type]:checked').val()=="flickr") jQuery('input[name=flickr-user-url]').change();
 				if(jQuery('input[name=source_type]:checked').val()=="youtube" && jQuery("select[name='youtube-type-source']").val()=='playlist') jQuery('input[name=youtube-channel-id]').change();
 			}
@@ -429,6 +463,9 @@ var RevSliderAdmin = new function(){
 				jQuery('#facebook-album-wrap').show();
 				jQuery('input[name=facebook-page-url]').change();
 			}
+
+			jQuery('input[name=facebook-type-source]').val(set);
+
 		 });
 		 if(jQuery('input[name=source_type]:checked').val()=="facebook") jQuery('select[name="facebook-type-source"]').change();
 
@@ -576,6 +613,15 @@ var RevSliderAdmin = new function(){
 		});
 		jQuery('select[name=vimeo-type-source]').change();
 
+		/**
+		 * Change Instagram Type
+		 */
+		jQuery('body').on('change','select[name="instagram-type"]',function(){
+		 	var set = jQuery(this).val();
+			jQuery(this).parent().find('div').hide();
+			jQuery("#instagram_"+set).show();
+		 });
+		 if(jQuery('input[name=source_type]:checked').val()=="instagram") jQuery('select[name="instagram-type"]').change();
 
 		/**
 		 * Set bullet type and navigation arrows to none if loop_slide is set to off
@@ -1047,7 +1093,7 @@ var RevSliderAdmin = new function(){
 			}
 		});
 		
-		jQuery("#button_import_template_slider").click(function(){
+		jQuery("#button_import_template_slider, #button_import_template_slider_b").click(function(){
 			jQuery('#template_area').addClass("show");
 			return true;
 		});
@@ -1062,7 +1108,7 @@ var RevSliderAdmin = new function(){
 				modal:true,
 				resizable:false,
 				width:600,
-				height:350,
+				height:400,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
 				buttons:{
@@ -1494,7 +1540,7 @@ var RevSliderAdmin = new function(){
 			var csel = jQuery('.bgsrcchanger:checked').val();
 			
 			if(csel == 'vimeo' || csel == 'html5' || csel == 'youtube'){ //check for cover image, if not set, deny the saving
-				if(typeof(data.params.image_id) === 'undefined' || parseInt(data.params.image_id) == 0 || data.params.image_id == ''){
+				if((typeof(data.params.image_id) === 'undefined' || parseInt(data.params.image_id) == 0 || data.params.image_id == '') && ((typeof(data.params.image_url) === 'undefined') || data.params.image_url == '')){
 					alert(rev_lang.cover_image_needs_to_be_set);
 					return false;
 				}

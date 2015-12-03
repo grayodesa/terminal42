@@ -128,7 +128,7 @@ class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
           array('key' => $key, 'var' => $data)
       );
 
-      throw new App_Google_Cache_Exception("Couldn't store data in cache");
+      throw new App_Google_Cache_Exception("Couldn't store data in cache");	       	 	   							
     }
 
     $this->client->getLogger()->debug(

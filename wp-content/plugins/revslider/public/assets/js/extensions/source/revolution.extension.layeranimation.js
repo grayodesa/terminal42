@@ -1,6 +1,6 @@
 /********************************************
  * REVOLUTION 5.0 EXTENSION - LAYER ANIMATION
- * @version: 1.1.4 (19.10.2015)
+ * @version: 1.3 (26.11.2015)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -24,14 +24,19 @@ jQuery.extend(true,_R, {
 		
 		if (t!=undefined && t!="none")
 		 if (ap==true || ap=="true" || ap=="on" ||  ap=="1sttime" || an) {				
-			_R.playVideo(_nc,opt);			
+			_R.playVideo(_nc,opt);	
+
+			_R.toggleState(_nc.data('videotoggledby'));
 			if ( an || ap=="1sttime") {
 				_nc.data('autoplayonlyfirsttime',false);
 				_nc.data('autoplay',"off");
 			}
-		  }	else 
-		  if (ap=="no1sttime") 
-			_nc.data('autoplay','on');		
+		  }	else {
+			  if (ap=="no1sttime") 
+				_nc.data('autoplay','on');
+			  _R.unToggleState(_nc.data('videotoggledby'));
+		  }
+
 	},
 
 	/********************************************************
@@ -190,7 +195,7 @@ jQuery.extend(true,_R, {
 				_nc.data('videoposter',_nc.data('thumbimage'))
 				
 		// FALL BACK TO NORMAL IMAGE IF NO VIDEO SHOULD BE PLAYED ON MOBILE DEVICES
-		if (_nc.hasClass("tp-videolayer") &&  _nc.data('videoposter')!=undefined && (_nc.data('posterOnMobile')=="on"  || _nc.data('posteronmobile')=="on") && _ISM) {			
+	/*	if (_nc.hasClass("tp-videolayer") &&  _nc.data('videoposter')!=undefined && (_nc.data('noposteronmobile')=="on" && _ISM)) {			
 			var vidw =  makeArray(_nc.data('videowidth'),opt)[opt.curWinRange] || makeArray(_nc.data('videowidth'),opt) || "auto",
 				vidh =  makeArray(_nc.data('videoheight'),opt)[opt.curWinRange] || makeArray(_nc.data('videoheight'),opt) || "auto";					
 			
@@ -203,7 +208,7 @@ jQuery.extend(true,_R, {
 			else 
 				_nc.css({width:"100%",height:"100%"});										
 			_nc.removeClass("tp-videolayer");							
-		}
+		}*/
 																				
 		// IF IT IS AN IMAGE
 		if (_nc.find('img').length>0) {
@@ -445,8 +450,7 @@ jQuery.extend(true,_R, {
 			calcx = (elx+offsetx),
 			calcy = (ely+offsety),
 			tpcapindex = _nc.css("z-Index");
-		
-		
+						
 		if (!triggerforce) 
 			if ($lts=="reset" && $start!="bytrigger") {
 				_nc.data("triggerstate","on");
@@ -542,8 +546,7 @@ jQuery.extend(true,_R, {
 				if (hashover) {
 
 					$hover = getAnimDatas($hover,_nc.data('transform_hover'));
-					$hover = convertHoverStyle($hover,_nc.data('style_hover'));
-
+					$hover = convertHoverStyle($hover,_nc.data('style_hover'));					
 					_nc.data('hover',$hover);
 				}
 			
@@ -564,9 +567,10 @@ jQuery.extend(true,_R, {
 					 		
 					 	if (intl && intl.progress()==1) {						 		
 
-						 	if (nc.data('newhoveranim')===undefined || 	nc.data('newhoveranim')==="none")						 		
+						 	if (nc.data('newhoveranim')===undefined || 	nc.data('newhoveranim')==="none")	{						 		
 						 		nc.data('newhoveranim',punchgs.TweenLite.to(nc,t.speed,t.anim));						 	
-						 	else {						 		
+
+						 	} else {						 		
 						 		nc.data('newhoveranim').progress(0);
 						 		nc.data('newhoveranim').play();
 						 	}
@@ -666,16 +670,19 @@ jQuery.extend(true,_R, {
 
 			// SAVE IT TO NCAPTION BEFORE NEW STEPS WILL BE ADDED
 			_nc.data('timeline',tl);
+
+			opt.sliderscrope = opt.sliderscrope === undefined ? Math.round(Math.random()*99999) : opt.sliderscrope;
 			
 			// IF THERE IS ANY EXIT ANIM DEFINED
 			// For Static Layers -> 1 -> In,  2-> Out  0-> Ignore  -1-> Not Static
 			staticdirection = staticLayerStatus(_nc,opt,"in");
 
 			if (($progress === 0 || staticdirection==2) &&  $end!=="bytrigger" && !triggerforce && $end!="sliderleave") 				
-				if (($end!=undefined) && (staticdirection==-1 || staticdirection==2) && ($end!=="bytriger")) 			
-					punchgs.TweenLite.delayedCall(parseInt(_nc.data('end'),0)/1000,_R.endMoveCaption,[_nc,_mw,_pw,opt]);
-				else 
-					punchgs.TweenLite.delayedCall(999999,_R.endMoveCaption,[_nc,_mw,_pw,opt]);						
+				if (($end!=undefined) && (staticdirection==-1 || staticdirection==2) && ($end!=="bytriger"))
+					punchgs.TweenLite.delayedCall(parseInt(_nc.data('end'),0)/1000,_R.endMoveCaption,[_nc,_mw,_pw,opt],opt.sliderscrope);
+				else
+					punchgs.TweenLite.delayedCall(999999,_R.endMoveCaption,[_nc,_mw,_pw,opt],opt.sliderscrope);
+				
 			
 
 			// SAVE THE TIMELINE IN DOM ELEMENT
@@ -691,8 +698,10 @@ jQuery.extend(true,_R, {
 				if (($progress<1 && $progress>0) || 
 					($progress==0 && $start!="bytrigger" && $lts!="keep") || 
 					($progress==0 && $start!="bytrigger" && $lts=="keep" && $cts=="on") || 				
-					($start=="bytrigger" && $lts=="keep" && $cts=="on")) 				
-					tl.resume($time);			
+					($start=="bytrigger" && $lts=="keep" && $cts=="on")) {				
+						tl.resume($time);			
+						_R.toggleState(_nc.data('layertoggledby'))
+			}
 		}
 		
 		//punchgs.TweenLite.set(_mw,{width:eow, height:eoh});
@@ -718,7 +727,7 @@ jQuery.extend(true,_R, {
 		// Kill TimeLine of "in Animation"
 		_nc.data('outstarted',1);
 		
-
+		
 		if (_nc.data('timeline'))
 			_nc.data('timeline').pause();
 		else
@@ -766,6 +775,8 @@ jQuery.extend(true,_R, {
 			  	data.layersettings = _nc.data();			  	
 			  	opt.c.trigger("revolution.layeraction",data);			  				  	
 		});
+
+		
 				
 		tl.add(subtl.staggerTo(animobject,$to.speed,$to.anim,elemdelay),0);	
 				
@@ -799,7 +810,10 @@ jQuery.extend(true,_R, {
 			jQuery.each(opt.layers[index], function(i,a) { allcaptions.push(a); });
 		if (opt.layers["static"])
 			jQuery.each(opt.layers["static"], function(i,a) { allcaptions.push(a); });
-		punchgs.TweenLite.killDelayedCallsTo(_R.endMoveCaption);
+
+		
+
+		punchgs.TweenLite.killDelayedCallsTo(_R.endMoveCaption,false,opt.sliderscrope);
 
 		// GO THROUGH ALL CAPTIONS, AND MANAGE THEM
 		if (allcaptions)
@@ -825,7 +839,6 @@ jQuery.extend(true,_R, {
 /**********************************************************************************************
 						-	HELPER FUNCTIONS FOR LAYER TRANSFORMS -
 **********************************************************************************************/
-
 
 
 /////////////////////////////////////

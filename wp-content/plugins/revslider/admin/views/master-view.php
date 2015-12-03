@@ -21,7 +21,7 @@ if(isset($_REQUEST['update_shop'])){
 ?>
 
 <div id="waitaminute" style="<?php echo $waitstyle; ?>">
-	<div class="waitaminute-message"><i class="eg-icon-emo-coffee"></i><br><?php _e("Please Wait...",REVSLIDER_TEXTDOMAIN); ?></div>
+	<div class="waitaminute-message"><i class="eg-icon-emo-coffee"></i><br><?php _e("Please Wait...", 'revslider'); ?></div>
 </div>
 
 

@@ -886,7 +886,7 @@ class RevSliderFunctionsWP{
 			$catName = $category["name"];
 			
 			if(!empty($link))
-				$thelist .= '<a href="' . esc_url( $link ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s", REVSLIDER_TEXTDOMAIN), $category["name"] ) ) . '" ' . $rel . '>' . $catName.'</a>';
+				$thelist .= '<a href="' . esc_url( $link ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s", 'revslider'), $category["name"] ) ) . '" ' . $rel . '>' . $catName.'</a>';
 			else
 				$thelist .= $catName;
 			

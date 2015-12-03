@@ -1,6 +1,6 @@
 # MailChimp for WordPress Pro
 
-__Stable Version:__ 2.7.23
+__Stable Version:__ 2.7.26
 
 Not sure how to install this plugin? Take a look at the installation guide linked below. 
 

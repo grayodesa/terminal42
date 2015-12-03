@@ -49,7 +49,7 @@ if($the_slidertype == 'hero'){
 				?>
 				<div class="slide-media-container icon-basketball" style="border:1px solid #3498DB; border-bottom:none;"></div>
 				<div class="slide-link-content alwaysbluebg" style="background:#3498DB !important; color:#fff">
-					<span class="slide-link" style="width:100%;text-align: center;"><?php _e("Static / Global Layers",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="slide-link" style="width:100%;text-align: center;"><?php _e("Static / Global Layers",'revslider'); ?></span>
 				</div>
 				<?php 
 				if(!$slide->isStaticSlide()){
@@ -65,7 +65,7 @@ if($the_slidertype == 'hero'){
 					$all_slides = $slider->getSlides(true);
 					?>
 						<span style="position:absolute; top:13px;left:0px; text-align: center">
-							<span class="setting_text_3"><?php _e("Show Layers from Slide:",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="setting_text_3"><?php _e("Show Layers from Slide:",'revslider'); ?></span>
 							<select name="rev_show_the_slides">
 								<option value="none">---</option>
 								<?php
@@ -102,14 +102,12 @@ if($the_slidertype == 'hero'){
 				$c_bgPositionX = intval($t_slide->getParam('bg_position_x', '0'));
 				$c_bgPositionY = intval($t_slide->getParam('bg_position_y', '0'));
 
-				$c_bgRepeat = $t_slide->getParam('bg_repeat"', 'no-repeat');
+				$c_bgRepeat = $t_slide->getParam('bg_repeat', 'no-repeat');
 
 				$c_isvisible = $t_slide->getParam('state', 'published');
 
 				$c_thumb_for_admin = $t_slide->getParam('thumb_for_admin', 'off');
 				$c_real_thumbURL = $t_slide->getParam('slide_thumb','');
-
-
 
 				$c_bgStyle = ' ';
 				if($c_bgFit == 'percentage'){
@@ -123,7 +121,6 @@ if($the_slidertype == 'hero'){
 					$c_bgStyle .= "background-position: ".$c_bgPosition.";";
 				}
 				$c_bgStyle .= "background-repeat: ".$c_bgRepeat.";";
-				$c_imageFilepath = $t_slide->getImageFilepath();
 				$c_urlImageForView = $t_slide->getThumbUrl();
 
 				$c_bg_fullstyle ='';
@@ -235,13 +232,13 @@ if($the_slidertype == 'hero'){
 							<?php
 							if($slidelistID != $slideID && !in_array($slideID, $arrChildrenIDs)){
 								?>
-								<a class="slide-link-toolbar-button slide-moveto" href="#"><span class=""><i class="eg-icon-forward"></i><span><?php _e("Copy / Move",REVSLIDER_TEXTDOMAIN); ?></span></span></a>
+								<a class="slide-link-toolbar-button slide-moveto" href="#"><span class=""><i class="eg-icon-forward"></i><span><?php _e("Copy / Move",'revslider'); ?></span></span></a>
 								<?php
 							}
 							?>
-							<a class="slide-link-toolbar-button slide-duplicate" href="#"><span class=""><i class="eg-icon-picture"></i><span><?php _e("Duplicate",REVSLIDER_TEXTDOMAIN); ?></span></span></a>
-							<a class="slide-link-toolbar-button slide-add-as-template" href="#"><span class=""><i class="eg-icon-menu"></i><span><?php _e("Add to Templates",REVSLIDER_TEXTDOMAIN); ?></span></span></a>
-							<a class="slide-link-toolbar-button slide-remove" href="#"><span class=""><i class="eg-icon-trash"></i><span><?php _e("Delete",REVSLIDER_TEXTDOMAIN); ?></span></span></a>
+							<a class="slide-link-toolbar-button slide-duplicate" href="#"><span class=""><i class="eg-icon-picture"></i><span><?php _e("Duplicate",'revslider'); ?></span></span></a>
+							<a class="slide-link-toolbar-button slide-add-as-template" href="#"><span class=""><i class="eg-icon-menu"></i><span><?php _e("Add to Templates",'revslider'); ?></span></span></a>
+							<a class="slide-link-toolbar-button slide-remove" href="#"><span class=""><i class="eg-icon-trash"></i><span><?php _e("Delete",'revslider'); ?></span></span></a>
 						</div>
 					</div>
 					
@@ -255,19 +252,19 @@ if($the_slidertype == 'hero'){
 						<i style="position:absolute; top:50%;left:50%; font-size:25px; color:#ddd;margin-left:-17px;margin-top:-7px;" class="eg-icon-plus"></i>
 					</div>
 					<div class="slide-link-content">
-						<span class="slide-link" style="width:100%;text-align: center;font-weight:600;"><?php _e("Add Slide",REVSLIDER_TEXTDOMAIN); ?></span>
+						<span class="slide-link" style="width:100%;text-align: center;font-weight:600;"><?php _e("Add Slide",'revslider'); ?></span>
 					</div>
 				</a>
 				<div class="slide-link-content">
 					<div class="slide-link-toolbar">
-						<a id="link_add_slide" href="javascript:void(0);" class="slide-link-toolbar-button"><span class="slide-add"><i class="eg-icon-picture-1" style="margin-right:5px"></i><span><?php _e("Add Blank Slide", REVSLIDER_TEXTDOMAIN); ?></span></span></a>
-						<a id="link_add_bulk_slide" href="javascript:void(0);" class="slide-link-toolbar-button"><span class="slide-add"><i class="eg-icon-picture" style="margin-right:5px"></i><span><?php _e("Add Bulk Slides", REVSLIDER_TEXTDOMAIN); ?></span></span></a>								
+						<a id="link_add_slide" href="javascript:void(0);" class="slide-link-toolbar-button"><span class="slide-add"><i class="eg-icon-picture-1" style="margin-right:5px"></i><span><?php _e("Add Blank Slide", 'revslider'); ?></span></span></a>
+						<a id="link_add_bulk_slide" href="javascript:void(0);" class="slide-link-toolbar-button"><span class="slide-add"><i class="eg-icon-picture" style="margin-right:5px"></i><span><?php _e("Add Bulk Slides", 'revslider'); ?></span></span></a>								
 						<a id="rs_copy_slide_from_slider" href="javascript:void(0);" class="slide-link-toolbar-button">
-							<span class="slide-copy-from-slider"><i class="eg-icon-menu" style="margin-right:5px"></i><span><?php _e("Add from Template", REVSLIDER_TEXTDOMAIN); ?></span></span>
+							<span class="slide-copy-from-slider"><i class="eg-icon-menu" style="margin-right:5px"></i><span><?php _e("Add from Template", 'revslider'); ?></span></span>
 						</a>
 					</div>
 					<span class="slide-link" style="text-align:center">
-						<?php _e("Add Slide", REVSLIDER_TEXTDOMAIN); ?>
+						<?php _e("Add Slide", 'revslider'); ?>
 					</span>
 				</div>
 				<div class="small-triangle-bar"></div>
@@ -322,7 +319,7 @@ if($the_slidertype == 'hero'){
 			oldslidetitle = slide_title;
 			titleinp.blur();
 			if(UniteAdminRev.sanitize_input(slide_title) == ''){
-				alert('<?php _e('Slide name should not be empty', REVSLIDER_TEXTDOMAIN); ?>');
+				alert('<?php _e('Slide name should not be empty', 'revslider'); ?>');
 				return false;
 			}
 			
@@ -343,7 +340,7 @@ if($the_slidertype == 'hero'){
 			oldslidetitle = slide_title;
 			titleinp.blur();
 			if(UniteAdminRev.sanitize_input(slide_title) == ''){
-				alert('<?php _e('Slide name should not be empty', REVSLIDER_TEXTDOMAIN); ?>');
+				alert('<?php _e('Slide name should not be empty', 'revslider'); ?>');
 				return false;
 			}
 			

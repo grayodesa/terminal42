@@ -203,7 +203,7 @@ class RevSliderSlide extends RevSliderElementsBase{
 				$this->initByVimeo($sliderID, $additions);
 			break;
 			default:
-				RevSliderFunctions::throwError(__("Source must be from Stream", REVSLIDER_TEXTDOMAIN));
+				RevSliderFunctions::throwError(__("Source must be from Stream", 'revslider'));
 			break;
 		}
 	}
@@ -212,6 +212,7 @@ class RevSliderSlide extends RevSliderElementsBase{
 	/**
 	 * init the data for facebook
 	 * @since: 5.0
+	 * @change: 5.1.1 Facebook Album
 	 */
 	private function initByFacebook($sliderID, $additions){
 		//set some slide params
@@ -227,31 +228,14 @@ class RevSliderSlide extends RevSliderElementsBase{
 		$this->params["state"] = "published";
 		
 		if($this->params["background_type"] == 'image'){ //if image is choosen, use featured image as background
-			//facebook check which image size is choosen
-			$img_sizes = RevSliderBase::get_all_image_sizes('facebook');
-			
-			$imgResolution = RevSliderFunctions::getVal($this->params, 'image_source_type', reset($img_sizes));
-			$this->imageID = RevSliderFunctions::getVal($this->postData, 'id');
-			if(!isset($img_sizes[$imgResolution])) $imgResolution = key($img_sizes);
-			
 			if($additions['fb_type'] == 'album'){
-				$imgs = RevSliderFunctions::getVal($this->postData, 'images', array());
-				$is = array();
-				foreach($imgs as $k => $im){
-					$is['size-'.$k] = $im->source;
-				}
-				
-				$facebook_images_avail_sizes = array('size-6','size-4','size-3','size-5','size-2','size-1','size-0');
-				$this->imageUrl = $this->find_biggest_photo($is, $imgResolution, $facebook_images_avail_sizes);
-				$this->imageThumb = $this->find_biggest_photo($is, 'size-5', $facebook_images_avail_sizes);
+				$this->imageUrl = 'https://graph.facebook.com/'.RevSliderFunctions::getVal($this->postData, 'id').'/picture';
+				$this->imageThumb = RevSliderFunctions::getVal($this->postData, 'picture');
 			}else{
 				$img = $this->get_facebook_timeline_image();
 				$this->imageUrl = $img;
 				$this->imageThumb = $img;
 			}
-			
-			//if(empty($this->imageUrl))
-			//	return(false);
 			
 			if(empty($this->imageUrl))
 				$this->imageUrl = RS_PLUGIN_URL.'public/assets/assets/sources/fb.png';
@@ -696,8 +680,6 @@ class RevSliderSlide extends RevSliderElementsBase{
 					}
 				}
 			}
-			
-			
 			$this->arrLayers[$key] = $layer;
 		}
 		
@@ -807,13 +789,18 @@ class RevSliderSlide extends RevSliderElementsBase{
 					$attr['author_name'] = $author_name_raw->name;
 					$likes_data = RevSliderFunctions::getVal($this->postData, 'likes');
 					$attr['likes'] = count(RevSliderFunctions::getVal($likes_data, 'data'));
-					$fb_img = RevSliderFunctions::getVal($this->postData, 'images', array());
-					foreach($fb_img as $key => $img){
-						$attr['img_urls']['size-'.$key] = array(
-							'url' => $img->source,
-							'tag' => '<img src="'.$img->source.'" width="'.$img->width.'" height="'.$img->height.'" data-no-retina />'
-						);
-					}
+					$fb_img_thumbnail = RevSliderFunctions::getVal($this->postData, 'picture');
+					$fb_img = 'https://graph.facebook.com/'.RevSliderFunctions::getVal($this->postData, 'id').'/picture';
+					
+					$attr['img_urls']['full'] = array(
+						'url' => $fb_img,
+						'tag' => '<img src="'.$fb_img.'" data-no-retina />'
+					);
+					$attr['img_urls']['thumbnail'] = array(
+						'url' => $fb_img_thumbnail,
+						'tag' => '<img src="'.$fb_img_thumbnail.'" data-no-retina />'
+					);
+
 				}else{
 					$attr['title'] = RevSliderFunctions::getVal($this->postData, 'message');
 					$attr['content'] = RevSliderFunctions::getVal($this->postData, 'message');
@@ -1204,7 +1191,7 @@ class RevSliderSlide extends RevSliderElementsBase{
 			}
 		}
 		
-		$numComments = RevSliderFunctions::getVal($postData, "comment_count");
+		$attr['numComments'] = RevSliderFunctions::getVal($postData, "comment_count");
 		
 		foreach($this->arrLayers as $key=>$layer){
 			
@@ -1701,6 +1688,13 @@ class RevSliderSlide extends RevSliderElementsBase{
 	 */
 	public function getID(){
 		return($this->id);
+	}
+	
+	/**
+	 * set slide ID
+	 */
+	public function setID($id){
+		$this->id = $id;
 	}
 	
 	/**
@@ -2687,7 +2681,7 @@ class RevSliderSlide extends RevSliderElementsBase{
 				$static = (array) RevSliderFunctions::getVal($layer, 'static_styles', array());
 				
 				foreach($all_fonts as $f){
-					if($f['label'] == $font && $f['type'] == 'googlefont'){
+					if(strtolower(str_replace(array('"', "'", ' '), '', $f['label'])) == strtolower(str_replace(array('"', "'", ' '), '', $font)) && $f['type'] == 'googlefont'){
 						if(!isset($fonts[$f['label']])){
 							$fonts[$f['label']] = array('variants' => array(), 'subsets' => array());
 						}

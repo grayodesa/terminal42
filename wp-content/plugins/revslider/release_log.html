@@ -1,28 +1,140 @@
 <div class="slider-revolution-update-list">
 
-<h3 class="version-number">Version 5.1 StarPath (19th October 2015)</h3>
-
+<h3 class="version-number">Version 5.1.4 StarPath (28th November 2015)</h3>
 <div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
 <ul>
-	<li>Set Thumbnail now also as Admin Slide Preview image for easier selection in the Slider List / Slides List </li>
-	<li>Added FullScreen Toggle , Go FullScreen and Exit FullScreen Actions, to allow Slider Revolution to open in Fullscreen from any Layout mode</li>
-	<li>Added visibility levels to allow hide/show layers via the Visibility Tab also if no Custom Grid Sizes has been set</li>
-	<li>Added new Tooltip for z-index Sorting of Elements</li>
-	<li>Added new Tooltip for Layer End Animation Toggler</li>
-	<li>Added new Google Font Handling - Using any Google font on layers will auto manage Loading of the font</li>
-	<li>Added filter revslider_meta_generator to remove the Meta Generator</li>
-	<li>Added Tabs to the Metis Navigation</li>
+	<li>Facebook Album now available at the Facebook Source Type</li>
+	<li>Instagram Stream can now also be fetched through hashtags</li>
+	<li>Added option to import layers from any existing Slide into the current Slide at the "Add Layer" selector</li>
+	<li>Added Video Toggle Action</li>
+	<li>Added Mute, UnMute, Toggle Mute Action</li>	
+	<li>Added Toggle Functions for HTML Layers. Toggled Layers can have two states if any Toggle Action is activated</li>
 </ul>
 
 <div class="change"><strong style="font-weight:700">Changes</strong></div>
 <ul>
-	<li>Available Options for current selected Layer Types are highlighted better in Slide Editor</li>
-	<li>New visualisation of Custom Layer Grid Sizes and Presets to make the function more Transparent</li>
-	<li>Added some CSS Changes to avoid Theme Overwrites</li>
+	<li>Specific Posts buttons "Add Popular Posts" and "Add Recent Posts" now append the IDs instead of replacing the current list</li>
+	<li>Video will play muted/unmuted based on the last state of the Mute Button at Slide Load</li>
+	<li>Changed YouTube default argument ref=0 to rel=0</li>
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed Delete / Backspace issues in CSS Editor textarea</li>
+	<li>Fixed animation opacity divided by 100</li>
+	<li>Fixed Fullcover / FullWidth sizing issues of Videos in Backend on differnet Layer Grid sizes</li>
+	<li>Fixed Video issues, where Play/Stop video button was not triggering HTML5, YouTube and Vimeo videos correctly</li>
+	<li>Fixed HTML5 Video Actions</li>
+	<li>Fixed video actions where video Start at was set</li>
+	<li>Fixed video "start at" and "end at" not resetting in Slide Editor after adding multiple videos</li>
+	<li>Fixed Google Fonts not beeing loaded in frontend from Static Layers in some cases</li>
+	<li>Fixed a bug where navigation does not replace meta placeholders if the meta data is empty</li>
+	<li>Fixed a bug where Layers of one Slider was animated in the wrong timeline if other Slider changed the slide. Some crosscall issue between independent sliders</li>
+	<li>Fixed an issue where Videos after Next Slide At End was not rewinded withouth the Force Rewind feature</li>
+	<li>Fixed Parallax Flickering in Safari and Google Chrome</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.3 StarPath (17th November 2015)</h3>
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed type:text; that was added in CSS</li>
+	<li>Fixed a JavaScript loading issue in backend</li>
+	<li>Fixed a typo failure in slide-main-options.php file which caused some jQuery issue in Slider Settings</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.2 StarPath (14th November 2015)</h3>
+
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>Added a key listener which will allow to close Fullscreen mode with ESC once it has been triggered by FullScreen Action</li>
+	<li>Added Keyboard listener to Slide Editor to save the Slider on CTRL+S / CMD+S</li>
+	<li>Added Keyboard listener to Slide Editor to delte Layers on Backspace / Delete Key</li>	  
+	<li>Added two new Premium Sliders</li>
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Removed the need of Username / API key to activate the plugin</li>
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Message "cover image needs to be set for videos" now appearing only if there is really no cover image set</li>
+	<li>Fixed HTML5 Start/End Time issues, and HTML5 Seekbar, Play Button issues</li>
+	<li>Fixed a strange bug in Safari, where end of the Video the Slider skipped one following slide</li>
+	<li>Fixed an issue if focus changed from one layer to an other, the wrong Aniamtion Speed was "shown" in the Animation speed Fields</li>
+	<li>Fixed an issue where the slider could not be loaded on localhosts</li>
+	<li>Fixed an issue where duplicated elements in Editor got the wrong zIndex position</li>
+	<li>Fixed an issue where Deleted layers still have been selected and some fields still keep their values</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.1 StarPath (12th November 2015)</h3>
+
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>WooCommerce is now officially available!</li>
+	<li>Added own Slider Module for Visual Composer called Slider Revolution 5</li>
+	<li>Added Quick Slider builder</li>
+	<li>Post Based Sliders can now choose between Categories & Tags, Related, Popular, Recent and Next / Previous</li>
+	<li>Specific Post Based Sliders can now add Popular and Recent Posts</li>
+	<li>Custom build navigations will now be added to the exports and will be also imported at the import process</li>
+	<li>New Cursors for Layers: zoom-in & zoom-out</li>	
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Made some changes to the GUI</li>
+	<li>Changed Success Messages to disappear faster now</li>
+	<li>Changed Error Messages to disappear now automatically</li>
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed a very rare bug where a slide may change it's selected background image</li>
+	<li>Fixed "number of comments" option not working properly for Post Based Slider</li>
+	<li>Fixed hover color not working</li>	
+	<li>Fixed multiple bugs for certain servers that could not import Sliders</li>
+	<li>Fixed a bug where the toolbar was missing after adding a video layer</li>
+	<li>Fixed some CSS Issues</li>
+	<li>Fixed Box Slots where Amount of Slots could not be changed</li>
+	<li>Fixed a bug where Resize Function was not working after Editing Video Layer</li>
+	<li>Fixed layer Source Type bug, not fetching the desired Source Type</li>
+	<li>Fixed a bug where an image was printed as array()</li>
+	<li>Fixed HTML5 Crop Issues for IE11 and Edge Browsers</li>
+	<li>Fixed a bug where Swipe was not available on elements with links</li>
+	<li>Fixed a bug where Parallax elements jumped on half scrolled position</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1 StarPath (19th October 2015)</h3>
+
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>WooCommerce is now available!</li>
+	<li>Set thumbnail now also as admin Slide Preview image for easier selection in the Slider List / Slides List </li>
+	<li>Added Fullscreen Toggle, Go Fullscreen and Exit Fullscreen actions, to allow Slider Revolution to open in Fullscreen from any layout mode</li>
+	<li>Added visibility levels to allow hide/show layers via the Visibility Tab also if no Custom Grid Sizes has been set</li>
+	<li>Added new Tooltip for z-index Sorting of Elements</li>
+	<li>Added new Tooltip for Layer End Animation Toggler</li>
+	<li>Added new Google Font Handling - Using any Google Font on layers will auto manage loading of the font</li>
+	<li>Added filter revslider_meta_generator to remove the Meta Generator</li>
+	<li>Added Tabs to the Metis Navigation</li>
+	<li>Added 3D Parallax Feature</li>
+	<li>Added new Transitions</li>
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Available options for current selected Layer Types are highlighted better in Slide Editor</li>
+	<li>New visualisation of Custom Layer Grid Sizes and Presets to make the function more transparent</li>
+	<li>Added some CSS changes to avoid Theme overwrites</li>
 	<li>Using Toggle/Play/Stop Slider will restart Progress of Slider, even if it is stopped due Stop At Slide options</li>
 	<li>Creating a new Slider will now redirect to the Slide Editor</li>
 	<li>Removed the requirement of the ZipArchive extension for import/export</li>
-	<li>Renmaed Action to Play/Pause/Stop Slider for more transparencity</li>
+	<li>Renamed action to Play/Pause/Stop Slider for more transparencity</li>
 	<li>Added confirmation box for layer deletion</li>
 </ul>
 
@@ -265,7 +377,7 @@
 <h3 class="version-number">Version 5.0 StarPath (6th August 2015)</h3>
 
 <div class="newfeature"><strong style="font-weight:700">The Technology</strong></div>
-Our premise is "less is more" and that is reflected in the structure of our components. In order to incorporate so much functionality into our plugins, we make sure everything is build as modular as possible.
+<ul><li>Our premise is "less is more" and that is reflected in the structure of our components. In order to incorporate so much functionality into our plugins, we make sure everything is build as modular as possible.</li></ul>
 <ul>
 <li>Fully Responsive & Mobile Specific Features</li>
 <li>jQuery 1.7 - jQuery 2.x Supported</li>
@@ -274,7 +386,7 @@ Our premise is "less is more" and that is reflected in the structure of our comp
 <li>Smart Font Loading</li>
 </ul>
 <div class="newfeature"><strong style="font-weight:700">General Options</strong></div>
-We want Revolution Slider to be able to fulfill all slide based roles along with special functionality like carousels and hero blocks. If you can‘t find a specific feature, feel free to ask us!
+<ul><li>We want Revolution Slider to be able to fulfill all slide based roles along with special functionality like carousels and hero blocks. If you can‘t find a specific feature, feel free to ask us!</li></ul>
 <ul>
 <li>All Sizes Possible (Full Responsive + Revolutionary 4 Level Advanced Sizes)</li>
 <li>Hero, Carousel and Classic Slider Features</li>
@@ -315,7 +427,7 @@ Layers have evolved from simple layers to become powerful scene building tools!<
 <li>Option to Hide Layers on Any Devices</li>
 </ul>
 <div class="newfeature"><strong style="font-weight:700">Slider Navigation</strong></div>
-We have implemented almost all navigation types you can think of, which can be aligned anywhere on the stage.<br/>Be in full control with Slider Revolution Navigation!
+<ul><li>We have implemented almost all navigation types you can think of, which can be aligned anywhere on the stage.<br/>Be in full control with Slider Revolution Navigation!</li></ul>
 <ul>
 <li>Bullet, Button, Tabs and Thumbnail Navigation, single or mixed mode. Any position like outter,inner, aligned etc.</li>
 <li>Left/Right, Top/Bottom Mouse Scroll events.</li> 

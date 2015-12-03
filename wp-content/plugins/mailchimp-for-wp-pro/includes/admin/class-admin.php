@@ -50,13 +50,6 @@ class MC4WP_Admin {
 
 		// setup hooks
 		$this->setup_hooks();
-
-		// Instantiate Usage Tracking nag
-		$options = mc4wp_get_options( 'general' );
-		if( ! $options['allow_usage_tracking'] ) {
-			$usage_tracking_nag = new MC4WP_Usage_Tracking_Nag( $this->get_required_user_capability() );
-			$usage_tracking_nag->add_hooks();
-		}
 	}
 
 	/**
@@ -102,6 +95,11 @@ class MC4WP_Admin {
 		add_action( 'wp_dashboard_setup', array( $this, 'register_dashboard_widgets' ) );
 		add_filter( 'wp_insert_post_data', array( $this, 'filter_form_content' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_form_data' ), 10, 2 );
+
+		if( $this->license_manager->license_is_valid() ) {
+			$three_o = new MC4WP_Three_O_Installer( MC4WP_PLUGIN_DIR . '..', $this->license_manager->get_license_key() );
+			$three_o->add_hooks();
+		}
 	}
 
 	/**
@@ -148,8 +146,6 @@ class MC4WP_Admin {
 		if( $this->current_page === 'plugins.php' ) {
 			add_filter( 'plugin_action_links_' . $this->plugin_file, array( $this, 'add_plugin_settings_link' ), 10, 2 );
 			add_filter( 'plugin_row_meta', array( $this, 'add_plugin_meta_links'), 10, 2 );
-
-			add_action( 'admin_notices', array( $this, 'show_notice_to_deactivate_lite' ) );
 		}
 
 		// Hooks for "edit form" pages
@@ -887,18 +883,7 @@ class MC4WP_Admin {
 		}
 	}
 
-	/**
-	 * Show a notice if MailChimp for WP Lite is activated
-	 */
-	public function show_notice_to_deactivate_lite() {
-		if ( false === is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) ) {
-			return;
-		}
-		?><div class="updated">
-			<p><?php printf( __( '<strong>Welcome to MailChimp for WordPress Pro!</strong> We transfered the settings you set in the Lite version, you can safely <a href="%s">deactivate it now</a>.', 'mailchimp-for-wp' ), admin_url( 'plugins.php#mailchimp-for-wordpress-lite' ) ); ?></p>
-        </div>
-		<?php
-	}
+
 
 	/**
 	 * Print the IE canvas fallback script in the footer on statistics pages

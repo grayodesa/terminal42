@@ -48,4 +48,17 @@
 <b>[03.11.2015 15:01]</b> Reminder message sent to yarotska@gmail.com for appointment ID:20
 <b>[04.11.2015 11:04]</b> Reminder message sent to gray@odesseya.net for appointment ID:20
 <b>[05.11.2015 15:50]</b> Notification message sent to gray@odesseya.net for appointment ID:21
+<b>[11.11.2015 11:23]</b> Notification message sent to gray@odesseya.net for appointment ID:22
+<b>[11.11.2015 12:13]</b> Confirmation message sent to izachok@yandex.ru for appointment ID:22
+<b>[16.11.2015 11:02]</b> Notification message sent to gray@odesseya.net for appointment ID:23
+<b>[24.11.2015 20:38]</b> Notification message sent to gray@odesseya.net for appointment ID:24
+<b>[25.11.2015 10:24]</b> Confirmation message sent to izachok@yandex.ru for appointment ID:24
+<b>[25.11.2015 10:24]</b> Status changed from removed to confirmed by Gray for appointment ID:24
+<b>[25.11.2015 10:33]</b> Reminder message sent to izachok@yandex.ru for appointment ID:24
+<b>[25.11.2015 10:33]</b> Reminder message sent to gray@odesseya.net for appointment ID:24
+<b>[26.11.2015 12:59]</b> Notification message sent to gray@odesseya.net for appointment ID:25
+<b>[26.11.2015 13:00]</b> Confirmation message sent to nataly@odesseya.net for appointment ID:25
+<b>[26.11.2015 13:00]</b> Status changed from pending to confirmed by Gray for appointment ID:25
+<b>[26.11.2015 14:04]</b> Reminder message sent to nataly@odesseya.net for appointment ID:25
+<b>[27.11.2015 10:05]</b> Reminder message sent to gray@odesseya.net for appointment ID:25
 

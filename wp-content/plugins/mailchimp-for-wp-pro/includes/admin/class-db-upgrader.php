@@ -48,7 +48,25 @@ class MC4WP_DB_Upgrader {
 			$this->change_success_message_key();
 		}
 
+		// upgrade to 2.7.24
+		if( ! $this->installing && version_compare( $this->database_version, '2.7.24', '<' ) ) {
+			$this->reschedule_usage_tracking();
+		}
+
 		update_option( 'mc4wp_version', MC4WP_VERSION );
+	}
+
+	/**
+	 * Reschedule usage tracking (using the new interval)
+	 */
+	protected function reschedule_usage_tracking() {
+
+		$options = get_option( 'mc4wp', array() );
+		if( isset( $options['allow_usage_tracking'] ) && $options['allow_usage_tracking'] ) {
+			$usage_tracking = MC4WP_Usage_Tracking::instance();
+			$usage_tracking->disable();
+			$usage_tracking->enable();
+		}
 	}
 
 	/**

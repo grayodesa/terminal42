@@ -110,6 +110,9 @@ class RevSliderFunctions{
 		return($var);
 	}
 	
+	public static function sortByOrder($a, $b) {
+		return $a['order'] - $b['order'];
+	}
 	
 	/**
 	 * validate that some file exists, if not - throw error

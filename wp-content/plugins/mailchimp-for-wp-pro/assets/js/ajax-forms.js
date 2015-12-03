@@ -38,9 +38,10 @@ window.mc4wpAjaxForms = (function($) {
 		// find all forms
 		$ajaxForms = $formWrappers.find('form');
 
-		// Load AJAX loader image as soon as a form input element gets focus
+		// preload AJAX loader image if it is enabled
 		if( mc4wp_vars.ajaxloader.enabled ) {
-			$ajaxForms.find('input').bind('focus.mc4wp', loadAjaxLoaderImg );
+			var img = new Image();
+			img.src = mc4wp_vars.ajaxloader.imgurl;
 		}
 
 		backwardsCompatibleEventBinds();
@@ -58,6 +59,19 @@ window.mc4wpAjaxForms = (function($) {
 
 		// create data string out of form fields
 		var data = $(this).serialize();
+
+		// check for filled email field
+		if( typeof( this.elements['EMAIL'] ) === "object" ) {
+
+			this.elements['EMAIL'].required = true;
+			var value = this.elements['EMAIL'].value;
+
+			// do nothing if EMAIl field is empty
+			if( value.trim() === '' ) {
+				return false;
+			}
+		}
+
 		beforeSubmit(data, $(this));
 
 		// build the request object
@@ -69,26 +83,8 @@ window.mc4wpAjaxForms = (function($) {
 			data: data,
 			dataType: 'json'
 		});
-		
+
 		return false;
-	}
-
-	/**
-	 * Add CSS to AJAX loader element.
-	 */
-	function loadAjaxLoaderImg() {
-
-		// apply styles to ajaxloader
-		$('.mc4wp-ajax-loader').css({
-			'vertical-align': 	'middle',
-			'height': 			'16px',
-			'width': 			'16px',
-			'border': 			0,
-			'background': 		'url("' + mc4wp_vars.ajaxloader.imgurl + '") no-repeat center center'
-		});
-
-		// unbind self
-		$ajaxForms.find('input').unbind('focus.mc4wp');
 	}
 
 	/**
@@ -101,7 +97,7 @@ window.mc4wpAjaxForms = (function($) {
 	 */
 	function beforeSubmit( data, $form ) {
 
-		var ajaxLoader, $submitButton, submitButton;
+		var $submitButton, submitButton;
 
 		$context = $form.parent('.mc4wp-form');
 
@@ -130,13 +126,19 @@ window.mc4wpAjaxForms = (function($) {
 
 			// Loading text was not set, use the AJAX loader
 			// Insert loader after submit button
-			ajaxLoader = $context.find('.mc4wp-ajax-loader').get(0);
-			submitButton.parentNode.insertBefore( ajaxLoader, submitButton.nextSibling );
-			ajaxLoader.style.display = 'inline-block';
+			var $ajaxLoader = $('<span />')
+				.addClass('mc4wp-ajax-loader').css({
+					'display': 'inline-block',
+					'vertical-align': 	'middle',
+					'height': 			'16px',
+					'width': 			'16px',
+					'border': 			0,
+					'background': 		'url("' + mc4wp_vars.ajaxloader.imgurl + '") no-repeat center center'
+			}).insertAfter($submitButton);
 
 			// Add small left-margin if loader doesn't have one yet
-			if( ajaxLoader.style.marginLeft === '' || parseInt( ajaxLoader.style.marginLeft ) < 5 ) {
-				ajaxLoader.style.marginLeft = '5px';
+			if( parseInt( $ajaxLoader.css('margin-left')) < 5 ) {
+				$ajaxLoader.css('margin-left', '5px');
 			}
 		}
 
@@ -184,8 +186,8 @@ window.mc4wpAjaxForms = (function($) {
 			response: response
 		} );
 
-		// hide ajax loader
-		$context.find('.mc4wp-ajax-loader').get(0).style.display = 'none';
+		// remove ajax loaders
+		$('.mc4wp-ajax-loader').remove();
 
 		// show response
 		$context.find('.mc4wp-response').html( response.data.html );
@@ -209,6 +211,7 @@ window.mc4wpAjaxForms = (function($) {
 		} else {
 			onSubscribeError( response.data.error, response.data.data );
 		}
+
 
 	}
 
@@ -320,7 +323,7 @@ window.mc4wpAjaxForms = (function($) {
 	// run this straight away
 	load(true);
 
-	// hook into all form submits of forms with out ajax class
+	// hook into all form submits of forms with our ajax class
 	$(document).on('submit', '.mc4wp-ajax form', ajaxifyForm );
 
 })(window.jQuery);

@@ -216,55 +216,50 @@ class RevSliderBase {
 		switch($type){
 			case 'flickr':
 				$custom_sizes = array(
-					'original' => __('Original', REVSLIDER_TEXTDOMAIN),
-					'large' => __('Large', REVSLIDER_TEXTDOMAIN),
-					'large-square' => __('Large Square', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'medium-800' => __('Medium 800', REVSLIDER_TEXTDOMAIN),
-					'medium-640' => __('Medium 640', REVSLIDER_TEXTDOMAIN),
-					'small' => __('Small', REVSLIDER_TEXTDOMAIN),
-					'small-320' => __('Small 320', REVSLIDER_TEXTDOMAIN),
-					'thumbnail'=> __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'square' => __('Square', REVSLIDER_TEXTDOMAIN)
+					'original' => __('Original', 'revslider'),
+					'large' => __('Large', 'revslider'),
+					'large-square' => __('Large Square', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'medium-800' => __('Medium 800', 'revslider'),
+					'medium-640' => __('Medium 640', 'revslider'),
+					'small' => __('Small', 'revslider'),
+					'small-320' => __('Small 320', 'revslider'),
+					'thumbnail'=> __('Thumbnail', 'revslider'),
+					'square' => __('Square', 'revslider')
 				);
 			break;
 			case 'instagram':
 				$custom_sizes = array(
-					'standard_resolution' => __('Standard Resolution', REVSLIDER_TEXTDOMAIN),
-					'thumbnail' => __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'low_resolution' => __('Low Resolution', REVSLIDER_TEXTDOMAIN)
+					'standard_resolution' => __('Standard Resolution', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider'),
+					'low_resolution' => __('Low Resolution', 'revslider')
 				);
 			break;
 			case 'twitter':
 				$custom_sizes = array(
-					'large' => __('Standard Resolution', REVSLIDER_TEXTDOMAIN)
+					'large' => __('Standard Resolution', 'revslider')
 				);
 			break;
 			case 'facebook':
 				$custom_sizes = array(
-					'size-0' => __('Size 0', REVSLIDER_TEXTDOMAIN),
-					'size-1' => __('Size 1', REVSLIDER_TEXTDOMAIN),
-					'size-2' => __('Size 2', REVSLIDER_TEXTDOMAIN),
-					'size-3' => __('Size 3', REVSLIDER_TEXTDOMAIN),
-					'size-4' => __('Size 4', REVSLIDER_TEXTDOMAIN),
-					'size-5' => __('Size 5', REVSLIDER_TEXTDOMAIN),
-					'size-6' => __('Size 6', REVSLIDER_TEXTDOMAIN)
+					'full' => __('Original Size', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider')
 				);
 			break;
 			case 'youtube':
 				$custom_sizes = array(
-					'default' => __('Default', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'high' => __('High', REVSLIDER_TEXTDOMAIN),
-					'standard' => __('Standard', REVSLIDER_TEXTDOMAIN),
-					'maxres' => __('Max. Res.', REVSLIDER_TEXTDOMAIN)
+					'default' => __('Default', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'high' => __('High', 'revslider'),
+					'standard' => __('Standard', 'revslider'),
+					'maxres' => __('Max. Res.', 'revslider')
 				);
 			break;
 			case 'vimeo':
 				$custom_sizes = array(
-					'thumbnail_small' => __('Small', REVSLIDER_TEXTDOMAIN),
-					'thumbnail_medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'thumbnail_large' => __('Large', REVSLIDER_TEXTDOMAIN),
+					'thumbnail_small' => __('Small', 'revslider'),
+					'thumbnail_medium' => __('Medium', 'revslider'),
+					'thumbnail_large' => __('Large', 'revslider'),
 				);
 			break;
 			case 'gallery':
@@ -276,10 +271,10 @@ class RevSliderBase {
 					}
 				}
 				$img_orig_sources = array(
-					'full' => __('Original Size', REVSLIDER_TEXTDOMAIN),
-					'thumbnail' => __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'large' => __('Large', REVSLIDER_TEXTDOMAIN)
+					'full' => __('Original Size', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'large' => __('Large', 'revslider')
 				);
 				$custom_sizes = array_merge($img_orig_sources, $custom_sizes);
 			break;
@@ -501,7 +496,7 @@ class RevSliderBase {
 				}
 				
 				if(!$zimage){
-					echo $image.__(' not found!<br>', REVSLIDER_TEXTDOMAIN);
+					echo $image.__(' not found!<br>', 'revslider');
 				}else{
 					if(!isset($alreadyImported['images/'.$image])){
 						if($strip == true){ //pclzip

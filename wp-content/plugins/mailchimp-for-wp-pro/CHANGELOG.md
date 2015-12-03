@@ -1,5 +1,28 @@
 == Changelog ==
 
+= 2.7.26 - November 23, 2015 =
+
+This release contains an upgrade wizard to get you to version 3.0 of the plugin.
+
+= 2.7.25 - November 11, 2015 =
+
+**Improvements**
+
+- AJAX loader image is now created & loaded in JavaScript to make sure it's always there. 
+- Preparations for [major upcoming changes in version 3.0](https://mc4wp.com/blog/breaking-backwards-compatibility-in-version-3-0/).
+- Don't show cookie data in email notification.
+
+= 2.7.24 - November 2, 2015 =
+
+**Fixes**
+
+- AJAX forms not working when loader image not found on server.
+- Prevent double AJAX request (edge case bug)
+
+**Improvements**
+
+- Usage tracking is now scheduled once a week, instead of daily.
+
 = 2.7.23 - October 22, 2015 =
 
 **Fixes**

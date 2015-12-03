@@ -1,6 +1,6 @@
 /********************************************
- * REVOLUTION 5.0 EXTENSION - PARALLAX
- * @version: 1.0.5 (20.10.2015)
+ * REVOLUTION 5.1.4 EXTENSION - PARALLAX
+ * @version: 1.1.1 (25.11.2015)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -259,7 +259,7 @@ jQuery.extend(true,_R, {
 		if (opt.scrollTicker!=true) {
 			opt.scrollTicker = true;				
 			punchgs.TweenLite.ticker.fps(150);
-			punchgs.TweenLite.ticker.addEventListener("tick",function() {_R.scrollHandling(opt);},container,true,1);
+			punchgs.TweenLite.ticker.addEventListener("tick",function() {_R.scrollHandling(opt);},container,false,1);
 		}
 	},
 
@@ -278,8 +278,14 @@ jQuery.extend(true,_R, {
 			_v = opt.viewPort,
 			_ = opt.parallax;
 
-		if (opt.lastscrolltop==st) return false;
-		opt.lastscrolltop = st;
+		
+		if (opt.lastscrolltop==st && !opt.duringslidechange) return false;
+		//if (opt.lastscrolltop==st) return false;
+
+		function saveLastScroll(opt,st) {			
+			opt.lastscrolltop = st;			
+		}
+		punchgs.TweenLite.delayedCall(0.2,saveLastScroll,[opt,st]);
 
 		b.top = (t-st);		
 		b.h = opt.conh==0 ? opt.c.height() : opt.conh;		

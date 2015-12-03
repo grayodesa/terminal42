@@ -3,12 +3,12 @@
 <div class="editor_buttons_wrapper  postbox unite-postbox" style="max-width:100% !important; min-width:1040px !important;">
 	<div class="box-closed tp-accordion" style="border-bottom:5px solid #ddd;">
 		<ul class="rs-slide-settings-tabs">
-			<li data-content="#slide-main-image-settings-content" class="selected"><i style="height:45px" class="rs-mini-layer-icon eg-icon-picture-1 rs-toolbar-icon"></i><span><?php _e("Main Background",REVSLIDER_TEXTDOMAIN); ?></span></li>
-			<li data-content="#slide-general-settings-content"><i style="height:45px" class="rs-mini-layer-icon rs-icon-chooser-2 rs-toolbar-icon"></i><?php _e("General Settings",REVSLIDER_TEXTDOMAIN); ?></li>
-			<li data-content="#slide-thumbnail-settings-content"><i style="height:45px" class="rs-mini-layer-icon eg-icon-flickr-1 rs-toolbar-icon"></i><?php _e("Thumbnail",REVSLIDER_TEXTDOMAIN); ?></li>
-			<li data-content="#slide-animation-settings-content" id="slide-animation-settings-content-tab"><i style="height:45px" class="rs-mini-layer-icon rs-icon-chooser-3 rs-toolbar-icon"></i><?php _e("Slide Animation",REVSLIDER_TEXTDOMAIN); ?></li>
-			<li data-content="#slide-seo-settings-content"><i style="height:45px" class="rs-mini-layer-icon rs-icon-advanced rs-toolbar-icon"></i><?php _e("Link & Seo",REVSLIDER_TEXTDOMAIN); ?></li>
-			<li data-content="#slide-info-settings-content"><i style="height:45px; font-size:16px;" class="rs-mini-layer-icon eg-icon-info-circled rs-toolbar-icon"></i><?php _e("Slide Info",REVSLIDER_TEXTDOMAIN); ?></li>						
+			<li data-content="#slide-main-image-settings-content" class="selected"><i style="height:45px" class="rs-mini-layer-icon eg-icon-picture-1 rs-toolbar-icon"></i><span><?php _e("Main Background",'revslider'); ?></span></li>
+			<li data-content="#slide-general-settings-content"><i style="height:45px" class="rs-mini-layer-icon rs-icon-chooser-2 rs-toolbar-icon"></i><?php _e("General Settings",'revslider'); ?></li>
+			<li data-content="#slide-thumbnail-settings-content"><i style="height:45px" class="rs-mini-layer-icon eg-icon-flickr-1 rs-toolbar-icon"></i><?php _e("Thumbnail",'revslider'); ?></li>
+			<li data-content="#slide-animation-settings-content" id="slide-animation-settings-content-tab"><i style="height:45px" class="rs-mini-layer-icon rs-icon-chooser-3 rs-toolbar-icon"></i><?php _e("Slide Animation",'revslider'); ?></li>
+			<li data-content="#slide-seo-settings-content"><i style="height:45px" class="rs-mini-layer-icon rs-icon-advanced rs-toolbar-icon"></i><?php _e("Link & Seo",'revslider'); ?></li>
+			<li data-content="#slide-info-settings-content"><i style="height:45px; font-size:16px;" class="rs-mini-layer-icon eg-icon-info-circled rs-toolbar-icon"></i><?php _e("Slide Info",'revslider'); ?></li>						
 		</ul>
 
 		<div style="clear:both"></div>
@@ -31,10 +31,10 @@
 			<div id="slide-main-image-settings-content" class="slide-main-settings-form">
 
 				<ul class="rs-layer-main-image-tabs" style="display:inline-block; ">
-					<li data-content="#mainbg-sub-source" class="selected"><?php _e('Source', REVSLIDER_TEXTDOMAIN); ?></li>
-					<li class="mainbg-sub-settings-selector" data-content="#mainbg-sub-setting"><?php _e('Source Settings', REVSLIDER_TEXTDOMAIN); ?></li>					
-					<li class="mainbg-sub-parallax-selector" data-content="#mainbg-sub-parallax"><?php _e('Parallax / 3D', REVSLIDER_TEXTDOMAIN); ?></li>
-					<li class="mainbg-sub-kenburns-selector" data-content="#mainbg-sub-kenburns"><?php _e('Ken Burns', REVSLIDER_TEXTDOMAIN); ?></li>
+					<li data-content="#mainbg-sub-source" class="selected"><?php _e('Source', 'revslider'); ?></li>
+					<li class="mainbg-sub-settings-selector" data-content="#mainbg-sub-setting"><?php _e('Source Settings', 'revslider'); ?></li>					
+					<li class="mainbg-sub-parallax-selector" data-content="#mainbg-sub-parallax"><?php _e('Parallax / 3D', 'revslider'); ?></li>
+					<li class="mainbg-sub-kenburns-selector" data-content="#mainbg-sub-kenburns"><?php _e('Ken Burns', 'revslider'); ?></li>
 				</ul>
 
 				<div class="tp-clearfix"></div>
@@ -62,46 +62,46 @@
 						<?php
 						if($slider_type == 'posts' || $slider_type == 'specific_posts' || $slider_type == 'woocommerce'){
 							?>
-							<label><?php _e("Featured Image",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Featured Image",'revslider'); ?></label>
 							<input type="radio" name="background_type" value="image" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="image" id="radio_back_image" <?php checked($bgType, 'image'); ?>>
 							
 							<?php
 							/*
 							<div class="tp-clearfix"></div>
-							<label><?php _e("Meta Image",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Meta Image",'revslider'); ?></label>
 							<input type="radio" name="background_type" value="meta" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="meta" <?php checked($bgType, 'meta'); ?>>
 							<span id="" class="" style="margin-left:20px;">
-								<span style="margin-right: 10px"><?php _e('Meta Handle', REVSLIDER_TEXTDOMAIN); ?></span>
+								<span style="margin-right: 10px"><?php _e('Meta Handle', 'revslider'); ?></span>
 								<input type="text" id="meta_handle" name="meta_handle" value="<?php echo $meta_handle; ?>">
 							</span>*/ ?>
 							<?php
 						}elseif($slider_type !== 'gallery'){
 							?>
-							<label><?php _e("Stream Image",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Stream Image",'revslider'); ?></label>
 							<input type="radio" name="background_type" value="image" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="image" id="radio_back_image" <?php checked($bgType, 'image'); ?>>
 							<?php
 							if($slider_type == 'vimeo' || $slider_type == 'youtube' || $slider_type == 'instagram' || $slider_type == 'twitter'){
 								?>
 								<div class="tp-clearfix"></div>
-								<label><?php _e("Stream Video",REVSLIDER_TEXTDOMAIN); ?></label>
+								<label><?php _e("Stream Video",'revslider'); ?></label>
 								<input type="radio" name="background_type" value="stream<?php echo $slider_type; ?>" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="stream<?php echo $slider_type; ?>" <?php checked($bgType, 'stream'.$slider_type); ?>>
 								<span id="streamvideo_cover" class="streamvideo_cover" style="display:none;margin-left:20px;">
-									<span style="margin-right: 10px"><?php _e("Use Cover",REVSLIDER_TEXTDOMAIN); ?></span>
+									<span style="margin-right: 10px"><?php _e("Use Cover",'revslider'); ?></span>
 									<input type="checkbox" class="tp-moderncheckbox" id="stream_do_cover" name="stream_do_cover" data-unchecked="off" <?php checked($stream_do_cover, 'on'); ?>>
 								</span>
 								
 								<div class="tp-clearfix"></div>
-								<label><?php _e("Stream Video + Image",REVSLIDER_TEXTDOMAIN); ?></label>
+								<label><?php _e("Stream Video + Image",'revslider'); ?></label>
 								<input type="radio" name="background_type" value="stream<?php echo $slider_type; ?>both" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="stream<?php echo $slider_type; ?>both" <?php checked($bgType, 'stream'.$slider_type.'both'); ?>>
 								<span id="streamvideo_cover_both" class="streamvideo_cover_both" style="display:none;margin-left:20px;">
-									<span style="margin-right: 10px"><?php _e("Use Cover",REVSLIDER_TEXTDOMAIN); ?></span>
+									<span style="margin-right: 10px"><?php _e("Use Cover",'revslider'); ?></span>
 									<input type="checkbox" class="tp-moderncheckbox" id="stream_do_cover_both" name="stream_do_cover_both" data-unchecked="off" <?php checked($stream_do_cover_both, 'on'); ?>>
 								</span>
 								<?php
 							}
 						}else{
 							?>
-							<label ><?php _e("Main / Background Image",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label ><?php _e("Main / Background Image",'revslider'); ?></label>
 							<input type="radio" name="background_type" value="image" class="bgsrcchanger" data-callid="tp-bgimagewpsrc" data-imgsettings="on" data-bgtype="image" id="radio_back_image" <?php checked($bgType, 'image'); ?>>
 							
 							<?php
@@ -109,30 +109,30 @@
 						?>
 						<!-- THE BG IMAGE CHANGED DIV -->
 						<span id="tp-bgimagewpsrc" class="bgsrcchanger-div" style="display:none;margin-left:20px;">
-							<a href="javascript:void(0)" id="button_change_image" class="button-primary revblue" ><?php _e("Change Image", REVSLIDER_TEXTDOMAIN); ?></a>
+							<a href="javascript:void(0)" id="button_change_image" class="button-primary revblue" ><?php _e("Change Image", 'revslider'); ?></a>
 						</span>
 						
 						<div class="tp-clearfix"></div>
 						
 						<!-- IMAGE FROM EXTERNAL -->
-						<label><?php _e("External URL",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("External URL",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="external" data-callid="tp-bgimageextsrc" data-imgsettings="on" class="bgsrcchanger" data-bgtype="external" id="radio_back_external" <?php checked($bgType, 'external'); ?>>
 
 						<!-- THE BG IMAGE FROM EXTERNAL SOURCE -->
 						<span id="tp-bgimageextsrc" class="bgsrcchanger-div" style="display:none;margin-left:20px;">
 							<input type="text" name="bg_external" id="slide_bg_external" value="<?php echo $slideBGExternal?>" <?php echo ($bgType != 'external') ? ' class="disabled"' : ''; ?>>
-							<a href="javascript:void(0)" id="button_change_external" class="button-primary revblue" ><?php _e("Get External",REVSLIDER_TEXTDOMAIN); ?></a>
+							<a href="javascript:void(0)" id="button_change_external" class="button-primary revblue" ><?php _e("Get External",'revslider'); ?></a>
 						</span>
 						
 						<div class="tp-clearfix"></div>
 						
 						<!-- TRANSPARENT BACKGROUND -->
-						<label><?php _e("Transparent",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Transparent",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="trans" data-callid="" class="bgsrcchanger" data-bgtype="trans" id="radio_back_trans" <?php checked($bgType, 'trans'); ?>>
 						<div class="tp-clearfix"></div>
 						
 						<!-- COLORED BACKGROUND -->
-						<label><?php _e("Solid Colored",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Solid Colored",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="solid"  data-callid="tp-bgcolorsrc" class="bgsrcchanger" data-bgtype="solid" id="radio_back_solid" <?php checked($bgType, 'solid'); ?>>
 						
 						<!-- THE COLOR SELECTOR -->
@@ -142,63 +142,63 @@
 						<div class="tp-clearfix"></div>
 
 						<!-- THE YOUTUBE SELECTOR -->
-						<label><?php _e("YouTube Video",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("YouTube Video",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="youtube"  data-callid="tp-bgyoutubesrc" class="bgsrcchanger" data-bgtype="youtube" id="radio_back_youtube" <?php checked($bgType, 'youtube'); ?>>
 						<div class="tp-clearfix"></div>
 						
 						<!-- THE BG IMAGE FROM YOUTUBE SOURCE -->
 						<span id="tp-bgyoutubesrc" class="bgsrcchanger-div" style="display:none; margin-left:20px;">
-							<label style="min-width:180px"><?php _e("ID:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e("ID:",'revslider'); ?></label>
 							<input type="text" name="slide_bg_youtube" id="slide_bg_youtube" value="<?php echo $slideBGYoutube; ?>" <?php echo ($bgType != 'youtube') ? ' class="disabled"' : ''; ?>>							
-							<?php _e('example: T8--OggjJKQ', REVSLIDER_TEXTDOMAIN); ?>
+							<?php _e('example: T8--OggjJKQ', 'revslider'); ?>
 							<div class="tp-clearfix"></div>
-							<label style="min-width:180px"><?php _e("Cover Image:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e("Cover Image:",'revslider'); ?></label>
 							<span id="youtube-image-picker"></span>
 						</span>
 						<div class="tp-clearfix"></div>
 						
 						<!-- THE VIMEO SELECTOR -->
-						<label><?php _e("Vimeo Video",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Vimeo Video",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="vimeo"  data-callid="tp-bgvimeosrc" class="bgsrcchanger" data-bgtype="vimeo" id="radio_back_vimeo" <?php checked($bgType, 'vimeo'); ?>>
 						<div class="tp-clearfix"></div>
 
 						<!-- THE BG IMAGE FROM VIMEO SOURCE -->
 						<span id="tp-bgvimeosrc" class="bgsrcchanger-div" style="display:none; margin-left:20px;">
-							<label style="min-width:180px"><?php _e("ID:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e("ID:",'revslider'); ?></label>
 							<input type="text" name="slide_bg_vimeo" id="slide_bg_vimeo" value="<?php echo $slideBGVimeo; ?>" <?php echo ($bgType != 'vimeo') ? ' class="disabled"' : ''; ?>>							
-							<?php _e('example: 30300114', REVSLIDER_TEXTDOMAIN); ?>
+							<?php _e('example: 30300114', 'revslider'); ?>
 							<div class="tp-clearfix"></div>
-							<label style="min-width:180px"><?php _e("Cover Image:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e("Cover Image:",'revslider'); ?></label>
 							<span id="vimeo-image-picker"></span>
 						</span>
 						<div class="tp-clearfix"></div>
 
 						<!-- THE HTML5 SELECTOR -->
-						<label><?php _e("HTML5 Video",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("HTML5 Video",'revslider'); ?></label>
 						<input type="radio" name="background_type" value="html5"  data-callid="tp-bghtmlvideo" class="bgsrcchanger" data-bgtype="html5" id="radio_back_htmlvideo" <?php checked($bgType, 'html5'); ?>>
 						<div class="tp-clearfix"></div>
 						<!-- THE BG IMAGE FROM HTML5 SOURCE -->
 						<span id="tp-bghtmlvideo" class="bgsrcchanger-div" style="display:none; margin-left:20px;">
 							
-							<label style="min-width:180px"><?php _e('MPEG:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e('MPEG:', 'revslider'); ?></label>
 							<input type="text" name="slide_bg_html_mpeg" id="slide_bg_html_mpeg" value="<?php echo $slideBGhtmlmpeg; ?>" <?php echo ($bgType != 'html5') ? ' class="disabled"' : ''; ?>>
 							<span class="vidsrcchanger-div" style="margin-left:20px;">
-								<a href="javascript:void(0)" data-inptarget="slide_bg_html_mpeg" class="button_change_video button-primary revblue" ><?php _e('Change Video', REVSLIDER_TEXTDOMAIN); ?></a>
+								<a href="javascript:void(0)" data-inptarget="slide_bg_html_mpeg" class="button_change_video button-primary revblue" ><?php _e('Change Video', 'revslider'); ?></a>
 							</span>
 							<div class="tp-clearfix"></div>
-							<label style="min-width:180px"><?php _e('WEBM:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e('WEBM:', 'revslider'); ?></label>
 							<input type="text" name="slide_bg_html_webm" id="slide_bg_html_webm" value="<?php echo $slideBGhtmlwebm; ?>" <?php echo ($bgType != 'html5') ? ' class="disabled"' : ''; ?>>
 							<span class="vidsrcchanger-div" style="margin-left:20px;">
-								<a href="javascript:void(0)" data-inptarget="slide_bg_html_webm" class="button_change_video button-primary revblue" ><?php _e('Change Video', REVSLIDER_TEXTDOMAIN); ?></a>
+								<a href="javascript:void(0)" data-inptarget="slide_bg_html_webm" class="button_change_video button-primary revblue" ><?php _e('Change Video', 'revslider'); ?></a>
 							</span>
 							<div class="tp-clearfix"></div>
-							<label style="min-width:180px"><?php _e('OGV:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e('OGV:', 'revslider'); ?></label>
 							<input type="text" name="slide_bg_html_ogv" id="slide_bg_html_ogv" value="<?php echo $slideBGhtmlogv; ?>" <?php echo ($bgType != 'html5') ? ' class="disabled"' : ''; ?>>							
 							<span class="vidsrcchanger-div" style="margin-left:20px;">
-								<a href="javascript:void(0)" data-inptarget="slide_bg_html_ogv" class="button_change_video button-primary revblue" ><?php _e('Change Video', REVSLIDER_TEXTDOMAIN); ?></a>
+								<a href="javascript:void(0)" data-inptarget="slide_bg_html_ogv" class="button_change_video button-primary revblue" ><?php _e('Change Video', 'revslider'); ?></a>
 							</span>
 							<div class="tp-clearfix"></div>
-							<label style="min-width:180px"><?php _e('Cover Image:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label style="min-width:180px"><?php _e('Cover Image:', 'revslider'); ?></label>
 							<span id="html5video-image-picker"></span>
 						</span>
 					</span>
@@ -206,13 +206,14 @@
 				<span id="mainbg-sub-setting" style="display:none">
 					<div class="rs-img-source-url">
 						<div style="float:none; clear:both; margin-bottom: 15px;"></div>
-						<label><?php _e('Image Source:', REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e('Source Info:', 'revslider'); ?></label>
 						<span class="text-selectable" id="the_image_source_url" style="margin-right:20px"></span>
+						<span class="description"><?php _e('Read Only ! Image can be changed from "Source Tab"','revslider'); ?></span>
 					</div>
 
 					<div class="rs-img-source-size">
 						<div style="float:none; clear:both; margin-bottom: 15px;"></div>
-						<label><?php _e('Image Source Size:', REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e('Image Source Size:', 'revslider'); ?></label>
 						<span style="margin-right:20px">
 							<select name="image_source_type">
 								<?php
@@ -229,118 +230,118 @@
 						<!-- ALT -->
 						<p>
 							<?php $alt_option = RevSliderFunctions::getVal($slideParams, 'alt_option', 'media_library'); ?>
-							<label><?php _e("Alt:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Alt:",'revslider'); ?></label>
 							<select id="alt_option" name="alt_option">
-								<option value="media_library" <?php selected($alt_option, 'media_library'); ?>><?php _e('From Media Library', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option value="file_name" <?php selected($alt_option, 'file_name'); ?>><?php _e('From Filename', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option value="custom" <?php selected($alt_option, 'custom'); ?>><?php _e('Custom', REVSLIDER_TEXTDOMAIN); ?></option>
+								<option value="media_library" <?php selected($alt_option, 'media_library'); ?>><?php _e('From Media Library', 'revslider'); ?></option>
+								<option value="file_name" <?php selected($alt_option, 'file_name'); ?>><?php _e('From Filename', 'revslider'); ?></option>
+								<option value="custom" <?php selected($alt_option, 'custom'); ?>><?php _e('Custom', 'revslider'); ?></option>
 							</select>
 							<?php $alt_attr = RevSliderFunctions::getVal($slideParams, 'alt_attr', ''); ?>
 							<input style="<?php echo ($alt_option !== 'custom') ? 'display:none;' : ''; ?>" type="text" id="alt_attr" name="alt_attr" value="<?php echo $alt_attr; ?>">
 						</p>
 						<p class="ext_setting" style="display: none;">
-							<label><?php _e('Width:', REVSLIDER_TEXTDOMAIN)?></label>
+							<label><?php _e('Width:', 'revslider')?></label>
 							<input type="text" name="ext_width" value="<?php echo $ext_width; ?>" />
 						</p>
 						<p class="ext_setting" style="display: none;">
-							<label><?php _e('Height:', REVSLIDER_TEXTDOMAIN)?></label>
+							<label><?php _e('Height:', 'revslider')?></label>
 							<input type="text" name="ext_height" value="<?php echo $ext_height; ?>" />
 						</p>
 					</span>					
 					
 					<span id="video-settings" style="display: block;">
 						<p>
-							<label for="video_force_cover" class="video-label"><?php _e('Force Cover:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_force_cover" class="video-label"><?php _e('Force Cover:', 'revslider'); ?></label>
 							<input type="checkbox" class="tp-moderncheckbox" id="video_force_cover" name="video_force_cover" data-unchecked="off" <?php checked($video_force_cover, 'on'); ?>>
 						</p>
 						<span id="video_dotted_overlay_wrap">
 							<label for="video_dotted_overlay">
-								<?php _e('Dotted Overlay:', REVSLIDER_TEXTDOMAIN); ?>
+								<?php _e('Dotted Overlay:', 'revslider'); ?>
 							</label>				
 							<select id="video_dotted_overlay" name="video_dotted_overlay" style="width:100px">
-								<option <?php selected($video_dotted_overlay, 'none'); ?> value="none"><?php _e('none', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_dotted_overlay, 'twoxtwo'); ?> value="twoxtwo"><?php _e('2 x 2 Black', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_dotted_overlay, 'twoxtwowhite'); ?> value="twoxtwowhite"><?php _e('2 x 2 White', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_dotted_overlay, 'threexthree'); ?> value="threexthree"><?php _e('3 x 3 Black', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_dotted_overlay, 'threexthreewhite'); ?> value="threexthreewhite"><?php _e('3 x 3 White', REVSLIDER_TEXTDOMAIN); ?></option>
-							</select>
-							<p style="clear: both;"></p>
-							<label for="video_ratio">
-								<?php _e("Aspect Ratio:", REVSLIDER_TEXTDOMAIN); ?>
-							</label>				
-							<select id="video_ratio" name="video_ratio" style="width:100px">
-								<option <?php selected($video_ratio, '16:9');?> value="16:9"><?php _e('16:9',REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_ratio, '4:3');?> value="4:3"><?php _e('4:3',REVSLIDER_TEXTDOMAIN); ?></option>
+								<option <?php selected($video_dotted_overlay, 'none'); ?> value="none"><?php _e('none', 'revslider'); ?></option>
+								<option <?php selected($video_dotted_overlay, 'twoxtwo'); ?> value="twoxtwo"><?php _e('2 x 2 Black', 'revslider'); ?></option>
+								<option <?php selected($video_dotted_overlay, 'twoxtwowhite'); ?> value="twoxtwowhite"><?php _e('2 x 2 White', 'revslider'); ?></option>
+								<option <?php selected($video_dotted_overlay, 'threexthree'); ?> value="threexthree"><?php _e('3 x 3 Black', 'revslider'); ?></option>
+								<option <?php selected($video_dotted_overlay, 'threexthreewhite'); ?> value="threexthreewhite"><?php _e('3 x 3 White', 'revslider'); ?></option>
 							</select>
 							<p style="clear: both;"></p>
 						</span>
+						<label for="video_ratio">
+							<?php _e("Aspect Ratio:", 'revslider'); ?>
+						</label>				
+						<select id="video_ratio" name="video_ratio" style="width:100px">
+							<option <?php selected($video_ratio, '16:9');?> value="16:9"><?php _e('16:9','revslider'); ?></option>
+							<option <?php selected($video_ratio, '4:3');?> value="4:3"><?php _e('4:3','revslider'); ?></option>
+						</select>
+						<p style="clear: both;"></p>
 						<p>
 							<label for="video_ratio">
-								<?php _e("Start At:", REVSLIDER_TEXTDOMAIN); ?>
+								<?php _e("Start At:", 'revslider'); ?>
 							</label>				
-							<input type="text" value="<?php echo $video_start_at; ?>" name="video_start_at"> <?php _e('For Example: 00:17', REVSLIDER_TEXTDOMAIN); ?>
+							<input type="text" value="<?php echo $video_start_at; ?>" name="video_start_at"> <?php _e('For Example: 00:17', 'revslider'); ?>
 							<p style="clear: both;"></p>
 						</p>
 						<p>
 							<label for="video_ratio">
-								<?php _e("End At:", REVSLIDER_TEXTDOMAIN); ?>
+								<?php _e("End At:", 'revslider'); ?>
 							</label>				
-							<input type="text" value="<?php echo $video_end_at; ?>" name="video_end_at"> <?php _e('For Example: 02:17', REVSLIDER_TEXTDOMAIN); ?>
+							<input type="text" value="<?php echo $video_end_at; ?>" name="video_end_at"> <?php _e('For Example: 02:17', 'revslider'); ?>
 							<p style="clear: both;"></p>
 						</p>
 						<p>
-							<label for="video_loop"><?php _e('Loop Video:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_loop"><?php _e('Loop Video:', 'revslider'); ?></label>
 							<select id="video_loop" name="video_loop" style="width: 200px;">
-								<option <?php selected($video_loop, 'none');?> value="none"><?php _e('Disable', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_loop, 'loop');?> value="loop"><?php _e('Loop, Slide is paused', REVSLIDER_TEXTDOMAIN); ?></option>
-								<option <?php selected($video_loop, 'loopandnoslidestop');?> value="loopandnoslidestop"><?php _e('Loop, Slide does not stop', REVSLIDER_TEXTDOMAIN); ?></option>
+								<option <?php selected($video_loop, 'none');?> value="none"><?php _e('Disable', 'revslider'); ?></option>
+								<option <?php selected($video_loop, 'loop');?> value="loop"><?php _e('Loop, Slide is paused', 'revslider'); ?></option>
+								<option <?php selected($video_loop, 'loopandnoslidestop');?> value="loopandnoslidestop"><?php _e('Loop, Slide does not stop', 'revslider'); ?></option>
 							</select>
 						</p>
 						
 						<p>	
-							<label for="video_nextslide"><?php _e('Next Slide On End:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_nextslide"><?php _e('Next Slide On End:', 'revslider'); ?></label>
 							<input type="checkbox" class="tp-moderncheckbox" id="video_nextslide" name="video_nextslide" data-unchecked="off" <?php checked($video_nextslide, 'on'); ?>>
 						</p>
 						<p>
-							<label for="video_force_rewind"><?php _e('Rewind at Slide Start:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_force_rewind"><?php _e('Rewind at Slide Start:', 'revslider'); ?></label>
 							<input type="checkbox" class="tp-moderncheckbox" id="video_force_rewind" name="video_force_rewind" data-unchecked="off" <?php checked($video_force_rewind, 'on'); ?>>
 						</p>
 						
 						<p>	
-							<label for="video_mute"><?php _e('Mute Video:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_mute"><?php _e('Mute Video:', 'revslider'); ?></label>
 							<input type="checkbox" class="tp-moderncheckbox" id="video_mute" name="video_mute" data-unchecked="off" <?php checked($video_mute, 'on'); ?>>
 						</p>
 						
 						<p class="vid-rev-vimeo-youtube video_volume_wrapper">
-							<label for="video_volume"><?php _e('Video Volume:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="video_volume"><?php _e('Video Volume:', 'revslider'); ?></label>
 							<input type="text" id="video_volume" name="video_volume" <?php echo esc_attr($video_volume); ?>>
 						</p>
 
 						<span id="vid-rev-youtube-options">
 							<p>
-								<label for="video_speed"><?php _e('Video Speed:', REVSLIDER_TEXTDOMAIN); ?></label>
+								<label for="video_speed"><?php _e('Video Speed:', 'revslider'); ?></label>
 								<select id="video_speed" name="video_speed" style="width:75px">
-									<option <?php selected($video_speed, '0.25');?> value="0.25"><?php _e('0.25', REVSLIDER_TEXTDOMAIN); ?></option>
-									<option <?php selected($video_speed, '0.50');?> value="0.50"><?php _e('0.50', REVSLIDER_TEXTDOMAIN); ?></option>
-									<option <?php selected($video_speed, '1');?> value="1"><?php _e('1', REVSLIDER_TEXTDOMAIN); ?></option>
-									<option <?php selected($video_speed, '1.5');?> value="1.5"><?php _e('1.5', REVSLIDER_TEXTDOMAIN); ?></option>
-									<option <?php selected($video_speed, '2');?> value="2"><?php _e('2', REVSLIDER_TEXTDOMAIN); ?></option>
+									<option <?php selected($video_speed, '0.25');?> value="0.25"><?php _e('0.25', 'revslider'); ?></option>
+									<option <?php selected($video_speed, '0.50');?> value="0.50"><?php _e('0.50', 'revslider'); ?></option>
+									<option <?php selected($video_speed, '1');?> value="1"><?php _e('1', 'revslider'); ?></option>
+									<option <?php selected($video_speed, '1.5');?> value="1.5"><?php _e('1.5', 'revslider'); ?></option>
+									<option <?php selected($video_speed, '2');?> value="2"><?php _e('2', 'revslider'); ?></option>
 								</select>
 							</p>
 							<p>
-								<label><?php _e('Arguments YouTube:', REVSLIDER_TEXTDOMAIN); ?></label>
+								<label><?php _e('Arguments YouTube:', 'revslider'); ?></label>
 								<input type="text" id="video_arguments" name="video_arguments" style="width:350px;" value="<?php echo esc_attr($video_arguments); ?>">
 							</p>
 						</span>
 						<p id="vid-rev-vimeo-options">
-							<label><?php _e('Arguments Vimeo:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e('Arguments Vimeo:', 'revslider'); ?></label>
 							<input type="text" id="video_arguments_vim" name="video_arguments_vim" style="width:350px;" value="<?php echo esc_attr($video_arguments_vim); ?>">
 						</p>
 					</span>
 					
 					<span id="bg-setting-wrap">
 						<p>
-							<label for="slide_bg_fit"><?php _e('Background Fit:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="slide_bg_fit"><?php _e('Background Fit:', 'revslider'); ?></label>
 							<select name="bg_fit" id="slide_bg_fit" style="margin-right:20px">
 								<option value="cover"<?php selected($bgFit, 'cover'); ?>>cover</option>
 								<option value="contain"<?php selected($bgFit, 'contain'); ?>>contain</option>
@@ -351,7 +352,7 @@
 							<input type="text" name="bg_fit_y" style="min-width:54px;width:54px;  <?php if($bgFit != 'percentage') echo 'display: none; '; ?> width:60px;margin-right:10px"  value="<?php echo $bgFitY; ?>" />
 						</p>
 						<p>
-							<label for="slide_bg_position" id="bg-position-lbl"><?php _e('Background Position:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label for="slide_bg_position" id="bg-position-lbl"><?php _e('Background Position:', 'revslider'); ?></label>
 							<span id="bg-start-position-wrapper">
 								<select name="bg_position" id="slide_bg_position">
 									<option value="center top"<?php selected($bgPosition, 'center top'); ?>>center top</option>
@@ -372,7 +373,7 @@
 						</p>
 
 						<p>
-							<label><?php _e("Background Repeat:",REVSLIDER_TEXTDOMAIN)?></label>
+							<label><?php _e("Background Repeat:",'revslider')?></label>
 							<span>
 								<select name="bg_repeat" id="slide_bg_repeat" style="margin-right:20px">
 									<option value="no-repeat"<?php selected($bgRepeat, 'no-repeat'); ?>>no-repeat</option>
@@ -391,15 +392,15 @@
 						<?php 
 						if ($use_parallax=="off") {						
 							echo '<i style="color:#c0392b">';
-							_e("Parallax Feature in Slider Settings is deactivated, parallax will be ignored.",REVSLIDER_TEXTDOMAIN); 
+							_e("Parallax Feature in Slider Settings is deactivated, parallax will be ignored.",'revslider'); 
 							echo '</i>';
 						} else {
 						
 								if ($parallaxisddd=="off") { 
 							?>
-							<label><?php _e("Parallax Level:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Parallax Level:",'revslider'); ?></label>
 							<select name="slide_parallax_level" id="slide_parallax_level">
-								<option value="-" <?php selected($slide_parallax_level, '-'); ?>><?php _e('No Parallax', REVSLIDER_TEXTDOMAIN); ?></option>
+								<option value="-" <?php selected($slide_parallax_level, '-'); ?>><?php _e('No Parallax', 'revslider'); ?></option>
 								<option value="1" <?php selected($slide_parallax_level, '1'); ?>>1 - (<?php echo $parallax_level[0]; ?>%)</option>
 								<option value="2" <?php selected($slide_parallax_level, '2'); ?>>2 - (<?php echo $parallax_level[1]; ?>%)</option>
 								<option value="3" <?php selected($slide_parallax_level, '3'); ?>>3 - (<?php echo $parallax_level[2]; ?>%)</option>
@@ -419,14 +420,14 @@
 							<?php } else {
 								if ($parallaxbgfreeze=="off") {
 							?>							
-								<label><?php _e("Selected 3D Depth:",REVSLIDER_TEXTDOMAIN); ?></label>
+								<label><?php _e("Selected 3D Depth:",'revslider'); ?></label>
 								<input style="min-width:54px;width:54px" type="text" disabled value="<?php echo $parallax_level[15];?>%" />							
-								<span><i><?php _e('3D Parallax is Enabled via Slider Settings !', REVSLIDER_TEXTDOMAIN); ?></i></span>
+								<span><i><?php _e('3D Parallax is Enabled via Slider Settings !', 'revslider'); ?></i></span>
 							<?php
 								} else {								
 									?>
-										<label><?php _e("Background 3D is Disabled",REVSLIDER_TEXTDOMAIN); ?></label>									
-										<span style="display: inline-block;vertical-align: middle;line-height:32px"><i><?php _e('To Enable 3D Parallax for Background please change the Option "BG 3D Disabled" to "OFF" via the Slider Settings !', REVSLIDER_TEXTDOMAIN); ?></i></span>
+										<label><?php _e("Background 3D is Disabled",'revslider'); ?></label>									
+										<span style="display: inline-block;vertical-align: middle;line-height:32px"><i><?php _e('To Enable 3D Parallax for Background please change the Option "BG 3D Disabled" to "OFF" via the Slider Settings !', 'revslider'); ?></i></span>
 									<?php
 								}
 							}
@@ -438,46 +439,46 @@
 
 				<span id="mainbg-sub-kenburns" style="display:none">
 					<p>
-						<label><?php _e('Ken Burns / Pan Zoom:', REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e('Ken Burns / Pan Zoom:', 'revslider'); ?></label>
 						<input type="checkbox" class="tp-moderncheckbox withlabel" id="kenburn_effect" name="kenburn_effect" data-unchecked="off" <?php checked($kenburn_effect, 'on'); ?>>
 					</p>
 					<span id="kenburn_wrapper" <?php echo ($kenburn_effect == 'off') ? 'style="display: none;"' : ''; ?>>						
 						<p>
-							<label><?php _e('Scale: (in %):', REVSLIDER_TEXTDOMAIN); ?></label>
-							<label style="min-width:40px"><?php _e('From', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e('Scale: (in %):', 'revslider'); ?></label>
+							<label style="min-width:40px"><?php _e('From', 'revslider'); ?></label>
 							<input style="min-width:54px;width:54px" type="text" name="kb_start_fit" value="<?php echo intval($kb_start_fit); ?>" />
-							<label style="min-width:20px"><?php _e('To', REVSLIDER_TEXTDOMAIN)?></label>
+							<label style="min-width:20px"><?php _e('To', 'revslider')?></label>
 							<input style="min-width:54px;width:54px" type="text" name="kb_end_fit" value="<?php echo intval($kb_end_fit); ?>" />
 						</p>
 						
 						<p>
-							<label><?php _e('Horizontal Offsets:', REVSLIDER_TEXTDOMAIN)?></label>
-							<label style="min-width:40px"><?php _e('From', REVSLIDER_TEXTDOMAIN); ?></label>							
+							<label><?php _e('Horizontal Offsets:', 'revslider')?></label>
+							<label style="min-width:40px"><?php _e('From', 'revslider'); ?></label>							
 							<input style="min-width:54px;width:54px" type="text" name="kb_start_offset_x" value="<?php echo $kbStartOffsetX; ?>" />
-							<label style="min-width:20px"><?php _e('To', REVSLIDER_TEXTDOMAIN)?></label>
+							<label style="min-width:20px"><?php _e('To', 'revslider')?></label>
 							<input style="min-width:54px;width:54px" type="text" name="kb_end_offset_x" value="<?php echo $kbEndOffsetX; ?>" />
-							<span><i><?php _e('Use Negative and Positive Values to offset from the Center !', REVSLIDER_TEXTDOMAIN); ?></i></span>
+							<span><i><?php _e('Use Negative and Positive Values to offset from the Center !', 'revslider'); ?></i></span>
 						</p>
 
 						<p>
-							<label><?php _e('Vertical Offsets:', REVSLIDER_TEXTDOMAIN)?></label>		
-							<label style="min-width:40px"><?php _e('From', REVSLIDER_TEXTDOMAIN); ?></label>												
+							<label><?php _e('Vertical Offsets:', 'revslider')?></label>		
+							<label style="min-width:40px"><?php _e('From', 'revslider'); ?></label>												
 							<input style="min-width:54px;width:54px" type="text" name="kb_start_offset_y" value="<?php echo $kbStartOffsetY; ?>" />
-							<label style="min-width:20px"><?php _e('To', REVSLIDER_TEXTDOMAIN)?></label>
+							<label style="min-width:20px"><?php _e('To', 'revslider')?></label>
 							<input style="min-width:54px;width:54px" type="text" name="kb_end_offset_y" value="<?php echo $kbEndOffsetY; ?>" />
-							<span><i><?php _e('Use Negative and Positive Values to offset from the Center !', REVSLIDER_TEXTDOMAIN); ?></i></span>
+							<span><i><?php _e('Use Negative and Positive Values to offset from the Center !', 'revslider'); ?></i></span>
 						</p>
 						
 						<p>
-							<label><?php _e('Rotation:', REVSLIDER_TEXTDOMAIN)?></label>		
-							<label style="min-width:40px"><?php _e('From', REVSLIDER_TEXTDOMAIN); ?></label>												
+							<label><?php _e('Rotation:', 'revslider')?></label>		
+							<label style="min-width:40px"><?php _e('From', 'revslider'); ?></label>												
 							<input style="min-width:54px;width:54px" type="text" name="kb_start_rotate" value="<?php echo $kbStartRotate; ?>" />
-							<label style="min-width:20px"><?php _e('To', REVSLIDER_TEXTDOMAIN)?></label>
+							<label style="min-width:20px"><?php _e('To', 'revslider')?></label>
 							<input style="min-width:54px;width:54px" type="text" name="kb_end_rotate" value="<?php echo $kbEndRotate; ?>" />
 						</p>
 						
 						<p>
-							<label><?php _e('Easing:', REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e('Easing:', 'revslider'); ?></label>
 							<select name="kb_easing">
 								<option <?php selected($kb_easing, 'Linear.easeNone'); ?> value="Linear.easeNone">Linear.easeNone</option>
 								<option <?php selected($kb_easing, 'Power0.easeIn'); ?> value="Power0.easeIn">Power0.easeIn  (linear)</option>
@@ -517,7 +518,7 @@
 							</select>
 						</p>
 						<p>
-							<label><?php _e('Duration (in ms):', REVSLIDER_TEXTDOMAIN)?></label>
+							<label><?php _e('Duration (in ms):', 'revslider')?></label>
 							<input type="text" name="kb_duration" value="<?php echo intval($kb_duration); ?>" />
 						</p>
 					</span>
@@ -531,28 +532,28 @@
 				<!-- SLIDE TITLE -->
 				<p style="display:none">
 					<?php $title = RevSliderFunctions::getVal($slideParams, 'title','Slide'); ?>
-					<label><?php _e("Slide Title",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Slide Title",'revslider'); ?></label>
 					<input type="text" class="medium" id="title" disabled="disabled" name="title" value="<?php echo $title; ?>">
-					<span class="description"><?php _e("The title of the slide, will be shown in the slides list.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("The title of the slide, will be shown in the slides list.",'revslider'); ?></span>
 				</p>
 
 				<!-- SLIDE DELAY -->
 				<p>
 					<?php $delay = RevSliderFunctions::getVal($slideParams, 'delay',''); ?>
-					<label><?php _e('Slide "Delay":',REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e('Slide "Delay":','revslider'); ?></label>
 					<input type="text" class="small-text" id="delay" name="delay" value="<?php echo $delay; ?>">
-					<span class="description"><?php _e("A new delay value for the Slide. If no delay defined per slide, the delay defined via Options (9000ms) will be used.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("A new delay value for the Slide. If no delay defined per slide, the delay defined via Options (9000ms) will be used.",'revslider'); ?></span>
 				</p>
 
 				<!-- SLIDE STATE --->
 				<p>
 					<?php $state = RevSliderFunctions::getVal($slideParams, 'state','published'); ?>
-					<label><?php _e("Slide State",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Slide State",'revslider'); ?></label>
 					<select id="state" name="state">
-						<option value="published"<?php selected($state, 'published'); ?>><?php _e("Published",REVSLIDER_TEXTDOMAIN); ?></option>
-						<option value="unpublished"<?php selected($state, 'unpublished'); ?>><?php _e("Unpublished",REVSLIDER_TEXTDOMAIN); ?></option>
+						<option value="published"<?php selected($state, 'published'); ?>><?php _e("Published",'revslider'); ?></option>
+						<option value="unpublished"<?php selected($state, 'unpublished'); ?>><?php _e("Unpublished",'revslider'); ?></option>
 					</select>
-					<span class="description"><?php _e("The state of the slide. The unpublished slide will be excluded from the slider.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("The state of the slide. The unpublished slide will be excluded from the slider.",'revslider'); ?></span>
 				</p>
 				<!-- SLIDE LANGUAGE SELECTOR -->
 				<?php
@@ -565,7 +566,7 @@
 						$curset_lang = RevSliderFunctions::getVal($slideParams, "lang","all");
 						?>
 						<p>
-							<label><?php _e("Language",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Language",'revslider'); ?></label>
 							<select name="lang">
 								<?php
 								if(!empty($arrLangs) && is_array($arrLangs)){
@@ -576,7 +577,7 @@
 								}
 								?>
 							</select>
-							<span class="description"><?php _e("The language of the slide (uses WPML plugin).",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e("The language of the slide (uses WPML plugin).",'revslider'); ?></span>
 						</p>
 						<?php
 					}
@@ -585,28 +586,28 @@
 				<!-- SLIDE VISIBLE FROM -->
 				<p>
 					<?php $date_from = RevSliderFunctions::getVal($slideParams, 'date_from',''); ?>
-					<label><?php _e("Visible from:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Visible from:",'revslider'); ?></label>
 					<input type="text" class="inputDatePicker" id="date_from" name="date_from" value="<?php echo $date_from; ?>">
-					<span class="description"><?php _e("If set, slide will be visible after the date is reached.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("If set, slide will be visible after the date is reached.",'revslider'); ?></span>
 				</p>
 
 				<!-- SLIDE VISIBLE UNTIL -->
 				<p>
 					<?php $date_to = RevSliderFunctions::getVal($slideParams, 'date_to',''); ?>
-					<label><?php _e("Visible until:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Visible until:",'revslider'); ?></label>
 					<input type="text" class="inputDatePicker" id="date_to" name="date_to" value="<?php echo $date_to; ?>">
-					<span class="description"><?php _e("If set, slide will be visible till the date is reached.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("If set, slide will be visible till the date is reached.",'revslider'); ?></span>
 				</p>
 
 				
 				<!-- SLIDE VISIBLE FROM -->
 				<p style="display:none">
 					<?php $save_performance = RevSliderFunctions::getVal($slideParams, 'save_performance','off'); ?>
-					<label><?php _e("Save Performance:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Save Performance:",'revslider'); ?></label>
 					<span style="display:inline-block; width:200px; margin-right:20px;">
 						<input type="checkbox" class="tp-moderncheckbox withlabel" id="save_performance" name="save_performance" data-unchecked="off" <?php checked( $save_performance, "on" ); ?>>
 					</span>
-					<span class="description"><?php _e("Slide End Transition will first start when last Layer has been removed.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("Slide End Transition will first start when last Layer has been removed.",'revslider'); ?></span>
 				</p>
 
 			</div>
@@ -617,7 +618,7 @@
 				<div style="margin-top:10px">
 					<?php $slide_thumb = RevSliderFunctions::getVal($slideParams, 'slide_thumb',''); ?>
 					<span style="display:inline-block; vertical-align: top;">
-						<label><?php _e("Thumbnail:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Thumbnail:",'revslider'); ?></label>
 					</span>
 					<div style="display:inline-block; vertical-align: top;">
 						<div id="slide_thumb_button_preview" class="setting-image-preview"><?php
@@ -635,7 +636,7 @@
 						<span style="clear:both;display:block"></span>
 						<input type="button" id="slide_thumb_button" style="width:110px !important; display:inline-block;" class="button-image-select button-primary revblue" value="Choose Image" original-title="">
 						<input type="button" id="slide_thumb_button_remove" style="margin-right:20px !important; width:85px !important; display:inline-block;" class="button-image-remove button-primary revred"  value="Remove" original-title="">
-						<span class="description"><?php _e("Slide Thumbnail. If not set - it will be taken from the slide image.",REVSLIDER_TEXTDOMAIN); ?></span>
+						<span class="description"><?php _e("Slide Thumbnail. If not set - it will be taken from the slide image.",'revslider'); ?></span>
 					</div>
 				</div>
 				<?php $thumb_dimension = RevSliderFunctions::getVal($slideParams, 'thumb_dimension', 'slider'); ?>
@@ -643,23 +644,23 @@
 
 				<p>
 					<span style="display:inline-block; vertical-align: top;">
-						<label><?php _e("Thumbnail Dimensions:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Thumbnail Dimensions:",'revslider'); ?></label>
 					</span>
 					<select name="thumb_dimension">
-						<option value="slider" <?php selected($thumb_dimension, 'slider'); ?>><?php _e('From Slider Settings', REVSLIDER_TEXTDOMAIN); ?></option>
-						<option value="orig" <?php selected($thumb_dimension, 'orig'); ?>><?php _e('Original Size', REVSLIDER_TEXTDOMAIN); ?></option>
+						<option value="slider" <?php selected($thumb_dimension, 'slider'); ?>><?php _e('From Slider Settings', 'revslider'); ?></option>
+						<option value="orig" <?php selected($thumb_dimension, 'orig'); ?>><?php _e('Original Size', 'revslider'); ?></option>
 					</select>
-					<span class="description"><?php _e("Width and height of thumbnails can be changed in the Slider Settings -> Navigation -> Thumbs tab.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("Width and height of thumbnails can be changed in the Slider Settings -> Navigation -> Thumbs tab.",'revslider'); ?></span>
 				</p>
 
 				<p style="display:none;" class="show_on_thumbnail_exist">
 					<span style="display:inline-block; vertical-align: top;">
-						<label><?php _e("Thumbnail Admin Purpose:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Thumbnail Admin Purpose:",'revslider'); ?></label>
 					</span>
 					<span style="display:inline-block; width:200px; margin-right:20px;line-height:27px">
 						<input type="checkbox" class="tp-moderncheckbox" id="thumb_for_admin" name="thumb_for_admin" data-unchecked="off" <?php checked($thumb_for_admin, 'on'); ?>>
 					</span>
-					<span class="description"><?php _e("Use the Thumbnail also for Admin purposes. This will use the selected Thumbnail to represent the Slide in all Slider Admin area.",REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e("Use the Thumbnail also for Admin purposes. This will use the selected Thumbnail to represent the Slide in all Slider Admin area.",'revslider'); ?></span>
 				</p>
 			</div>
 
@@ -798,38 +799,38 @@
 							</div>
 						</div>
 						<div class="slide-trans-cur-selected">
-							<p><?php _e("Used Transitions (Order in Loops)",REVSLIDER_TEXTDOMAIN); ?></p>
+							<p><?php _e("Used Transitions (Order in Loops)",'revslider'); ?></p>
 							<ul class="slide-trans-cur-ul">
 							</ul>
 						</div>
 						<div class="slide-trans-cur-selected-settings">
 							<!-- SLOT AMOUNT -->
 							
-							<label><?php _e("Slot / Box Amount:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Slot / Box Amount:",'revslider'); ?></label>
 							<input type="text" class="small-text input-deepselects" id="slot_amount" name="slot_amount" value="<?php echo $slot_amount[0]; ?>" data-selects="1||Random||Custom||Default" data-svalues ="1||random||3||default" data-icons="thumbs-up||shuffle||wrench||key">
 							<span class="tp-clearfix"></span>
-							<span class="description"><?php _e("# of slots/boxes the slide is divided into.",REVSLIDER_TEXTDOMAIN); ?></span>					
+							<span class="description"><?php _e("# of slots/boxes the slide is divided into.",'revslider'); ?></span>					
 							<span class="tp-clearfix"></span>
 							
 							<!-- ROTATION -->
 							
-							<label><?php _e("Slot Rotation:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Slot Rotation:",'revslider'); ?></label>
 							<input type="text" class="small-text input-deepselects" id="transition_rotation" name="transition_rotation" value="<?php echo $transition_rotation[0]; ?>" data-selects="0||Random||Custom||Default||45||90||180||270||360" data-svalues ="0||random||-75||default||45||90||180||270||360" data-icons="thumbs-up||shuffle||wrench||key||star-empty||star-empty||star-empty||star-empty||star-empty">
 							<span class="tp-clearfix"></span>
-							<span class="description"><?php _e("Start Rotation of Transition (deg).",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e("Start Rotation of Transition (deg).",'revslider'); ?></span>
 							<span class="tp-clearfix"></span>
 
 							<!-- DURATION -->
 							
-							<label><?php _e("Animation Duration:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Animation Duration:",'revslider'); ?></label>
 							<input type="text" class="small-text input-deepselects" id="transition_duration" name="transition_duration" value="<?php echo $transition_duration[0]; ?>" data-selects="300||Random||Custom||Default" data-svalues ="500||random||650||default" data-icons="thumbs-up||shuffle||wrench||key">
 							<span class="tp-clearfix"></span>
-							<span class="description"><?php _e("The duration of the transition.",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e("The duration of the transition.",'revslider'); ?></span>
 							<span class="tp-clearfix"></span>
 
 							<!-- IN EASE -->
 							
-							<label><?php _e("Easing In:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Easing In:",'revslider'); ?></label>
 							<select name="transition_ease_in">
 									<option value="default">Default</option>
 									<option value="Linear.easeNone">Linear.easeNone</option>
@@ -869,12 +870,12 @@
 									<option value="SlowMo.ease">SlowMo.ease</option>
 							</select>
 							<span class="tp-clearfix"></span>
-							<span class="description"><?php _e("The easing of Appearing transition.",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e("The easing of Appearing transition.",'revslider'); ?></span>
 							<span class="tp-clearfix"></span>
 
 							<!-- OUT EASE -->
 							
-							<label><?php _e("Easing Out:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Easing Out:",'revslider'); ?></label>
 							<select name="transition_ease_out">
 									<option value="default">Default</option>
 									<option value="Linear.easeNone">Linear.easeNone</option>
@@ -914,7 +915,7 @@
 									<option value="SlowMo.ease">SlowMo.ease</option>
 							</select>
 							<span class="tp-clearfix"></span>
-							<span class="description"><?php _e("The easing of Disappearing transition.",REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e("The easing of Disappearing transition.",'revslider'); ?></span>
 							
 						</div>
 
@@ -932,8 +933,8 @@
 					for($i=1;$i<=10;$i++){
 						?>
 						<p>
-							<?php _e('Parameter', REVSLIDER_TEXTDOMAIN); echo ' '.$i; ?> <input type="text" name="params_<?php echo $i; ?>" value="<?php echo stripslashes(esc_attr(RevSliderFunctions::getVal($slideParams, 'params_'.$i,''))); ?>">
-							<?php _e('Max. Chars', REVSLIDER_TEXTDOMAIN); ?> <input type="text" style="width: 50px; min-width: 50px;" name="params_<?php echo $i; ?>_chars" value="<?php echo esc_attr(RevSliderFunctions::getVal($slideParams, 'params_'.$i.'_chars',10, RevSlider::FORCE_NUMERIC)); ?>">
+							<?php _e('Parameter', 'revslider'); echo ' '.$i; ?> <input type="text" name="params_<?php echo $i; ?>" value="<?php echo stripslashes(esc_attr(RevSliderFunctions::getVal($slideParams, 'params_'.$i,''))); ?>">
+							<?php _e('Max. Chars', 'revslider'); ?> <input type="text" style="width: 50px; min-width: 50px;" name="params_<?php echo $i; ?>_chars" value="<?php echo esc_attr(RevSliderFunctions::getVal($slideParams, 'params_'.$i.'_chars',10, RevSlider::FORCE_NUMERIC)); ?>">
 							<?php if($slider_type !== 'gallery'){ ?><i class="eg-icon-pencil rs-param-meta-open" data-curid="<?php echo $i; ?>"></i><?php } ?>
 						</p>
 						<?php
@@ -943,10 +944,10 @@
 				<!-- BASIC DESCRIPTION -->
 				<p>
 					<?php $slide_description = stripslashes(RevSliderFunctions::getVal($slideParams, 'slide_description', '')); ?>
-					<label><?php _e("Description of Slider:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Description of Slider:",'revslider'); ?></label>
 
 					<textarea name="slide_description" style="height: 425px; width: 100%"><?php echo $slide_description; ?></textarea>
-					<span class="description"><?php _e('Define a description here to show at the navigation if enabled in Slider Settings',REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e('Define a description here to show at the navigation if enabled in Slider Settings','revslider'); ?></span>
 				</p>
 			</div>
 
@@ -955,68 +956,68 @@
 				<!-- CLASS -->
 				<p>
 					<?php $class_attr = RevSliderFunctions::getVal($slideParams, 'class_attr',''); ?>
-					<label><?php _e("Class:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Class:",'revslider'); ?></label>
 					<input type="text" class="" id="class_attr" name="class_attr" value="<?php echo $class_attr; ?>">
-					<span class="description"><?php _e('Adds a unique class to the li of the Slide like class="rev_special_class" (add only the classnames, seperated by space)',REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e('Adds a unique class to the li of the Slide like class="rev_special_class" (add only the classnames, seperated by space)','revslider'); ?></span>
 				</p>
 
 				<!-- ID -->
 				<p>
 					<?php $id_attr = RevSliderFunctions::getVal($slideParams, 'id_attr',''); ?>
-					<label><?php _e("ID:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("ID:",'revslider'); ?></label>
 					<input type="text" class="" id="id_attr" name="id_attr" value="<?php echo $id_attr; ?>">
-					<span class="description"><?php _e('Adds a unique ID to the li of the Slide like id="rev_special_id" (add only the id)',REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e('Adds a unique ID to the li of the Slide like id="rev_special_id" (add only the id)','revslider'); ?></span>
 				</p>
 
 				<!-- CUSTOM FIELDS -->
 				<p>
 					<?php $data_attr = stripslashes(RevSliderFunctions::getVal($slideParams, 'data_attr','')); ?>
-					<label><?php _e("Custom Fields:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Custom Fields:",'revslider'); ?></label>
 					<textarea id="data_attr" name="data_attr"><?php echo $data_attr; ?></textarea>
-					<span class="description"><?php _e('Add as many attributes as you wish here. (i.e.: data-layer="firstlayer" data-custom="somevalue").',REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e('Add as many attributes as you wish here. (i.e.: data-layer="firstlayer" data-custom="somevalue").','revslider'); ?></span>
 				</p>
 
 				<!-- Enable Link -->
 				<p>
 					<?php $enable_link = RevSliderFunctions::getVal($slideParams, 'enable_link','false'); ?>
-					<label><?php _e("Enable Link:",REVSLIDER_TEXTDOMAIN); ?></label>
+					<label><?php _e("Enable Link:",'revslider'); ?></label>
 					<select id="enable_link" name="enable_link">
-						<option value="true"<?php selected($enable_link, 'true'); ?>><?php _e("Enable",REVSLIDER_TEXTDOMAIN); ?></option>
-						<option value="false"<?php selected($enable_link, 'false'); ?>><?php _e("Disable",REVSLIDER_TEXTDOMAIN); ?></option>
+						<option value="true"<?php selected($enable_link, 'true'); ?>><?php _e("Enable",'revslider'); ?></option>
+						<option value="false"<?php selected($enable_link, 'false'); ?>><?php _e("Disable",'revslider'); ?></option>
 					</select>
-					<span class="description"><?php _e('Link the Full Slide to an URL or Action.',REVSLIDER_TEXTDOMAIN); ?></span>
+					<span class="description"><?php _e('Link the Full Slide to an URL or Action.','revslider'); ?></span>
 				</p>
 				
 				<div class="rs-slide-link-setting-wrapper">
 					<!-- Link Type -->
 					<p>
 						<?php $enable_link = RevSliderFunctions::getVal($slideParams, 'link_type','regular'); ?>
-						<label><?php _e("Link Type:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Link Type:",'revslider'); ?></label>
 						<span style="display:inline-block; width:200px; margin-right:20px;">
-							<input type="radio" id="link_type_1" value="regular" name="link_type"<?php checked($enable_link, 'regular'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Regular',REVSLIDER_TEXTDOMAIN); ?></span>
-							<input type="radio" id="link_type_2" value="slide" name="link_type"<?php checked($enable_link, 'slide'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('To Slide',REVSLIDER_TEXTDOMAIN); ?></span>
+							<input type="radio" id="link_type_1" value="regular" name="link_type"<?php checked($enable_link, 'regular'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Regular','revslider'); ?></span>
+							<input type="radio" id="link_type_2" value="slide" name="link_type"<?php checked($enable_link, 'slide'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('To Slide','revslider'); ?></span>
 						</span>
-						<span class="description"><?php _e('Regular - Link to URL,  To Slide - Call a Slide Action',REVSLIDER_TEXTDOMAIN); ?></span>
+						<span class="description"><?php _e('Regular - Link to URL,  To Slide - Call a Slide Action','revslider'); ?></span>
 					</p>
 
 					<div class="rs-regular-link-setting-wrap">
 						<!-- SLIDE LINK -->
 						<p>
 							<?php $val_link = RevSliderFunctions::getVal($slideParams, 'link',''); ?>
-							<label><?php _e("Slide Link:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Slide Link:",'revslider'); ?></label>
 							<input type="text" id="rev_link" name="link" value="<?php echo $val_link; ?>">
-							<span class="description"><?php _e('A link on the whole slide pic (use {{link}} or {{meta:somemegatag}} in template sliders to link to a post or some other meta)',REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e('A link on the whole slide pic (use {{link}} or {{meta:somemegatag}} in template sliders to link to a post or some other meta)','revslider'); ?></span>
 						</p>
 					
 						<!-- LINK TARGET -->
 						<p>
 							<?php $link_open_in = RevSliderFunctions::getVal($slideParams, 'link_open_in','same'); ?>
-							<label><?php _e("Link Target:",REVSLIDER_TEXTDOMAIN); ?></label>
+							<label><?php _e("Link Target:",'revslider'); ?></label>
 							<select id="link_open_in" name="link_open_in">
-								<option value="same"<?php selected($link_open_in, 'same'); ?>><?php _e('Same Window',REVSLIDER_TEXTDOMAIN); ?></option>
-								<option value="new"<?php selected($link_open_in, 'new'); ?>><?php _e('New Window',REVSLIDER_TEXTDOMAIN); ?></option>
+								<option value="same"<?php selected($link_open_in, 'same'); ?>><?php _e('Same Window','revslider'); ?></option>
+								<option value="new"<?php selected($link_open_in, 'new'); ?>><?php _e('New Window','revslider'); ?></option>
 							</select>
-							<span class="description"><?php _e('The target of the slide link.',REVSLIDER_TEXTDOMAIN); ?></span>
+							<span class="description"><?php _e('The target of the slide link.','revslider'); ?></span>
 						</p>
 					</div>
 					<!-- LINK TO SLIDE -->
@@ -1024,12 +1025,12 @@
 						<?php $slide_link = RevSliderFunctions::getVal($slideParams, 'slide_link','nothing');
 						//num_slide_link
 						$arrSlideLink = array();
-						$arrSlideLink["nothing"] = __("-- Not Chosen --",REVSLIDER_TEXTDOMAIN);
-						$arrSlideLink["next"] = __("-- Next Slide --",REVSLIDER_TEXTDOMAIN);
-						$arrSlideLink["prev"] = __("-- Previous Slide --",REVSLIDER_TEXTDOMAIN);
+						$arrSlideLink["nothing"] = __("-- Not Chosen --",'revslider');
+						$arrSlideLink["next"] = __("-- Next Slide --",'revslider');
+						$arrSlideLink["prev"] = __("-- Previous Slide --",'revslider');
 
 						$arrSlideLinkLayers = $arrSlideLink;
-						$arrSlideLinkLayers["scroll_under"] = __("-- Scroll Below Slider --",REVSLIDER_TEXTDOMAIN);
+						$arrSlideLinkLayers["scroll_under"] = __("-- Scroll Below Slider --",'revslider');
 						$arrSlideNames = array();
 						if(isset($slider) && $slider->isInited())
 							$arrSlideNames = $slider->getArrSlideNames();
@@ -1041,7 +1042,7 @@
 							}
 						}
 						?>
-						<label><?php _e("Link To Slide:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Link To Slide:",'revslider'); ?></label>
 						<select id="slide_link" name="slide_link">
 							<?php
 							if(!empty($arrSlideLinkLayers) && is_array($arrSlideLinkLayers)){
@@ -1052,17 +1053,17 @@
 							}
 							?>
 						</select>
-						<span class="description"><?php _e('Call Slide Action',REVSLIDER_TEXTDOMAIN); ?></span>
+						<span class="description"><?php _e('Call Slide Action','revslider'); ?></span>
 					</p>
 					<!-- Link POSITION -->
 					<p>
 						<?php $link_pos = RevSliderFunctions::getVal($slideParams, 'link_pos','front'); ?>
-						<label><?php _e("Link Sensibility:",REVSLIDER_TEXTDOMAIN); ?></label>
+						<label><?php _e("Link Sensibility:",'revslider'); ?></label>
 						<span style="display:inline-block; width:200px; margin-right:20px;">
-							<input type="radio" id="link_pos_1" value="front" name="link_pos"<?php checked($link_pos, 'front'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Front',REVSLIDER_TEXTDOMAIN); ?></span>
-							<input type="radio" id="link_pos_2" value="back" name="link_pos"<?php checked($link_pos, 'back'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Back',REVSLIDER_TEXTDOMAIN); ?></span>
+							<input type="radio" id="link_pos_1" value="front" name="link_pos"<?php checked($link_pos, 'front'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Front','revslider'); ?></span>
+							<input type="radio" id="link_pos_2" value="back" name="link_pos"<?php checked($link_pos, 'back'); ?>><span style="line-height:30px; vertical-align: middle; margin:0px 20px 0px 10px;"><?php _e('Back','revslider'); ?></span>
 						</span>
-						<span class="description"><?php _e('The z-index position of the link related to layers',REVSLIDER_TEXTDOMAIN); ?></span>
+						<span class="description"><?php _e('The z-index position of the link related to layers','revslider'); ?></span>
 					</p>
 				</div>
 			</div>

@@ -44,16 +44,18 @@ class RevSliderNavigation {
 	 * Get all Navigations
 	 * @since: 5.0
 	 **/
-	public static function get_all_navigations($defaults = true){
+	public static function get_all_navigations($defaults = true, $raw = false){
 		global $wpdb;
 		
 		$navigations = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix.RevSliderGlobals::TABLE_NAVIGATION_NAME, ARRAY_A);
 		
-		foreach($navigations as $key => $nav){
-			$navigations[$key]['css'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['css'], true));
-			$navigations[$key]['markup'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['markup'], true));
-			if(isset($navigations[$key]['settings'])){
-				$navigations[$key]['settings'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['settings'], true));
+		if($raw == false){
+			foreach($navigations as $key => $nav){
+				$navigations[$key]['css'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['css'], true));
+				$navigations[$key]['markup'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['markup'], true));
+				if(isset($navigations[$key]['settings'])){
+					$navigations[$key]['settings'] = RevSliderBase::stripslashes_deep(json_decode($navigations[$key]['settings'], true));
+				}
 			}
 		}
 		
@@ -61,13 +63,15 @@ class RevSliderNavigation {
 			$def = self::get_default_navigations();
 			
 			if(!empty($def)){
-				foreach($def as $key => $nav){
-					
-					$def[$key]['css'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['css'], true));
-					$def[$key]['markup'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['markup'], true));
-				}
-				if(isset($def[$key]['settings'])){
-					$def[$key]['settings'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['settings'], true));
+				if($raw == false){
+					foreach($def as $key => $nav){
+						
+						$def[$key]['css'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['css'], true));
+						$def[$key]['markup'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['markup'], true));
+					}
+					if(isset($def[$key]['settings'])){
+						$def[$key]['settings'] = RevSliderBase::stripslashes_deep(json_decode($def[$key]['settings'], true));
+					}
 				}
 				$navigations = array_merge($navigations, $def);
 			}
@@ -155,11 +159,11 @@ class RevSliderNavigation {
 	public function delete_navigation($nav_id = 0){
 		global $wpdb;
 		
-		if(!isset($nav_id) || intval($nav_id) == 0) return __('Invalid ID', REVSLIDER_TEXTDOMAIN);
+		if(!isset($nav_id) || intval($nav_id) == 0) return __('Invalid ID', 'revslider');
 		
 		
 		$response = $wpdb->delete($wpdb->prefix.RevSliderGlobals::TABLE_NAVIGATION_NAME, array('id' => $nav_id));
-		if($response === false) return __('Navigation could not be deleted', REVSLIDER_TEXTDOMAIN);
+		if($response === false) return __('Navigation could not be deleted', 'revslider');
 		
 		return true;
 
@@ -333,6 +337,33 @@ class RevSliderNavigation {
 		}
 		
 		return $handle;
+	}
+	
+	
+	/**
+	 * Check if given Navigation is custom, if yes, export it
+	 * @since: 5.1.1
+	 **/
+	public static function export_navigation($nav_handle){
+		$navs = self::get_all_navigations(false, true);
+		
+		if(!is_array($nav_handle)) $nav_handle = array($nav_handle => true);
+		
+		
+		$entries = array();
+		if(!empty($nav_handle) && !empty($navs)){
+			foreach($nav_handle as $handle => $u){
+				foreach($navs as $n => $v){
+					if($v['handle'] == $handle){
+						$entries[$handle] = $navs[$n];
+						break;
+					}
+				}
+			}
+			if(!empty($entries)) return $entries;
+		}
+		
+		return false;
 	}
 }
 

@@ -1,6 +1,6 @@
 /********************************************
  * REVOLUTION 5.0 EXTENSION - NAVIGATION
- * @version: 1.0.3 (25.09.2015)
+ * @version: 1.0.4 (10.11.2015)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -444,187 +444,188 @@ var swipeAction = function(container,opt,vertical) {
 	pagescroll = vertical == "swipebased" && swipe_wait_dir=="vertical" ? "none" : vertical ? "vertical" : pagescroll;
 	
 	if (!jQuery.fn.swipetp) jQuery.fn.swipetp = jQuery.fn.swipe;
-	if (!jQuery.fn.swipetp.defaults || !jQuery.fn.swipetp.defaults.excludedElements) {
+	if (!jQuery.fn.swipetp.defaults || !jQuery.fn.swipetp.defaults.excludedElements) 
 		if (!jQuery.fn.swipetp.defaults) 
 			jQuery.fn.swipetp.defaults = new Object();
-		jQuery.fn.swipetp.defaults.excludedElements = "label, button, input, select, textarea, a, .noSwipe"
-	}
+
+	jQuery.fn.swipetp.defaults.excludedElements = "label, button, input, select, textarea, .noSwipe"
+
 
 	SwipeOn.swipetp({			
 		allowPageScroll:pagescroll,			
 		triggerOnTouchLeave:true,					
 		excludeElements:jQuery.fn.swipetp.defaults.excludedElements,	
-
+			
 		swipeStatus:function(event,phase,direction,distance,duration,fingerCount,fingerData) {			
 					
 
-		var withinslider = isme('rev_slider_wrapper',container,event),
-			withinthumbs =  isme('tp-thumbs',container,event),
-			withintabs =  isme('tp-tabs',container,event),
-			starget = jQuery(this).attr('class'),
-			istt = starget.match(/tp-tabs|tp-thumb/gi) ? true : false;
-							
-
-			
-		// SWIPE OVER SLIDER, TO SWIPE SLIDES IN CAROUSEL MODE
-		if (opt.sliderType==="carousel" && 
-			(((phase==="move" || phase==="end" || phase=="cancel") &&  (opt.dragStartedOverSlider && !opt.dragStartedOverThumbs && !opt.dragStartedOverTabs))
-			 || (phase==="start" && withinslider>0 && withinthumbs===0 && withintabs===0))) {				
+			var withinslider = isme('rev_slider_wrapper',container,event),
+				withinthumbs =  isme('tp-thumbs',container,event),
+				withintabs =  isme('tp-tabs',container,event),
+				starget = jQuery(this).attr('class'),
+				istt = starget.match(/tp-tabs|tp-thumb/gi) ? true : false;
 								
-			opt.dragStartedOverSlider = true;
-			distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);
-			
-			switch (phase) {
-				case "start":								
-					if (_.positionanim!==undefined) {											
-							_.positionanim.kill();																		
-							_.slide_globaloffset = _.infinity==="off" ? _.slide_offset : _R.simp(_.slide_offset, _.maxwidth);																		
-					}
-					_.overpull = "none";																						
-					_.wrap.addClass("dragged");		
-				break;
-				case "move":	
+
+				
+			// SWIPE OVER SLIDER, TO SWIPE SLIDES IN CAROUSEL MODE
+			if (opt.sliderType==="carousel" && 
+				(((phase==="move" || phase==="end" || phase=="cancel") &&  (opt.dragStartedOverSlider && !opt.dragStartedOverThumbs && !opt.dragStartedOverTabs))
+				 || (phase==="start" && withinslider>0 && withinthumbs===0 && withintabs===0))) {				
 									
+				opt.dragStartedOverSlider = true;
+				distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);
+				
+				switch (phase) {
+					case "start":								
+						if (_.positionanim!==undefined) {											
+								_.positionanim.kill();																		
+								_.slide_globaloffset = _.infinity==="off" ? _.slide_offset : _R.simp(_.slide_offset, _.maxwidth);																		
+						}
+						_.overpull = "none";																						
+						_.wrap.addClass("dragged");		
+					break;
+					case "move":	
+										
 
-						_.slide_offset = _.infinity==="off" ? _.slide_globaloffset + distance : _R.simp(_.slide_globaloffset + distance, _.maxwidth);
-						
-						if (_.infinity==="off") {
-							var bb = _.horizontal_align==="center" ? ((_.wrapwidth/2-_.slide_width/2) - _.slide_offset) / _.slide_width : (0 - _.slide_offset) / _.slide_width;
+							_.slide_offset = _.infinity==="off" ? _.slide_globaloffset + distance : _R.simp(_.slide_globaloffset + distance, _.maxwidth);
 							
-							if ((_.overpull ==="none" || _.overpull===0)  && (bb<0 || bb>opt.slideamount-1)) 
-								_.overpull =  distance;
-							else
-							if (bb>=0 && bb<=opt.slideamount-1 && ((bb>=0 && distance>_.overpull) || (bb<=opt.slideamount-1 && distance<_.overpull)))
-								_.overpull = 0;
-																																		
-							_.slide_offset = bb<0 ? _.slide_offset+ (_.overpull-distance)/1.1 + Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : 
-							 bb>opt.slideamount-1 ? _.slide_offset+ (_.overpull-distance)/1.1 - Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : _.slide_offset ;
-						 }
-						_R.organiseCarousel(opt,direction,true,true);									
-				break;
+							if (_.infinity==="off") {
+								var bb = _.horizontal_align==="center" ? ((_.wrapwidth/2-_.slide_width/2) - _.slide_offset) / _.slide_width : (0 - _.slide_offset) / _.slide_width;
+								
+								if ((_.overpull ==="none" || _.overpull===0)  && (bb<0 || bb>opt.slideamount-1)) 
+									_.overpull =  distance;
+								else
+								if (bb>=0 && bb<=opt.slideamount-1 && ((bb>=0 && distance>_.overpull) || (bb<=opt.slideamount-1 && distance<_.overpull)))
+									_.overpull = 0;
+																																			
+								_.slide_offset = bb<0 ? _.slide_offset+ (_.overpull-distance)/1.1 + Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : 
+								 bb>opt.slideamount-1 ? _.slide_offset+ (_.overpull-distance)/1.1 - Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : _.slide_offset ;
+							 }
+							_R.organiseCarousel(opt,direction,true,true);									
+					break;
 
-				case "end":
-				case "cancel":		
-						//duration !!
-						_.slide_globaloffset = _.slide_offset;	
-						_.wrap.removeClass("dragged");
-						_R.carouselToEvalPosition(opt,direction);							
-						opt.dragStartedOverSlider = false;
-						opt.dragStartedOverThumbs = false;
-						opt.dragStartedOverTabs = false;																									
-				break;
-			}
-		}  else
-
-		// SWIPE OVER THUMBS OR TABS
-		if ((
-			((phase==="move" || phase==="end" || phase=="cancel") &&  (!opt.dragStartedOverSlider && (opt.dragStartedOverThumbs || opt.dragStartedOverTabs)))
-			 || 
-			(phase==="start" && (withinslider>0 && (withinthumbs>0 || withintabs>0))))) {				
-							
-			
-			if (withinthumbs>0) opt.dragStartedOverThumbs = true;
-			if (withintabs>0) opt.dragStartedOverTabs = true;
-			
-			var thumbs = opt.dragStartedOverThumbs ? ".tp-thumbs" : ".tp-tabs",
-				thumbmask = opt.dragStartedOverThumbs ? ".tp-thumb-mask" : ".tp-tab-mask",
-				thumbsiw = opt.dragStartedOverThumbs ? ".tp-thumbs-inner-wrapper" : ".tp-tabs-inner-wrapper",
-				thumb = opt.dragStartedOverThumbs ? ".tp-thumb" : ".tp-tab",
-				_o = opt.dragStartedOverThumbs ? opt.navigation.thumbnails : opt.navigation.tabs;
-
-
-			distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);						
-			var t= container.parent().find(thumbmask),
-				el = t.find(thumbsiw),
-				tdir = _o.direction,
-				els = tdir==="vertical" ? el.height() : el.width(),
-				ts =  tdir==="vertical" ? t.height() : t.width(),
-				tw = tdir==="vertical" ? t.find(thumb).first().outerHeight(true)+_o.space : t.find(thumb).first().outerWidth(true)+_o.space,	
-				newpos =  (el.data('offset') === undefined ? 0 : parseInt(el.data('offset'),0)),
-				curpos = 0;
-			
-			switch (phase) {
-				case "start":							
-					container.parent().find(thumbs).addClass("dragged");
-					newpos = tdir === "vertical" ? el.position().top : el.position().left;
-					el.data('offset',newpos);
-					if (el.data('tmmove')) el.data('tmmove').pause();
-					
-				break;
-				case "move":	
-						if (els<=ts) return false;
-														
-						curpos = newpos + distance;																					
-						curpos = curpos>0 ? tdir==="horizontal" ? curpos - (el.width() * (curpos/el.width() * curpos/el.width())) : curpos - (el.height() * (curpos/el.height() * curpos/el.height())) : curpos;
-						var dif = tdir==="vertical" ? 0-(el.height()-t.height()) : 0-(el.width()-t.width());
-						curpos = curpos < dif ? tdir==="horizontal" ? curpos + (el.width() * (curpos-dif)/el.width() * (curpos-dif)/el.width()) : curpos + (el.height() * (curpos-dif)/el.height() * (curpos-dif)/el.height()) : curpos;									
-						if (tdir==="vertical") 									
-							punchgs.TweenLite.set(el,{top:curpos+"px"});									
-						else
-							punchgs.TweenLite.set(el,{left:curpos+"px"});	
-						
-
-				break;
-
-				case "end":
-				case "cancel":		
-					
-					if (istt) {
-						curpos = newpos + distance;								
-														
-						curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
-						curpos = curpos > 0 ? 0 : curpos;
-
-						curpos = Math.abs(distance)>tw/10 ? distance<=0 ? Math.floor(curpos/tw)*tw : Math.ceil(curpos/tw)*tw : distance<0 ? Math.ceil(curpos/tw)*tw : Math.floor(curpos/tw)*tw;
-
-						curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
-						curpos = curpos > 0 ? 0 : curpos;
-						
-						if (tdir==="vertical")
-							punchgs.TweenLite.to(el,0.5,{top:curpos+"px",ease:punchgs.Power3.easeOut});
-						else
-							punchgs.TweenLite.to(el,0.5,{left:curpos+"px",ease:punchgs.Power3.easeOut});
-
-						curpos = !curpos ?  tdir==="vertical" ? el.position().top : el.position().left : curpos;	
-						
-						el.data('offset',curpos);								
-						el.data('distance',distance);
-
-						setTimeout(function() {
+					case "end":
+					case "cancel":		
+							//duration !!
+							_.slide_globaloffset = _.slide_offset;	
+							_.wrap.removeClass("dragged");
+							_R.carouselToEvalPosition(opt,direction);							
 							opt.dragStartedOverSlider = false;
 							opt.dragStartedOverThumbs = false;
-							opt.dragStartedOverTabs = false;
-						},100);
-						container.parent().find(thumbs).removeClass("dragged");
+							opt.dragStartedOverTabs = false;																									
+					break;
+				}
+			}  else
+
+			// SWIPE OVER THUMBS OR TABS
+			if ((
+				((phase==="move" || phase==="end" || phase=="cancel") &&  (!opt.dragStartedOverSlider && (opt.dragStartedOverThumbs || opt.dragStartedOverTabs)))
+				 || 
+				(phase==="start" && (withinslider>0 && (withinthumbs>0 || withintabs>0))))) {				
+								
+				
+				if (withinthumbs>0) opt.dragStartedOverThumbs = true;
+				if (withintabs>0) opt.dragStartedOverTabs = true;
+				
+				var thumbs = opt.dragStartedOverThumbs ? ".tp-thumbs" : ".tp-tabs",
+					thumbmask = opt.dragStartedOverThumbs ? ".tp-thumb-mask" : ".tp-tab-mask",
+					thumbsiw = opt.dragStartedOverThumbs ? ".tp-thumbs-inner-wrapper" : ".tp-tabs-inner-wrapper",
+					thumb = opt.dragStartedOverThumbs ? ".tp-thumb" : ".tp-tab",
+					_o = opt.dragStartedOverThumbs ? opt.navigation.thumbnails : opt.navigation.tabs;
+
+
+				distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);						
+				var t= container.parent().find(thumbmask),
+					el = t.find(thumbsiw),
+					tdir = _o.direction,
+					els = tdir==="vertical" ? el.height() : el.width(),
+					ts =  tdir==="vertical" ? t.height() : t.width(),
+					tw = tdir==="vertical" ? t.find(thumb).first().outerHeight(true)+_o.space : t.find(thumb).first().outerWidth(true)+_o.space,	
+					newpos =  (el.data('offset') === undefined ? 0 : parseInt(el.data('offset'),0)),
+					curpos = 0;
+				
+				switch (phase) {
+					case "start":							
+						container.parent().find(thumbs).addClass("dragged");
+						newpos = tdir === "vertical" ? el.position().top : el.position().left;
+						el.data('offset',newpos);
+						if (el.data('tmmove')) el.data('tmmove').pause();
 						
+					break;
+					case "move":	
+							if (els<=ts) return false;
+															
+							curpos = newpos + distance;																					
+							curpos = curpos>0 ? tdir==="horizontal" ? curpos - (el.width() * (curpos/el.width() * curpos/el.width())) : curpos - (el.height() * (curpos/el.height() * curpos/el.height())) : curpos;
+							var dif = tdir==="vertical" ? 0-(el.height()-t.height()) : 0-(el.width()-t.width());
+							curpos = curpos < dif ? tdir==="horizontal" ? curpos + (el.width() * (curpos-dif)/el.width() * (curpos-dif)/el.width()) : curpos + (el.height() * (curpos-dif)/el.height() * (curpos-dif)/el.height()) : curpos;									
+							if (tdir==="vertical") 									
+								punchgs.TweenLite.set(el,{top:curpos+"px"});									
+							else
+								punchgs.TweenLite.set(el,{left:curpos+"px"});	
+							
+
+					break;
+
+					case "end":
+					case "cancel":		
+						
+						if (istt) {
+							curpos = newpos + distance;								
+															
+							curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
+							curpos = curpos > 0 ? 0 : curpos;
+
+							curpos = Math.abs(distance)>tw/10 ? distance<=0 ? Math.floor(curpos/tw)*tw : Math.ceil(curpos/tw)*tw : distance<0 ? Math.ceil(curpos/tw)*tw : Math.floor(curpos/tw)*tw;
+
+							curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
+							curpos = curpos > 0 ? 0 : curpos;
+							
+							if (tdir==="vertical")
+								punchgs.TweenLite.to(el,0.5,{top:curpos+"px",ease:punchgs.Power3.easeOut});
+							else
+								punchgs.TweenLite.to(el,0.5,{left:curpos+"px",ease:punchgs.Power3.easeOut});
+
+							curpos = !curpos ?  tdir==="vertical" ? el.position().top : el.position().left : curpos;	
+							
+							el.data('offset',curpos);								
+							el.data('distance',distance);
+
+							setTimeout(function() {
+								opt.dragStartedOverSlider = false;
+								opt.dragStartedOverThumbs = false;
+								opt.dragStartedOverTabs = false;
+							},100);
+							container.parent().find(thumbs).removeClass("dragged");
+							
+							return false;
+						}
+					break;							
+				}
+			}									
+			else  {								
+				if (phase=="end" && !istt) {		
+					
+					opt.sc_indicator="arrow";	
+					
+					if ((swipe_wait_dir=="horizontal" && direction == "left") || (swipe_wait_dir=="vertical" && direction == "up")) {
+						opt.sc_indicator_dir = 0;
+						_R.callingNewSlide(opt,opt.c,1);
 						return false;
 					}
-				break;							
-			}
-		}									
-		else  {								
-			if (phase=="end" && !istt) {		
-				
-				opt.sc_indicator="arrow";	
-				
-				if ((swipe_wait_dir=="horizontal" && direction == "left") || (swipe_wait_dir=="vertical" && direction == "up")) {
-					opt.sc_indicator_dir = 0;
-					_R.callingNewSlide(opt,opt.c,1);
-					return false;
-				}
-				if ((swipe_wait_dir=="horizontal" && direction == "right") || (swipe_wait_dir=="vertical" && direction == "down")) {
-					opt.sc_indicator_dir = 1;
-					_R.callingNewSlide(opt,opt.c,-1);	
-					return false;
-				}
+					if ((swipe_wait_dir=="horizontal" && direction == "right") || (swipe_wait_dir=="vertical" && direction == "down")) {
+						opt.sc_indicator_dir = 1;
+						_R.callingNewSlide(opt,opt.c,-1);	
+						return false;
+					}
 
-			}
-			opt.dragStartedOverSlider = false;
-			opt.dragStartedOverThumbs = false;
-			opt.dragStartedOverTabs = false;
-			return true;				
-		}												
-	}
+				}
+				opt.dragStartedOverSlider = false;
+				opt.dragStartedOverThumbs = false;
+				opt.dragStartedOverTabs = false;
+				return true;				
+			}												
+		}
 	});	
 };
 

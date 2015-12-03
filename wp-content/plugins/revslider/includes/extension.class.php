@@ -53,7 +53,7 @@ class RevSliderExtension {
 	 */
 	public function add_slider_to_eg_ajax($media){
 		
-		$media['revslider'] = array('name' => __('Slider Revolution', REVSLIDER_TEXTDOMAIN), 'type' => 'ccw');
+		$media['revslider'] = array('name' => __('Slider Revolution', 'revslider'), 'type' => 'ccw');
 		
 		return $media;
 	}
@@ -109,11 +109,11 @@ class RevSliderExtension {
 		if($selected_slider == '') $selected_slider[0] = '';
 		?>
 		<p>
-			<strong style="font-size:14px"><?php _e('Choose Revolution Slider', REVSLIDER_TEXTDOMAIN); ?></strong>
+			<strong style="font-size:14px"><?php _e('Choose Revolution Slider', 'revslider'); ?></strong>
 		</p>
 		<p>
 			<select name="eg_sources_revslider" id="eg_sources_revslider">
-				<option value=""<?php selected($selected_slider[0], ''); ?>><?php _e('--- Choose Slider ---', REVSLIDER_TEXTDOMAIN); ?></option>
+				<option value=""<?php selected($selected_slider[0], ''); ?>><?php _e('--- Choose Slider ---', 'revslider'); ?></option>
 				<?php
 				if(!empty($shortcodes)){
 					foreach($shortcodes as $id => $name){

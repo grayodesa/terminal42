@@ -1,6 +1,6 @@
 /************************************************
  * REVOLUTION 5.0 EXTENSION - SLIDE ANIMATIONS
- * @version: 1.0.5 (20.10.2015)
+ * @version: 1.1.0 (10.11.2015)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 ************************************************/
@@ -74,48 +74,42 @@ var _R = jQuery.fn.revolution;
 				if (bgrepeat==undefined) bgrepeat="no-repeat";
 				if (bgposition==undefined) bgposition="center center";
 								
+				
 				switch (vorh) {
 					// BOX ANIMATION PREPARING
 					case "box":
 						// SET THE MINIMAL SIZE OF A BOX
-						var basicsize = 0,
-							x = 0,
+						//var  basicsize = 0,
+						var x = 0,
 							y = 0;
 
-						if (opt.sloth>opt.slotw)
+						/*if (opt.sloth>opt.slotw)
 							basicsize=opt.sloth
 						else
 							basicsize=opt.slotw;
-
-						if (!visible) {
-							var off=0-basicsize;
-						}
-
-						opt.slotw = basicsize;
-						opt.sloth = basicsize;
-						var x=0;
-						var y=0;
 						
+						opt.slotw = basicsize;
+						opt.sloth = basicsize;*/
+						
+											
 						for (var j=0;j<opt.slots;j++) {
-
 							y=0;
 							for (var i=0;i<opt.slots;i++) 	{
-
 
 								sh.append('<div class="slot" '+
 										  'style="position:absolute;'+
 													'top:'+(fullyoff+y)+'px;'+
 													'left:'+(fulloff+x)+'px;'+
-													'width:'+basicsize+'px;'+
-													'height:'+basicsize+'px;'+
+													'width:'+opt.slotw+'px;'+
+													'height:'+opt.sloth+'px;'+
 													'overflow:hidden;">'+
 
 										  '<div class="slotslide" data-x="'+x+'" data-y="'+y+'" '+
 										  			'style="position:absolute;'+
 													'top:'+(0)+'px;'+
 													'left:'+(0)+'px;'+
-													'width:'+basicsize+'px;'+
-													'height:'+basicsize+'px;'+
+													'width:'+opt.slotw+'px;'+
+													'height:'+opt.sloth+'px;'+
 													'overflow:hidden;">'+
 
 										  '<div style="position:absolute;'+
@@ -128,14 +122,11 @@ var _R = jQuery.fn.revolution;
 													'background-repeat:'+bgrepeat+';'+
 													'background-size:'+bgfit+';background-position:'+bgposition+';">'+
 										  '</div></div></div>');
-								y=y+basicsize;
-
-								
-
+								y=y+opt.sloth;
 								if (scalestart!=undefined && rotatestart!=undefined)
 										punchgs.TweenLite.set(sh.find('.slot').last(),{rotationZ:rotatestart});
 							}
-							x=x+basicsize;
+							x=x+opt.slotw;
 						}
 					break;
 
@@ -311,7 +302,7 @@ var getSliderTransitionParameters = function(container,opt,comingtransition,next
 							 ['parallaxdown', 13, 3,1,0,'horizontal',true,true,58,p2io,p1i,1500,1],							 
 						   ];
 
-
+	opt.duringslidechange = true;
 
 	// INTERNAL TEST FOR TRANSITIONS
 	opt.testanims = false;
@@ -444,8 +435,8 @@ var animateSlideIntern = function(nexttrans, comingtransition, container,  opt, 
 	///////////////////////
 	//	ADJUST SLOTS     //	
 	///////////////////////
-	opt.slots = gSlideTransA(nextli.data('slotamount'),ctid);
-	opt.slots = opt.slots==undefined || opt.slots=="default" ? STA[12] : opt.slots=="random" ? Math.round(Math.random()*12+4) : STA[12];
+	opt.slots = gSlideTransA(nextli.data('slotamount'),ctid);	
+	opt.slots = opt.slots==undefined || opt.slots=="default" ? STA[12] : opt.slots=="random" ? Math.round(Math.random()*12+4) : opt.slots;
 	opt.slots = opt.slots < 1 ? comingtransition=="boxslide" ? Math.round(Math.random()*6+3) : comingtransition=="flyin" ? Math.round(Math.random()*4+1) : opt.slots : opt.slots;
 	opt.slots = (nexttrans==4 || nexttrans==5 || nexttrans==6) && opt.slots<3 ? 3 : opt.slots;
 	opt.slots = STA[3] != 0 ? Math.min(opt.slots,STA[3]) : opt.slots;
@@ -1398,6 +1389,9 @@ var animateSlideIntern = function(nexttrans, comingtransition, container,  opt, 
 
 		});
 	}	
+	
+
 	return mtl;
 }	
+
 })(jQuery);

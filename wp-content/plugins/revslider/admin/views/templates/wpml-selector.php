@@ -6,9 +6,9 @@ $urlIconDelete = RS_PLUGIN_URL."admin/assets/images/icon-trash.png";
 $urlIconEdit = RS_PLUGIN_URL."admin/assets/images/icon-edit.png";
 $urlIconPreview = RS_PLUGIN_URL."admin/assets/images/preview.png";
 
-$textDelete = __("Delete Slide",REVSLIDER_TEXTDOMAIN);
-$textEdit = __("Edit Slide",REVSLIDER_TEXTDOMAIN);
-$textPreview = __("Preview Slide",REVSLIDER_TEXTDOMAIN);
+$textDelete = __("Delete Slide",'revslider');
+$textEdit = __("Edit Slide",'revslider');
+$textPreview = __("Preview Slide",'revslider');
 
 $htmlBefore = "";
 $htmlBefore .= "<li class='item_operation operation_delete'><a data-operation='delete' href='javascript:void(0)'>"."\n";
@@ -38,7 +38,7 @@ $langFloatMenu = RevSliderWpml::getLangsWithFlagsHtmlList("id='slides_langs_floa
 	<div class="slide_langs_selector editor_buttons_wrapper  postbox unite-postbox" style="margin-bottom:20px; max-width:100% !important; min-width:1040px !important;">
 		<div class="slide-main-settings-form" style="padding:15px;">
 			
-			<label style="display:inline-block; margin-right:15px;"><?php _e("Choose slide language",REVSLIDER_TEXTDOMAIN); ?>:</label>
+			<label style="display:inline-block; margin-right:15px;"><?php _e("Choose slide language",'revslider'); ?>:</label>
 			
 			<ul class="list_slide_icons" style="display:inline-block; vertical-align: middle; margin-bottom:0px;">
 				<?php
