@@ -18,10 +18,10 @@ if ( is_array( $venues ) && ! empty( $venues ) ) {
 	}
 }
 
-$state_options = Tribe__Events__View_Helpers::loadStates();
+$state_options = Tribe__View_Helpers::loadStates();
 $state_options = array_merge( array( '' => __( 'Select a State', 'tribe-events-calendar-pro' ) ), $state_options );
 
-$country_options = Tribe__Events__View_Helpers::constructCountries();
+$country_options = Tribe__View_Helpers::constructCountries();
 
 $defaultsTab = array(
 	'priority' => 30,
@@ -45,20 +45,6 @@ $defaultsTab = array(
 		'tribe-form-content-start'          => array(
 			'type' => 'html',
 			'html' => '<div class="tribe-settings-form-wrap">',
-		),
-		'eventsDefaultOptionsHelperTitle'   => array(
-			'type' => 'html',
-			'html' => '<h3>' . __( 'Options', 'tribe-events-calendar-pro' ) . '</h3>',
-		),
-		'defaultValueReplace'               => array(
-			'type'            => 'checkbox_bool',
-			'label'           => __( 'Automatically replace empty fields with default values', 'tribe-events-calendar-pro' ),
-			'default'         => false,
-			'validation_type' => 'boolean',
-		),
-		'defaultValueReplaceHelper'         => array(
-			'type' => 'html',
-			'html' => '<p style="margin-top:-15px;" class="tribe-field-indent tribe-field-description description">' . __( 'Check this box to have the organizer and venue fields pre-populated with the default values below for any new event that is created.', 'tribe-events-calendar-pro' ) . '</p>',
 		),
 		'eventsDefaultOrganizerHelperTitle' => array(
 			'type' => 'html',
@@ -205,5 +191,29 @@ $defaultsTab = array(
 			'type' => 'html',
 			'html' => '</div>',
 		),
-	)
+	),
 );
+
+/**
+ * @todo remove in 4.3
+ * @deprecated
+ */
+if ( apply_filters( 'tribe_enable_default_value_replace_checkbox', false ) ) {
+	_deprecated_function( "'defaultValueReplace checkbox'", '4.0', 'Built-in WordPress postmeta filters' );
+	$defaultsTab['fields'] = Tribe__Main::array_insert_before_key(
+		'eventsDefaultOrganizerHelperTitle',
+		$defaultsTab['fields'],
+		array(
+			'eventsDefaultOptionsHelperTitle'   => array(
+				'type' => 'html',
+				'html' => '<h3>' . esc_html__( 'Options', 'tribe-events-calendar-pro' ) . '</h3>',
+			),
+			'defaultValueReplace' => array(
+				'type'            => 'checkbox_bool',
+				'label'           => esc_html__( 'If fields are left empty when they\'re submitted, automatically fill them in with these values.', 'tribe-events-calendar-pro' ),
+				'default'         => false,
+				'validation_type' => 'boolean',
+			),
+		)
+	);
+}

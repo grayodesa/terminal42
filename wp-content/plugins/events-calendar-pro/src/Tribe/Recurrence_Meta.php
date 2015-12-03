@@ -175,7 +175,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					if ( ! $is_first_in_series ) {
 						$split_actions['split_all'] = sprintf( '<a href="%s" class="tribe-split tribe-split-all" title="%s">%s</a>', esc_url( wp_nonce_url( self::get_split_series_url( $post->ID, false, true ), 'tribe_split_' . $post->ID ) ), esc_attr( __( 'Split the series in two at this point, creating a new series out of this and all subsequent events', 'tribe-events-calendar-pro' ) ), __( 'Edit Upcoming', 'tribe-events-calendar-pro' ) );
 					}
-					$actions = Tribe__Events__Main::array_insert_after_key( 'edit', $actions, $split_actions );
+					$actions = Tribe__Main::array_insert_after_key( 'edit', $actions, $split_actions );
 				}
 				if ( current_user_can( 'edit_post', $first_id_in_series ) ) {
 					$edit_series_url = get_edit_post_link( $first_id_in_series, 'display' );
@@ -438,7 +438,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 			'description' => empty( $data['recurrence']['description'] ) ? null : sanitize_text_field( $data['recurrence']['description'] ),
 		);
 
-		$datepicker_format = Tribe__Events__Date_Utils::datepicker_formats( tribe_get_option( 'datepickerFormat' ) );
+		$datepicker_format = Tribe__Date_Utils::datepicker_formats( tribe_get_option( 'datepickerFormat' ) );
 
 		if ( ! empty( $data['recurrence'] ) ) {
 			if ( isset( $data['recurrence']['recurrence-description'] ) ) {
@@ -461,23 +461,29 @@ class Tribe__Events__Pro__Recurrence_Meta {
 						continue;
 					}
 
-					if ( ( empty( $recurrence['type'] ) && empty( $recurrence['custom']['type'] ) ) || 'None' === $recurrence['custom']['type'] ) {
+					if (
+						( empty( $recurrence['type'] ) && empty( $recurrence['custom']['type'] ) )
+						|| ( 'exclusions' == $rule_type && ! empty( $recurrence['custom']['type'] ) && 'None' === $recurrence['custom']['type'] )
+					) {
 						unset( $data['recurrence'][ $rule_type ][ $key ] );
 						continue;
 					}
 
-					unset(
-						$recurrence['occurrence-count-text'],
-						$recurrence['custom']['type-text']
-					);
+					if ( isset( $recurrence['custom'] ) && isset( $recurrence['custom']['type-text'] ) ) {
+						unset( $recurrence['custom']['type-text'] );
+					}
+
+					unset( $recurrence['occurrence-count-text'] );
 
 					if ( ! empty( $recurrence['end'] ) ) {
-						$recurrence['end'] = Tribe__Events__Date_Utils::datetime_from_format( $datepicker_format, $recurrence['end'] );
+						$recurrence['end'] = Tribe__Date_Utils::datetime_from_format( $datepicker_format, $recurrence['end'] );
 					}
 
 					// if this isn't an exclusion and it isn't a Custom rule, then we don't need the custom array index
 					if ( 'rules' === $rule_type && 'Custom' !== $recurrence['type'] ) {
-						unset( $recurrence['custom'] );
+						if ( isset( $recurrence['custom'] ) ) {
+							unset( $recurrence['custom'] );
+						}
 					} else {
 						$custom_types = array(
 							'date',
@@ -571,7 +577,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$recurrence = Tribe__Events__Pro__Recurrence_Meta::getRecurrenceMeta( $post_id );
 		?>
 		<script>
-		var tribe_events_pro_recurrence_data = <?php echo json_encode( $recurrence ); ?>;
+			var tribe_events_pro_recurrence_data = <?php echo json_encode( $recurrence ); ?>;
 		</script>
 		<?php
 	}
@@ -794,7 +800,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	}
 
 	public static function get_child_event_ids( $post_id, $args = array() ) {
-		$cache    = new Tribe__Events__Cache();
+		$cache    = new Tribe__Cache();
 		$children = $cache->get( 'child_events_' . $post_id, 'save_post' );
 		if ( is_array( $children ) ) {
 			return $children;
@@ -811,13 +817,13 @@ class Tribe__Events__Pro__Recurrence_Meta {
 			'order'          => 'ASC',
 		) );
 		$children = get_posts( $args );
-		$cache->set( 'child_events_' . $post_id, $children, Tribe__Events__Cache::NO_EXPIRATION, 'save_post' );
+		$cache->set( 'child_events_' . $post_id, $children, Tribe__Cache::NO_EXPIRATION, 'save_post' );
 
 		return $children;
 	}
 
 	public static function get_events_by_slug( $slug ) {
-		$cache   = new Tribe__Events__Cache();
+		$cache   = new Tribe__Cache();
 		$all_ids = $cache->get( 'events_by_slug_' . $slug, 'save_post' );
 		if ( is_array( $all_ids ) ) {
 			return $all_ids;
@@ -838,7 +844,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 			return array();
 		}
 
-		$cache->set( 'events_by_slug_' . $slug, $all_ids, Tribe__Events__Cache::NO_EXPIRATION, 'save_post' );
+		$cache->set( 'events_by_slug_' . $slug, $all_ids, Tribe__Cache::NO_EXPIRATION, 'save_post' );
 
 		return $all_ids;
 	}
@@ -855,7 +861,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		if ( empty( $post_id ) ) {
 			return array();
 		}
-		$cache = new Tribe__Events__Cache();
+		$cache = new Tribe__Cache();
 		$dates = $cache->get( 'event_dates_' . $post_id, 'save_post' );
 		if ( is_array( $dates ) ) {
 			return $dates;
@@ -867,7 +873,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$sql       = "SELECT meta_value FROM {$wpdb->postmeta} m INNER JOIN {$wpdb->posts} p ON p.ID=m.post_id AND (p.post_parent=%d OR p.ID=%d) WHERE meta_key='_EventStartDate' ORDER BY meta_value ASC";
 		$sql       = $wpdb->prepare( $sql, $post_id, $post_id );
 		$result    = $wpdb->get_col( $sql );
-		$cache->set( 'recurrence_start_dates_' . $post_id, $result, Tribe__Events__Cache::NO_EXPIRATION, 'save_post' );
+		$cache->set( 'recurrence_start_dates_' . $post_id, $result, Tribe__Cache::NO_EXPIRATION, 'save_post' );
 
 		return $result;
 	}
@@ -925,14 +931,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 
 			$recurrence->setMinDate( $earliest_date );
 			$recurrence->setMaxDate( $latest_date );
-			$exclusion = $recurrence->getDates();
-			// On Exclusions for now, the duration is always a full day
-			$exclusion[0]['duration'] = DAY_IN_SECONDS - 1;
-
-			// Ignore Start time
-			$exclusion[0]['timestamp'] = strtotime( date( 'Y-m-d', $exclusion[0]['timestamp'] ) );
-
-			$exclusions = array_merge( $exclusions, $exclusion );
+			$exclusions = array_merge( $exclusions, $recurrence->getDates() );
 		}
 
 		// make sure we don't create excluded dates
@@ -984,7 +983,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	public static function array_unique( array $original ) {
 		$unique = array();
 
-		foreach ( $original as $inner ) {
+		foreach( $original as $inner ) {
 			$unique[ join( '|', $inner ) ] = $inner;
 		}
 
@@ -1001,8 +1000,8 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	 *     [ 'timestamp' => int,
 	 *       'duration'  => int  ]
 	 *
-	 * In the case of exclusions, duration will always be a full day as custom exclusions do
-	 * not currently support custom durations.
+	 * In the case of exclusions, duration will always be zero as custom exclusions do
+	 * not currently support custom durations, so that element is ignored during comparison.
 	 *
 	 * @param array $date_durations
 	 * @param array $exclusion_dates
@@ -1010,14 +1009,15 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	 * @return array
 	 */
 	public static function remove_exclusions( array $date_durations, array $exclusion_dates ) {
-		foreach ( $date_durations as $key => $date_duration ) {
-			foreach ( $exclusion_dates as $exclusion ) {
-				$start = $exclusion['timestamp'];
-				$end = $exclusion['timestamp'] + $exclusion['duration'];
+		$exclusion_timestamps = array();
 
-				if ( $date_duration['timestamp'] >= $start && $date_duration['timestamp'] < $end && isset( $date_durations[ $key ] ) ) {
-					unset( $date_durations[ $key ] );
-				}
+		foreach ( $exclusion_dates as $exclusion ) {
+			$exclusion_timestamps[] = $exclusion[ 'timestamp' ];
+		}
+
+		foreach ( $date_durations as $key => $date_duration ) {
+			if ( in_array( $date_duration[ 'timestamp' ], $exclusion_timestamps ) ) {
+				unset( $date_durations[ $key ] );
 			}
 		}
 
@@ -1135,7 +1135,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 				if ( 'rules' === $rule_type ) {
 					switch ( $recurrence['end-type'] ) {
 						case 'On':
-							$end = strtotime( tribe_event_end_of_day( $recurrence['end'] ) );
+							$end = strtotime( tribe_end_of_day( $recurrence['end'] ) );
 							break;
 						case 'Never':
 							$end = Tribe__Events__Pro__Recurrence::NO_END;
@@ -1172,7 +1172,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$expected = array(
 			'days'    => 0,
 			'hours'   => 0,
-			'minutes' => 0,
+			'minutes' => 0
 		);
 
 		$duration = array_merge( $expected, $duration );
@@ -1249,8 +1249,8 @@ class Tribe__Events__Pro__Recurrence_Meta {
 			$rule = new Tribe__Events__Pro__Date_Series_Rules__Year(
 				$recurrence['custom']['interval'],
 				$recurrence['custom']['year']['month'],
-				$recurrence['custom']['year']['filter'] ? $recurrence['custom']['year']['month-number'] : null,
-				$recurrence['custom']['year']['filter'] ? $recurrence['custom']['year']['month-day'] : null
+				empty( $recurrence['custom']['year']['filter'] ) ? null : $recurrence['custom']['year']['month-number'],
+				empty( $recurrence['custom']['year']['filter'] ) ? null : $recurrence['custom']['year']['month-day']
 			);
 		}
 
@@ -1312,6 +1312,18 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	 */
 	public static function recurrence_strings() {
 		$strings = array(
+			'simple-every-day-on' => __( 'Daily until %1$s', 'tribe-events-calendar-pro' ),
+			'simple-every-week-on' => __( 'Weekly on the same day until %1$s', 'tribe-events-calendar-pro' ),
+			'simple-every-month-on' => __( 'Monthly on the same day until %1$s', 'tribe-events-calendar-pro' ),
+			'simple-every-year-on' => __( 'Yearly on the same date until %1$s', 'tribe-events-calendar-pro' ),
+			'simple-every-day-after' => __( 'Daily', 'tribe-events-calendar-pro' ),
+			'simple-every-week-after' => __( 'Weekly on the same day', 'tribe-events-calendar-pro' ),
+			'simple-every-month-after' => __( 'Monthly on the same day', 'tribe-events-calendar-pro' ),
+			'simple-every-year-after' => __( 'Yearly on the same date', 'tribe-events-calendar-pro' ),
+			'simple-every-day-never' => __( 'Daily', 'tribe-events-calendar-pro' ),
+			'simple-every-week-never' => __( 'Weekly on the same day', 'tribe-events-calendar-pro' ),
+			'simple-every-month-never' => __( 'Monthly on the same day', 'tribe-events-calendar-pro' ),
+			'simple-every-year-never' => __( 'Yearly on the same date', 'tribe-events-calendar-pro' ),
 			'every-day-on' => __( 'An event every day that lasts %1$s day(s) and %2$s hour(s), the last of which will begin on %3$s', 'tribe-events-calendar-pro' ),
 			'every-day-after' => __( 'An event every day that lasts %1$s day(s) and %2$s hour(s), but only create %3$s event(s)', 'tribe-events-calendar-pro' ),
 			'every-day-never' => __( 'An event every day that lasts %1$s day(s) and %2$s hour(s) with no end date', 'tribe-events-calendar-pro' ),
@@ -1345,7 +1357,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 			'custom-monthly-on-same-time' => __( 'An event every %1$s month(s) on %2$s that lasts %3$s day(s) and %4$s hour(s), the last of which will begin on %5$s', 'tribe-events-calendar-pro' ),
 			'custom-monthly-after-same-time' => __( 'An event every %1$s month(s) on %2$s that lasts %3$s day(s) and %4$s hour(s), but only create %5$s event(s)', 'tribe-events-calendar-pro' ),
 			'custom-monthly-never-same-time' => __( 'An event every %1$s month(s) on %2$s that lasts %3$s day(s) and %4$s hour(s) with no end date', 'tribe-events-calendar-pro' ),
-			'custom-monthly-on-diff-time' => __( 'An event every %1$s month(s) on %2$s that begins at %3$s and lasts %4$s day(s) and %5$s hour(s), the last of which will begin on %7$s', 'tribe-events-calendar-pro' ),
+			'custom-monthly-on-diff-time' => __( 'An event every %1$s month(s) on %2$s that begins at %3$s and lasts %4$s day(s) and %5$s hour(s), the last of which will begin on %6$s', 'tribe-events-calendar-pro' ),
 			'custom-monthly-after-diff-time' => __( 'An event every %1$s month(s) on %2$s that begins at %3$s and lasts %4$s day(s) and %5$s hour(s), but only create %6$s event(s)', 'tribe-events-calendar-pro' ),
 			'custom-monthly-never-diff-time' => __( 'An event every %1$s month(s) on %2$s that begins at %3$s and lasts %4$s day(s) and %5$s hour(s) with no end date', 'tribe-events-calendar-pro' ),
 			'custom-yearly-on-same-time-unfiltered' => __( 'An event every %1$s year(s) in %2$s on day %3$s that lasts %4$s day(s) and %5$s hour(s), the last of which will begin on %6$s', 'tribe-events-calendar-pro' ),
@@ -1414,11 +1426,14 @@ class Tribe__Events__Pro__Recurrence_Meta {
 	/**
 	 * Convert the event recurrence meta into a human readable string
 	 *
-	 * @TODO: get this to work for arbitrary recurrence
+	 * @TODO: there's a great deal of duplication between this method and tribe_events_pro_admin.recurrence.update_rule_recurrence_text (events-recurrence.js)
+	 *        let's consider generating once (by JS?) and saving the result for re-use instead
 	 *
-	 * @param array $postId The recurring event
+	 * @param array   $rule
+	 * @param string  $start_date
+	 * @param int     $event_id
 	 *
-	 * @return The human readable string
+	 * @return string human readable string
 	 */
 	public static function recurrenceToText( $rule, $start_date, $event_id ) {
 		$text = '';
@@ -1431,28 +1446,38 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$year_filtered = false;
 		$rule['type'] = str_replace( ' ', '-', strtolower( $rule['type'] ) );
 		$rule['end-type'] = str_replace( ' ', '-', strtolower( $rule['end-type'] ) );
-		$formatted_end = date( tribe_get_date_format( true ), strtotime( $rule['end'] ) );
+
+		$formatted_end = _x( 'an unspecified date', 'An unspecified end date', 'tribe-events-calendar-pro' );
+		if ( ! empty( $rule['end'] ) ) {
+			$formatted_end = date( tribe_get_date_format( true ), strtotime( $rule['end'] ) );
+		}
 
 		// if the type is "none", then there's no rules to parse
 		if ( 'none' === $rule['type'] ) {
 			return;
 		}
 
-		// Start Date is always there
-		$start_date = strtotime( tribe_get_start_date( $event_id ) );
-
-		// End Date will depend on custom rules.
-		$end_date = strtotime( tribe_get_end_date( $event_id ) );
+		// if there isn't an end date, then there isn't a recurrence set up
+		if ( 'on' === $rule['end-type'] && empty( $rule['end'] ) ) {
+			return;
+		}
 
 		if ( 'custom' === $rule['type'] ) {
 			$is_custom = true;
-			$custom_rule_args = $rule['custom'][ self::custom_type_to_key( $rule['custom']['type'] ) ];
-			$same_time = ! empty( $custom_rule_args['same-time'] ) && 'yes' === $custom_rule_args['same-time'];
+
+			$same_time = false;
+
+			if ( 'yes' === @$rule['custom'][ self::custom_type_to_key( $rule['custom']['type'] ) ]['same-time'] ) {
+				$same_time = true;
+			}
 
 			if ( 'Yearly' === $rule['custom']['type'] ) {
 				$year_filtered = ! empty( $rule['custom']['year']['filter'] );
 			}
 		}
+
+		$start_date = strtotime( tribe_get_start_date( $event_id, true, Tribe__Date_Utils::DBDATETIMEFORMAT ) );
+		$end_date = strtotime( tribe_get_end_date( $event_id, true, Tribe__Date_Utils::DBDATETIMEFORMAT ) );
 
 		$num_days = floor( ( $end_date - $start_date ) / DAY_IN_SECONDS );
 
@@ -1460,26 +1485,34 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$num_hours = ceil( ( ( ( $end_date - $start_date ) / HOUR_IN_SECONDS ) - ( $num_days * 24 ) ) * 100 ) / 100;
 
 		if ( $is_custom && 'custom' === $rule['type'] && ! $same_time ) {
-			$new_start_time = date( 'Y-m-d', $start_date ) . ' ' . $rule['custom']['start-time']['hour'] . ':' . $rule['custom']['start-time']['minute'];
+			$formatted_start = date( 'Y-m-d', $start_date ) . ' ' . $rule['custom']['start-time']['hour'] . ':' . $rule['custom']['start-time']['minute'];
 			if ( isset( $rule['custom']['start-time']['meridian'] ) ) {
-				$new_start_time .= ' ' . $rule['custom']['start-time']['meridian'];
+				$formatted_start .= ' ' . $rule['custom']['start-time']['meridian'];
 			}
 
-			// When we don't have a end-date but a duration instead
-			if ( false === $end_date && ! empty( $rule['custom']['duration'] ) ){
-				$new_end_time = date( 'Y-m-d H:i', $start_date + self::get_duration_in_seconds( $rule['custom']['duration'] ) );
-			} else {
-				$new_end_time = date( 'Y-m-d', $end_date ) . ' ' . $rule['custom']['end-time']['hour'] . ':' . $rule['custom']['end-time']['minute'];
+			if ( isset( $rule['custom']['duration'] ) ) {
+				try {
+					$end_date = new DateTime( '@' . $start_date );
+
+					$end_date->modify( '+' . absint( $rule[ 'custom' ][ 'duration' ][ 'days' ] ) . ' days' );
+					$end_date->modify( '+' . absint( $rule[ 'custom' ][ 'duration' ][ 'hours' ] ) . ' hours' );
+					$end_date->modify( '+' . absint( $rule[ 'custom' ][ 'duration' ][ 'minutes' ] ) . ' minutes' );
+
+					$formatted_end = Tribe__View_Helpers::is_24hr_format()
+						? $end_date->format( 'Y-m-d H:i' )
+						: $end_date->format( 'Y-m-d g:i' );
+
+					$end_date = $end_date->format( 'U' );
+				}
+				catch ( Exception $e ) {
+					// $formatted_end will default to the "unspecified end date" text in this case
+				}
 			}
 
-			if ( isset( $rule['custom']['end-time']['meridian'] ) ) {
-				$new_end_time .= ' ' . $rule['custom']['end-time']['meridian'];
-			}
-
-			$new_num_days = floor( ( $new_end_time - $new_start_time ) / DAY_IN_SECONDS );
+			$new_num_days = floor( ( $end_date - $start_date ) / DAY_IN_SECONDS );
 
 			// make sure we always round hours UP to when dealing with decimal lengths more than 2. Example: 4.333333 would become 4.34
-			$new_num_hours = ceil( ( ( ( $new_end_time - $new_start_time ) / HOUR_IN_SECONDS ) - ( $new_num_days * 24 ) ) * 100 ) / 100;
+			$new_num_hours = ceil( ( ( ( $end_date - $start_date ) / HOUR_IN_SECONDS ) - ( $new_num_days * 24 ) ) * 100 ) / 100;
 		}
 
 		$weekdays = array();
@@ -1549,6 +1582,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 				$key .= '-unfiltered';
 			}
 		} else {
+			$key = "simple-{$key}";
 			$key .= "-{$rule['end-type']}";
 		}
 
@@ -1581,6 +1615,15 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		$text = $recurrence_strings[ $key ];
 
 		switch ( $key ) {
+			case 'simple-every-day-on':
+			case 'simple-every-week-on':
+			case 'simple-every-month-on':
+			case 'simple-every-year-on':
+				$text = sprintf(
+					$text,
+					$formatted_end
+				);
+				break;
 			case 'every-day-on':
 			case 'every-week-on':
 			case 'every-month-on':
@@ -1631,7 +1674,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 				$text = sprintf(
 					$text,
 					$interval,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$formatted_end
@@ -1641,7 +1684,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 				$text = sprintf(
 					$text,
 					$interval,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$rule['end-count']
@@ -1674,7 +1717,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$text,
 					$interval,
 					$weekdays,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$formatted_end
@@ -1685,7 +1728,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$text,
 					$interval,
 					$weekdays,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$rule['end-count']
@@ -1723,7 +1766,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$text,
 					$interval,
 					$month_day_description,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$formatted_end
@@ -1735,7 +1778,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$text,
 					$interval,
 					$month_day_description,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$rule['end-count']
@@ -1776,7 +1819,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$interval,
 					$months,
 					$month_day_description,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$formatted_end
@@ -1789,7 +1832,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 					$interval,
 					$months,
 					$month_day_description,
-					$new_start_time,
+					$formatted_start,
 					$new_num_days,
 					$new_num_hours,
 					$rule['end-count']
@@ -1990,7 +2033,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 		if ( $id == 'general' ) {
 
 			// we want to inject the hiding subsequent occurrences into the general section directly after "Live update AJAX"
-			$args = Tribe__Events__Main::array_insert_after_key( 'liveFiltersUpdate', $args, array(
+			$args = Tribe__Main::array_insert_after_key( 'liveFiltersUpdate', $args, array(
 				'hideSubsequentRecurrencesDefault' => array(
 					'type'            => 'checkbox_bool',
 					'label'           => __( 'Recurring event instances', 'tribe-events-calendar-pro' ),
@@ -2032,7 +2075,7 @@ class Tribe__Events__Pro__Recurrence_Meta {
 
 	/**
 	 * @param string     $html
-	 * @param Tribe__Events__Field $field
+	 * @param Tribe__Field $field
 	 *
 	 * @return string
 	 */

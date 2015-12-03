@@ -36,11 +36,11 @@ $events_label_plural = tribe_get_event_label_plural();
 		<?php printf( __( 'No upcoming %s.', 'tribe-events-calendar-pro' ), strtolower( $events_label_plural ) ); ?>
 	<?php else: ?>
 		<?php do_action( 'tribe_events_venue_widget_before_the_list' ); ?>
-		<ul class="tribe-venue-widget-list hfeed vcalendar">
+		<ul class="tribe-venue-widget-list">
 			<?php while ( $events->have_posts() ): ?>
 				<?php $events->the_post(); ?>
 				<li class="<?php tribe_events_event_classes() ?>">
-					<h4 class="entry-title summary">
+					<h4 class="tribe-event-title">
 						<a href="<?php echo esc_url( tribe_get_event_link() ); ?>"><?php echo get_the_title( get_the_ID() ) ?></a>
 					</h4>
 					<?php echo tribe_events_event_schedule_details() ?>
@@ -56,5 +56,5 @@ $events_label_plural = tribe_get_event_label_plural();
 		<?php do_action( 'tribe_events_venue_widget_after_the_list' ); ?>
 	<?php endif; ?>
 
-	<a href="<?php echo esc_url( tribe_get_venue_link( $venue_ID, false ) ); ?>"><?php printf( __( 'View all %1$s at this %2$s', 'tribe-events-calendar' ), $events_label_plural, tribe_get_venue_label_singular() ); ?></a>
+	<a href="<?php echo esc_url( tribe_get_venue_link( $venue_ID, false ) ); ?>"><?php printf( __( 'View all %1$s at this %2$s', 'tribe-events-calendar-pro' ), $events_label_plural, tribe_get_venue_label_singular() ); ?></a>
 </div>

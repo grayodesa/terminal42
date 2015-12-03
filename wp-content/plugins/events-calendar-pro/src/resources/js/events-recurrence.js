@@ -558,6 +558,7 @@ tribe_events_pro_admin.recurrence = {
 				key += '-unfiltered';
 			}
 		} else {
+			key = 'simple-' + key;
 			key += '-' + end_type;
 		}
 
@@ -616,6 +617,12 @@ tribe_events_pro_admin.recurrence = {
 		}
 
 		switch ( key ) {
+			case 'simple-every-day-on':
+			case 'simple-every-week-on':
+			case 'simple-every-month-on':
+			case 'simple-every-year-on':
+				text = text.replace( '%1$s', end );
+				break;
 			case 'every-day-on':
 			case 'every-week-on':
 			case 'every-month-on':
@@ -892,7 +899,12 @@ tribe_events_pro_admin.recurrence = {
 
 	my.event.datepicker_end_date_changed = function() {
 		$( this ).removeClass( 'placeholder' );
+
+		/**
+		 * DEPRECATED: recurrenceEndChanged has been deprecated in 4.0. Use recurrence-end-changed.tribe instead
+		 */
 		$( this ).trigger( 'recurrenceEndChanged' );
+		$( this ).trigger( 'recurrence-end-changed.tribe' );
 	};
 
 	my.event.recurrence_row_changed = function() {
