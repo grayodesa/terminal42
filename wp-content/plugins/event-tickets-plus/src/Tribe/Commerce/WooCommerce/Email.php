@@ -15,7 +15,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Email extends WC_Email {
 		$this->title       = __( 'Tickets', 'event-tickets-plus' );
 		$this->description = __( 'Email the user will receive after a completed order with the tickets he purchased.', 'event-tickets-plus' );
 
-		$this->subject = __( 'Your tickets from {sitename}', 'event-tickets-plus' );
+		$this->subject = __( 'Your tickets from {site_title}', 'event-tickets-plus' );
 
 
 		// Triggers for this email
@@ -36,10 +36,6 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Email extends WC_Email {
 		if ( $order_id ) {
 			$this->object    = new WC_Order( $order_id );
 			$this->recipient = $this->object->billing_email;
-
-			$this->find[]    = '{sitename}';
-			$this->replace[] = get_option( 'blogname' );
-
 		}
 
 		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -29,7 +29,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
+class Google_Cache_Memcache extends Google_Cache_Abstract
 {
   private $connection = false;
   private $mc = false;
@@ -41,13 +41,13 @@ class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
    */
   private $client;
 
-  public function __construct(App_Google_Client $client)
+  public function __construct(Google_Client $client)
   {
     if (!function_exists('memcache_connect') && !class_exists("Memcached")) {
       $error = "Memcache functions not available";
 
       $client->getLogger()->error($error);
-      throw new App_Google_Cache_Exception($error);
+      throw new Google_Cache_Exception($error);
     }
 
     $this->client = $client;
@@ -63,7 +63,7 @@ class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
         $error = "You need to supply a valid memcache host and port";
 
         $client->getLogger()->error($error);
-        throw new App_Google_Cache_Exception($error);
+        throw new Google_Cache_Exception($error);
       }
     }
   }
@@ -128,7 +128,7 @@ class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
           array('key' => $key, 'var' => $data)
       );
 
-      throw new App_Google_Cache_Exception("Couldn't store data in cache");	       	 	   							
+      throw new Google_Cache_Exception("Couldn't store data in cache");
     }
 
     $this->client->getLogger()->debug(
@@ -178,7 +178,7 @@ class App_Google_Cache_Memcache extends App_Google_Cache_Abstract
       $error = "Couldn't connect to memcache server";
 
       $this->client->getLogger()->error($error);
-      throw new App_Google_Cache_Exception($error);
+      throw new Google_Cache_Exception($error);
     }
   }
 }

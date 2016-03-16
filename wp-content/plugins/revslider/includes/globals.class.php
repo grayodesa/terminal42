@@ -11,7 +11,7 @@ define("REVSLIDER_TEXTDOMAIN","revslider"); //just here for fallback reasons of 
 
 class RevSliderGlobals{
 
-	const SLIDER_REVISION = '5.1.4';
+	const SLIDER_REVISION = '5.2.2';
 	const TABLE_SLIDERS_NAME = "revslider_sliders";
 	const TABLE_SLIDES_NAME = "revslider_slides";
 	const TABLE_STATIC_SLIDES_NAME = "revslider_static_slides";
@@ -21,7 +21,7 @@ class RevSliderGlobals{
 	const TABLE_NAVIGATION_NAME = "revslider_navigations";
 
 	const FIELDS_SLIDE = "slider_id,slide_order,params,layers";
-	const FIELDS_SLIDER = "title,alias,params";
+	const FIELDS_SLIDER = "title,alias,params,type";
 
 	const YOUTUBE_EXAMPLE_ID = "iyuxFo-WBiU";
 	const DEFAULT_YOUTUBE_ARGUMENTS = "hd=1&amp;wmode=opaque&amp;showinfo=0&amp;rel=0;";

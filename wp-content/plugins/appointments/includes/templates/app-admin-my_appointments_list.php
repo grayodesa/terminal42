@@ -12,10 +12,47 @@ if ( isset( $appointments->options["records_per_page"] ) && $appointments->optio
 else
 	$rpp = 50;
 
-$startat = ($paged - 1) * $rpp;
+$args = array();
+if ( isset( $_GET['s'] ) && trim( $_GET['s'] ) != '' ) {
+	$args['s'] = $_GET['s'];
+}
 
-$apps = $appointments->get_admin_apps($type, $startat, $rpp);
-$total = $appointments->get_apps_total();
+if ( isset( $_GET['app_service_id'] ) && $_GET['app_service_id'] ) {
+	$args['service'] = $_GET['app_service_id'];
+}
+
+if ( isset( $_GET['app_provider_id'] ) && $_GET['app_provider_id'] ) {
+	$args['worker'] = $_GET['app_provider_id'];
+}
+
+$args['order']   = 'DESC';
+if ( isset( $_GET['app_order_by']) && $_GET['app_order_by'] ) {
+	$_orderby        = explode( '_', $_GET['app_order_by'] );
+	if ( count( $_orderby ) == 1 ) {
+		$args['order']   = $_orderby[0];
+	}
+	elseif ( count( $_orderby ) == 2 ) {
+		$args['order']   = $_orderby[1];
+		$args['orderby'] = $_orderby[0];
+	}
+
+}
+
+switch($type) {
+	case 'active':
+		$args['status'] = array( 'confirmed', 'paid' );
+		break;
+	default:
+		$args['status'] = array( $type );
+		break;
+}
+
+$args['per_page'] = $rpp;
+$args['page'] = $paged;
+
+$apps = appointments_get_appointments( $args );
+$args['count'] = true;
+$total = appointments_get_appointments( $args );
 
 $columns = array();
 
@@ -28,12 +65,13 @@ $columns['service'] = __('Service','appointments');
 $columns['worker'] = __('Provider','appointments');
 $columns['status'] = __('Status','appointments');
 
-$trans_navigation = paginate_links( array(
+$pag_args = array(
 	'base' => add_query_arg( 'paged', '%#%' ),
 	'format' => '',
 	'total' => ceil($total / $rpp),
 	'current' => $paged
-));
+);
+$trans_navigation = paginate_links( $pag_args );
 
 if ( $trans_navigation ) {
 	echo '<div class="tablenav">';
@@ -120,7 +158,7 @@ if ( true || isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 						</td>
 						<td class="column-worker">
 							<?php
-								echo $appointments->get_worker_name( $app->worker );
+								echo appointments_get_worker_name( $app->worker );
 							?>
 						</td>
 						<td class="column-status">
@@ -165,7 +203,7 @@ if ( isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 
 	<script type="text/javascript">
 	var service_price = new Array();
-	<?php foreach( $appointments->get_services() as $service_obj ) { ?>
+	<?php foreach( appointments_get_services() as $service_obj ) { ?>
 		service_price[<?php echo $service_obj->ID ?>] = '<?php echo $service_obj->price ?>';
 	<?php
 	}

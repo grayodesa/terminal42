@@ -30,6 +30,9 @@ $slideParams = $slide->getParams();
 
 $operations = new RevSliderOperations();
 
+$rs_nav = new RevSliderNavigation();
+$arr_navigations = $rs_nav->get_all_navigations();
+
 //init slider object
 $sliderID = $slide->getSliderID();
 $slider = new RevSlider();
@@ -67,8 +70,6 @@ $arrCaptionClassesSorted = RevSliderCssParser::get_captions_sorted();
 
 $arrFontFamily = $operations->getArrFontFamilys($slider);
 $arrCSS = $operations->getCaptionsContentArray();
-$arrButtonClasses = $operations->getButtonClasses();
-
 
 $arrAnim = $operations->getFullCustomAnimations();
 $arrAnimDefaultIn = $operations->getArrAnimations(false);
@@ -217,7 +218,7 @@ $kbStartOffsetY = intval(RevSliderFunctions::getVal($slideParams, 'kb_start_offs
 $kbEndOffsetX = intval(RevSliderFunctions::getVal($slideParams, 'kb_end_offset_x', $def_kb_end_offset_x));
 $kbEndOffsetY = intval(RevSliderFunctions::getVal($slideParams, 'kb_end_offset_y', $def_kb_end_offset_y));
 $kbStartRotate = intval(RevSliderFunctions::getVal($slideParams, 'kb_start_rotate', $def_kb_start_rotate));
-$kbEndRotate = intval(RevSliderFunctions::getVal($slideParams, 'kb_end_rotate', $def_kb_start_rotate));
+$kbEndRotate = intval(RevSliderFunctions::getVal($slideParams, 'kb_end_rotate', $def_kb_end_rotate));
 /* END OF NEW KEN BURN INPUTS*/
 
 $bgRepeat = RevSliderFunctions::getVal($slideParams, 'bg_repeat', $def_bg_repeat);
@@ -304,11 +305,22 @@ $isWpmlExists = RevSliderWpml::isWpmlExists();
 $useWpml = $slider->getParam("use_wpml","off");
 $wpmlActive = false;
 
+$jsonStaticLayers = "";
 if(!$slide->isStaticSlide()){
 	if($isWpmlExists && $useWpml == "on"){
 		$wpmlActive = true;
 		$parentSlide = $slide->getParentSlide();
 		$arrChildLangs = $parentSlide->getArrChildrenLangs();
+	}
+	
+	//get static slide, check all layers and add them to the action list
+	$static_slide_id = $slide->getStaticSlideID($sliderID);
+	
+	if($static_slide_id !== false){
+		$static_slide = new RevSlide();
+		$static_slide->initByStaticID($static_slide_id);
+		$static_layers = $static_slide->getLayers();
+		$jsonStaticLayers = RevSliderFunctions::jsonEncodeForClientSide($static_layers);
 	}
 }
 
@@ -458,7 +470,6 @@ require self::getPathTemplate('template-selector');
 	<div class="title_line" style="margin-bottom:0px !important;">
 		<div id="icon-options-general" class="icon32"></div>		
 		<a href="<?php echo RevSliderGlobals::LINK_HELP_SLIDE; ?>" class="button-primary float_right revblue mtop_10 mleft_10" target="_blank"><?php _e("Help",'revslider'); ?></a>
-
 	</div>
 
 	<div class="rs_breadcrumbs">
@@ -529,8 +540,7 @@ require self::getPathTemplate('template-selector');
 			})
 		});
 	</script>
-
-
+	
 	<?php
 	require self::getPathTemplate('slide-selector');
 	
@@ -540,9 +550,7 @@ require self::getPathTemplate('template-selector');
 		require self::getPathTemplate('wpml-selector');
 	}
 	
-	if(!$slide->isStaticSlide()){
-		require self::getPathTemplate('slide-general-settings');
-	}
+	require self::getPathTemplate('slide-general-settings');
 	
 	$operations = new RevSliderOperations();
 
@@ -620,6 +628,12 @@ require self::getPathTemplate('template-selector');
 						<?php
 					break;
 				}
+				// Apply Filters for Tabs from Add-Ons
+				do_action( 'rev_slider_insert_meta_tabs',array(
+						'dummy'=>'<li data-content="#slide-INSERT_TAB_SLUG-template-entry" class="selected"><i style="height:45px" class="rs-mini-layer-icon INSERT_ICON_CLASS rs-toolbar-icon"></i><span>INSERT_TAB_NAME</span></li>',
+						'slider_type'=>$slider_type
+					)
+				);
 				?>
 				<li data-content="#slide-images-template-entry" class="selected"><i style="height:45px" class="rs-mini-layer-icon eg-icon-picture-1 rs-toolbar-icon"></i><span><?php _e('Images', 'revslider'); ?></span></li>
 			</ul>
@@ -636,12 +650,15 @@ require self::getPathTemplate('template-selector');
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('excerpt')">{{excerpt}}</a></td><td><?php _e("Post Excerpt",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('alias')">{{alias}}</a></td><td><?php _e("Post Alias",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e("Post content",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e("The link to the post",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date')">{{date}}</a></td><td><?php _e("Date created",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_modified')">{{date_modified}}</a></td><td><?php _e("Date modified",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('author_name')">{{author_name}}</a></td><td><?php _e("Author name",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('num_comments')">{{num_comments}}</a></td><td><?php _e("Number of comments",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('catlist')">{{catlist}}</a></td><td><?php _e("List of categories with links",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('catlist_raw')">{{catlist_raw}}</a></td><td><?php _e("List of categories without links",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('taglist')">{{taglist}}</a></td><td><?php _e("List of tags with links",'revslider'); ?></td></tr>
 					</table>
 					<table class="table_template_help" id="slide-images-template-entry" style="display: none;">
@@ -690,14 +707,14 @@ require self::getPathTemplate('template-selector');
 						</table>
 					<?php }
 					}
-					?>
-					<?php
 				break;
 				case 'flickr':
 					?>
 					<table class="table_template_help" id="slide-flickr-template-entry" style="display: none;">
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e("Post Title",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e("Post content",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e("The link to the post",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date')">{{date}}</a></td><td><?php _e("Date created",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('author_name')">{{author_name}}</a></td><td><?php _e('Username','revslider'); ?></td></tr>
@@ -720,6 +737,8 @@ require self::getPathTemplate('template-selector');
 					<table class="table_template_help" id="slide-instagram-template-entry" style="display: none;">
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e("Title",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e("Content",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e("Link",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date')">{{date}}</a></td><td><?php _e("Date created",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('author_name')">{{author_name}}</a></td><td><?php _e('Username','revslider'); ?></td></tr>
@@ -743,6 +762,8 @@ require self::getPathTemplate('template-selector');
 					<table class="table_template_help" id="slide-twitter-template-entry" style="display: none;">
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e('Title','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e('Content','revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e("Link",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_published')">{{date_published}}</a></td><td><?php _e('Pulbishing Date','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('author_name')">{{author_name}}</a></td><td><?php _e('Username','revslider'); ?></td></tr>
@@ -766,6 +787,8 @@ require self::getPathTemplate('template-selector');
 					<table class="table_template_help" id="slide-facebook-template-entry" style="display: none;">
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e('Title','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e('Content','revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e('Link','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_published')">{{date_published}}</a></td><td><?php _e('Pulbishing Date','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_published')">{{date_modified}}</a></td><td><?php _e('Last Modify Date','revslider'); ?></td></tr>
@@ -790,6 +813,8 @@ require self::getPathTemplate('template-selector');
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e('Title','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('excerpt')">{{excerpt}}</a></td><td><?php _e('Excerpt','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e('Content','revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_published')">{{date_published}}</a></td><td><?php _e('Pulbishing Date','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e('Link','revslider'); ?></td></tr>
 					</table>
@@ -811,6 +836,8 @@ require self::getPathTemplate('template-selector');
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('title')">{{title}}</a></td><td><?php _e('Title','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('excerpt')">{{excerpt}}</a></td><td><?php _e('Excerpt','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content')">{{content}}</a></td><td><?php _e('Content','revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:words:10')">{{content:words:10}}</a></td><td><?php _e("Post content limit by words",'revslider'); ?></td></tr>
+						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('content:chars:10')">{{content:chars:10}}</a></td><td><?php _e("Post content limit by chars",'revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('link')">{{link}}</a></td><td><?php _e('The link to the post','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('date_published')">{{date_published}}</a></td><td><?php _e('Pulbishing Date','revslider'); ?></td></tr>
 						<tr><td><a href="javascript:UniteLayersRev.insertTemplate('author_name')">{{author_name}}</a></td><td><?php _e('Username','revslider'); ?></td></tr>
@@ -831,6 +858,14 @@ require self::getPathTemplate('template-selector');
 					<?php
 				break;
 			}
+			// Apply Filters for Tab Content from Add-Ons
+			do_action( 'rev_slider_insert_meta_tab_content',array(
+					'tab_head' => '<table class="table_template_help" id="slide-INSERT_TAB_SLUG-template-entry" style="display: none;">' ,
+					'tab_row'  => '<tr><td><a href="javascript:UniteLayersRev.insertTemplate(\'INSERT_META_SLUG\')">{{INSERT_META_SLUG}}</a></td><td>INSERT_META_NAME</td></tr>',
+					'tab_foot' => '</table>',
+					'slider_type' => $slider_type
+				)
+			);
 			?>
 			<script type="text/javascript">
 			jQuery('document').ready(function() {
@@ -905,7 +940,7 @@ require self::getPathTemplate('template-selector');
 			 
 			jQuery(document).ready(function() {
 
-				
+				UniteLayersRev.addPreventLeave();
 				
 				<?php if(!empty($jsonLayers)){ ?>
 					//set init layers object
@@ -930,7 +965,11 @@ require self::getPathTemplate('template-selector');
 					UniteLayersRev.setInitDemoSettingsJson(<?php echo $jsonDemoSettings; ?>);
 					<?php
 				} ?>
-
+				
+				<?php if(!empty($jsonStaticLayers)){ ?>
+				UniteLayersRev.setInitStaticLayersJson(<?php echo $jsonStaticLayers; ?>);
+				<?php } ?>
+				
 				<?php if(!empty($jsonCaptions)){ ?>
 				UniteLayersRev.setInitCaptionClasses(<?php echo $jsonCaptions; ?>);
 				<?php } ?>
@@ -1144,15 +1183,19 @@ require self::getPathTemplate('template-selector');
 
 		<?php
 		if(!$slide->isStaticSlide()){
-		?>
+			?>
 <!--			<a href="javascript:void(0)" id="button_save_slide" class="revgreen button-primary"><div class="updateicon"></div><i class="rs-icon-save-light" style="display: inline-block;vertical-align: middle;width: 18px;height: 20px;background-repeat: no-repeat;margin-right:5px;"></i><?php _e("Save Slide",'revslider'); ?></a>
 
 -->
-		<?php }else{ ?>
+			<?php
+		}else{
+			?>
 <!--			<a href="javascript:void(0)" id="button_save_static_slide" class="revgreen button-primary"><div class="updateicon"></div><i class="revicon-arrows-ccw"></i><?php _e("Update Static Layers",'revslider'); ?></a>
 
 -->
-		<?php } ?>
+			<?php
+		}
+		?>
 <!--		<span id="loader_update" class="loader_round" style="display:none;"><?php _e("updating",'revslider'); ?>...</span>
 		<span id="update_slide_success" class="success_message" class="display:none;"></span>
 		<a href="<?php echo self::getViewUrl(RevSliderAdmin::VIEW_SLIDER,"id=$sliderID"); ?>" class="button-primary revblue"><i class="revicon-cog"></i><?php _e("Slider Settings",'revslider'); ?></a>
@@ -1160,15 +1203,14 @@ require self::getPathTemplate('template-selector');
 -->
 		<?php
 		if(!$slide->isStaticSlide()){
-		?>
+			?>
 <!--		<a href="javascript:void(0)" id="button_delete_slide" class="button-primary revred" original-title=""><i class="revicon-trash"></i><?php _e("Delete Slide",'revslider'); ?></a>
 	-->
-		<?php } ?>
+			<?php 
+		} ?>
 	</div>
 
 <div class="vert_sap"></div>
-
-
 
 
 <div id="dialog_rename_animation" class="dialog_rename_animation" title="<?php _e('Rename Animation', 'revslider'); ?>" style="display:none;">
@@ -1209,3 +1251,49 @@ $mslide_list = RevSliderFunctions::jsonEncodeForClientSide($mslide_list);
 <?php
 require self::getPathTemplate("../system/dialog-copy-move");
 ?>
+
+
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('#rs-do-set-style-on-devices').click(function(){
+			var layer = UniteLayersRev.getCurrentLayer();
+			
+			if(layer !== false){
+				if(layer['static_styles'] == undefined) layer['static_styles'] = {};
+				
+				var mcolor = jQuery('input[name="color_static"]').val();
+				var mfontsize = jQuery('input[name="font_size_static"]').val();
+				var mlineheight = jQuery('input[name="line_height_static"]').val();
+				var mfontweight = jQuery('select[name="font_weight_static"] option:selected').val();
+				
+				jQuery('.rs-set-device-chk').each(function(){
+					if(jQuery(this).is(':checked')){
+						var dt = jQuery(this).data('device'); //which device to set on
+						var so = jQuery(this).data('seton'); //set on color/font-size and so on
+						
+						switch(so){
+							case 'color':
+								var mval = mcolor;
+							break;
+							case 'font-size':
+								var mval = mfontsize;
+							break;
+							case 'line-height':
+								var mval = mlineheight;
+							break;
+							case 'font-weight':
+								var mval = mfontweight;
+							break;
+						}
+						
+						layer['static_styles'] = UniteLayersRev.setVal(layer['static_styles'], so, mval, false, [dt]);
+					}
+				});
+				
+				//give status that it has been done
+				
+				jQuery('#rs-set-style-on-devices-dialog').toggle();
+			}
+		});
+	});
+</script>

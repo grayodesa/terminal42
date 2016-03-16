@@ -176,6 +176,8 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 		add_filter( 'woocommerce_email_classes', array( $this, 'add_email_class_to_woocommerce' ) );
 
 		add_action( 'woocommerce_resend_order_emails_available', array( $this, 'add_resend_tickets_action' ) );
+
+		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
 	}
 
 	/**
@@ -673,12 +675,30 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 		$return->end_date       = get_post_meta( $ticket_id, '_ticket_end_date', true );
 		$return->purchase_limit = get_post_meta( $ticket_id, '_ticket_purchase_limit', true );
 
-		$pending = $qty ? $this->count_incomplete_order_items( $ticket_id ) : 0;
+		$complete_totals = $this->count_order_items_by_status( $ticket_id, 'complete' );
+		$pending_totals = $this->count_order_items_by_status( $ticket_id, 'incomplete' );
+		$qty = $qty ? $qty : 0;
+		$pending = $pending_totals['total'] ? $pending_totals['total'] : 0;
+
+		// if any orders transitioned from complete back to one of the incomplete states, their quantities
+		// were already recorded in total_sales and we have to deduct them from there so they aren't
+		// double counted
+		$qty -= $pending_totals['recorded_sales'];
+
+		// let's calculate the stock based on the product stock minus the quantity purchased minus the
+		// pending purchases
+		$stock = $product->get_stock_quantity() - $qty - $pending;
+
+		// if any orders have reduced the stock of an order (check and cash on delivery payments do this, for example)
+		// we need to re-inflate the stock by that amount
+		$stock += $pending_totals['reduced_stock'];
+		$stock += $complete_totals['reduced_stock'];
 
 		$return->manage_stock( $product->managing_stock() );
-		$return->stock( $product->get_stock_quantity() - $qty - $pending );
-		$return->qty_sold( $qty ? $qty : 0 );
+		$return->stock( $stock );
+		$return->qty_sold( $qty );
 		$return->qty_pending( $pending );
+		$return->qty_cancelled( $this->get_cancelled( $ticket_id ) );
 
 		if ( empty( $return->purchase_limit ) && 0 !== (int) $return->purchase_limit ) {
 			/**
@@ -695,42 +715,61 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 	}
 
 	/**
-	 * Determine the total number of the specified ticket contained in orders which have not
-	 * progressed to a "completed" status.
+	 * Determine the total number of the specified ticket contained in orders which have
+	 * progressed to a "completed" or "incomplete" status.
 	 *
 	 * Essentially this returns the total quantity of tickets held within orders that are
-	 * "pending", "on hold" or "processing".
+	 * complete or incomplete (incomplete are: "pending", "on hold" or "processing").
 	 *
-	 * @param $ticket_id
+	 * @param int $ticket_id
+	 * @param string $status Types of orders: incomplete or complete
 	 * @return int
 	 */
-	protected function count_incomplete_order_items( $ticket_id ) {
-		$total = 0;
+	protected function count_order_items_by_status( $ticket_id, $status = 'incomplete' ) {
+		$totals = array(
+			'total' => 0,
+			'recorded_sales' => 0,
+			'reduced_stock' => 0,
+		);
 
 		$incomplete_orders = version_compare( '2.2', WooCommerce::instance()->version, '<=' )
-			? $this->get_incomplete_orders( $ticket_id ) : $this->backcompat_get_incomplete_orders( $ticket_id );
+			? $this->get_orders_by_status( $ticket_id, $status ) : $this->backcompat_get_orders_by_status( $ticket_id, $status );
 
 		foreach ( $incomplete_orders as $order_id ) {
 			$order = new WC_Order( $order_id );
 
+			$has_recorded_sales = 'yes' === get_post_meta( $order_id, '_recorded_sales', true );
+			$has_reduced_stock = (bool) get_post_meta( $order_id, '_order_stock_reduced', true );
+
 			foreach ( (array) $order->get_items() as $order_item ) {
 				if ( $order_item['product_id'] == $ticket_id ) {
-					$total += (int) $order_item['qty'];
+					$totals['total'] += (int) $order_item['qty'];
+					if ( $has_recorded_sales ) {
+						$totals['recorded_sales'] += (int) $order_item['qty'];
+					}
+
+					if ( $has_reduced_stock ) {
+						$totals['reduced_stock'] += (int) $order_item['qty'];
+					}
 				}
 			}
 		}
 
-		return $total;
+		return $totals;
 	}
 
-	protected function get_incomplete_orders( $ticket_id ) {
+	protected function get_orders_by_status( $ticket_id, $status = 'incomplete' ) {
 		global $wpdb;
 
 		$order_state_sql = '';
 		$incomplete_states = $this->incomplete_order_states();
 
 		if ( ! empty( $incomplete_states ) ) {
-			$order_state_sql = "AND posts.post_status IN ($incomplete_states)";
+			if ( 'incomplete' === $status ) {
+				$order_state_sql = "AND posts.post_status IN ($incomplete_states)";
+			} else {
+				$order_state_sql = "AND posts.post_status NOT IN ($incomplete_states)";
+			}
 		}
 
 		$query = "
@@ -778,10 +817,11 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 	 * @deprecated remove in 4.0 (provides compatibility with pre-2.2 WC releases)
 	 *
 	 * @param $ticket_id
+	 * @param string $status Types of orders: incomplete or complete
 	 *
 	 * @return array
 	 */
-	protected function backcompat_get_incomplete_orders( $ticket_id ) {
+	protected function backcompat_get_orders_by_status( $ticket_id, $status = 'incomplete' ) {
 		global $wpdb;
 		$total = 0;
 
@@ -789,6 +829,8 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 		if ( empty( $incomplete_states ) ) {
 			return array();
 		}
+
+		$comparison = 'incomplete' === $status ? 'IN' : 'NOT IN';
 
 		$query = "
 			SELECT
@@ -802,7 +844,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 			WHERE
 			    (meta_key = '_product_id'
 			        AND meta_value = %d )
-			        AND (relationships.term_taxonomy_id IN ( $incomplete_states ));
+			        AND (relationships.term_taxonomy_id $comparison ( $incomplete_states ));
 		";
 
 		return (array) $wpdb->get_col( $wpdb->prepare( $query, $ticket_id ) );
@@ -856,7 +898,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 			return false;
 		}
 
-		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types ) ) {
+		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types() ) ) {
 			return get_post( $event );
 		}
 
@@ -1023,7 +1065,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 		if ( ! empty( $ticket_id ) ) {
 			$ticket = $this->get_ticket( $event_id, $ticket_id );
 			if ( ! empty( $ticket ) ) {
-				$stock = $ticket->stock();
+				$stock = $ticket->managing_stock() ? $ticket->stock() : '';
 				$sku   = get_post_meta( $ticket_id, '_sku', true );
 				$purchase_limit = $ticket->purchase_limit;
 			}
@@ -1175,5 +1217,28 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets__T
 
 		$emails[] = 'wootickets';
 		return $emails;
+	}
+
+	private function get_cancelled( $ticket_id ) {
+		$cancelled = Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Cancelled::for_ticket( $ticket_id );
+
+		return $cancelled->get_count();
+	}
+
+	/**
+	 * Excludes WooCommerce product post types from the list of supported post types that Tickets can be attached to
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $post_types Array of supported post types
+	 *
+	 * @return array
+	 */
+	public function exclude_product_post_type( $post_types ) {
+		if ( isset( $post_types['product'] ) ) {
+			unset( $post_types['product'] );
+		}
+
+		return $post_types;
 	}
 }

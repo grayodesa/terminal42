@@ -24,6 +24,9 @@
 			 */
 			public $single_event_meta;
 
+			/** @var Tribe__Events__Pro__Recurrence__Single_Event_Overrides */
+			public $single_event_overrides;
+
 			/** @var Tribe__Events__Pro__Admin__Custom_Meta_Tools */
 			public $custom_meta_tools;
 
@@ -43,8 +46,8 @@
 			 */
 			public $widget_wrappers;
 
-			const REQUIRED_TEC_VERSION = '4.0';
-			const VERSION = '4.0';
+			const REQUIRED_TEC_VERSION = '4.0.7';
+			const VERSION = '4.0.7';
 
 
 			private function __construct() {
@@ -404,6 +407,7 @@
 				$this->displayMetaboxCustomFields();
 				$this->custom_meta_tools = new Tribe__Events__Pro__Admin__Custom_Meta_Tools;
 				$this->single_event_meta = new Tribe__Events__Pro__Single_Event_Meta;
+				$this->single_event_overrides = new Tribe__Events__Pro__Recurrence__Single_Event_Overrides;
 				$this->queue_processor = new Tribe__Events__Pro__Recurrence__Queue_Processor;
 				$this->queue_realtime = new Tribe__Events__Pro__Recurrence__Queue_Realtime;
 				$this->embedded_maps = new Tribe__Events__Pro__Embedded_Maps;
@@ -1101,7 +1105,7 @@
 				wp_localize_script( Tribe__Events__Main::POSTTYPE . '-premium-admin', 'TribeEventsProAdmin', $data );
 				wp_localize_script( Tribe__Events__Main::POSTTYPE . '-premium-admin', 'tribe_events_pro_recurrence_strings', array(
 					'date' => Tribe__Events__Pro__Recurrence_Meta::date_strings(),
-					'recurrence' => Tribe__Events__Pro__Recurrence_Meta::recurrence_strings(),
+					'recurrence' => Tribe__Events__Pro__Recurrence__Strings::recurrence_strings(),
 					'exclusion' => array(),
 				) );
 			}

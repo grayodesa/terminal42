@@ -220,6 +220,7 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		add_filter( 'shopp_order_management_controls', array( $this, 'add_resend_email_btn' ) );
 		add_filter( 'shopp_tag_cartitem_url', array( $this, 'change_product_links' ), 10, 3 );
 		add_filter( 'shopp_tag_product_url', array( $this, 'change_product_links' ), 10, 3 );
+		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
 	}
 
 	/**
@@ -599,7 +600,7 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 			return false;
 		}
 
-		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types ) ) {
+		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types() ) ) {
 			return get_post( $event );
 		}
 
@@ -797,7 +798,7 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		if ( ! empty( $ticket_id ) ) {
 			$ticket = $this->get_ticket( $event_id, $ticket_id );
 			if ( ! empty( $ticket ) ) {
-				$stock = $ticket->stock;
+				$stock = $ticket->managing_stock() ? $ticket->stock() : '';
 				$sku   = get_post_meta( $ticket_id, '_sku', true );
 			}
 		}
@@ -1064,5 +1065,22 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 
 	private function get_shopp_pending_statuses() {
 		return array( 0 );
+	}
+
+	/**
+	 * Excludes Shopp product post types from the list of supported post types that Tickets can be attached to
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $post_types Array of supported post types
+	 *
+	 * @return array
+	 */
+	public function exclude_product_post_type( $post_types ) {
+		if ( isset( $post_types['shopp_product'] ) ) {
+			unset( $post_types['shopp_product'] );
+		}
+
+		return $post_types;
 	}
 }

@@ -109,7 +109,6 @@ if( !defined( 'ABSPATH') ) exit();
 				
 				$editLink = self::getViewUrl(RevSliderAdmin::VIEW_SLIDER,"id=$id");
 				
-				$orderSlidesLink = ($isFromPosts) ? self::getViewUrl(RevSliderAdmin::VIEW_SLIDES,"id=$id") : '';
 				$editSlidesLink = self::getViewUrl(RevSliderAdmin::VIEW_SLIDE,"id=$first_slide_id");
 
 				$showTitle = RevSliderFunctions::getHtmlLink($editLink, $showTitle);
@@ -148,29 +147,22 @@ if( !defined( 'ABSPATH') ) exit();
 
 				<div class="tls-hover-metas">
 					<!--<span class="tls-shortcode"><?php echo $shortCode; ?></span>-->
-					<span class="button-primary rs-embed-slider" ><i class="eg-icon-plus"></i><?php _e("Embed Slider",'revslider'); ?></span>		
-					
-					
-					<?php
-					if($isFromPosts){
-						?>
-						<a class="button-primary " href='<?php echo $orderSlidesLink; ?>'><i class="revicon-pencil-1"></i><?php _e("Order Posts",'revslider'); ?></a>
+					<span class="button-primary rs-embed-slider" ><i class="eg-icon-plus"></i><?php _e("Embed Slider",'revslider'); ?></span>
+					<?php if(!RS_DEMO){ ?>
+						<a class="button-primary  export_slider_overview" id="export_slider_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export",'revslider'); ?></a>
 						<?php
-					}
-					?>
-					<a class="button-primary  export_slider_overview" id="export_slider_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export",'revslider'); ?></a>
-					<?php
-					$operations = new RevSliderOperations();
-					$general_settings = $operations->getGeneralSettingsValues();
-					
-					$show_dev_export = RevSliderBase::getVar($general_settings, 'show_dev_export', 'off');
-					
-					if($show_dev_export == 'on'){
+						$operations = new RevSliderOperations();
+						$general_settings = $operations->getGeneralSettingsValues();
+						
+						$show_dev_export = RevSliderBase::getVar($general_settings, 'show_dev_export', 'off');
+						
+						if($show_dev_export == 'on'){
+							?>
+							<a class="button-primary  export_slider_standalone" id="export_slider_standalone_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export to HTML",'revslider'); ?></a>
+							<?php
+						}
 						?>
-						<a class="button-primary  export_slider_standalone" id="export_slider_standalone_<?php echo $id; ?>" href="javascript:void(0);" ><i class="revicon-export"></i><?php _e("Export to HTML",'revslider'); ?></a>
-						<?php
-					}
-					?>
+					<?php } ?>
 					<a class="button-primary  button_delete_slider" id="button_delete_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-trash"></i><?php _e("Delete",'revslider'); ?></a>
 					<a class="button-primary  button_duplicate_slider" id="button_duplicate_<?php echo $id; ?>" href='javascript:void(0)'><i class="revicon-picture"></i><?php _e("Duplicate",'revslider'); ?></a>
 					<div id="button_preview_<?php echo $id; ?>" class="button_slider_preview button-primary revgray"><i class="revicon-search-1"></i><?php _e("Preview",'revslider'); ?></div>
@@ -182,6 +174,7 @@ if( !defined( 'ABSPATH') ) exit();
 		}
 	}
 	?>
+	
 	<li class="tls-slide tls-addnewslider">
 		<a href='<?php echo $addNewLink; ?>'>
 			<span class="tls-main-metas">
@@ -201,23 +194,25 @@ if( !defined( 'ABSPATH') ) exit();
 					<i class="slider_list_add_buttons add_new_template_icon"></i>
 				</span>
 				<span class="tls-title-wrapper">			
-					<span class="tls-title"><?php _e("Add Slider Template",'revslider'); ?></span>					
+					<span class="tls-title"><?php _e("Add Slider From Template",'revslider'); ?></span>					
 				</span>
 			</span>
 		</a>
 	</li>
-	<li class="tls-slide tls-addnewslider">
-		<a href="javascript:void(0);" id="button_import_slider">
-			<span class="tls-main-metas">
-				<span class="tls-new-icon-wrapper">
-					<i class="slider_list_add_buttons  add_new_import_icon"></i>
+	<?php if(!RevSliderFunctionsWP::isAdminUser() && apply_filters('revslider_restrict_role', true)){ }else{ ?>
+		<li class="tls-slide tls-addnewslider">
+			<a href="javascript:void(0);" id="button_import_slider">
+				<span class="tls-main-metas">
+					<span class="tls-new-icon-wrapper">
+						<i class="slider_list_add_buttons  add_new_import_icon"></i>
+					</span>
+					<span class="tls-title-wrapper">			
+						<span class="tls-title"><?php _e("Import Slider",'revslider'); ?></span>					
+					</span>
 				</span>
-				<span class="tls-title-wrapper">			
-					<span class="tls-title"><?php _e("Import Slider",'revslider'); ?></span>					
-				</span>
-			</span>
-		</a>		
-	</li>
+			</a>		
+		</li>
+	<?php } ?>
 </ul>	
 <script>
   jQuery(document).on("ready",function() {  	

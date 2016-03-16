@@ -5,7 +5,7 @@
  */
 class App_Installer {
 
-	private function __construct () {}
+	public function __construct () {}
 
 	public static function serve () {
 		$me = new self;
@@ -225,6 +225,8 @@ class App_Installer {
 
 	public static function uninstall () {
 		global $wpdb;
+
+		wp_unschedule_event( current_time( 'timestamp' ), 'appointments_gcal_sync' );
 
 		delete_option( 'appointments_options' );
 		delete_option( 'app_last_update' );

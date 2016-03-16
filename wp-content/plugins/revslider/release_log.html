@@ -1,4 +1,149 @@
 <div class="slider-revolution-update-list">
+<h3 class="version-number">Version 5.2.2 StarPath (11th March 2016)</h3>
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed an issue in Slide Editor where Options were not any more selectable. This is also a Fix for all iussues with "Can not read lenght of Null" Faliure</li>
+	<li>Fixed Layer Timing issue where Layer could not start any more at 0ms</li>
+	<li>Fixed Start Value issues in Slide Editor where some Value changed from "0" to a predefined Default value</li>
+	<li>Fixed an Issue where Layers disappearing after a long time period.</li>
+	<li>Fixed Slider / Layer Grid  Based Align options for Navigation Elements</li>
+	<li>Fixed calculation errors of navigation elements</li>
+	<li>Fixed an issue where slidelinks on carousel slides was not working properly</li>
+	<li>Fixed Static Layer container perspective on 3D Parallax Animations. Static Layers and Layers will have now the same View Perspective. To achieve this, Static Layers will always overlay simple Layers in 3D Parallax Mode</li>
+	<li>Scrolling by Scroll Bar will also trigger Parallax and Start Slider functions now</li>
+	<li>Fixed issues that could occur with older Visual Composer versions</li>
+	<li>Fixed a few template store issues where notices and warning occured</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.2.1 StarPath (4th March 2016)</h3>
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed an Issue for PHP 5.2 or older where the Plugin was not loading on Backend any more</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.2.0 StarPath (3th March 2016)</h3>
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>Added Navigation Position Aligned By option to allow Navigation element positioned within the Layer Grid also</li>
+	<li>Added individual RTL Option to Arrows, Bullets, Tabs and Tumbnails to change the Slider direction and the order of elements</li>
+	<li>Added New Layer Type: Object with SVG Icon Library included (over 500+ SVG Icons)</li>
+	<li>Added New Layer Type: Audio Layer</li>
+	<li>Added Text-Transform Style Option (Uppercase, LowerCase, Capitalize)</li>
+	<li>Added Force Inherit Style Changes on Font Size, Font Weight, Font Color and Line Height in Break Point Based Sliders, to inherit changes for other Device Sizes during changes</li>
+	<li>Added PlaceHolders and Presets for Navigation Elements to allow Easy Styling on Navigation elements per Slider</li>
+	<li>Added Options to change Navigation Element Styling per Slide (i.e. use Light Navigation on Dark Slides and Dark navigation on Light Slides)</li>
+	<li>Live Preview of Custom Changes on Navigation Elements</li>
+	<li>Added title Attribute to the background images for Slides</li>
+	<li>Added option to redownload Slider Templates.</li>
+	<li>Added Bulk TimeLine Functions to arrange Layer timings based on predefined batches</li>
+	<li>Added Undo & Redo Steps to the Slide Editor</li>
+	<li>Version 5.2. is Introducing the Possibilities of using Addons.</li>
+	<li>Added Vimeo "No Controls" option to hide the Control Panel of Vime Videos on request</li>
+	<li>Added "Pause on Slide" option to stop the Auto Play Progress on certain slides</li>
+	<li>Added an option to Wait for revapi.revstart() Method to start the Slider. This allows to start the Slider on request</li>
+	<li>Added an global option to trigger database creation</li>
+	<li>Added Static Layers Overflow hidden/visible option</li>
+	<li>Added option for Post and Stream Sliders to strip fetched content by words/chars</li>
+	<li>Added Cache timing option for Social Streams</li>
+	<li>Added Global Mute for All Media Action to mute the whole Slider</li>
+	<li>Added Invisible Slide option to make Slides only Availblae due Actions and API Functions</li>
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Calculation of HTML5 Videos on IE Edge has been changed to respoect the Cover mode in all responsive mode also</li>
+	<li>HTML5 Video leaves automaticaly FullScreen Mode when it reach the end of the Video and Next Slide at End selected</li>
+	<li>HTML5 Video does not show Cover image if Pause Mode is selected and Video is on FullScreen Mode</li>
+	<li>Improvement of the GUI in Slide Editor</li>
+	<li>Removed .htaccess file</li>
+	<li>Updated Vimeo API</li>
+	<li>Images, Videos and Audios will get Line height 0px to avoid position distortions on small elements</li>
+
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed Parallax Effect if slider is higher than screen height to avoid an odd jump effect</li>
+	<li>Fix for limiting the excerpt length in WooCommerce</li>
+	<li>Fix for border-radius not working on hover state in certain cases</li>
+	<li>Fix for Sharp Right option not saving properly on layers</li>
+	<li>Fix for Cover Mode not beeing applied to all devices for image layers in certain cases</li>
+	<li>Fixed a minor jQuery bug in Slider Settings on Hover over different options</li>
+	<li>Fix for Mouse Scroll Option.  The values on/off were interchanged</li>
+	<li>Fixed a bug which would not allow to go to next slide If Show Only Poster on Mobile was selected on HTML5 Videos</li>
+	<li>Slotholder and BG Video got own z-index to fix some layer / video covering issues in Carousel mode</li>
+	<li>Fixed an issue where SlideLink on RTL environment was not available</li>
+	<li>Fixed an issue where export did not work if a newver version of WPML is active</li>
+	<li>Fixed Replace URL's in Slider Settings, to check also for actions, videos and more</li>
+	<li>Removed loading of jQuery UI libraries if not needed while Visual Composer is installed</li>
+	<li>Fixed Scroll Bugs in Layer Timeline Window</li>
+	<li>Fixed Timeline Calculation Issues on Backend</li>
+	<li>Fixed Warning Issue by leaving the Slider</li>
+	<li>Fixed KenBurns issues on RTL Environment</li>
+	<li>Fixed Bug with Static Layers if Static Layer was set to only show on Slider Hover</li>	
+	<li>Fixed Video Background Loop And Keep Slider Progress Function</li>
+	<li>Fixed Shape Resize Issue, where Shape Height lost its last valuse</li>
+	<li>Fixed Sorting Order WP Gallery Images when using revslider shortcode wrap</li>
+	<li>Fixed YouTube API Issues, (Mute, Loop, Auto Start, Next Slide Bugs due the latest YT Api)</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.61 StarPath (28th January 2016)</h3>
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed import bug for animations</li>
+	<li>Fixed output bug for cover images where in some cases it was only beeing applied to Desktop mode</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.6 StarPath (5th January 2016)</h3>
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>Added MouseWheel Scroll option "carousel" to allow infinite MouseWheel scroll on Sliders in both direction. If enabled, slider will not allow page to scroll during wheel functions on Slider Container</li>
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Upgraded FontAwesome Library to latest version 4.5.0</li>
+	<li>Leaving Slide Editor will now ask to confirm leaving, to prevent data loss if Slide was not saved</li>
+	<li>The video type can now be switched on an existing Video Layer</li>
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Out of ViewPort Preloading and Prestarting was calculating the values wrongly. Issue is fixed in this release</li>
+	<li>Min amount of Used Fingers for Touch/Scroll/Link was set to 50 as default, which broke any kind of Touch function on Mobiles in version 5.1.5. Issue is fixed now</li>
+</ul>
+
+
+<h3 class="version-number">Version 5.1.5 StarPath (16th December 2015)</h3>
+<div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>
+<ul>
+	<li>Added "Layer Selectable" option as Default and Layer based, to enable Layer selection on Frontend for visitors (to copy paste text content from Layers)</li>
+	<li>Added a new Method "revremoveslide(slideindex)" to remove a slide from the Slider on demand</li>
+	<li>Added a new option to each Slide "Hide after Loop" which will remove / Hide 1 Slide from the Slider after x amount of loop of that certain slide</li>
+</ul>
+
+<div class="change"><strong style="font-weight:700">Changes</strong></div>
+<ul>
+	<li>Strengthened Security Posture</li>
+	<li>Removed some inline css written on videos/images</li>
+	<li>Restricted access to certain features if the user does not have administrator privileges. Can be enabled again by adding: add_filter('revslider_restrict_role', '__return_false');</li>
+</ul>
+
+<div class="bugfix"><strong style="font-weight:700">BUGFIXES</strong></div>
+<ul>
+	<li>Fixed a bug where the background image would be exported (if there was one selected at a time) even if transparent or solid color was selected</li>	
+	<li>Fixed PanZoom/KenBurns Disabling on Mobile function</li>	
+	<li>Fixed z-index position for From/Till Calendar in Slide Editor</li>
+	<li>Fixed Swipe Treshold and Fingers Options which were ignored in earlier version</li>
+	<li>Fixed and issue with Static Layer Parallax handling</li>
+	<li>Fixed Specific Posts not sorting properly</li>
+	<li>Improved Custom Animation save speed in backend</li>
+</ul>
+
 
 <h3 class="version-number">Version 5.1.4 StarPath (28th November 2015)</h3>
 <div class="newfeature"><strong style="font-weight:700">NEW FEATURES</strong></div>

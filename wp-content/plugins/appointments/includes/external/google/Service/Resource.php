@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -25,7 +25,7 @@ if (!class_exists('App_Google_Client')) {
  * is available in this service, and if so construct an apiHttpRequest representing it.
  *
  */
-class App_Google_Service_Resource
+class Google_Service_Resource
 {
   // Valid query parameters that work, but don't appear in discovery.
   private $stackParameters = array(
@@ -72,7 +72,7 @@ class App_Google_Service_Resource
   }
 
   /**
-   * TODO(ianbarber): This function needs simplifying.
+   * TODO: This function needs simplifying.
    * @param $name
    * @param $arguments
    * @param $expected_class - optional, the expected class name
@@ -91,7 +91,7 @@ class App_Google_Service_Resource
           )
       );
 
-      throw new App_Google_Exception(
+      throw new Google_Exception(
           "Unknown function: " .
           "{$this->serviceName}->{$this->resourceName}->{$name}()"
       );
@@ -103,7 +103,7 @@ class App_Google_Service_Resource
     // document as parameter, but we abuse the param entry for storing it.
     $postBody = null;
     if (isset($parameters['postBody'])) {
-      if ($parameters['postBody'] instanceof App_Google_Model) {
+      if ($parameters['postBody'] instanceof Google_Model) {
         // In the cases the post body is an existing object, we want
         // to use the smart method to create a simple object for
         // for JSONification.
@@ -115,10 +115,13 @@ class App_Google_Service_Resource
             $this->convertToArrayAndStripNulls($parameters['postBody']);
       }
       $postBody = json_encode($parameters['postBody']);
+      if ($postBody === false && $parameters['postBody'] !== false) {
+        throw new Google_Exception("JSON encoding failed. Ensure all strings in the request are UTF-8 encoded.");
+      }
       unset($parameters['postBody']);
     }
 
-    // TODO(ianbarber): optParams here probably should have been
+    // TODO: optParams here probably should have been
     // handled already - this may well be redundant code.
     if (isset($parameters['optParams'])) {
       $optParams = $parameters['optParams'];
@@ -131,8 +134,8 @@ class App_Google_Service_Resource
     }
 
     $method['parameters'] = array_merge(
-        $method['parameters'],
-        $this->stackParameters
+        $this->stackParameters,
+        $method['parameters']
     );
     foreach ($parameters as $key => $val) {
       if ($key != 'postBody' && ! isset($method['parameters'][$key])) {
@@ -145,7 +148,7 @@ class App_Google_Service_Resource
                 'parameter' => $key
             )
         );
-        throw new App_Google_Exception("($name) unknown parameter: '$key'");
+        throw new Google_Exception("($name) unknown parameter: '$key'");
       }
     }
 
@@ -163,7 +166,7 @@ class App_Google_Service_Resource
                 'parameter' => $paramName
             )
         );
-        throw new App_Google_Exception("($name) missing required param: '$paramName'");
+        throw new Google_Exception("($name) missing required param: '$paramName'");
       }
       if (isset($parameters[$paramName])) {
         $value = $parameters[$paramName];
@@ -186,12 +189,12 @@ class App_Google_Service_Resource
         )
     );
 
-    $url = App_Google_Http_REST::createRequestUri(
+    $url = Google_Http_REST::createRequestUri(
         $this->servicePath,
         $method['path'],
         $parameters
     );
-    $httpRequest = new App_Google_Http_Request(
+    $httpRequest = new Google_Http_Request(
         $url,
         $method['httpMethod'],
         null,
@@ -217,7 +220,7 @@ class App_Google_Service_Resource
     if (isset($parameters['data']) &&
         ($parameters['uploadType']['value'] == 'media' || $parameters['uploadType']['value'] == 'multipart')) {
       // If we are doing a simple media upload, trigger that as a convenience.
-      $mfu = new App_Google_Http_MediaFileUpload(
+      $mfu = new Google_Http_MediaFileUpload(
           $this->client,
           $httpRequest,
           isset($parameters['mimeType']) ? $parameters['mimeType']['value'] : 'application/octet-stream',

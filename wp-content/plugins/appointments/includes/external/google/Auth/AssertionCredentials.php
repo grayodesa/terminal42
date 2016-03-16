@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
 /**
  * Credentials object used for OAuth 2.0 Signed JWT assertion grants.
  */
-class App_Google_Auth_AssertionCredentials
+class Google_Auth_AssertionCredentials
 {
   const MAX_TOKEN_LIFETIME_SECS = 3600;
 
@@ -91,7 +91,7 @@ class App_Google_Auth_AssertionCredentials
     $now = time();
 
     $jwtParams = array(
-          'aud' => App_Google_Auth_OAuth2::OAUTH2_TOKEN_URI,
+          'aud' => Google_Auth_OAuth2::OAUTH2_TOKEN_URI,
           'scope' => $this->scopes,
           'iat' => $now,
           'exp' => $now + self::MAX_TOKEN_LIFETIME_SECS,
@@ -122,14 +122,14 @@ class App_Google_Auth_AssertionCredentials
     $payload = str_replace('\/', '/', $payload);
 
     $segments = array(
-      App_Google_Utils::urlSafeB64Encode(json_encode($header)),
-      App_Google_Utils::urlSafeB64Encode($payload)
+      Google_Utils::urlSafeB64Encode(json_encode($header)),
+      Google_Utils::urlSafeB64Encode($payload)
     );
 
     $signingInput = implode('.', $segments);
-    $signer = new App_Google_Signer_P12($this->privateKey, $this->privateKeyPassword);
+    $signer = new Google_Signer_P12($this->privateKey, $this->privateKeyPassword);
     $signature = $signer->sign($signingInput);
-    $segments[] = App_Google_Utils::urlSafeB64Encode($signature);
+    $segments[] = Google_Utils::urlSafeB64Encode($signature);
 
     return implode(".", $segments);
   }

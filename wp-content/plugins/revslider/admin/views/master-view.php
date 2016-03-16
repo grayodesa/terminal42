@@ -41,6 +41,7 @@ if(isset($_REQUEST['update_shop'])){
 		'mobile': '<?php echo RevSliderBase::getVar($glval, 'width_mobile', 480); ?>'
 	};
 	
+	var RS_DEMO = <?php echo (RS_DEMO) ? 'true' : 'false'; ?>;
 </script>
 
 <div id="div_debug"></div>

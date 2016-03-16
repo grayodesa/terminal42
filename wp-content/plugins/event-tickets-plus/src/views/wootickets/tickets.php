@@ -38,8 +38,8 @@ ob_start();
 
 					woocommerce_quantity_input( array(
 						'input_name'  => 'quantity_' . $ticket->ID,
-						'input_value' => 0,
-						'min_value'   => 0,
+						'input_value' => 1,
+						'min_value'   => 1,
 						'max_value'   => $max_quantity,
 					) );
 
@@ -51,7 +51,7 @@ ob_start();
 						?>
 						<span class="tribe-tickets-remaining">
 							<?php
-							echo sprintf( esc_html__( '%1$s out of %2$s available', 'event-tickets-plus' ), esc_html( $remaining ), esc_html( $ticket->original_stock() ) );
+							echo sprintf( esc_html__( '%1$s из %2$s доступны', 'event-tickets-plus' ), esc_html( $remaining ), esc_html( $ticket->original_stock() ) );
 							?>
 						</span>
 						<?php
@@ -59,7 +59,7 @@ ob_start();
 
 					do_action( 'wootickets_tickets_after_quantity_input', $ticket, $product );
 				} else {
-					echo '<span class="tickets_nostock">' . esc_html__( 'Out of stock!', 'event-tickets-plus' ) . '</span>';
+					echo '<span class="tickets_nostock">' . esc_html__( 'Билеты закончились!', 'event-tickets-plus' ) . '</span>';
 				}
 				echo '</td>';
 
@@ -85,7 +85,7 @@ ob_start();
 				<td colspan="4" class="woocommerce add-to-cart">
 
 					<button type="submit" name="wootickets_process" value="1"
-					        class="button alt"><?php esc_html_e( 'Add to cart', 'event-tickets-plus' );?></button>
+					        class="button alt"><?php esc_html_e( 'Купить билет', 'event-tickets-plus' );?></button>
 				</td>
 			</tr>
 			<?php

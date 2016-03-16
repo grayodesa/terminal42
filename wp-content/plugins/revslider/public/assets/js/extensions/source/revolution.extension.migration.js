@@ -1,6 +1,6 @@
 /*****************************************************************************************************
  * jquery.themepunch.revmigrate.js - jQuery Plugin for Revolution Slider Migration from 4.x to 5.0   
- * @version: 1.0.1 (18.08.2015)
+ * @version: 1.0.2 (20.01.2016)
  * @requires jQuery v1.7 or later (tested on 1.9)
  * @author ThemePunch
 *****************************************************************************************************/
@@ -145,13 +145,14 @@ var prepOptions = function(o) {
 
 	}
 	
-	o.fallbacks  = {
-					isJoomla:o.isJoomla || false,
-					panZoomDisableOnMobile: o.parallaxDisableOnMobile || "off",
-					simplifyAll:o.simplifyAll || "on",
-					nextSlideOnWindowFocus:o.nextSlideOnWindowFocus || "off",	
-					disableFocusListener:o.disableFocusListener || true						
-				};
+	if (o.fallbacks==undefined)
+		o.fallbacks  = {
+						isJoomla:o.isJoomla || false,
+						panZoomDisableOnMobile: o.parallaxDisableOnMobile || "off",
+						simplifyAll:o.simplifyAll || "on",
+						nextSlideOnWindowFocus:o.nextSlideOnWindowFocus || "off",	
+						disableFocusListener:o.disableFocusListener || true						
+					};
 
 	return o;
 

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Event Tickets Plus
 Description: Event Tickets Plus allows you to sell tickets to events
-Version: 4.0
+Version: 4.0.5
 Author: Modern Tribe, Inc.
 Author URI: http://m.tri.be/28
 License: GPLv2 or later
@@ -38,11 +38,11 @@ add_action( 'plugins_loaded', 'event_tickets_plus_init' );
 function event_tickets_plus_init() {
 	tribe_init_tickets_plus_autoloading();
 
-	if ( event_tickets_plus_is_incompatible_tickets_core_installed() ) {
-		$langpath = trailingslashit( basename( dirname( __FILE__ ) ) ) . 'lang/';
-		load_plugin_textdomain( 'event-tickets-plus', false, $langpath );
-		add_action( 'admin_notices', 'event_tickets_plus_show_fail_message' );
+	$langpath = trailingslashit( basename( dirname( __FILE__ ) ) ) . 'lang/';
+	load_plugin_textdomain( 'event-tickets-plus', false, $langpath );
 
+	if ( event_tickets_plus_is_incompatible_tickets_core_installed() ) {
+		add_action( 'admin_notices', 'event_tickets_plus_show_fail_message' );
 		return;
 	}
 
@@ -91,17 +91,17 @@ function event_tickets_plus_show_fail_message() {
 	if ( ! current_user_can( 'activate_plugins' ) )
 		return;
 
-	$url_tec = add_query_arg( array(
+	$url = add_query_arg( array(
 		'tab'       => 'plugin-information',
-		'plugin'    => 'the-events-calendar',
+		'plugin'    => 'event-tickets',
 		'TB_iframe' => 'true',
 	), admin_url( 'plugin-install.php' ) );
 
-	$title_tec = __( 'Tribe Tickets', 'event-tickets-plus' );
+	$title = __( 'Event Tickets', 'event-tickets-plus' );
 
 	echo '<div class="error"><p>';
 
-	printf( __( 'To begin using Event Tickets Plus, please install and activate the latest version of <a href="%s" class="thickbox" title="%s">%s</a>.', 'event-tickets-plus' ), esc_url( $url_tec ), $title_tec, $title_tec );
+	printf( __( 'To begin using Event Tickets Plus, please install and activate the latest version of <a href="%s" class="thickbox" title="%s">%s</a>.', 'event-tickets-plus' ), esc_url( $url ), $title, $title );
 
 	echo '</p></div>';
 }

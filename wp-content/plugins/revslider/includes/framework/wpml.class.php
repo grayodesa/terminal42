@@ -39,9 +39,9 @@ class RevSliderWpml{
 		self::validateWpmlExists();
 		
 		$wpml = new SitePress();
-		$arrLangs = $wpml->get_active_languages();
-		/* NEW:
 		$arrLangs = apply_filters( 'wpml_active_languages', array() );
+		/* OLD:
+		$arrLangs = $wpml->get_active_languages();
 		*/
 		
 		$response = array();
@@ -71,9 +71,9 @@ class RevSliderWpml{
 		self::validateWpmlExists();
 		
 		$wpml = new SitePress();
-		$arrLangs = $wpml->get_active_languages();
-		/* NEW:
 		$arrLangs = apply_filters( 'wpml_active_languages', array() );
+		/* OLD:
+		$arrLangs = $wpml->get_active_languages();
 		*/
 		foreach($arrLangs as $code=>$arr){
 			$arrCodes[$code] = $code;
@@ -101,24 +101,26 @@ class RevSliderWpml{
 	 */
 	public static function getLangsWithFlagsHtmlList($props = "",$htmlBefore = ""){
 		
-		$arrLangs = self::getArrLanguages();
 		/* NEW:
 		$arrLangs = apply_filters( 'wpml_active_languages', array() );
 		*/
+		$arrLangs = self::getArrLanguages();
+		
 		if(!empty($props))
 			$props = " ".$props;
 		
 		$html = "<ul".$props.">"."\n";
 		$html .= $htmlBefore;
 	
-		
 		foreach($arrLangs as $code=>$title){
 			$urlIcon = self::getFlagUrl($code);
+		
 		/* NEW:
 		foreach($arrLangs as $lang){
             $code = $lang['language_code'];
             $title = $lang['native_name'];
             $urlIcon = $lang['country_flag_url'];
+		
 		*/	
 			$html .= "<li data-lang='".$code."' class='item_lang'><a data-lang='".$code."' href='javascript:void(0)'>"."\n";
 			$html .= "<img src='".$urlIcon."'/> $title"."\n";				
@@ -141,19 +143,19 @@ class RevSliderWpml{
 		
 		$wpml = new SitePress();
 		
+		/* OLD:
 		if(empty($code) || $code == "all")
 			$url = RS_PLUGIN_URL.'admin/assets/images/icon-all.png';
 		else
 			$url = $wpml->get_flag_url($code);
+		*/
 
-		/* NEW:
 		if ( empty( $code ) || $code == "all" ) {
-            $url = ICL_PLUGIN_URL . '/res/img/icon16.png';
+            $url = RS_PLUGIN_URL.'admin/assets/images/icon-all.png'; // NEW: ICL_PLUGIN_URL . '/res/img/icon16.png';
         } else {
             $active_languages = apply_filters( 'wpml_active_languages', array() );
             $url = isset( $active_languages[$code]['country_flag_url'] ) ? $active_languages[$code]['country_flag_url'] : null;
         }
-		*/
 		
 		//default: show all
 		if(empty($url)){
@@ -185,7 +187,7 @@ class RevSliderWpml{
 	 * get language title by code
 	 */
 	public static function getLangTitle($code){
-		
+		/* OLD: 
 		$langs = self::getArrLanguages();
 		
 		if($code == "all")
@@ -199,10 +201,12 @@ class RevSliderWpml{
 			return($details["english_name"]);
 		
 		return("");
-		/* NEW: 
+		*/
+		if($code == "all")
+			return(__("All Languages", 'revslider'));
+		
 		$default_language = apply_filters( 'wpml_default_language', null );
         return apply_filters( 'wpml_translated_language_name', '', $code, $default_language );
-		*/
 	}
 	
 	
@@ -215,17 +219,17 @@ class RevSliderWpml{
 		$wpml = new SitePress();
 
 		
+		/* OLD:
 		if(is_admin())
 			$lang = $wpml->get_default_language();
 		else
 			$lang = RevSliderFunctionsWP::getCurrentLangCode();
+		*/
 		
-		/* NEW:
 		if ( is_admin() ) {
             return apply_filters( 'wpml_default_language', null );
         }
         return apply_filters( 'wpml_current_language', null );
-		*/
 		
 		return($lang);
 	}

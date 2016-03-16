@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
-Tested up to: 4.3.1
-Stable tag: 4.0
+Tested up to: 4.4
+Stable tag: 4.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,61 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.0.7] 2016-03-02 =
+
+* Fix - Load venue shortcode when there are no Events on that venue
+* Fix - Default value for `tribe_get_event_website_link_target` is corrected to `_self`
+* Fix - Default values for Venue and Organizers are now fully respected across the add-ons
+
+= [4.0.6] 2016-02-17 =
+
+* Fix - Resolved issue where the list widget was displaying dates in the wrong timezone when sitewide timezones were enabled
+* Fix - Custom Recurring descriptions are now saving as expected
+* Fix - Administration Recurring Exclusion Datepickers are now fully operational with custom formats
+* Fix - Prevent "/all" page to show past events
+* Fix - Ensure Photo view is fully displayed on Mobile
+* Fix - Organizer and Venue URL now respect UTF-8 characters
+* Fix - All of our Permalinks will now allow translations with non-alphanumeric characters
+* Fix - Fixing Fatals on bad Debug Classes for Map View
+* Tweak - "/all" page on Recurring events will be recoginized as a `is_archive` template
+
+= [4.0.5] 2016-01-25 =
+
+* Security - Improved escaping within Advanced Post Manager integration (our thanks to Daniel Kudwien for highlighting this)
+
+= [4.0.4] 2016-01-15 =
+
+* Security - Resolved issue with Organizer and Venue output
+
+= [4.0.3] 2015-12-22 =
+
+* Tweak - When viewing a recurring event that has multiple instances in a single day, display each time in the event details (Thank you Sitecrafting for bringing this up!)
+* Fix - Fixed another Isotope reLayout bug that sometimes prevented the rendering of posts in Photo view (Props to Douglas for the report!)
+
+= [4.0.2] 2015-12-16 =
+
+* Tweak - Avoid notice level errors when advanced events list widget settings are saved (Thank you Johan for the report!)
+* Tweak - Simplify default values logic to ensure that default values are returned regardless of post type (Thank you Karly!)
+* Fix - Fixed bug where recurrence excluses were not always respected (Cheers to inhouse for the help!)
+* Fix - Ensure venue and organizer URLs can be localized even with non-Roman alphabets (Thanks for the report Andreas!)
+* Fix - Ensure the current default venue fields are reflected in the relevant settings screen (Thank you Carly for highlighting this!)
+* Fix - Resolved issue where new recurring events were not targetable by the Recurring APM filter (Props to terrizsolo for the help!)
+* Fix - Fixed bug where the Isotope reLayout method was sometimes getting executed before Isotope was initialized causing Photo view to break (Thank you Douglas for bringing this up!)
+* Fix - Fixed issue where past events for Map and Photo view were not in descending order (Thank you Jesse!)
+* Fix - Resolved bug where week/photo permalinks were sometimes generated incorrectly (Cheers to Anthony for the tip!)
+* Fix - Fixed bug with the List Widget where the Organizer displayed even when it is disabled in the widget settings (Thank you Eric!)
+* Fix - Resolved translation issues with the List Widget (Props to amazing on the forum for reporting this!)
+
+= [4.0.1] 2015-12-10 =
+
+* Tweak - Included a Filter for filtering Recurrence Output Data `tribe_events_pro_output_recurrence_data`
+* Tweak - Add better support for Daylight Saving Time
+* Fix - Resolve issue where the "Events List" shortcode view more link was being generated too generically when a category was specified
+* Fix - Fixed bug where the "On the..." section of Recurring event fields was failing to save in some cases (props to Adam on the forums for point this out!)
+* Fix - Resolved issue where the recurring event clean-up cron was failing to clear some old events
+* Fix - Resolved bug where custom yearly recurrence rules were not generating events properly
+* Fix - Fixed issue where the Countdown widget was missing the title of the event it was counting down to
 
 = [4.0] 2015-12-02 =
 

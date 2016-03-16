@@ -85,7 +85,7 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets__Tickets {
 	 * Meta key that relates Attendees and Products.
 	 *
 	 * @deprecated use of the ATTENDEE_OBJECT class constant is preferred
-	 * 
+	 *
 	 * @var string
 	 */
 	public static $attendee_product_key = '_tribe_eddticket_product';
@@ -181,7 +181,7 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets__Tickets {
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 		add_filter( 'edd_download_files', array( $this, 'ticket_downloads' ), 10, 2 );
 		add_filter( 'edd_download_file_url_args', array( $this, 'print_ticket_url' ), 10 );
-
+		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
 	}
 
 	/**
@@ -655,7 +655,7 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets__Tickets {
 			return false;
 		}
 
-		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types ) ) {
+		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types() ) ) {
 			return get_post( $event );
 		}
 
@@ -783,7 +783,7 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets__Tickets {
 		if ( ! empty( $ticket_id ) ) {
 			$ticket = $this->get_ticket( $event_id, $ticket_id );
 			if ( ! empty( $ticket ) ) {
-				$stock = $ticket->stock();
+				$stock = $ticket->managing_stock() ? $ticket->stock() : '';
 				$sku   = get_post_meta( $ticket_id, '_sku', true );
 			}
 		}
@@ -1118,6 +1118,24 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets__Tickets {
 	 */
 	public function stock() {
 		return $this->stock_control;
+	}
+
+
+	/**
+	 * Excludes EDD product post types from the list of supported post types that Tickets can be attached to
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $post_types Array of supported post types
+	 *
+	 * @return array
+	 */
+	public function exclude_product_post_type( $post_types ) {
+		if ( isset( $post_types['download'] ) ) {
+			unset( $post_types['download'] );
+		}
+
+		return $post_types;
 	}
 
 	/********** SINGLETON FUNCTIONS **********/

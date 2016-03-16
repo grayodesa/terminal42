@@ -19,7 +19,7 @@
  * Collection of static utility methods used for convenience across
  * the client library.
  */
-class App_Google_Utils
+class Google_Utils
 {
   public static function urlSafeB64Encode($data)
   {

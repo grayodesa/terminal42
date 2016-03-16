@@ -19,7 +19,7 @@
  * Implementation of levels 1-3 of the URI Template spec.
  * @see http://tools.ietf.org/html/rfc6570
  */
-class App_Google_Utils_URITemplate
+class Google_Utils_URITemplate
 {
   const TYPE_MAP = "1";
   const TYPE_LIST = "2";
@@ -213,7 +213,7 @@ class App_Google_Utils_URITemplate
 
     if (isset($parameters[$key])) {
       $data_type = $this->getDataType($parameters[$key]);
-      switch($data_type) {
+      switch ($data_type) {
         case self::TYPE_SCALAR:
           $value = $this->getValue($parameters[$key], $length);
           break;

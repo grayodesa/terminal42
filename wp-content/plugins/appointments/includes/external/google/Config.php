@@ -18,7 +18,7 @@
 /**
  * A class to contain the library configuration for the Google API client.
  */
-class App_Google_Config
+class Google_Config
 {
   const GZIP_DISABLED = true;
   const GZIP_ENABLED = false;
@@ -44,10 +44,10 @@ class App_Google_Config
       'application_name' => '',
 
       // Which Authentication, Storage and HTTP IO classes to use.
-      'auth_class'    => 'App_Google_Auth_OAuth2',
+      'auth_class'    => 'Google_Auth_OAuth2',
       'io_class'      => self::USE_AUTO_IO_SELECTION,
-      'cache_class'   => 'App_Google_Cache_File',
-      'logger_class'  => 'App_Google_Logger_Null',
+      'cache_class'   => 'Google_Cache_File',
+      'logger_class'  => 'Google_Logger_Null',
 
       // Don't change these unless you're working against a special development
       // or testing environment.
@@ -55,21 +55,25 @@ class App_Google_Config
 
       // Definition of class specific values, like file paths and so on.
       'classes' => array(
-        'App_Google_IO_Abstract' => array(
+        'Google_IO_Abstract' => array(
           'request_timeout_seconds' => 100,
         ),
-        'App_Google_Logger_Abstract' => array(
+        'Google_IO_Curl' => array(
+          'disable_proxy_workaround' => false,
+          'options' => null,
+        ),
+        'Google_Logger_Abstract' => array(
           'level' => 'debug',
           'log_format' => "[%datetime%] %level%: %message% %context%\n",
           'date_format' => 'd/M/Y:H:i:s O',
           'allow_newlines' => true
         ),
-        'App_Google_Logger_File' => array(
+        'Google_Logger_File' => array(
           'file' => 'php://stdout',
           'mode' => 0640,
           'lock' => false,
         ),
-        'App_Google_Http_Request' => array(
+        'Google_Http_Request' => array(
           // Disable the use of gzip on calls if set to true. Defaults to false.
           'disable_gzip' => self::GZIP_ENABLED,
 
@@ -81,7 +85,7 @@ class App_Google_Config
         ),
         // If you want to pass in OAuth 2.0 settings, they will need to be
         // structured like this.
-        'App_Google_Auth_OAuth2' => array(
+        'Google_Auth_OAuth2' => array(
           // Keys for OAuth 2.0 access, see the API console at
           // https://developers.google.com/console
           'client_id' => '',
@@ -104,7 +108,7 @@ class App_Google_Config
           'federated_signon_certs_url' =>
               'https://www.googleapis.com/oauth2/v1/certs',
         ),
-        'App_Google_Task_Runner' => array(
+        'Google_Task_Runner' => array(
           // Delays are specified in seconds
           'initial_delay' => 1,
           'max_delay' => 60,
@@ -117,7 +121,7 @@ class App_Google_Config
           // Maximum number of retries allowed
           'retries' => 0
         ),
-        'App_Google_Service_Exception' => array(
+        'Google_Service_Exception' => array(
           'retry_map' => array(
             '500' => self::TASK_RETRY_ALWAYS,
             '503' => self::TASK_RETRY_ALWAYS,
@@ -125,7 +129,7 @@ class App_Google_Config
             'userRateLimitExceeded' => self::TASK_RETRY_ALWAYS
           )
         ),
-        'App_Google_IO_Exception' => array(
+        'Google_IO_Exception' => array(
           'retry_map' => !extension_loaded('curl') ? array() : array(
             CURLE_COULDNT_RESOLVE_HOST => self::TASK_RETRY_ALWAYS,
             CURLE_COULDNT_CONNECT => self::TASK_RETRY_ALWAYS,
@@ -135,8 +139,8 @@ class App_Google_Config
           )
         ),
         // Set a default directory for the file cache.
-        'App_Google_Cache_File' => array(
-          'directory' => sys_get_temp_dir() . '/App_Google_Client'
+        'Google_Cache_File' => array(
+          'directory' => sys_get_temp_dir() . '/Google_Client'
         )
       ),
     );

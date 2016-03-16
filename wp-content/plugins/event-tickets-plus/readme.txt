@@ -3,8 +3,8 @@
 Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, shane.pearlman, thatdudebutch,  zbtirrell
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Shopp, EDD, WPEC, WP-eCommerce, WPEC Tickets, Shopp Tickets, Easy Digital Downloads, EDDTickets
 Requires at least: 3.9
-Tested up to: 4.3.1
-Stable tag: 4.0
+Tested up to: 4.4
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,7 +114,7 @@ The plugin is produced by <a href="http://m.tri.be/3i">Modern Tribe Inc</a>.
 
 = Translations =
 
-* Dutch 
+* Dutch
 
 We don’t have many translations for this plugin yet, but you can help us! You can contribute at http://translations.theeventscalendar.com
 
@@ -143,6 +143,35 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.0.5] 2016-02-17 =
+
+* Fix - Prevent tickets from being attached to Commerce provider products/downloads
+* Fix - Prevent bad encoding on WooCommerce Ticket emails
+* Fix - Prevent Notice on bad usage of `tribe_events_get_ticket_event()`
+* Fix - Use method instead of a property inside of get_event_for_ticket() for all 4 eCommerce tickets
+
+= [4.0.4] 2015-12-23 =
+
+* Fix - Resolved bug where payment types that reduce stock manually (like checks and cash on delivery) were incorrectly totaling the available tickets once a purchase was made (Big thanks to user Tommy and tigertoertchen who helped us resolve this issue!)
+
+= [4.0.3] 2015-12-22 =
+
+* Fix - Resolved issue where pending payments were being double-counted when calculating total sales for a ticket (Thank you liblogger for bringing this to our attention!)
+* Fix - Fixed issue where Orders in the Orders Report were excluded if the "Blog pages show at most" setting in WP was lower than the number of orders for an event (Thank you Ameet for the report!)
+* Fix - Resolved fatal caused by PHP 5.4 and lower with WooCommerce when querying cancelled tickets (Cheers to Eric for reporting this issue!)
+
+= [4.0.2] 2015-12-16 =
+
+* Tweak - Gracefully handle negative inventories (Thank you Ameet for the report!)
+* Fix - Resolved bug where the textdomain was not loaded at the appropriate time causing translations to fail (Cheers to Stéphane Bergeron for bringing this up!)
+* Fix - Corrected the URL in the popup about Event Tickets being a prerequisite (Thanks for the tip websource!)
+
+= [4.0.1] 2015-12-10 =
+
+* Tweak - Added performance improvements to the generation of the WooCommerce Orders table
+* Tweak - Added hooks to inject event information into Event Tickets attendees reports
+* Fix - Resolved issue where a ticket that was created with a blank stock would show a stock of 0 on page reload
 
 = [4.0] 2015-12-02 =
 

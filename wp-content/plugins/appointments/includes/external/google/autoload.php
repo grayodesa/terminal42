@@ -15,20 +15,17 @@
  * limitations under the License.
  */
 
-function app_google_api_php_client_autoload($className)
+function google_api_php_client_autoload($className)
 {
   $classPath = explode('_', $className);
-
-  if ($classPath[0] != 'App') {
+  if ($classPath[0] != 'Google') {
     return;
   }
   // Drop 'Google', and maximum class file path depth in this project is 3.
-  $classPath = array_slice($classPath, 2, 2);
-
+  $classPath = array_slice($classPath, 1, 2);
   $filePath = dirname(__FILE__) . '/' . implode('/', $classPath) . '.php';
   if (file_exists($filePath)) {
     require_once($filePath);
   }
 }
-
-spl_autoload_register('app_google_api_php_client_autoload');
+spl_autoload_register('google_api_php_client_autoload');

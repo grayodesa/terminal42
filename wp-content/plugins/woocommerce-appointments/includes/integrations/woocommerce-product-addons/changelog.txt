@@ -1,0 +1,32 @@
+*** Product Addons Changelog ***
+
+2016.01.26 - version 2.7.15
+* Tweak - Show the price display suffix on the grand total.
+
+2016.01.14 - version 2.7.14
+* Fix - WooCommerce 2.5 compatibility.
+* Fix - Made the 'required' tooltip translatable.
+
+
+2015.11.24 - version 2.7.13
+* Fix - Compatibility fix for WooCommerce Photography. The "select options" button should now lead to the correct screen when using WC Photography 1.0.6.
+* i18n / translation updates
+
+2015.11.06 - version 2.7.12
+* Fix - Compatibility fix for WooCommerce Photography. Users can no longer add photography products to cart without filling any required add-on fields.
+* Fix - The "default label" place holder now clears when you click into it.
+* Fix - Fix toggle display on "global add-ons" page.
+* Fix - Compatibility fix for WooCommerce Quick View. Prices with variations now quickly display the correct grand total on single product pages.
+
+2015.09.29 - version 2.7.11
+* Limit input element names in HTML to less than 64 characters to avoid issues on some hosts
+
+2015.10.13 - version 2.7.10
+* Automatically add a default option when a new add-on group is added to a product
+* Prevent merchant from removing all options in a given add-on group
+* Add custom email as an add-on field option
+* Add custom letters only text, digits only text and letters and digits only text as add-on field options
+* Add subscription period to add-on prices and totals for simple subscriptions too (not just those with variations)
+
+2015.08.14 - version 2.7.9
+* Forked version of WooCommerce Product Add-ons

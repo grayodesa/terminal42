@@ -14,6 +14,11 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 	 * Permalinks magic Happens over here!
 	 */
 	class Tribe__Events__Rewrite {
+		/**
+		 * If we wish to setup a rewrite rule that uses percent symbols, we'll need
+		 * to make use of this placeholder.
+		 */
+		const PERCENT_PLACEHOLDER = '~~TRIBE~PC~~';
 
 		/**
 		 * Static singleton variable
@@ -76,10 +81,14 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 				add_filter( 'generate_rewrite_rules', array( $this, 'filter_generate' ) );
 				add_filter( 'post_type_link', array( $this, 'filter_post_type_link' ), 15, 2 );
 
+				// Remove percent Placeholders on all items
+				add_filter( 'rewrite_rules_array', array( $this, 'remove_percent_placeholders' ), 25 );
+
 			} elseif ( true === $remove ) {
 				// Remove the Hooks
 				remove_filter( 'generate_rewrite_rules', array( $this, 'filter_generate' ) );
 				remove_filter( 'post_type_link', array( $this, 'filter_post_type_link' ), 15 );
+				remove_filter( 'rewrite_rules_array', array( $this, 'remove_percent_placeholders' ), 25 );
 			}
 		}
 
@@ -185,6 +194,9 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 		 * @return string      Permalink with the language
 		 */
 		public function filter_post_type_link( $permalink, $post ) {
+			// When creating the link we need to re-do the Percent Placeholder
+			$permalink = str_replace( self::PERCENT_PLACEHOLDER, '%', $permalink );
+
 			if ( ! $this->is_wpml_active() || empty( $_GET['lang'] ) ) {
 				return $permalink;
 			}
@@ -261,7 +273,7 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 			// By default we load the Default and our plugin domains
 			$domains = apply_filters( 'tribe_events_rewrite_i18n_domains', array(
 				'default' => true, // Default doesn't need file path
-				'the-events-calendar' => Tribe__Events__Main::instance()->pluginDir . 'lang/',
+				'the-events-calendar' => $tec->pluginDir . 'lang/',
 			) );
 
 			// If WPML exists we treat the multiple languages
@@ -282,14 +294,19 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 				$current_locale = $sitepress->get_locale( $sitepress->get_current_language() );
 
 				// Get the strings on multiple Domains and Languages
-				$bases = Tribe__Events__Main::instance()->get_i18n_strings( $bases, $languages, $domains, $current_locale );
+				$bases = $tec->get_i18n_strings( $bases, $languages, $domains, $current_locale );
 			}
 
 			if ( 'regex' === $method ){
 				foreach ( $bases as $type => $base ) {
+					// Escape all the Bases
+					$base = array_map( 'preg_quote', $base );
+
+					// Create the Regular Expression
 					$bases[ $type ] = '(?:' . implode( '|', $base ) . ')';
 				}
 			}
+
 
 			/**
 			 * Use `tribe_events_rewrite_i18n_slugs` to modify the final version of the l10n slugs bases
@@ -405,6 +422,105 @@ if ( ! class_exists( 'Tribe__Events__Rewrite' ) ) {
 			$regex = array_merge( array( $this->bases->archive, $this->bases->tag, '([^/]+)' ), (array) $regex );
 
 			return $this->add( $regex, $args );
+		}
+
+		/**
+		 * Returns a sanitized version of $slug that can be used in rewrite rules.
+		 *
+		 * This is ideal for those times where we wish to support internationalized
+		 * URLs (ie, where "venue" in "venue/some-slug" may be rendered in non-ascii
+		 * characters).
+		 *
+		 * In the case of registering new post types, $permastruct_name should
+		 * generally match the CPT name itself.
+		 *
+		 * @param  string $slug
+		 * @param  string $permastruct_name
+		 * @return string
+		 */
+		public function prepare_slug( $slug, $permastruct_name ) {
+			$needs_handling = false;
+			$sanitized_slug = sanitize_title( $slug );
+
+			// Was UTF8 encoding required for the slug? %a0 type entities are a tell-tale of this
+			if ( preg_match( '/(%[0-9a-f]{2})+/', $sanitized_slug ) ) {
+				/**
+				 * Controls whether special UTF8 URL handling is setup for the set of
+				 * rules described by $permastruct_name.
+				 *
+				 * This only fires if Tribe__Events__Rewrite::prepare_slug() believes
+				 * handling is required.
+				 *
+				 * @var string $permastruct_name
+				 * @var string $slug
+				 */
+				$needs_handling = apply_filters( 'tribe_events_rewrite_utf8_handling',
+					true,
+					$permastruct_name,
+					$slug
+				);
+			}
+
+			if ( $needs_handling ) {
+				// User agents encode things the same way but in uppercase
+				$sanitized_slug = strtoupper( $sanitized_slug );
+
+				// UTF8 encoding results in lots of "%" chars in our string which play havoc
+				// with WP_Rewrite::generate_rewrite_rules(), so we swap them out temporarily
+				$sanitized_slug = str_replace( '%', self::PERCENT_PLACEHOLDER, $sanitized_slug );
+			}
+
+			/**
+			 * Provides an opportunity to modify the sanitized slug which will be used
+			 * in rewrite rules relating to $permastruct_name.
+			 *
+			 * @var string $prepared_slug
+			 * @var string $permastruct_name
+			 * @var string $original_slug
+			 */
+			return apply_filters( 'tribe_events_rewrite_prepared_slug',
+				preg_quote( $sanitized_slug ),
+				$permastruct_name,
+				$slug
+			);
+		}
+
+		/**
+		 * Converts any percentage placeholders in the array keys back to % symbols.
+		 *
+		 * @param  array $rules
+		 * @return array
+		 */
+		public function remove_percent_placeholders( array $rules ) {
+			foreach ( $rules as $key => $value ) {
+				$this->replace_array_key( $rules, $key, str_replace( self::PERCENT_PLACEHOLDER, '%', $key ) );
+			}
+
+			return $rules;
+		}
+
+		/**
+		 * A way to replace an Array key without destroying the array ordering
+		 *
+		 * @since  4.0.6
+		 *
+		 * @param  array &$array   The Rules Array should be used here
+		 * @param  string $search  Search for this Key
+		 * @param  string $replace Replace with this key]
+		 * @return bool            Did we replace anything?
+		 */
+		private function replace_array_key( &$array, $search, $replace ) {
+			$keys = array_keys( $array );
+			$index = array_search( $search, $keys );
+
+			if ( false !== $index ) {
+				$keys[ $index ] = $replace;
+				$array = array_combine( $keys, $array );
+
+				return true;
+			}
+
+			return false;
 		}
 
 	} // end Tribe__Events__Rewrite class

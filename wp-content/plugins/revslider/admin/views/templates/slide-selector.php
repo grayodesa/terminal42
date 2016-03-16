@@ -228,7 +228,7 @@ if($the_slidertype == 'hero'){
 							<input class="slidetitleinput" name="slidetitle" value="<?php echo stripslashes($title); ?>" />
 							<span class="slidelint-edit-button"></span>
 						</span>						
-						<div class="slide-link-toolbar">							
+						<div class="slide-link-toolbar">
 							<?php
 							if($slidelistID != $slideID && !in_array($slideID, $arrChildrenIDs)){
 								?>

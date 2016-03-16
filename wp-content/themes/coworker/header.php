@@ -70,6 +70,7 @@ endif;
         WP Head
     ============================================= -->
     <?php wp_head(); ?>
+
 <script>(function() {
 var _fbq = window._fbq || (window._fbq = []);
 if (!_fbq.loaded) {

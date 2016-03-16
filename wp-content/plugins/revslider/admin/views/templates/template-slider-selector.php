@@ -17,36 +17,43 @@ $all_slider = $tmp_slider->getArrSliders();
 		
 		<div id="close-template"></div>
 		
-		<div class="revolution-template-switcher">
-			<span data-showgroup="revolution-basic-templates" class="revolution-templatebutton selected"><?php _e('Revolution Base', 'revslider'); ?></span>
-			<span data-showgroup="revolution-premium-templates" class="revolution-templatebutton premium-templatebutton"><i class="eg-icon-basket"></i><?php _e('Premium Sliders', 'revslider'); ?></span>
-			<?php
-			if(!empty($author_template_slider) && is_array($author_template_slider)){
-				foreach($author_template_slider as $name => $v){
-					?>
-					<span data-showgroup="revolution-<?php echo sanitize_title($name); ?>" class="revolution-templatebutton"><?php echo esc_attr($name); ?></span>
-					<?php
+		<div class="revolution-template-switcher">		
+			<span style="display:table-cell;vertical-align:top">	
+				<?php
+				if(!empty($author_template_slider) && is_array($author_template_slider)){
+					foreach($author_template_slider as $name => $v){
+						?>
+						<span data-type="temp_<?php echo sanitize_title($name); ?>" class="template_filter_button"><?php echo esc_attr($name); ?></span>
+						<?php
+					}
 				}
-			}
-			?>
-			<span class="rs-reload-shop"><i class="eg-icon-arrows-ccw"></i><?php _e('Check for new Templates', 'revslider'); ?></span>
-		</div>
-
-		<div class="revolution-template-subtitle"><?php _e('Add Slider', 'revslider'); ?>
-			<span style="display:inline-block;width:40px;"></span>
-			<span class="template_filter_button selected" data-type="temp_all"><?php _e('SHOW ALL', 'revslider'); ?></span>
-			<span class="template_filter_button" data-type="temp_slider"><?php _e('SLIDER', 'revslider'); ?></span>
-			<span class="template_filter_button" data-type="temp_carousel"><?php _e('CAROUSEL', 'revslider'); ?></span>
-			<span class="template_filter_button" data-type="temp_hero"><?php _e('HERO', 'revslider'); ?></span>
+				?>
+				<span class="template_filter_button selected" data-type="temp_all"><?php _e('All Templates', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="template_free"><?php _e('Free Templates', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="template_premium"><?php _e('Premium Templates', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_slider"><?php _e('Slider', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_carousel"><?php _e('Carousel', 'revslider'); ?></span>			
+				<span class="template_filter_button" data-type="temp_hero"><?php _e('Hero', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_notinstalled"><?php _e('Not Installed', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_socialmedia"><?php _e('Social Media', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="temp_postbased"><?php _e('Post-Based', 'revslider'); ?></span>
+				<span class="template_filter_button temp_new_udpated" data-type="temp_newupdate"><?php _e('New / Updated', 'revslider'); ?></span>			
+			</span>
+			<span style="display:table-cell;vertical-align:top;text-align:right">
+				<span class="rs-reload-shop"><i class="eg-icon-arrows-ccw"></i><?php _e('Update Library', 'revslider'); ?></span>
+			</span>			
 		</div>
 	</div>
 
 	<!-- THE REVOLUTION BASE TEMPLATES -->
-	<div class="revolution-basic-templates revolution-template-groups">
+	<div class="revolution-template-groups">
+		<div id="template_bigoverlay"></div>
 		<?php
+		$plugin_list = array();
+		
 		if(!empty($tp_template_slider)){
 			foreach($tp_template_slider as $m_slider){
-				if($m_slider['cat'] != 'Revolution Base') continue;
+				if($m_slider['cat'] != 'Revolution Base' && $m_slider['cat'] != 'Premium') continue;
 				
 				if(!empty($m_slider['filter']) && is_array($m_slider['filter'])){
 					foreach($m_slider['filter'] as $f => $v){
@@ -54,21 +61,60 @@ $all_slider = $tmp_slider->getArrSliders();
 					}
 				}
 				
-				if(!isset($m_slider['installed']) && !isset($m_slider['is_new'])){
-					
+				$slidercat = $m_slider['cat'] == 'Revolution Base' ? " template_free " : " template_premium ";				
+				$etikett_a = $m_slider['cat'] == 'Revolution Base' ? __("Free", 'revslider') : __("Premium", 'revslider');
+				$isnew = (isset($m_slider['new_slider'])) ? true : false;
+				
+				$slidercat_new = $isnew ? " temp_newupdate " : "";
+				
+				$m_slider['plugin_require'] = (isset($m_slider['plugin_require'])) ? json_decode($m_slider['plugin_require'], true) : array();
+				if(is_array($m_slider['plugin_require']) && !empty($m_slider['plugin_require'])){
+					foreach($m_slider['plugin_require'] as $k => $pr){
+						if(!isset($plugin_list[$pr['path']])){
+							if(is_plugin_active(esc_attr($pr['path']))){
+								$plugin_list[$pr['path']] = true;
+							}else{
+								$plugin_list[$pr['path']] = false;
+							}
+						}
+						if($plugin_list[$pr['path']] === true){
+							$m_slider['plugin_require'][$k]['installed'] = true;
+						}else{
+							$m_slider['plugin_require'][$k]['installed'] = false;
+						}
+					}
+				}else{
+					$m_slider['plugin_require'] = array();
+				}
+
+
+				if(!isset($m_slider['installed'])){
 					$c_slider = new RevSlider();
 					$c_slider->initByDBData($m_slider);
 					$c_slides = $tmpl->getThemePunchTemplateSlides(array($m_slider));
 					$c_title = $c_slider->getTitle();
 					$width = $c_slider->getParam("width",1240);
 					$height = $c_slider->getParam("height",868);
+					$version_installed = $c_slider->getParam("version",'1.0.0');
+					if ($version_installed==='') $version_installed='1.0.0';
+					$isupdate = false;
+					
+					
+					if(version_compare($version_installed, $m_slider['version'], '<')){
+						$isupdate = true;
+						$slidercat_new = ' temp_newupdate ';
+					}
+					
 					
 					if(!empty($c_slides)){
 						?>
-						<div class="template_group_wrappers <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
+						<div class="template_group_wrappers <?php echo $slidercat.$slidercat_new; if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
 							<?php
-							foreach($c_slides as $c_slide){
+							foreach($c_slides as $key => $c_slide){
+								
+								$c_slide = array_merge($m_slider, $c_slide);
 								$c_slide['img'] = $m_slider['img']; //set slide image
+								
 								if(isset($m_slider['preview'])){
 									$c_slide['preview'] = $m_slider['preview']; //set preview URL
 								}
@@ -82,20 +128,46 @@ $all_slider = $tmp_slider->getArrSliders();
 								
 								$c_slide['settings']['width'] = $width;
 								$c_slide['settings']['height'] = $height;
+								
+								$c_slide['number'] = $key;
+								$c_slide['current_version'] = ($version_installed !== '') ? $version_installed : __('N/A', 'revslider');
+								$c_slide['title'] = $c_title;
+								
+								
 								$tmpl->write_template_markup($c_slide, $c_slider->getID()); //add the Slider ID as we want to add a Slider and no Slide
 								break; //only write the first, as we want to add a Slider and not a Slide
 							}
-							echo '<div class="template_thumb_title">'.$c_title.'</div>';
 							?>
+							<div class="template_meta_line">
+								<?php if ($isnew) { ?>
+								<span class="template_new"><?php _e("New", "revslider"); ?></span>
+								<?php } ?>
+								<?php if ($isupdate) { ?>
+								<span class="template_new"><?php _e("Update", "revslider"); ?></span>
+								<?php } ?>
+								<span class="<?php echo $slidercat; ?>"><?php echo $etikett_a; ?></span>
+								<span class="template_installed"><?php _e("Installed", "revslider"); ?><i class="eg-icon-check"></i></span>
+							</div>							
+							<div class="template_thumb_title"><?php echo $c_title; ?></div>							
 						</div><?php
 					}
 				}else{
 					?>
-					<div class="template_group_wrappers not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
+					<div class="template_group_wrappers <?php echo $slidercat_new.$slidercat; ?> temp_notinstalled not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
 						<?php
 						$tmpl->write_import_template_markup($m_slider); //add the Slider ID as we want to add a Slider and no Slide
-						echo '<div class="template_thumb_title">'.$m_slider['title'].'</div>';
 						?>
+						<div class="template_meta_line">
+							<?php if ($isnew) { ?>
+								<span class="template_new"><?php _e("New", "revslider"); ?></span>
+								<?php } ?>
+								<?php /*if ($isupdate) { ?>
+								<span class="template_new"><?php _e("Update", "revslider"); ?></span>
+								<?php }*/ ?>
+							<span class="<?php echo $slidercat;?>"><?php echo $etikett_a; ?></span>
+							<span class="template_notinstalled"><?php _e("Not Installed", "revslider"); ?></span>
+						</div>
+						<div class="template_thumb_title"><?php echo $m_slider['title']; ?></div>	
 					</div>
 					<?php
 				}
@@ -106,180 +178,95 @@ $all_slider = $tmp_slider->getArrSliders();
 			echo '</span>';
 		}
 		?>
-		<div style="clear:both;width:100%"></div>
+
+		<div style="clear:both;width:100%"></div>		
 	</div>
 	
-	<!-- THE REVOLUTION PREMIUM TEMPLATES -->
-	<div class="revolution-premium-templates revolution-template-groups" style="display: none">
-		<?php
-		if(!empty($tp_template_slider)){
-			foreach($tp_template_slider as $m_slider){
-				if($m_slider['cat'] != 'Premium') continue;
-				
-				if(!empty($m_slider['filter']) && is_array($m_slider['filter'])){
-					foreach($m_slider['filter'] as $f => $v){
-						$m_slider['filter'][$f] = 'temp_'.$v;
-					}
-				}
-				
-				if(!isset($m_slider['installed']) && !isset($m_slider['is_new'])){
-					
-					$c_slider = new RevSlider();
-					$c_slider->initByDBData($m_slider);
-					$c_slides = $tmpl->getThemePunchTemplateSlides(array($m_slider));
-					$c_title = $c_slider->getTitle();
-					$width = $c_slider->getParam("width",1240);
-					$height = $c_slider->getParam("height",868);
-					
-					if(!empty($c_slides)){
-						?>
-						<div class="template_group_wrappers <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
-							<?php
-							foreach($c_slides as $c_slide){
-								$c_slide['img'] = $m_slider['img']; //set slide image
-								if(isset($m_slider['preview'])){
-									$c_slide['preview'] = $m_slider['preview']; //set preview URL
-								}
-								if(isset($m_slider['filter'])){
-									$c_slide['filter'] = $m_slider['filter']; //add filters 
-								}
-								
-								if($c_slide['img'] == ''){
-									//set default image
-								}
-								
-								$c_slide['settings']['width'] = $width;
-								$c_slide['settings']['height'] = $height;
-								$tmpl->write_template_markup($c_slide, $c_slider->getID()); //add the Slider ID as we want to add a Slider and no Slide
-								break; //only write the first, as we want to add a Slider and not a Slide
-							}
-							echo '<div class="template_thumb_title">'.$c_title.'</div>';
-							?>
-						</div><?php
-					}
-				}else{
-					?>
-					<div class="template_group_wrappers not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
-						<?php
-						$tmpl->write_import_template_markup($m_slider); //add the Slider ID as we want to add a Slider and no Slide
-						echo '<div class="template_thumb_title">'.$m_slider['title'].'</div>';
-						?>
-					</div>
-					<?php
-				}
-			}
-		}
-		?>
-		<div style="clear:both;width:100%"></div>
-		
-		<a href="javascript:void(0);" class="rs-visit-store"></a>
-		<script type="text/javascript">
-		jQuery(document).ready(function(){
-			jQuery('.rs-visit-store').click(function(){
-				UniteAdminRev.ajaxRequest("rs_get_store_information", {}, function(response){
-					if(response.success == true){
-						if(typeof(response.data.message) !== 'undefined'){
-							alert(response.data.message);
-						}
-					}
-					
-					return true;
-				});
-			});
-			
-		});
-		</script>
-		<div style="clear:both;width:100%"></div>
-	</div>
 	
-	<?php
-	if(!empty($author_template_slider) && is_array($author_template_slider)){
-		foreach($author_template_slider as $name => $v){
-			?>
-			<!-- THE REVOLUTION AUTHOR TEMPLATES -->
-			<div class="revolution-<?php echo sanitize_title($name); ?> revolution-template-groups" style="display: none">
-				<?php
-				if(!empty($v)){
-					foreach($v as $m_slider){
-						
-						if(!empty($m_slider['filter']) && is_array($m_slider['filter'])){
-							foreach($m_slider['filter'] as $f => $v){
-								$m_slider['filter'][$f] = 'temp_'.$v;
-							}
-						}
-						
-						if(!isset($m_slider['installed']) && !isset($m_slider['is_new'])){
-							
-							$c_slider = new RevSlider();
-							$c_slider->initByDBData($m_slider);
-							$c_slides = $tmpl->getThemePunchTemplateSlides(array($m_slider));
-							$c_title = $c_slider->getTitle();
-							$width = $c_slider->getParam("width",1240);
-							$height = $c_slider->getParam("height",868);
-							
-							if(!empty($c_slides)){
-								?>
-								<div class="template_group_wrappers <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
-									<?php									
-									foreach($c_slides as $c_slide){
-										$c_slide['img'] = $m_slider['img']; //set slide image
-										if(isset($m_slider['preview'])){
-											$c_slide['preview'] = $m_slider['preview']; //set preview URL
-										}
-										if(isset($m_slider['filter'])){
-											$c_slide['filter'] = $m_slider['filter']; //add filters 
-										}
-										$c_slide['settings']['width'] = $width;
-										$c_slide['settings']['height'] = $height;
-										
-										if($c_slide['img'] == ''){
-											//set default image
-										}
-										
-										$tmpl->write_template_markup($c_slide, $c_slider->getID()); //add the Slider ID as we want to add a Slider and no Slide
-										break; //only write the first, as we want to add a Slider and not a Slide
-									}
-									echo '<div class="template_thumb_title">'.$c_title.'</div>';
-									?>
-									
-								</div><?php
-							}
-						}else{
-							?>
-							<div class="template_group_wrappers not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
-								<?php
-								$tmpl->write_import_template_markup($m_slider); //add the Slider ID as we want to add a Slider and no Slide
-								echo '<div class="template_thumb_title">'.$m_slider['title'].'</div>';
-								?>
-								
-							</div>
-							<?php
-						}
-					}
-				}
-				?>
-				<div style="clear:both;width:100%"></div>
-			</div>
-			<?php
-		}
-	}
-	?>
 </div>
 
 <script>
+	function isElementInViewport(element,sctop,wh,rtgt) {		
+			var etp = parseInt(element.offset().top,0)-rtgt,
+				etpp = parseInt(element.position().top,0),
+				inviewport = false;		
+			//element.closest('.template_group_wrappers').find('.template_thumb_title').html("Offset:"+etp+"   Scroll:"+sctop+" POffset:"+rtgt);
+			if ((etp>-50) && (etp<wh+50))
+				inviewport =  true;						
+			return inviewport;
+	}
+	
+	function scrollTA() {
+		var ta = jQuery('.revolution-template-groups'),
+			st = ta.scrollTop(),
+			rtgt = parseInt(jQuery('.revolution-template-groups').offset().top,0),
+			wh = jQuery(window).height();
+
+		ta.find('.template_slider_item:visible, .template_slider_item_import:visible, .template_slider_item_img:visible').each(function() {
+			var el = jQuery(this);				
+			if (el.data('src')!=undefined && el.data('bgadded')!=1) {
+				if (jQuery('#template_area').hasClass("show"))
+					if (isElementInViewport(el,st,wh,rtgt)){																			
+						el.css({backgroundImage:'url("'+el.data('src')+'")'});														
+						el.data('bgadded',1);						
+					}
+			}
+		});
+	}
+	function setTWHeight() {
+			var w = jQuery(window).height(),
+				wh = jQuery('#template_header_part').height();
+			jQuery('.revolution-template-groups').css({height:(w-wh)+"px"});
+			jQuery('.revolution-template-groups').perfectScrollbar("update");
+			scrollTA();
+		};
+
+
 	jQuery("document").ready(function() {		
 		
+		
+
+		
+
+		jQuery('#template_area').on('showitnow',scrollTA);
+
+
+		jQuery('body').on('click','.show_more_template_slider',function() {
+			jQuery('.template_group_wrappers').css({zIndex:2});
+			var item = jQuery(this).closest('.template_group_wrappers');
+			if (item.length>0) {				
+				if (jQuery(window).width() - item.offset().left < item.width()*2.1)
+					item.addClass("show_more_to_left")
+				else 
+					item.removeClass("show_more_to_left");
+
+				item.find('.template_thumb_more').fadeIn(100);
+				jQuery('#template_bigoverlay').fadeIn(100);
+				item.css({zIndex:15});
+			}
+		});
+
+		jQuery('#template_bigoverlay').on('click',function() {
+			jQuery('#template_bigoverlay').fadeOut(100);
+			jQuery('.template_thumb_more:visible').fadeOut(100);
+		});
+
 		// TEMPLATE ELEMENTS
 		jQuery('.template_filter_button').on("click",function() {
+			jQuery('#template_bigoverlay').fadeOut(100);
+			jQuery('.template_thumb_more:visible').fadeOut(100);
 			var btn = jQuery(this),
 				sch = btn.data('type');
 			jQuery('.template_filter_button').removeClass("selected");
 			btn.addClass("selected");
-			jQuery('.temp_slider, .temp_carousel, .temp_hero').hide();
+			jQuery('.template_group_wrappers').hide();						
 			if (sch=="temp_all") 
-				jQuery('.temp_slider, .temp_carousel, .temp_hero').show();
-			else
-				jQuery('.'+sch).show();
+				jQuery('.template_group_wrappers').show();
+			else 
+				jQuery('.'+sch).show();		
+			jQuery('.revolution-template-groups').scrollTop(0);		
+			scrollTA();	
+			
 		});
 
 		
@@ -317,47 +304,19 @@ $all_slider = $tmp_slider->getArrSliders();
 			jQuery('.revolution-templatebutton').removeClass("selected");
 			btn.addClass("selected");
 			scrollTA();
-			jQuery('#template_area').perfectScrollbar();
+			jQuery('.revolution-template-groups').perfectScrollbar("update");
 		});
-
-		scrollTA();
-			jQuery('#template_area').perfectScrollbar();
-
-		function isElementInViewport(element,sctop,wh) {
-			var etp = parseInt(element.position().top,0),
-				ebp = etp + parseInt(element.height(),0),
-				inviewport = false;
-			
-			//if ((etp>parseInt(sctop,0) && etp<parseInt(sctop,0)+parseInt(wh,0)) || (ebp<parseInt(sctop,0)+parseInt(wh,0) && ebp>sctop))
-			if ((etp>0 && etp<parseInt(wh,0)) || (ebp<parseInt(wh,0) && ebp>0))
-				inviewport =  true;
-			
-			return inviewport;
-		}
-
-		jQuery('#template_area').on("scroll", function() {
-			scrollTA()
-		});
-
-		function scrollTA() {
-			var ta = jQuery('#template_area'),
-				st = ta.scrollTop(),
-				wh = jQuery(window).height();
-
-			ta.find('.template_slider_item:visible, .template_slider_item_import:visible').each(function() {
-				var el = jQuery(this);
-					
-				if (el.data('src')!=undefined && el.data('bgadded')!=1) {										
-					if (isElementInViewport(el,st,wh)) 	{						
-						el.css({backgroundImage:'url("'+el.data('src')+'")'});
-						el.data('bgadded',1);
-					} 
-
-					
-				}
-			});
-		}
 		
+		setTWHeight();
+		jQuery(window).on("resize",setTWHeight);
+		jQuery('.revolution-template-groups').perfectScrollbar();
+
+		document.addEventListener('ps-scroll-y', function (e) {
+			if (jQuery(e.target).closest('.revolution-template-groups').length>0) {
+				scrollTA();
+				jQuery('#template_bigoverlay').css({top:jQuery('.revolution-template-groups').scrollTop()});												
+			}
+	    });
 		
 		jQuery(".input_import_slider").change(function(){
 			if(jQuery(this).val() !== ''){
@@ -374,11 +333,14 @@ $all_slider = $tmp_slider->getArrSliders();
 		var recalls_amount = 0;
 		function callTemplateSlider() {			
 			recalls_amount++;
-			if (recalls_amount>5000) {
+			if (recalls_amount>5000) {				
 				jQuery('#waitaminute').hide();
 			} else {
-				if (jQuery('#template_area').length>0) { 												
+				if (jQuery('#template_area').length>0) { 																	
 					jQuery('#template_area').addClass("show");
+					scrollTA();
+					setTWHeight();
+					jQuery('.revolution-template-groups').perfectScrollbar("update");					
 					jQuery('#waitaminute').hide();						
 				} else {
 					callTemplateSlider();

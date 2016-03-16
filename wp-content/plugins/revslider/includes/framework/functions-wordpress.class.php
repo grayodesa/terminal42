@@ -174,6 +174,13 @@ class RevSliderFunctionsWP{
 	}
 	
 	
+	/**
+	 * Check if current user is administrator
+	 **/
+	public static function isAdminUser(){
+		return current_user_can('administrator');
+	}
+	
 	
 	/* Import media from url
 	 *
@@ -278,7 +285,7 @@ class RevSliderFunctionsWP{
 	public static function getImageUrlFromPath($pathImage){
 		//protect from absolute url
 		$pathLower = strtolower($pathImage);
-		if(strpos($pathLower, "http://") !== false || strpos($pathLower, "www.") === 0)
+		if(strpos($pathLower, "http://") !== false || strpos($pathLower, "https://") !== false || strpos($pathLower, "www.") === 0)
 			return($pathImage);
 		
 		$urlImage = self::getUrlUploads().$pathImage;
@@ -423,26 +430,33 @@ class RevSliderFunctionsWP{
 	 * 
 	 * get posts by coma saparated posts
 	 */
-	public static function getPostsByIDs($strIDs, $slider_id){
+	public static function getPostsByIDs($strIDs, $slider_id, $is_gal, $additional = array()){
 		
 		if(is_string($strIDs)){
 			$arr = explode(",",$strIDs);
-		}			
-		
+		}else{
+			$arr = $strIDs;
+		}
+
 		$query = array(
 			'post_type'=>"any",
 			'ignore_sticky_posts' => 1,
 			'post__in' => $arr
 		);
 		
+		if($is_gal){
+			$query['post_status'] = 'inherit';
+			$query['orderby'] = 'post__in';
+		}
+		
+		$query = array_merge($query, $additional);
 		$query = apply_filters('revslider_get_posts', $query, $slider_id);
 		
 		$objQuery = new WP_Query($query);
 		
-		$arrPosts = $objQuery->posts;						
-		
+		$arrPosts = $objQuery->posts;		
+
 		//dmp($query);dmp("num posts: ".count($arrPosts));exit();
-		
 		foreach($arrPosts as $key=>$post){
 				
 			if(method_exists($post, "to_array"))
@@ -451,6 +465,8 @@ class RevSliderFunctionsWP{
 				$arrPosts[$key] = (array)$post;
 		}
 		
+
+
 		return($arrPosts);
 	}
 	

@@ -153,7 +153,7 @@ class RevSliderPluginUpdate {
 		$db = new RevSliderDB();
 		
 		foreach($v5 as $v5class){
-			$result = $db->fetch(RevSliderGlobals::$table_css, "handle = '".$v5class['handle']."'");
+			$result = $db->fetch(RevSliderGlobals::$table_css, $db->prepare("handle = %s", array($v5class['handle'])));
 			if(empty($result)){
 				//add v5 style
 				$db->insert(RevSliderGlobals::$table_css, $v5class);
@@ -190,35 +190,11 @@ class RevSliderPluginUpdate {
 			'opacity' => 'opacity',
 			'padding' => 'padding',
 			'text-decoration' => 'textDecoration',
-			
-			
-			'x' => 'x',
-			'y' => 'y',
-			'z' => 'z',
-			'skewx' => 'skewx',
-			'skewy' => 'skewy',
-			'scalex' => 'scalex',
-			'scaley' => 'scaley',
-			'opacity' => 'opacity',
-			'xrotate' => 'xrotate',
-			'yrotate' => 'yrotate',
-			'2d_rotation' => '2d_rotation',
-			'layer_2d_origin_x' => 'layer_2d_origin_x',
-			'layer_2d_origin_y' => 'layer_2d_origin_y',
-			'2d_origin_x' => '2d_origin_x',
-			'2d_origin_y' => '2d_origin_y',
-			'pers' => 'pers',
-			
-			'color-transparency' => 'color-transparency',
-			'background-transparency' => 'background-transparency',
-			'border-transparency' => 'border-transparency',
-			'css_cursor' => 'css_cursor',
-			'speed' => 'speed',
-			'easing' => 'easing',
-			'corner_left' => 'corner_left',
-			'corner_right' => 'corner_right',
-			'parallax' => 'parallax'
 		);
+		
+		$cs = array_merge($cs, RevSliderCssParser::get_deformation_css_tags());
+		
+		
 		
 		foreach($styles as $key => $attr){
 			
@@ -346,7 +322,7 @@ class RevSliderPluginUpdate {
 							
 							$static_id = $sl->getStaticSlideID($template_id);
 							if($static_id !== false){
-								$record = $db->fetchSingle(RevSliderGlobals::$table_static_slides,"id=$static_id");
+								$record = $db->fetchSingle(RevSliderGlobals::$table_static_slides, $db->prepare("id = %s", array($static_id)));
 								unset($record['id']);
 								$record['slider_id'] = $slider_id;
 								
@@ -418,7 +394,7 @@ class RevSliderPluginUpdate {
 						$layers = $slide->getLayers();
 						if(!empty($layers) && is_array($layers)){
 							foreach($layers as $lk => $layer){
-								if(RevSliderFunctions::getVal($layer, 'x_start', false) == false){ //values are not set, set them now through
+								if(RevSliderFunctions::getVal($layer, 'x_start', false) === false){ //values are not set, set them now through
 									$animation = RevSliderFunctions::getVal($layer, 'animation', 'tp-fade');
 									$endanimation = RevSliderFunctions::getVal($layer, 'endanimation', 'tp-fade');
 									if($animation == 'fade') $animation = 'tp-fade';

@@ -1,0 +1,195 @@
+*** WooCommerce Appointments Changelog ***
+
+2016.02.27 - version 1.7.7
+* Feature - Staff notification emails
+* Improved - Added margin below email notification table for better styling
+
+2016.02.27 - version 1.7.6
+* Improved - Calendar font now inherits body font
+* Improved - Calendar day columns now have the same width
+* Improved - Select2 library updated to 4.0.2
+
+2016.02.24 - version 1.7.5
+* Fix - PHP Notice:  Trying to get property of non-object in \\includes\\class-wc-appointment.php on line 566
+* Fix - PHP Notice:  Undefined variable: values in \\includes\\integrations\\class-wc-appointments-integration-addons.php on line 98
+
+2016.02.24 - version 1.7.4
+* Fix - https://bizzthemes.com/forums/topic/error-message-at-cart/
+* Fix - Overrides Bookly absolute calendar positioning: https://bizzthemes.com/forums/topic/divi-theme-not-showing-good-calendar-in-products-page/
+* Fix - https://bizzthemes.com/forums/topic/add-ons-are-not-being-added-to-the-order-item-list-properly/
+
+2016.02.17 - version 1.7.3
+* Fix - Scheduled multiple quantity is now correctly calculated in
+
+2016.02.12 - version 1.7.2
+* Feature - Select custom time intervals independently from duration
+* Tweak - Cancel time is now by default 1 day prior to appointment instead of 1 month
+* Fix - Adding appointment in now shows the calculated price
+
+2016.02.12 - version 1.7.1
+* Fix - Sale price display error
+* Fix - Translation of remaining slots for scheduling
+
+2016.02.11 - version 1.7.0
+* Feature - Customer can now book multiple appointments at once
+* Tweak - Add-ons cost now displayed with a plus + sign prefix
+* Tweak - jQuery: deprecated size() replaced with length()
+* Tweak - Updated translations
+* Tweak - Add-ons multipled with quantity scheduled
+* Fix - gCal sync error on appointment removal fixed
+* Fix - Appointment editing in admin now correctly synced with corresponding Order
+
+2016.02.09 - version 1.6.2
+* Tweak - Added more WPML support
+* Tweak - New Appointments specific add-on section under WooCommerce > Add-ons.
+* Tweak - Show a notice when viewing a appointment if it's add-on plugin no longer is installed.
+* Fix - Prevent the Duration input field from displaying on non appointment products when using the product add-ons extension.
+* Fix - Prevent start times that end after date times from showing up when using padding times.
+* Fix - Appointment in "My Account" not created with Confirmation Requried Appointment + New User account
+* Fix - Missing ending double quotes in order note of appointment status transition
+* Fix - Use full unit 'hour' when using date/time str in strtotime
+* Fix - Removed a bug with cost calculation that resulted in PHP warning
+
+2016.02.04 - version 1.6.1
+* Fix - Price wasn't calculated correctly for Staff, when pricing rules were empty
+
+2016.02.03 - version 1.6.0
+* Feature - Custom pricing rule
+* Feature - Additional price per staff
+* Improved - Price calculations on all product levels
+* Improved - Display FROM label before price, when additional costs are applied
+* Tweak - Staff capacity overrides appointment capacity
+* Tweak - Staff is set as appointment author, so you can filter capabilities correctly
+* Fix - No preference for staff now selects only available staff
+* Fix - Changing staff on scheduling form now reloads the time slots
+
+2016.01.28 - version 1.5.4
+* Improved - Updated Add-ons to version 2.7.15
+* Tweak - Sync appointments without orders (manually created appointments) to Google Calendar.
+* Tweak - Humanized order status in order column of appointments list.
+* Fix - If the new staff input is canceled, the staff input area will no longer be blocked.
+* Fix - Format the datetime form based on site language (matches behavior for day form).
+* Fix - Fix for possible availability problems using time range slots.
+* Fix - Prevent extra border from showing on time slots when using TwentySixteen as your theme.
+* Fix - Save the correct (appointment, not order) ID when saving appointment details on the admin screen.
+
+2016.01.27 - version 1.5.3
+* Feature - Ability to check availability rules against starting slot in range only
+
+2016.01.26 - version 1.5.2
+* Feature - Full integration with 'WooCommerce Follow Up Emails' extension
+* Tweak - Display of appointment customer in admin
+
+2016.01.20 - version 1.5.1
+* Improved - Updated Add-ons to version 2.7.14
+* Fix - Staff access to their schedule
+* Tweak - Some WooCommerce 2.5 compatibility fixes
+
+2016.01.15 - version 1.5.0
+* Feature - Capacity can be overriden on availability rule level, great for classes
+* Tweak - When manually creating appointments that either have no order or are attached to an existing order, the status will now default to "confirmed" instead of "pending confirmation".
+* Tweak - Adding staff now more stramlined
+* Improved - Deprecated time range on specific date and replaced with time range with date range
+* Improved - Highlighted all selected day if appointment lasts for more than 1 day
+* Improved - Not messing with WooCommerce pricing any more. Selecting price label doesn't set price to zero.
+* Fix - Fix ranges on non-product rules.
+
+2015.12.23 - version 1.4.6
+* Fix - Capacity is now independent from staff count
+* Tweak - Added 'woocommerce_appointments_get_posted_data' filter
+* Tweak - Added 'woocommerce_appointments_order_item_status' filter
+* Feature - Full WPML compatibility
+
+2015.12.23 - version 1.4.5
+* Fix - Price including tax displayed correctly
+* Tweak - Zero total in cart should avoid cache, temporarily disabled hiding price, when zero
+* Tweak - Updated Select2 script to 4.0.1
+* Feature - Integration with free plugin "WooCommerce Product Price Based on Countries"
+* Feature - Integration with free plugin "TM Extra Product Options"
+
+2015.12.17 - version 1.4.4
+* Tweak - New filter added: 'woocommerce_appointments_gcal_sync_statuses'
+
+2015.12.17 - version 1.4.3
+* Tweak - New filter added: 'woocommerce_before_appointment_form_output'
+* Tweak - WooCommerce 2.5+ compatibility
+* Fix - Email reminders not looped any more
+* Fix - Email reminders now sent on paid appointment status only
+
+2015.12.08 - version 1.4.2
+* Fix - Add-ons syntax error
+
+2015.12.08 - version 1.4.1
+* Fix - Calendar day names localization
+* Fix - Product Add-ons localization is now merged with "woocommercea-appointments" text-string
+
+2015.12.05 - version 1.4.0
+* Tweak - Better UI for adding appointments in admin
+* Tweak - Integrated product add-ons, when adding appointments in admin
+* Tweak - Add-ons displayed after available time slot is selected
+* Tweak - Add-ons now show extra duration next to each addon label
+* Feature - Appointments by day - can be scheduled for multiple days at a time.
+
+2015.12.01 - version 1.3.1
+* Tweak - first day of week also applies to admin calendar picker
+
+2015.12.01 - version 1.3.0
+* Tweak - New filter to change custom appointment labels.
+* Fix - Rules ending at midnight will now properly be parsed.
+* Fix - Google Calendar events now properly include the correct end date.
+* Fix - Slots smaller than 30 minute chunks will no longer get cut off on the admin calendar.
+* Fix - Prevent the partial scheduled indicator from sometimes showing on a previous day to a day with appointments.
+* Fix - If there are 0 time slots left, make sure not to show the slot at all.
+* Fix - Fix a bug with hours spanning days that can potentially show (still unschedulable) slots on other days
+* Feature - Time based appointments can now extend into the next day.
+* Feature - Rules can now have priorities set to create custom availability schedules.
+* Tweak - Our "partially scheduled" indicator now works for day slots with multiple spots.
+* Tweak - Tooltips have been added on the appointment calendar to explain what each color means.
+* Tweak - New get_wc_appointment_statuses() to return an array of appointment statuses.
+* Tweak - Use wc_date_format/wc_time_format instead of hard-coded format strings for default date & time formats.
+* Fix - Show days as available if time based rules say so.
+* Fix - Fatal error that occurs when setting a appointment's scheduled product to N/A.
+* Fix - Associate appointment details with an order, even if the appointment and order are created separately.
+* Fix - Only send appointment cancelation emails for appointments and not orders.
+* Fix - Next/Previous tooltip text can now be translated.
+* Tweak - Updated Product Add-ons to 2.7.13
+* Fix - Capacity not showing correct number
+
+2015.11.09 - version 1.2.4
+* Feature - added shortcode 'appointment_form'
+* Improved - Better price display with label instead of cost
+* Improved - Removed any cost mention, when cart/order total is zero
+* Fix - appointment form design now more consistent
+* Fix - time range with specific date now works correctly (leading zero not added for months and days)
+
+2015.10.15 - version 1.2.3
+* Fix - wc_appointment_convert_to_hours_and_minutes functions definition
+* Fix - Product Add-ons assests linked correctly
+* Fix - availability error
+
+2015.10.15 - version 1.2.2
+* Improved - Better price display with sale price
+* Fix - Price label display
+
+2015.10.15 - version 1.2.1
+* Fix - Availability for Time range (specific date) now works, when no other rule is active
+
+2015.10.14 - version 1.2.0
+* Feature - When duration longer than 120 minutes it gets broken into hours and minutes
+* Improved - Updated WooCommerce Product Add-ons to 2.7.10
+* Improved - Front-end classes now fire inside $GLOBALS[] variable
+* Improved - Translations can now be handled inside WP languages directory
+* Improved - Replaced WC deprecated functions
+* Fix - Cancelled appointment staff member
+* Fix - Select2 removed from datetime-picker.php template
+* Fix - Padding time now assinged correctly
+
+2015.09.07 - version 1.1.0
+* Fix - Clear transients after an order is canceled by a user
+* Fix - Show an error message if an invalid date is entered
+* Fix - Fatal error that sometimes occurs when canceling a "requires confirmation" appointment
+* Fix - Search now correctly pulls out appointments when you search for customer info
+* Fix - Correctly calculate the quantity of spots needed in create_wc_appointment if the multiplier is set to yes & multiple persons are appointment
+
+2015.09.01 - version 1.0.0
+ * First Release.

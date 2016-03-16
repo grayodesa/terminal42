@@ -139,11 +139,13 @@ class RevSliderFacebook {
 	public function get_photo_feed($user,$app_id,$app_secret,$item_count=10){
 		$oauth = wp_remote_fopen("https://graph.facebook.com/oauth/access_token?type=client_cred&client_id=".$app_id."&client_secret=".$app_secret);
 		$url = "https://graph.facebook.com/$user/feed?".$oauth."&fields=id,from,message,picture,link,name,icon,privacy,type,status_type,object_id,application,created_time,updated_time,is_hidden,is_expired,comments.limit(1).summary(true),likes.limit(1).summary(true)";
+
 		$transient_name = 'revslider_' . md5($url);
 		if ($this->transient_sec > 0 && false !== ($data = get_transient( $transient_name)))
 			return ($data);
 
 		$feed = json_decode(wp_remote_fopen($url));
+
 		if(isset($feed->data)){
 			set_transient( $transient_name, $feed->data, $this->transient_sec );
 			return $feed->data;
@@ -638,7 +640,9 @@ class RevSliderFlickr {
 		  'format' => 'json',
 		  'nojsoncallback' => 1,
 		);
-		$this->transient_sec = $transient_sec;
+
+    $this->transient_sec = $transient_sec;
+
 	}
 
 	/**
@@ -657,7 +661,7 @@ class RevSliderFlickr {
 		//call the API and decode the response
 		$url = "https://api.flickr.com/services/rest/?".implode('&', $encoded_params);
 		$transient_name = 'revslider_' . md5($url);
-		
+
 		if ($this->transient_sec > 0 && false !== ($data = get_transient( $transient_name)))
 			return ($data);
 
@@ -734,7 +738,8 @@ class RevSliderFlickr {
 		
 		//get photo list
 		$public_photos_list = $this->call_flickr_api($public_photo_params);
-		if(isset($public_photos_list->photos->photo))
+    //var_dump($public_photos);
+		if(isset($public_photos_list->photos->photo))      
 			return $public_photos_list->photos->photo;
 		else return '';
 	}

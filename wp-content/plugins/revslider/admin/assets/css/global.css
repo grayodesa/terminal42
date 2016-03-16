@@ -20,6 +20,8 @@ div[aria-describedby="revslider-tiny-mce-dialog"] .ui-button-icon-primary.ui-ico
 
 #revslider-existing-slider {	display: none;}
 
+#revslider-tiny-mce-dialog .button-primary { text-shadow:none !important;}
+
 .ui-widget-overlay.ui-front { background: #000; opacity:0.5;}
 
 .rs-slider-modify-li,

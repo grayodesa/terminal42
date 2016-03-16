@@ -3,7 +3,7 @@
 class App_AddonHandler {
 
 	private function __construct () {
-		define('APP_PLUGIN_ADDONS_DIR', APP_PLUGIN_DIR . '/includes/addons', true);
+		define('APP_PLUGIN_ADDONS_DIR', APP_PLUGIN_DIR . '/includes/addons');
 		$this->_load_active_plugins();
 	}
 
@@ -89,6 +89,8 @@ class App_AddonHandler {
 		if (in_array($plugin, $active)) return true; // Already active
 
 		$active[] = $plugin;
+
+		appointments_clear_cache();
 		return update_option('app_activated_plugins', $active);
 	}
 
@@ -100,6 +102,7 @@ class App_AddonHandler {
 		if ($key === false) return false; // Haven't found it
 
 		unset($active[$key]);
+		appointments_clear_cache();
 		return update_option('app_activated_plugins', $active);
 	}
 

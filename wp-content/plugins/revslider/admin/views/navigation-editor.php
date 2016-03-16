@@ -19,6 +19,9 @@ $rsopr = new RevSliderOperations();
 
 $font_families = $rsopr->getArrFontFamilys();
 ?>
+<script>
+	jQuery(document).ready(function(){function r(r){var i;return r=r.replace(/ /g,""),r.match(/rgba\(\d+\,\d+\,\d+\,([^\)]+)\)/)?(i=100*parseFloat(r.match(/rgba\(\d+\,\d+\,\d+\,([^\)]+)\)/)[1]).toFixed(2),i=parseInt(i)):i=100,i}function i(r,i,e,t){var n,o,c;n=i.data("a8cIris"),o=i.data("wpWpColorPicker"),n._color._alpha=r,c=n._color.toString(),i.val(c),o.toggler.css({"background-color":c}),t&&a(r,e),i.wpColorPicker("color",c)}function a(r,i){i.slider("value",r),i.find(".ui-slider-handle").text(r.toString())}Color.prototype.toString=function(r){if("no-alpha"==r)return this.toCSS("rgba","1").replace(/\s+/g,"");if(1>this._alpha)return this.toCSS("rgba",this._alpha).replace(/\s+/g,"");var i=parseInt(this._color,10).toString(16);if(this.error)return"";if(i.length<6)for(var a=6-i.length-1;a>=0;a--)i="0"+i;return"#"+i},jQuery.fn.alphaColorPicker=function(){return this.each(function(){var e,t,n,o,c,l,s,d,u,p,f;e=jQuery(this),e.wrap('<div class="alpha-color-picker-wrap"></div>'),n=e.attr("data-palette")||"true",o=e.attr("data-show-opacity")||"true",c=e.attr("data-default-color")||"",l=-1!==n.indexOf("|")?n.split("|"):"false"==n?!1:!0,t=e.val().replace(/\s+/g,""),""==t&&(t=c),s={change:function(i,a){var t,n,o,l;t=e.attr("data-customize-setting-link"),n=e.wpColorPicker("color"),c==n&&(o=r(n),u.find(".ui-slider-handle").text(o)),"undefined"!=typeof wp.customize&&wp.customize(t,function(r){r.set(n)}),l=d.find(".transparency"),l.css("background-color",a.color.toString("no-alpha"))},palettes:l},e.wpColorPicker(s),d=e.parents(".wp-picker-container:first"),jQuery('<div class="alpha-color-picker-container"><div class="min-click-zone click-zone"></div><div class="max-click-zone click-zone"></div><div class="alpha-slider"></div><div class="transparency"></div></div>').appendTo(d.find(".wp-picker-holder")),u=d.find(".alpha-slider"),p=r(t),f={create:function(r,i){var a=jQuery(this).slider("value");jQuery(this).find(".ui-slider-handle").text(a),jQuery(this).siblings(".transparency ").css("background-color",t)},value:p,range:"max",step:1,min:0,max:100,animate:300},u.slider(f),"true"==o&&u.find(".ui-slider-handle").addClass("show-opacity"),d.find(".min-click-zone").on("click",function(){i(0,e,u,!0)}),d.find(".max-click-zone").on("click",function(){i(100,e,u,!0)}),d.find(".iris-palette").on("click",function(){var i,t;i=jQuery(this).css("background-color"),t=r(i),a(t,u),100!=t&&(i=i.replace(/[^,]+(?=\))/,(t/100).toFixed(2))),e.wpColorPicker("color",i)}),d.find(".button.wp-picker-default").on("click",function(){var i=r(c);a(i,u)}),e.on("input",function(){var i=jQuery(this).val(),e=r(i);a(e,u)}),u.slider().on("slide",function(r,a){var t=parseFloat(a.value)/100;i(t,e,u,!1),jQuery(this).find(".ui-slider-handle").text(a.value)})})}});
+</script>
 <div class='wrap'>
 	<div class="clear_both"></div>
 
@@ -175,6 +178,7 @@ $font_families = $rsopr->getArrFontFamilys();
 											<select name="rs-font-family" style="width: 160px">
 												<?php
 												foreach($font_families as $handle => $name){
+													if($name['label'] == 'Dont Show Me') continue;
 													?>
 													<option value="<?php echo esc_attr($name['label']); ?>"><?php echo esc_attr($name['label']); ?></option>
 													<?php
@@ -198,7 +202,17 @@ $font_families = $rsopr->getArrFontFamilys();
 									<li id="reset-css-tabs" data-call="tabs_css"><span class="libtn"><?php _e('Classes & Style', 'revslider'); ?><span class="more-values-available resetme"></span></span></li>
 									<li id="reset-css-tabs-empty" data-call="tabs_css_empty"><span class="libtn"><?php _e('Only Classes', 'revslider'); ?><span class="more-values-available resetme"></span></span></li>
 								</ul>-->		
-							</div>					
+							</div>
+							<div class="helper-wrappers">
+								<h4><span class="libtn"><?php _e('Dynamic Values', 'revslider'); ?><span class="more-values-available"></span></span></h4>
+								<ul class="rs-element-list collapsable" id="rs-placeholder-container" style="display:none">
+									<li class="rs-always-stay">
+										<div class="rs-element-add rs-element-add-placeholder">
+											<a href="javascript:void(0);" id="rs-add-placeholder" class="button-primary revblue" original-title=""><?php _e('Add', 'revslider'); ?></a>
+										</div>
+									</li>
+								</ul>
+							</div>
 						</div>
 						<div class="showhidehelper"></div>
 					</div>
@@ -238,7 +252,7 @@ $font_families = $rsopr->getArrFontFamilys();
 		<div class="rs-tabs-preview"></div>
 	</div>
 	
-	<a class="button-primary revgreen" id="rs-save-navigation-style" href="javascript:void(0);"><i class="rs-icon-save-light"></i><?php _e('Save All Changes','revslider'); ?></a>
+	<!--a class="button-primary revgreen" id="rs-save-navigation-style" href="javascript:void(0);"><i class="rs-icon-save-light"></i><?php _e('Save All Changes','revslider'); ?></a-->
 	
 	
 	<script type="text/javascript">
@@ -396,13 +410,13 @@ $font_families = $rsopr->getArrFontFamilys();
 			var hlLineM = rs_cm_markup_editor.setLineClass(0, "activeline"),
 				hlLineC = rs_cm_css_editor.setLineClass(0, "activeline");				
 
-
-
+			
 			//----------------------------------------------------
 			// 		DRAW PREVIEW OF NAVIGATION ELEMENTS
 			//----------------------------------------------------
-			var previewNav = function(sbut,mclass,the_css,the_markup,settings) {
-
+			var previewNav = function(sbut,mclass,the_css,the_markup,settings, cur_edit_type) {
+				the_css = replace_placeholder_in_css(the_css, mclass, cur_edit_type);
+				
 				var ap = jQuery('#preview-nav-wrapper .rs-arrows-preview'),
 					bp = jQuery('#preview-nav-wrapper .rs-bullets-preview'),
 					tabp = jQuery('#preview-nav-wrapper .rs-tabs-preview'),
@@ -420,6 +434,8 @@ $font_families = $rsopr->getArrFontFamilys();
 				tabp.hide();
 				thumbp.hide();
 				sizer.hide();
+
+				
 
 				if (sbut.hasClass("rs-nav-arrows-edit")) {
 					ap.show();		
@@ -527,16 +543,21 @@ $font_families = $rsopr->getArrFontFamilys();
 				thumbp.hide();
 				sizer.hide();
 
+				var cur_css = rs_cm_css_editor.getValue();
+				cur_css = replace_placeholder_in_css(cur_css, mclass);
+
+				
+				
 				if (sbut.hasClass("rs-nav-arrows-edit")) {
 					ap.show();					
-					var t = '<style>'+rs_cm_css_editor.getValue()+'</style>';
+					var t = '<style>'+cur_css+'</style>';
 					t = t + '<div class="'+mclass+' tparrows tp-leftarrow">'+rs_cm_markup_editor.getValue()+'</div>';
 					t = t + '<div class="'+mclass+' tparrows tp-rightarrow">'+rs_cm_markup_editor.getValue()+'</div>';
 					ap.html(t);	
 				} else 
 				if (sbut.hasClass("rs-nav-bullets-edit")) {
 					bp.show();	
-					var t = '<style>'+rs_cm_css_editor.getValue()+'</style>';
+					var t = '<style>'+cur_css+'</style>';
 					t = t + '<div class="'+mclass+' tp-bullets">'
 					for (var i=0;i<5;i++) {
 						t = t + '<div class="tp-bullet">'+rs_cm_markup_editor.getValue()+'</div>';
@@ -561,7 +582,7 @@ $font_families = $rsopr->getArrFontFamilys();
 				} else
 				if (sbut.hasClass("rs-nav-tabs-edit")) {
 					tabp.show();
-					var t = '<style>'+rs_cm_css_editor.getValue()+'</style>';
+					var t = '<style>'+cur_css+'</style>';
 					t = t + '<div class="'+mclass+'"><div class="tp-tab">'+rs_cm_markup_editor.getValue()+'</div></div>';
 					tabp.html(t);
 					changeTabThumbSize();
@@ -569,7 +590,7 @@ $font_families = $rsopr->getArrFontFamilys();
 				} else
 				if (sbut.hasClass("rs-nav-thumbs-edit")) {
 					thumbp.show();
-					var t = '<style>'+rs_cm_css_editor.getValue()+'</style>';
+					var t = '<style>'+cur_css+'</style>';
 					t = t + '<div class="'+mclass+'"><div class="tp-thumb">'+rs_cm_markup_editor.getValue()+'</div></div>';
 					thumbp.html(t);
 					sizer.show();
@@ -628,7 +649,99 @@ $font_families = $rsopr->getArrFontFamilys();
 					hw.addClass("rea-open");
 				}
 				ul.removeClass("infocus");
-			})
+			});
+			
+			var rs_replace = function(str, find, replace) {
+				return str.replace(new RegExp(find, 'g'), replace);
+			}
+
+			
+			function convertAnytoRGBorRGBA(a,c) {
+				if (a==="color" || a==="color-rgba") {						
+					if (c.indexOf("rgb")>=0) {
+						c = c.split('(')[1].split(")")[0];
+					}
+					else{							
+						c = UniteAdminRev.convertHexToRGB(c);
+						c = c[0]+","+c[1]+","+c[2];
+						
+					}
+
+					if (a==="color-rgba" && c.split(",").length<4) c = c+",1";						
+					
+				}
+				return c;
+			}
+			
+			
+			/**
+			 * Default navigations have a different handle, replace them for the preview
+			 **/
+			var return_true_handle = function(css_handle){
+				
+				var def = {
+					'hesperiden': 'round',
+					'gyges': 'navbar',
+					'hades': 'preview1',
+					'ares': 'preview2',
+					'hebe': 'preview3',
+					'hermes': 'preview4',
+					'hephaistos': 'round-old',
+					'persephone': 'square-old',
+					'erinyen': 'navbar-old'
+				};
+				css_handle = (def[css_handle] !== undefined) ? def[css_handle] : css_handle;
+				
+				
+				return css_handle;
+			}
+			
+			
+			var replace_placeholder_in_css = function(css, css_handle, nav_type){
+				if(nav_type === undefined){
+					var nav_type = rs_get_current_nav_type();
+				}
+				
+				css_handle = return_true_handle(css_handle);
+				
+				for(var key in rs_navigations){
+					if(rs_navigations[key]['handle'] != css_handle) continue;
+					
+					
+					
+					if(typeof(rs_navigations[key]['settings']) !== 'undefined'){
+						if(rs_navigations[key]['settings']['placeholders'] == undefined) return css;
+					}
+					
+					for(var phkey in rs_navigations[key]['settings']['placeholders']){
+						if(rs_navigations[key]['settings']['placeholders'][phkey]['nav-type'] !== nav_type) continue;
+						var d = rs_navigations[key]['settings']['placeholders'][phkey];
+						
+						switch(d['type']){
+							case 'color':			
+
+								css = rs_replace(css, '##'+d['handle']+'##', convertAnytoRGBorRGBA('color',d['data']['color']));
+							break;
+							case 'color-rgba':
+								css = rs_replace(css, '##'+d['handle']+'##', convertAnytoRGBorRGBA('color-rgba',d['data']['color-rgba']));								
+							break;
+							case 'font-family':
+								css = rs_replace(css, '##'+d['handle']+'##', d['data'].font_family);
+							break;
+							case 'custom':
+								css = rs_replace(css, '##'+d['handle']+'##', d['data'].custom);
+								break;
+							default:
+								//return false;
+							break;
+						}
+						
+					}
+					
+				}
+				
+				return css;
+			}
 			
 			jQuery('body').on('click', '.rs-nav-arrows-edit, .rs-nav-bullets-edit, .rs-nav-thumbs-edit, .rs-nav-tabs-edit', function(){
 				var nav_id = jQuery(this).closest('.rs-nav-table-row').attr('id').replace('rs-nav-table-', ''),
@@ -756,15 +869,133 @@ $font_families = $rsopr->getArrFontFamilys();
 					rs_cm_markup_editor.setOption("readOnly", false);
 				}
 				
+				
+				remove_placeholder();
+				add_placeholder(cur_edit);
+				
+			});
+			
+			var remove_placeholder = function(){
+				jQuery('#rs-placeholder-container li').each(function(){
+					if(!jQuery(this).hasClass('rs-always-stay')){
+						jQuery(this).remove();
+					}
+				});
+			}
+			
+			var add_placeholder = function(cur_edit){
+				//add placeholder to CSS if they exist
+				if(cur_edit.settings !== undefined && cur_edit.settings.placeholders !== undefined){
+					var nav_type = rs_get_current_nav_type();
+					
+					for(var key in cur_edit.settings.placeholders){
+						
+						if(cur_edit.settings.placeholders[key]['nav-type'] != nav_type) continue;
+						
+						//add to list
+						var ph_title = '';
+						switch(cur_edit.settings.placeholders[key]['type']){
+							case 'color':
+								ph_title = '<?php _e('Color', 'revslider'); ?>';
+							break;
+							case 'color-rgba':
+								ph_title = '<?php _e('Color-RGBA', 'revslider'); ?>';
+							break;
+							case 'font-family':
+								ph_title = '<?php _e('Font Family', 'revslider'); ?>';
+							break;
+							case 'custom':
+								ph_title = '<?php _e('Custom', 'revslider'); ?>';
+							break;
+							default:
+								continue;
+							break;
+						}
+						
+						jQuery('#rs-placeholder-container').prepend('<li data-placeholder="##'+cur_edit.settings.placeholders[key]['handle']+'##"><span class="rs-placeholder-title">'+cur_edit.settings.placeholders[key]['title']+'</span><a href="javascript:void(0);" class="rs-add-placeholder"><i class="eg-icon-plus"></i></a><a href="javascript:void(0);" class="rs-edit-placeholder"><i class="eg-icon-cog"></i></a><a href="javascript:void(0);" class="rs-remove-placeholder"><i class="eg-icon-trash"></i></a></li>');
+					}
+				}
+			}
+			
+			
+			jQuery('body').on('click', '.rs-edit-placeholder', function(){
+				var placeholder = jQuery(this).closest('li').data('placeholder').replace(/#/g, '');
+				var cur_id = rs_nav_get_selected_id();
+				var nav_type = rs_get_current_nav_type();
+				
+				for(var key in rs_navigations){
+					if(rs_navigations[key]['id'] != cur_id) continue;
+					
+					if(typeof(rs_navigations[key]['settings']) !== 'undefined'){
+						if(rs_navigations[key]['settings']['placeholders'] == undefined) rs_navigations[key]['settings']['placeholders'] = [];
+					}
+					
+					for(var phkey in rs_navigations[key]['settings']['placeholders']){
+						if(rs_navigations[key]['settings']['placeholders'][phkey]['nav-type'] !== nav_type) continue;
+						
+						if(rs_navigations[key]['settings']['placeholders'][phkey]['handle'] == placeholder){
+							
+							rs_open_placeholder_dialog(rs_navigations[key]['settings']['placeholders'][phkey], phkey, key);
+							
+							return true;
+						}
+					}
+					
+				}
+				
+				alert('<?php _e('Entry not found', 'revslider'); ?>');
+			});
+			
+			
+			jQuery('body').on('click', '.rs-remove-placeholder', function(){
+				if(confirm('<?php _e('Delete this Placeholder?', 'revslider'); ?>')){
+					var placeholder = jQuery(this).closest('li').data('placeholder').replace(/#/g, '');
+					var cur_id = rs_nav_get_selected_id();
+					var nav_type = rs_get_current_nav_type();
+					
+					for(var key in rs_navigations){
+						if(rs_navigations[key]['id'] != cur_id) continue;
+						
+						if(typeof(rs_navigations[key]['settings']) !== 'undefined'){
+							if(rs_navigations[key]['settings']['placeholders'] == undefined) rs_navigations[key]['settings']['placeholders'] = [];
+						}
+						for(var phkey in rs_navigations[key]['settings']['placeholders']){
+							
+							if(rs_navigations[key]['settings']['placeholders'][phkey]['nav-type'] !== nav_type) continue;
+							
+							if(rs_navigations[key]['settings']['placeholders'][phkey]['handle'] == placeholder){
+								delete(rs_navigations[key]['settings']['placeholders'][phkey]);
+								
+								remove_placeholder();
+								add_placeholder(rs_navigations[key]);
+				
+								return true;
+							}
+						}
+						
+					}
+					
+					alert('<?php _e('Could not delete, entry not found', 'revslider'); ?>');
+				}
+			});
+			
+			jQuery('body').on('click', '#rs-placeholder-container li .rs-add-placeholder', function(){
+				if(rs_check_if_default_nav()) return false;
+				if(jQuery(this).closest('li').data('placeholder') == undefined) return false;
+				
+				var css = jQuery(this).closest('li').data('placeholder');
+				
+				rs_cm_css_editor.replaceSelection(css+"\n","end");
 			});
 
 
 			// SHOW ELEMENT ON HOVER
 			jQuery('body').on('mouseenter', '.rs-nav-arrows-edit, .rs-nav-bullets-edit, .rs-nav-thumbs-edit, .rs-nav-tabs-edit', function(){
 				var e = jQuery(this),
-						nav_id = e.closest('.rs-nav-table-row').attr('id').replace('rs-nav-table-', ''),
-						edit_title = e.closest('.rs-nav-table-row').find('input[name="navigation-name"]').val(),
-						cur_edit = {};				
+					nav_id = e.closest('.rs-nav-table-row').attr('id').replace('rs-nav-table-', ''),
+					edit_title = e.closest('.rs-nav-table-row').find('input[name="navigation-name"]').val(),
+					cur_edit = {};
+					
 				for(var key in rs_navigations){
 					if(rs_navigations[key]['id'] == nav_id){
 						cur_edit = jQuery.extend(true, {}, rs_navigations[key]);
@@ -794,7 +1025,7 @@ $font_families = $rsopr->getArrFontFamilys();
 				if(cur_edit['css'] == null) return false;
 				if(cur_edit['markup'] == null) return false;
 
-				previewNav(e,mclass,the_css,the_markup,settings);
+				previewNav(e,mclass,the_css,the_markup,settings, cur_edit_type);
 				var pos = e.offset(),
 					pp =jQuery('#viewWrapper').offset(),
 					ll = pos.left-pp.left,
@@ -866,7 +1097,7 @@ $font_families = $rsopr->getArrFontFamilys();
 					rs_cm_css_editor.setValue(rs_css_placeholder['bullets_empty'].replace(/\{\{class\}\}/g,edit_title).toLowerCase());
 				
 				else
-				if (call==='params_markup')						
+				if (call==='params_markup')
 					rs_cm_markup_editor.replaceSelection('{{param'+li.data('paramid')+'}}',"end");
 				else
 				if (call==='params_special')
@@ -875,10 +1106,10 @@ $font_families = $rsopr->getArrFontFamilys();
 						var add = false;
 						if (!li.hasClass("rea-open")) {
 							li.find('.rs-element-add').slideDown(100);
-							add = true;							
+							add = true;
 						} 
-						jQuery('.rs-element-list li').removeClass("rea-open");						
-						if (add) li.addClass("rea-open");					
+						jQuery('.rs-element-list li').removeClass("rea-open");
+						if (add) li.addClass("rea-open");
 				}
 				
 			});
@@ -886,8 +1117,9 @@ $font_families = $rsopr->getArrFontFamilys();
 
 			
 			
-			jQuery('.my-color-field').wpColorPicker({});
-			jQuery('.bg-color-field').wpColorPicker({
+			jQuery('.my-color-field').alphaColorPicker({palettes:true});
+			jQuery('.bg-color-field').alphaColorPicker({
+				palettes:true,
 				change:function() {
 					jQuery('.rs-editing-preview-overlay').css({backgroundColor:jQuery('#rs-preview-color-changer').val()})		
 				}
@@ -915,12 +1147,16 @@ $font_families = $rsopr->getArrFontFamilys();
 			
 			jQuery('#rs-save-navigation-style').click(function(){
 				
-
-				UniteAdminRev.ajaxRequest('change_navigations', rs_navigations, function(data){
+				var marr = [];
+				
+				for(var key in rs_navigations){
+					if(rs_navigations[key].default !== true) marr.push(rs_navigations[key]);
+				}
+				UniteAdminRev.ajaxRequest('change_navigations', marr, function(data){
 					var cur_id = rs_nav_get_selected_id();
 					if(cur_id !== false)
 						var cur_type = rs_nav_get_selected_nav_type(cur_id);
-									
+					
 					if(data.success == true){
 						rs_navigations = data.navs;
 				
@@ -968,7 +1204,7 @@ $font_families = $rsopr->getArrFontFamilys();
 					if(cur_id !== false)
 						var cur_type = rs_nav_get_selected_nav_type(cur_id);
 			
-					jQuery('.rs-nav-entry-wrap').remove();								
+					jQuery('.rs-nav-entry-wrap').remove();
 					latest_nav_id = 0;
 					
 					rs_add_all_navigation_entries();
@@ -1036,7 +1272,7 @@ $font_families = $rsopr->getArrFontFamilys();
 						
 						the_copy['settings']['original'] = {css:{},markup:{}};
 						the_copy['settings']['original']['css'] = rs_navigations[key]['css'];
-												
+						
 						var re = new RegExp('.'+rs_navigations[key]['name'].toLowerCase(), 'g'); //for defaults
 						//var re2 = new RegExp('.'+ += '-'+latest_nav_id;, 'g'); //for custom 
 						for(var t in the_copy['css']){ 
@@ -1051,6 +1287,7 @@ $font_families = $rsopr->getArrFontFamilys();
 						the_copy['new'] = true;
 						
 						rs_navigations.push(the_copy);
+						
 						break;
 					}
 				}
@@ -1081,7 +1318,7 @@ $font_families = $rsopr->getArrFontFamilys();
 						return false;
 					}
 				}
-								
+				
 				if(updated !== false){
 					var oldname = rs_navigations[updated]['handle'],
 						oldname_b = rs_navigations[updated]['name'];
@@ -1093,12 +1330,12 @@ $font_families = $rsopr->getArrFontFamilys();
 					if (curselected) {
 						var el = cell.find('.selected .selected');
 						el = el.hasClass('rs-nav-bullets-edit') ? "bullets" : el.hasClass('rs-nav-arrows-edit') ? "arrows" : el.hasClass('rs-nav-thumbs-edit') ? "thumbs" : el.hasClass('rs-nav-tabs-edit') ? "tabs" : "none";
-						if (el!=="none") {							
+						if (el!=="none") {
 							rs_cm_css_editor.setValue(rs_cm_css_editor.getValue().replace(regex,"."+name_handle));
 							rs_cm_markup_editor.setValue(rs_cm_markup_editor.getValue().replace(regex,"."+name_handle));
 						}
-					} 
-										
+					}
+					
 					if (rs_navigations[updated].css.arrows) rs_navigations[updated].css.arrows = rs_navigations[updated].css.arrows.replace(regex,"."+name_handle);
 					if (rs_navigations[updated].markup.arrows) rs_navigations[updated].markup.arrows = rs_navigations[updated].markup.arrows.replace(regex,"."+name_handle);
 				
@@ -1348,6 +1585,165 @@ $font_families = $rsopr->getArrFontFamilys();
 				rs_cm_css_editor.replaceSelection(css+"\n","end");
 			});
 			
+			
+			jQuery('#rs-add-placeholder').click(function(){
+				if(rs_check_if_default_nav()) return false;
+
+				jQuery('select[name="ph-type"] option[value="color"]').attr('selected', 'selected');
+				jQuery('select[name="ph-type"]').change();
+				
+				rs_open_placeholder_dialog();
+			});
+			
+			
+			var rs_open_placeholder_dialog = function(entry, phkey, key){
+				if(entry != undefined){
+					
+					switch(entry['type']){
+						case 'color':
+							jQuery('input[name="ph-color"]').val(entry['data'].color);
+							jQuery('input[name="ph-color"]').change();
+						break;
+						case 'color-rgba':
+							jQuery('input[name="ph-color-rgba"]').val(entry['data']['color-rgba']);
+							jQuery('input[name="ph-color-rgba"]').change();
+						break;
+						case 'font-family':
+							jQuery('select[name="ph-font-family"] option[value="'+entry['data'].font_family+'"]').attr('selected', true);
+						break;
+						case 'custom':
+							jQuery('input[name="ph-custom"]').val(entry['data'].custom);
+							break;
+						default:
+							alert('<?php _e('Wrong Handle', 'revslider'); ?>');
+							return false;
+						break;
+					}
+					
+					jQuery('input[name="ph-id"]').val(phkey);
+					jQuery('input[name="ph-handle"]').val(entry['handle']);
+					jQuery('input[name="ph-title"]').val(entry['title']);
+					
+					jQuery('select[name="ph-type"] option[value="'+entry['type']+'"]').attr('selected', true);
+					jQuery('select[name="ph-type"]').change();
+					
+					jQuery('select[name="ph-nav-type"] option[value="'+entry['nav-type']+'"]').attr('selected', 'selected');
+					
+					var btn_title = "<?php _e('Currently Editing:', 'revslider'); ?> "+entry['title'];
+					
+					var btn_text = '<?php _e('Update', 'revslider'); ?>';
+				}else{
+					//check what type we currently are
+					var nav_type = rs_get_current_nav_type();
+					
+					var btn_title = "<?php _e('Currently Editing a New Dynamic Value', 'revslider'); ?>";
+					jQuery('input[name="ph-id"]').val('NEW');
+					
+					jQuery('input[name="ph-handle"]').val('');
+					jQuery('input[name="ph-title"]').val('');
+					
+					jQuery('input[name="ph-color"]').val('#000000');
+					jQuery('input[name="ph-color"]').change();
+					
+					jQuery('input[name="ph-color-rgba"]').val('0,0,0,0');
+					jQuery('input[name="ph-color-rgba"]').change();
+					jQuery('select[name="ph-font-family"] option:first-child').attr('selected', true);
+					jQuery('input[name="ph-custom"]').val('');
+					
+					jQuery('select[name="ph-nav-type"] option[value="'+nav_type+'"]').attr('selected', 'selected');
+					
+					var btn_text = '<?php _e('Add', 'revslider'); ?>';
+				}
+			
+				
+				jQuery('#add-placeholder-dialog').dialog({
+					modal:true,
+					draggable:false,
+					resizable:false,
+					width:600,
+					height:370,
+					closeOnEscape:true,
+					title:btn_title,
+					dialogClass:'wp-dialog',
+					buttons: [ { text: btn_text, click: function() {
+						var ph_title = UniteAdminRev.sanitize_input(jQuery('input[name="ph-title"]').val());
+						var ph_handle = UniteAdminRev.sanitize_input(jQuery('input[name="ph-handle"]').val());
+						var ph_type = jQuery('select[name="ph-type"] option:selected').val();
+						var ph_nav_type = jQuery('select[name="ph-nav-type"] option:selected').val();
+						
+						var ph_data = {};
+						
+						var ph_id = jQuery('input[name="ph-id"]').val();
+						
+						switch(ph_type){
+							case 'color':
+								ph_data.color = jQuery('input[name="ph-color"]').val();
+							break;
+							case 'color-rgba':
+								ph_data['color-rgba'] = jQuery('input[name="ph-color-rgba"]').val();
+							break;
+							case 'font-family':
+								ph_data.font_family = jQuery('select[name="ph-font-family"] option:selected').val();
+							break;
+							case 'custom':
+								ph_data.custom = jQuery('input[name="ph-custom"]').val();
+								break;
+							default:
+								alert('<?php _e('Wrong Handle', 'revslider'); ?>');
+								return false;
+							break;
+						}
+						
+						if(ph_handle !== '' && ph_title !== ''){
+							var cur_id = rs_nav_get_selected_id();
+							
+							for(var key in rs_navigations){
+								if(rs_navigations[key]['handle'] == ph_handle){
+									alert('<?php _e('Handle already existing', 'revslider'); ?>');
+									return false;
+								}
+							}
+							for(var key in rs_navigations){
+								if(rs_navigations[key]['id'] != cur_id) continue;
+								
+								if(typeof(rs_navigations[key]['settings']) !== 'undefined'){
+									if(rs_navigations[key]['settings']['placeholders'] == undefined) rs_navigations[key]['settings']['placeholders'] = [];
+								}
+								
+								if(ph_id == 'NEW'){
+									rs_navigations[key]['settings']['placeholders'].push({'title': ph_title, 'handle': ph_handle, 'type': ph_type, 'nav-type': ph_nav_type, 'data': ph_data});
+								}else{
+									rs_navigations[key]['settings']['placeholders'][ph_id] = {'title': ph_title, 'handle': ph_handle, 'type': ph_type, 'nav-type': ph_nav_type, 'data': ph_data};
+								}
+								
+								remove_placeholder();
+								add_placeholder(rs_navigations[key]);
+								
+								jQuery(this).dialog('close');
+								
+								drawEditor();
+								return true;
+							}
+							alert('<?php _e('Navigation not found', 'revslider'); ?>');
+						}else{
+							alert('<?php _e('Please add a valid handle/title', 'revslider'); ?>');
+						}
+						
+					} } ],
+				});
+			}
+			
+			
+			jQuery('select[name="ph-type"]').change(function(){
+				var the_type = jQuery(this).val();
+				jQuery(this).closest('ul').find('li').hide();
+				jQuery(this).closest('li').show();
+				jQuery(this).closest('ul').find('li[data-menu="'+the_type+'"]').show();
+				jQuery(this).closest('ul').find('li[data-menu="always"]').show();
+				jQuery(this).closest('ul').find('li[data-menu="never"]').hide();
+			});
+			
+			
 			jQuery('#rs-add-new-navigation-element').click(function(){
 				latest_nav_id++;
 				
@@ -1368,6 +1764,31 @@ $font_families = $rsopr->getArrFontFamilys();
 			jQuery('#list-of-navigations').perfectScrollbar({wheelPropagation:true});
 			jQuery('#list-of-navigations').perfectScrollbar('update');
 			
+			var rs_get_current_nav_type = function(){
+				var ret = 'arrows';
+				jQuery('.rs-nav-arrows-edit').each(function(){
+					if(jQuery(this).hasClass('selected')){
+						ret = 'arrows';
+					}
+				});
+				jQuery('.rs-nav-bullets-edit').each(function(){
+					if(jQuery(this).hasClass('selected')){
+						ret = 'bullets';
+					}
+				});
+				jQuery('.rs-nav-thumbs-edit').each(function(){
+					if(jQuery(this).hasClass('selected')){
+						ret = 'thumbs';
+					}
+				});
+				jQuery('.rs-nav-tabs-edit').each(function(){
+					if(jQuery(this).hasClass('selected')){
+						ret = 'tabs';
+					}
+				});
+				
+				return ret;
+			}
 
 			
 			var setCMSize = function() {
@@ -1459,3 +1880,61 @@ $font_families = $rsopr->getArrFontFamilys();
 		<div class="rs-nav-table-cell">&nbsp;</div>
 	</div>
 </script>
+
+
+<div id="add-placeholder-dialog" style="display: none">
+	<input type="hidden" name="ph-id" value="NEW">
+	<ul id="placeholder-options">
+		<li data-menu="never" style="display: none;">
+			<label><?php _e('On Navigation:', 'revslider'); ?></label>
+			<select name="ph-nav-type">
+				<option value="arrows"><?php _e('Arrows', 'revslider'); ?></option>
+				<option value="bullets"><?php _e('Bullets', 'revslider'); ?></option>
+				<option value="thumbs"><?php _e('Thumbs', 'revslider'); ?></option>
+				<option value="tabs"><?php _e('Tabs', 'revslider'); ?></option>
+			</select>
+		</li>
+		<li>
+			<label><?php _e('Type:', 'revslider'); ?></label>
+			<select name="ph-type">
+				<option value="color"><?php _e('Color RGB', 'revslider'); ?></option>
+				<option value="color-rgba"><?php _e('Color RGBA', 'revslider'); ?></option>
+				<option value="font-family"><?php _e('Font Family', 'revslider'); ?></option>
+				<option value="custom"><?php _e('Text/Custom', 'revslider'); ?></option>
+			</select>
+		</li>
+		<li data-menu="always">
+			<label><?php _e('Title:', 'revslider'); ?></label>
+			<input type="text" name="ph-title" value="">
+		</li>
+		<li data-menu="always">
+			<label><?php _e('Handle:', 'revslider'); ?></label>
+			<span style="margin-left:-20px">##<input type="text" name="ph-handle" value="">##</span>
+		</li>
+		<li data-menu="color">
+			<label><?php _e('Default Value:', 'revslider'); ?></label>
+			<input type="text" name="ph-color" class="my-color-field" value="#000000">
+		</li>
+		<li data-menu="color-rgba">
+			<label><?php _e('Default Value:', 'revslider'); ?></label>
+			<input type="text" name="ph-color-rgba" class="my-color-field" value="0,0,0,0">
+		</li>
+		<li data-menu="font-family">
+			<label><?php _e('Default Value:', 'revslider'); ?></label>
+			<select name="ph-font-family" style="width: 112px;">
+				<?php
+				foreach($font_families as $handle => $name){
+					if($name['label'] == 'Dont Show Me') continue;
+					?>
+					<option value="<?php echo esc_attr($name['label']); ?>"><?php echo esc_attr($name['label']); ?></option>
+					<?php
+				}
+				?>
+			</select>
+		</li>
+		<li data-menu="custom">
+			<label><?php _e('Default Value:', 'revslider'); ?></label>
+			<input type="text" name="ph-custom" value="">
+		</li>
+	</ul>
+</div>

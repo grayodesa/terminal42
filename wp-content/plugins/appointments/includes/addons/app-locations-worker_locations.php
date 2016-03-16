@@ -68,21 +68,21 @@ class App_Locations_WorkerLocations {
 			App_Shortcode_WorkerLocationsShortcode::serve();
 			App_Shortcode_RequiredWorkerLocationsShortcode::serve();
 		}
+
+		if ( empty( $this->_data['worker_locations']['insert'] ) ) {
+			$this->_data['worker_locations']['insert'] = '';
+		}
 	}
 
 	public function record_appointment_location ($appointment_id) {
 		global $wpdb, $appointments;
-		$appointment = $appointments->get_app($appointment_id);
+		$appointment = appointments_get_appointment($appointment_id);
 		if (empty($appointment->worker)) return false;
 
 		$location_id = self::worker_to_location_id($appointment->worker);
 		if (!$location_id) return false;
 
-		return $wpdb->update(
-			$appointments->app_table,
-			array('location' => $location_id),
-			array('ID' => $appointment_id)
-		);
+		appointments_update_appointment( $appointment_id, array('location' => $location_id) );
 	}
 
 	public function show_settings () {
@@ -178,18 +178,14 @@ class App_Locations_WorkerLocations {
 	}
 
 	private function _update_appointment_locations ($worker_id, $old_location_id, $location_id) {
-		global $wpdb, $appointments;
+		if ( $old_location_id == $location_id ) {
+			return;
+		}
 
-		if ($old_location_id == $location_id) return false;
-
-		$res = $wpdb->update(
-			$appointments->app_table,
-			array('location' => $location_id),
-			array(
-				'location' => $old_location_id,
-				'worker' => $worker_id,
-			), '%s', '%s'
-		);
+		$apps = appointments_get_appointments( array( 'location' => $old_location_id, 'worker' => $worker_id ) );
+		foreach ( $apps as $app ) {
+			appointments_update_appointment( $app->ID, array( 'location' => $location_id ) );
+		}
 	}
 
 	private function _get_worker_location_markup ($worker_id, $fallback='', $rich_content=true) {
@@ -207,8 +203,11 @@ class App_Locations_WorkerLocations {
 
 	private function _map_description_post_to_worker_id ($post_id) {
 		global $appointments, $wpdb;
-		$sql = $wpdb->prepare("SELECT ID FROM {$appointments->workers_table} WHERE page=%d", $post_id);
-		return $wpdb->get_var($sql);
+		$workers = appointments_get_workers( array( 'page' => $post_id ) );
+		if ( ! empty( $workers ) )
+			return $workers[0]->ID;
+
+		return false;
 	}
 }
 App_Locations_WorkerLocations::serve();

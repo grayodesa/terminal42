@@ -1,0 +1,570 @@
+03-03-2016 @ 15:14:12 - Создание платежной формы для заказа #10822.
+03-03-2016 @ 15:14:39 - 10822stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140187533
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10822
+    [liqpay_order_id] => 0QCFGNBL1457010879040479
+    [description] => Оплата заказа #10822
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140187533
+)
+
+03-03-2016 @ 15:16:06 - 10822stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140187533
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10822
+    [liqpay_order_id] => 0QCFGNBL1457010879040479
+    [description] => Оплата заказа #10822
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140187533
+)
+
+03-03-2016 @ 15:18:26 - 10821stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140186678
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10821
+    [liqpay_order_id] => SEEHC5UJ1457010775302729
+    [description] => Оплата заказа #10821
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140186678
+)
+
+03-03-2016 @ 15:23:38 - 10814stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140177246
+    [status] => success
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10814
+    [liqpay_order_id] => 2Z0YF5ZP1457009568667523
+    [description] => Оплата заказа #10814
+    [sender_phone] => 380503336365
+    [sender_card_mask2] => 414949*37
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [authcode_debit] => 768664
+    [authcode_credit] => 170700
+    [rrn_debit] => 000337040663
+    [rrn_credit] => 000337040668
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140177246
+)
+
+03-03-2016 @ 15:23:38 - Оплата заказа #10814 выполнена.
+03-03-2016 @ 16:48:25 - Создание платежной формы для заказа #10825.
+03-03-2016 @ 16:49:08 - 10825stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140230102
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10825
+    [liqpay_order_id] => YJUA8JUJ1457016548124205
+    [description] => Оплата заказа #10825
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140230102
+)
+
+03-03-2016 @ 16:52:58 - Создание платежной формы для заказа #10828.
+03-03-2016 @ 16:53:18 - 10828stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140231914
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10828
+    [liqpay_order_id] => LFHD8WWT1457016798278900
+    [description] => Оплата заказа #10828
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140231914
+)
+
+03-03-2016 @ 19:28:43 - Создание платежной формы для заказа #10854.
+03-03-2016 @ 19:29:10 - 10854stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140294740
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10854
+    [liqpay_order_id] => EEBBBMVK1457026150390495
+    [description] => Оплата заказа #10854
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140294740
+)
+
+03-04-2016 @ 06:11:11 - 
+03-04-2016 @ 06:11:11 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #
+03-04-2016 @ 06:13:11 - 
+03-04-2016 @ 06:13:11 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #
+03-04-2016 @ 06:18:17 - 
+03-04-2016 @ 06:18:17 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #
+03-04-2016 @ 10:56:08 - Создание платежной формы для заказа #10890.
+03-04-2016 @ 10:56:49 - 10890stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140516473
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10890
+    [liqpay_order_id] => KINQN9ZY1457081809352794
+    [description] => Оплата заказа #10890
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140516473
+)
+
+03-04-2016 @ 10:59:16 - 10890stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140516473
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10890
+    [liqpay_order_id] => KINQN9ZY1457081809352794
+    [description] => Оплата заказа #10890
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140516473
+)
+
+03-04-2016 @ 11:15:05 - 10890stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140516473
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10890
+    [liqpay_order_id] => KINQN9ZY1457081809352794
+    [description] => Оплата заказа #10890
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140516473
+)
+
+03-04-2016 @ 11:16:29 - Создание платежной формы для заказа #10896.
+03-04-2016 @ 11:16:59 - 10896stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140528816
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10896
+    [liqpay_order_id] => 9I1MEKCL1457083019597263
+    [description] => Оплата заказа #10896
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140528816
+)
+
+03-04-2016 @ 11:18:35 - Создание платежной формы для заказа #10897.
+03-04-2016 @ 11:19:30 - 10896stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140528816
+    [status] => sandbox
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10896
+    [liqpay_order_id] => 9I1MEKCL1457083019597263
+    [description] => Оплата заказа #10896
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140528816
+)
+
+03-04-2016 @ 11:20:28 - 10897stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140530881
+    [status] => success
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10897
+    [liqpay_order_id] => QR9MVDVO1457083219778379
+    [description] => Оплата заказа #10897
+    [sender_phone] => 380503167251
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [authcode_debit] => 016654
+    [authcode_credit] => 182305
+    [rrn_debit] => 000337485629
+    [rrn_credit] => 000337485636
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140530881
+)
+
+03-04-2016 @ 11:20:33 - Оплата заказа #10897 выполнена.
+03-04-2016 @ 11:34:32 - Создание платежной формы для заказа #10906.
+03-04-2016 @ 11:35:51 - 10906stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140540426
+    [status] => success
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10906
+    [liqpay_order_id] => W0H30HR91457084136244630
+    [description] => Оплата заказа #10906
+    [sender_phone] => 380503167251
+    [sender_card_mask2] => 545709*55
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.138.72.242
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [authcode_debit] => 702720
+    [authcode_credit] => 422939
+    [rrn_debit] => 000337496946
+    [rrn_credit] => 000337496950
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140540426
+)
+
+03-04-2016 @ 11:35:58 - Оплата заказа #10906 выполнена.
+03-04-2016 @ 13:12:23 - 
+03-04-2016 @ 13:12:23 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #
+03-04-2016 @ 13:12:33 - 
+03-04-2016 @ 13:12:33 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #
+03-04-2016 @ 13:42:47 - Создание платежной формы для заказа #10924.
+03-04-2016 @ 13:44:10 - 10924stdClass Object
+(
+    [action] => pay
+    [payment_id] => 140611656
+    [status] => success
+    [version] => 3
+    [type] => buy
+    [public_key] => i61463867102
+    [acq_id] => 414963
+    [order_id] => 10924
+    [liqpay_order_id] => TBI0Y2KB1457091837629702
+    [description] => Оплата заказа #10924
+    [sender_phone] => 380506420942
+    [sender_card_mask2] => 414949*03
+    [sender_card_bank] => pb
+    [sender_card_country] => 804
+    [ip] => 195.66.204.227
+    [info] => Предварительная продажа на лекцию «Из жизни одесских улиц» 15.03.2016 - 1
+    [amount] => 50
+    [currency] => UAH
+    [sender_commission] => 0
+    [receiver_commission] => 1.38
+    [agent_commission] => 0
+    [amount_debit] => 50
+    [amount_credit] => 50
+    [commission_debit] => 0
+    [commission_credit] => 1.38
+    [currency_debit] => UAH
+    [currency_credit] => UAH
+    [sender_bonus] => 0
+    [amount_bonus] => 0
+    [authcode_debit] => 401406
+    [authcode_credit] => 062298
+    [rrn_debit] => 000337582122
+    [rrn_credit] => 000337582147
+    [mpi_eci] => 7
+    [is_3ds] => 
+    [transaction_id] => 140611656
+)
+
+03-04-2016 @ 13:44:22 - Оплата заказа #10924 выполнена.
+03-04-2016 @ 13:46:57 - 
+03-04-2016 @ 13:46:57 - Ответ от сервера. Ошибка: подпись (signature) не соответствует действительности. Заказ #

@@ -324,6 +324,68 @@ class RevSliderBase {
 		return $attachment_id;
 	}
 	
+	/**
+	 * get all the svg url sets used in Slider Revolution
+	 * @since: 5.1.7
+	 **/
+	public static function get_svg_sets_url(){
+		$svg_sets = array();
+		
+		$svg_sets['Actions'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/action/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/action/');
+		$svg_sets['Alerts'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/alert/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/alert/');
+		$svg_sets['AV'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/av/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/av/');
+		$svg_sets['Communication'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/communication/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/communication/');
+		$svg_sets['Content'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/content/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/content/');
+		$svg_sets['Device'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/device/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/device/');
+		$svg_sets['Editor'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/editor/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/editor/');
+		$svg_sets['File'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/file/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/file/');
+		$svg_sets['Hardware'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/hardware/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/hardware/');
+		$svg_sets['Images'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/image/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/image/');
+		$svg_sets['Maps'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/maps/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/maps/');
+		$svg_sets['Navigation'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/navigation/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/navigation/');
+		$svg_sets['Notifications'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/notification/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/notification/');
+		$svg_sets['Places'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/places/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/places/');
+		$svg_sets['Social'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/social/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/social/');
+		$svg_sets['Toggle'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/toggle/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/toggle/');
+		
+		$svg_sets = apply_filters('revslider_get_svg_sets', $svg_sets);
+		
+		return $svg_sets;
+	}
+	
+	/**
+	 * get all the svg files for given sets used in Slider Revolution
+	 * @since: 5.1.7
+	 **/
+	public static function get_svg_sets_full(){
+		
+		$svg_sets = self::get_svg_sets_url();
+		
+		$svg = array();
+		
+		if(!empty($svg_sets)){
+			foreach($svg_sets as $handle => $values){
+				$svg[$handle] = array();
+				
+				if($dir = opendir($values['path'])) {
+					while(false !== ($file = readdir($dir))){
+						if ($file != "." && $file != "..") {
+							$filetype = pathinfo($file);
+							
+							if(isset($filetype['extension']) && $filetype['extension'] == 'svg'){
+								$svg[$handle][$file] = $values['url'].$file;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		$svg = apply_filters('revslider_get_svg_sets_full', $svg);
+		
+		return $svg;
+	}
+	
 	
 	/**
 	 * get all the icon sets used in Slider Revolution

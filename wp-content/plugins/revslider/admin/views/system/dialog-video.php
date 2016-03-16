@@ -7,13 +7,13 @@
 		<div id="video_content" style="display:none"></div>
 
 		<div id="video-dialog-wrap">
-			<div id="video_dialog_tabs" class="box-closed tp-accordion disabled" style="border-bottom:5px solid #ddd; background:#fff">
+			<div id="video_dialog_tabs" class="box-closed tp-accordion disabled" style="background:#fff">
 				<ul class="rs-layer-settings-tabs">
-					<li data-content="#rs-video-source" id="reset_video_dialog_tab" class="selected"><i style="height:45px" class="rs-mini-layer-icon eg-icon-export rs-toolbar-icon"></i><?php _e('Source', 'revslider'); ?></li>
-					<li data-content="#rs-video-size"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-resize-full-alt rs-toolbar-icon"></i><?php _e('Sizing', 'revslider'); ?></li>
-					<li data-content="#rs-video-settings"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-cog rs-toolbar-icon"></i><?php _e('Settings', 'revslider'); ?></li>
-					<li data-content="#rs-video-thumbnails"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-eye rs-toolbar-icon"></i><?php _e('Poster/Mobile Visibility', 'revslider'); ?></li>
-					<li data-content="#rs-video-arguments"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-th rs-toolbar-icon"></i><?php _e('Arguments', 'revslider'); ?></li>
+					<li class="selected" data-content="#rs-video-source" id="reset_video_dialog_tab"><i style="height:45px" class="rs-mini-layer-icon eg-icon-export rs-toolbar-icon"></i><?php _e('Source', 'revslider'); ?></li>
+					<li class="rs-hide-on-audio" data-content="#rs-video-size"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-resize-full-alt rs-toolbar-icon"></i><?php _e('Sizing', 'revslider'); ?></li>
+					<li class="" data-content="#rs-video-settings"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-cog rs-toolbar-icon"></i><?php _e('Settings', 'revslider'); ?></li>
+					<li class="rs-hide-on-audio" data-content="#rs-video-thumbnails"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-eye rs-toolbar-icon"></i><?php _e('Poster/Mobile Visibility', 'revslider'); ?></li>
+					<li class="" data-content="#rs-video-arguments"><i style="height:45px; font-size:16px" class="rs-mini-layer-icon eg-icon-th rs-toolbar-icon"></i><?php _e('Arguments', 'revslider'); ?></li>
 				</ul>
 				<div style="clear:both"></div>
 			</div>
@@ -43,6 +43,8 @@
 					<input type="radio" id="video_radio_streaminstagram" name="video_select" style="margin-left:20px">
 					<span for="video_radio_streaminstagram"><?php _e('From Stream', 'revslider'); ?></span>
 				</span>
+				
+				<input type="radio" checked id="video_radio_audio" name="video_select" style="display: none;">
 			</div>
 			
 
@@ -69,7 +71,7 @@
 				<label><?php _e('Poster Image Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_poster" name="html5_url_poster" value="">
 				<span class="imgsrcchanger-div" style="margin-left:20px;">
-					<a href="javascript:void(0)" class="button-image-select-html5-video button-primary revblue" ><?php _e('Set Image', 'revslider'); ?></a>
+					<a href="javascript:void(0)" class="button-image-select-html5-video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
 				<span class="video_example"><?php _e('example', 'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.png</span>
 				
@@ -77,24 +79,32 @@
 				<label><?php _e('Video MP4 Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_mp4" name="html5_url_mp4" value="">
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
-					<a href="javascript:void(0)" data-inptarget="html5_url_mp4" class="button_change_video button-primary revblue" ><?php _e('Set Video', 'revslider'); ?></a>
+					<a href="javascript:void(0)" data-inptarget="html5_url_mp4" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
 				<span class="video_example"><?php _e("example",'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.mp4</span>
 		
 				<label><?php _e('Video WEBM Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_webm" name="html5_url_webm" value="">
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
-					<a href="javascript:void(0)" data-inptarget="html5_url_webm" class="button_change_video button-primary revblue" ><?php _e('Set Video', 'revslider'); ?></a>
+					<a href="javascript:void(0)" data-inptarget="html5_url_webm" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
 				<span class="video_example"><?php _e('example','revslider'); ?>: http://video-js.zencoder.com/oceans-clip.webm</span>
 		
 				<label><?php _e('Video OGV Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_ogv" name="html5_url_ogv" value="">
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
-					<a href="javascript:void(0)" data-inptarget="html5_url_ogv" class="button_change_video button-primary revblue" ><?php _e('Set Video', 'revslider'); ?></a>
+					<a href="javascript:void(0)" data-inptarget="html5_url_ogv" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
 				<span class="video_example"><?php _e('example', 'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.ogv</span>
 				
+			</div>
+			
+			<div id="video_block_audio" class="video-select-block" style="display:none;" >
+				<label><?php _e('Audio Url', 'revslider'); ?></label>
+				<input style="width:330px" type="text" id="html5_url_audio" name="html5_url_audio" value="">
+				<span class="vidsrcchanger-div" style="margin-left:20px;">
+					<a href="javascript:void(0)" data-inptarget="html5_url_audio" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
+				</span>
 			</div>
 		</div>
 
@@ -102,7 +112,6 @@
 		<div id="rs-video-size"  style="display:none">
 			<!-- Video Sizing -->
 			<div id="video_size_wrapper" class="youtube-inputs-wrapper">
-				
 				<label for="input_video_fullwidth"><?php _e('Full Screen:', 'revslider'); ?></label>	
 				<input type="checkbox" class="tp-moderncheckbox rs-staticcustomstylechange tipsy_enabled_top" id="input_video_fullwidth">
 				<div class="clearfix mb10"></div>
@@ -111,7 +120,7 @@
 			<label for="input_video_cover" class="video-label"><?php _e('Force Cover:', 'revslider'); ?></label>
 			<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox mb10" id="input_video_cover">
 			
-			<div id="fullscreenvideofun1" class="video-settings-line">
+			<div id="fullscreenvideofun1" class="video-settings-line mb10">
 				<label for="input_video_dotted_overlay" class="video-label" id="input_video_dotted_overlay_lbl">
 					<?php _e('Dotted Overlay:', 'revslider'); ?>
 				</label>				
@@ -131,17 +140,23 @@
 					<option value="4:3"><?php _e('4:3','revslider'); ?></option>
 				</select>
 			</div>
-
+			<div id="video_full_screen_settings" class="video-settings-line">
+				<div class="mb10">
+					<label for="input_video_leave_fs_on_pause"><?php _e('Leave Full Screen on Pause/End:', 'revslider'); ?></label>
+					<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_leave_fs_on_pause">
+				</div>
+			</div>
 		</div>
 		
 		<div id="rs-video-settings" style="display:none">
 			<div class="mb10">
-				<label for="input_video_loop"><?php _e("Loop Video:",'revslider'); ?></label>
+				<label for="input_video_loop"><?php _e("Loop:",'revslider'); ?></label>
 				<?php /* <input type="checkbox" class="checkbox_video_dialog  mtop_13" id="input_video_loop" > */ ?>
 				<select id="input_video_loop" style="width: 200px;">
 					<option value="none"><?php _e('Disable', 'revslider'); ?></option>
-					<option value="loop"><?php _e('Loop, Slide is paused', 'revslider'); ?></option>
-					<option value="loopandnoslidestop"><?php _e('Loop, Slide does not stop', 'revslider'); ?></option>
+					<option class="rs-hide-on-audio" value="loop"><?php _e('Loop, Slide is paused', 'revslider'); ?></option>
+					<option class="rs-hide-on-audio" value="loopandnoslidestop"><?php _e('Loop, Slide does not stop', 'revslider'); ?></option>
+					<option class="rs-show-on-audio" value="loopandnoslidestop"><?php _e('Loop Segment', 'revslider'); ?></option>
 				</select>
 			</div>
 
@@ -156,11 +171,11 @@
 			</div>
 
 			<div class="mb10">
-				<label for="input_video_stopallvideo"><?php _e('Stop Other Videos:', 'revslider'); ?></label>
+				<label for="input_video_stopallvideo"><?php _e('Stop Other Media:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_stopallvideo" >
 			</div>
 
-			<div class="mb10 hide-for-vimeo">
+			<div class="mb10 hide-for-vimeo rs-hide-on-audio">
 				<label for="input_video_allowfullscreen"><?php _e('Allow FullScreen:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_allowfullscreen" >
 			</div>
@@ -175,12 +190,12 @@
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_force_rewind" >
 			</div>
 
-			<div class="mb10 hide-for-vimeo">
+			<div class="mb10">
 				<label for="input_video_control"><?php _e('Hide Controls:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_control" >
 			</div>
 
-			<div class="mb10">
+			<div class="mb10 rs-hide-on-audio">
 				<label for="input_video_mute"><?php _e('Mute:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_mute" >
 			</div>
@@ -191,21 +206,28 @@
 			</div>
 			
 			<div class="mb10">
-				<label for="input_video_start_at"><?php _e('Start at:', 'revslider'); ?></label>
+				<span class="rs-hide-on-audio"><label for="input_video_start_at"><?php _e('Start at:', 'revslider'); ?></label></span>
+				<span class="rs-show-on-audio"><label for="input_video_start_at"><?php _e('Segment Start:', 'revslider'); ?></label></span>
 				<input type="text" id="input_video_start_at" style="width: 50px;"> <?php _e('i.e.: 0:17', 'revslider'); ?>
 			</div>
 			
 			<div class="mb10">
-				<label for="input_video_end_at"><?php _e('End at:', 'revslider'); ?></label>
+				<span class="rs-hide-on-audio"><label for="input_video_end_at"><?php _e('End at:', 'revslider'); ?></label></span>
+				<span class="rs-show-on-audio"><label for="input_video_end_at"><?php _e('Segment End:', 'revslider'); ?></label></span>
 				<input type="text" id="input_video_end_at" style="width: 50px;"> <?php _e('i.e.: 2:41', 'revslider'); ?>
 			</div>
 			
-			<div class="mb10">
+			<div class="mb10 rs-hide-on-audio">
 				<label for="input_video_show_cover_pause"><?php _e('Show Cover at Pause:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_show_cover_pause" >
 			</div>
 			
-			<div id="rev-youtube-options" class="video-settings-line mb10">
+			<div class="mb10 rs-show-on-audio">
+				<label for="input_video_show_visibility"><?php _e('Invisible on Frontend:', 'revslider'); ?></label>
+				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_show_visibility" >
+			</div>
+			
+			<div id="rev-youtube-options" class="video-settings-line mb10 rs-hide-on-audio">
 				<label for="input_video_speed"><?php _e('Video Speed:', 'revslider'); ?></label>
 				<select id="input_video_speed" style="width:75px">
 					<option value="0.25"><?php _e('0.25', 'revslider'); ?></option>
@@ -215,16 +237,57 @@
 					<option value="2"><?php _e('2', 'revslider'); ?></option>
 				</select>
 			</div>
-
+			
+			<div class="mb10 rs-show-on-audio" style="display: none">
+				<div class="mb10">
+					<label for="input_audio_preload" class="video-label">
+						<?php _e("Audio Preload:",'revslider')?>
+					</label>
+					<select id="input_audio_preload" style="width:200px">
+						<option value="none"><?php _e('Disable', 'revslider'); ?></option>
+						<option value="metadata"><?php _e('Metadata', 'revslider'); ?></option>
+						<option value="progress"><?php _e('Progress', 'revslider'); ?></option>
+						<option value="canplay"><?php _e('Can Play', 'revslider'); ?></option>
+						<option value="canplaythrough"><?php _e('Can Play Through', 'revslider'); ?></option>
+					</select>
+				</div>
+				<div class="mb10">
+					<label for="input_audio_preload" class="video-label">
+						<?php _e("Ignore Preload after ",'revslider'); ?>
+					</label>
+					<select id="input_video_preload_wait">
+						<option value="0"><?php _e('0', 'revslider'); ?></option>
+						<option value="1"><?php _e('1', 'revslider'); ?></option>
+						<option value="2"><?php _e('2', 'revslider'); ?></option>
+						<option value="3"><?php _e('3', 'revslider'); ?></option>
+						<option value="4"><?php _e('4', 'revslider'); ?></option>
+						<option value="5"><?php _e('5', 'revslider'); ?></option>
+						<option value="6"><?php _e('6', 'revslider'); ?></option>
+						<option value="7"><?php _e('7', 'revslider'); ?></option>
+						<option value="8"><?php _e('8', 'revslider'); ?></option>
+						<option value="9"><?php _e('9', 'revslider'); ?></option>
+						<option value="10"><?php _e('10', 'revslider'); ?></option>
+					</select><?php _e(" seconds",'revslider'); ?>
+				</div>
+			</div>
+			
 			<div id="rev-html5-options" style="display: none; mb10">
-				<label for="input_video_preload" class="video-label">
-					<?php _e("Video Preload:",'revslider')?>
-				</label>
-				<select id="input_video_preload" style="width:200px">
-					<option value="auto"><?php _e('Auto', 'revslider'); ?></option>
-					<option value="none"><?php _e('Disable', 'revslider'); ?></option>
-					<option value="metadata"><?php _e('Metadata', 'revslider'); ?></option>
-				</select>
+			
+				<div class="mb10">
+					<label for="input_video_preload" class="video-label">
+						<?php _e("Video Preload:",'revslider')?>
+					</label>
+					<select id="input_video_preload" style="width:200px">
+						<option value="auto"><?php _e('Auto', 'revslider'); ?></option>
+						<option value="none"><?php _e('Disable', 'revslider'); ?></option>
+						<option value="metadata"><?php _e('Metadata', 'revslider'); ?></option>
+					</select>
+				</div>
+				
+				<div class="mb10">
+					<label for="input_video_large_controls"><?php _e('Large Controls:', 'revslider'); ?></label>
+					<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_large_controls" >
+				</div>
 			</div>		
 		</div>
 
@@ -268,6 +331,7 @@
 		
 		<div class="add-button-wrapper" style="margin-left:25px;">
 			<a href="javascript:void(0)" class="button-primary revblue" id="button-video-add" data-textadd="<?php _e('Add This Video', 'revslider'); ?>" data-textupdate="<?php _e('Update Video', 'revslider'); ?>" ><?php _e('Add This Video', 'revslider'); ?></a>
+			<a href="javascript:void(0)" class="button-primary revblue" style="display: none;" id="button-audio-add" data-textadd="<?php _e('Add This Audio', 'revslider'); ?>" data-textupdate="<?php _e('Update Audio', 'revslider'); ?>" ><?php _e('Add This Audio', 'revslider'); ?></a>
 		</div>
 	</form>
 </div>

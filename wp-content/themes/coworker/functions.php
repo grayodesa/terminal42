@@ -1169,4 +1169,51 @@ include( SEMICOLON_FUNCTIONS . '/posttypes.php' ); // Theme PostTypes
 
 include( SEMICOLON_FUNCTIONS . '/metaboxes.php' ); // Theme MetaBoxes
 
+/**
+* Move RSVP Tickets form in events template
+*/
+if (class_exists('Tribe__Tickets__RSVP')) {
+remove_action( 'tribe_events_single_event_after_the_meta', array( Tribe__Tickets__RSVP::get_instance(), 'front_end_tickets_form' ), 5 );
+add_action( 'tribe_events_single_event_before_the_content', array( Tribe__Tickets__RSVP::get_instance(), 'front_end_tickets_form' ), 5 );
+}
+
+/*
+ * Moves the front-end ticket purchase form, accepts WP action/hook and optional hook priority
+ * 
+ * @param $ticket_location_action WP Action/hook to display the ticket form at
+ * @param $ticket_location_priority Priority for the WP Action
+ */
+function tribe_etp_move_tickets_purchase_form ( $ticket_location_action, $ticket_location_priority = 10 ) {
+    $etp_classes = array(
+	'Tribe__Tickets_Plus__Commerce__EDD__Main',
+    //	'Tribe__Tickets_Plus__Commerce__Shopp__Main', // As of ETP v4.0 Shopp will generate errors when referenced, if not active. Uncomment this line if you have Shopp Active
+	'Tribe__Tickets_Plus__Commerce__WPEC__Main',
+	'Tribe__Tickets_Plus__Commerce__WooCommerce__Main'
+    );
+    foreach ( $etp_classes as $ticket_class ) {
+	if ( ! class_exists( $ticket_class ) ) break;
+	$form_display_function = array( $ticket_class::get_instance(), 'front_end_tickets_form' );
+	if ( has_action ( 'tribe_events_single_event_after_the_meta', $form_display_function ) ) {
+	    remove_action( 'tribe_events_single_event_after_the_meta', $form_display_function, 5 );
+	    add_action( $ticket_location_action, $form_display_function, $ticket_location_priority );
+	}
+    }
+}
+/*
+ * TO MOVE THE TICKET FORM UNCOMMENT ONE OF THE FOLLOWING BY REMOVING THE //
+ */
+/*
+ * Uncomment to Move Ticket Form Below Related Events
+ */
+//tribe_etp_move_tickets_purchase_form( 'tribe_events_single_event_after_the_meta', 20 );
+/*
+ * Uncomment to Move Ticket Form Below the Event Description
+ */
+//tribe_etp_move_tickets_purchase_form( 'tribe_events_single_event_after_the_content', 5 );
+/*
+ * Uncomment to Move Ticket Form Above the Event Description
+ */
+tribe_etp_move_tickets_purchase_form( 'tribe_events_single_event_before_the_content' );
+
+
 ?>

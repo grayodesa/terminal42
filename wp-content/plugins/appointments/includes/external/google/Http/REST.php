@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
 /**
  * This class implements the RESTful transport of apiServiceRequest()'s
  */
-class App_Google_Http_REST
+class Google_Http_REST
 {
   /**
    * Executes a Google_Http_Request and (if applicable) automatically retries
@@ -34,9 +34,9 @@ class App_Google_Http_REST
    * @throws Google_Service_Exception on server side error (ie: not authenticated,
    *  invalid or malformed post body, invalid url)
    */
-  public static function execute(App_Google_Client $client, App_Google_Http_Request $req)
+  public static function execute(Google_Client $client, Google_Http_Request $req)
   {
-    $runner = new App_Google_Task_Runner(
+    $runner = new Google_Task_Runner(
         $client,
         sprintf('%s %s', $req->getRequestMethod(), $req->getUrl()),
         array(get_class(), 'doExecute'),
@@ -55,7 +55,7 @@ class App_Google_Http_REST
    * @throws Google_Service_Exception on server side error (ie: not authenticated,
    *  invalid or malformed post body, invalid url)
    */
-  public static function doExecute(App_Google_Client $client, App_Google_Http_Request $req)
+  public static function doExecute(Google_Client $client, Google_Http_Request $req)
   {
     $httpRequest = $client->getIo()->makeRequest($req);
     $httpRequest->setExpectedClass($req->getExpectedClass());
@@ -70,7 +70,7 @@ class App_Google_Http_REST
    * @param Google_Client $client
    * @return mixed|null
    */
-  public static function decodeHttpResponse($response, App_Google_Client $client = null)
+  public static function decodeHttpResponse($response, Google_Client $client = null)
   {
     $code = $response->getResponseHttpCode();
     $body = $response->getResponseBody();
@@ -107,7 +107,7 @@ class App_Google_Http_REST
             'retry_map'
         );
       }
-      throw new App_Google_Service_Exception($err, $code, null, $errors, $map);
+      throw new Google_Service_Exception($err, $code, null, $errors, $map);
     }
 
     // Only attempt to decode the response, if the response code wasn't (204) 'no content'
@@ -122,7 +122,7 @@ class App_Google_Http_REST
         if ($client) {
           $client->getLogger()->error($error);
         }
-        throw new App_Google_Service_Exception($error);
+        throw new Google_Service_Exception($error);
       }
 
       if ($response->getExpectedClass()) {
@@ -165,7 +165,7 @@ class App_Google_Http_REST
     }
 
     if (count($uriTemplateVars)) {
-      $uriTemplateParser = new App_Google_Utils_URITemplate();
+      $uriTemplateParser = new Google_Utils_URITemplate();
       $requestUrl = $uriTemplateParser->parse($requestUrl, $uriTemplateVars);
     }
 

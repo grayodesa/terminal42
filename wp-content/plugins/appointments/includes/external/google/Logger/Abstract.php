@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -27,7 +27,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
  */
-abstract class App_Google_Logger_Abstract
+abstract class Google_Logger_Abstract
 {
   /**
    * Default log format
@@ -120,20 +120,20 @@ abstract class App_Google_Logger_Abstract
   /**
    * @param Google_Client $client  The current Google client
    */
-  public function __construct(App_Google_Client $client)
+  public function __construct(Google_Client $client)
   {
     $this->setLevel(
-        $client->getClassConfig('App_Google_Logger_Abstract', 'level')
+        $client->getClassConfig('Google_Logger_Abstract', 'level')
     );
 
-    $format = $client->getClassConfig('App_Google_Logger_Abstract', 'log_format');
+    $format = $client->getClassConfig('Google_Logger_Abstract', 'log_format');
     $this->logFormat = $format ? $format : self::DEFAULT_LOG_FORMAT;
 
-    $format = $client->getClassConfig('App_Google_Logger_Abstract', 'date_format');
+    $format = $client->getClassConfig('Google_Logger_Abstract', 'date_format');
     $this->dateFormat = $format ? $format : self::DEFAULT_DATE_FORMAT;
 
     $this->allowNewLines = (bool) $client->getClassConfig(
-        'App_Google_Logger_Abstract',
+        'Google_Logger_Abstract',
         'allow_newlines'
     );
   }
@@ -394,7 +394,7 @@ abstract class App_Google_Logger_Abstract
       return self::$levels[$level];
     }
 
-    throw new App_Google_Logger_Exception(
+    throw new Google_Logger_Exception(
         sprintf("Unknown LogLevel: '%s'", $level)
     );
   }

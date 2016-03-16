@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -24,7 +24,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * This logger writes to a PHP stream resource.
  */
-class App_Google_Logger_File extends App_Google_Logger_Abstract
+class Google_Logger_File extends Google_Logger_Abstract
 {
   /**
    * @var string|resource $file Where logs are written
@@ -51,13 +51,13 @@ class App_Google_Logger_File extends App_Google_Logger_Abstract
   /**
    * {@inheritdoc}
    */
-  public function __construct(App_Google_Client $client)
+  public function __construct(Google_Client $client)
   {
     parent::__construct($client);
 
     $file = $client->getClassConfig('Google_Logger_File', 'file');
     if (!is_string($file) && !is_resource($file)) {
-      throw new App_Google_Logger_Exception(
+      throw new Google_Logger_Exception(
           'File logger requires a filename or a valid file pointer'
       );
     }
@@ -79,7 +79,7 @@ class App_Google_Logger_File extends App_Google_Logger_Abstract
     if (is_string($this->file)) {
       $this->open();
     } elseif (!is_resource($this->file)) {
-      throw new App_Google_Logger_Exception('File pointer is no longer available');
+      throw new Google_Logger_Exception('File pointer is no longer available');
     }
 
     if ($this->lock) {

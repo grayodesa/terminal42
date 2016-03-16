@@ -21,26 +21,34 @@
  * @author Stuart Langley <slangley@google.com>
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
-class App_Google_IO_Curl extends App_Google_IO_Abstract
+class Google_IO_Curl extends Google_IO_Abstract
 {
   // cURL hex representation of version 7.30.0
   const NO_QUIRK_VERSION = 0x071E00;
 
   private $options = array();
 
-  public function __construct(App_Google_Client $client)
+  /** @var bool $disableProxyWorkaround */
+  private $disableProxyWorkaround;
+
+  public function __construct(Google_Client $client)
   {
     if (!extension_loaded('curl')) {
       $error = 'The cURL IO handler requires the cURL extension to be enabled';
       $client->getLogger()->critical($error);
-      throw new App_Google_IO_Exception($error);
+      throw new Google_IO_Exception($error);
     }
 
     parent::__construct($client);
+
+    $this->disableProxyWorkaround = $this->client->getClassConfig(
+        'Google_IO_Curl',
+        'disable_proxy_workaround'
+    );
   }
 
   /**
@@ -50,7 +58,7 @@ class App_Google_IO_Curl extends App_Google_IO_Abstract
    * @return array containing response headers, body, and http code
    * @throws Google_IO_Exception on curl or IO error
    */
-  public function executeRequest(App_Google_Http_Request $request)
+  public function executeRequest(Google_Http_Request $request)
   {
     $curl = curl_init();
 
@@ -73,8 +81,11 @@ class App_Google_IO_Curl extends App_Google_IO_Abstract
 
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-    // 1 is CURL_SSLVERSION_TLSv1, which is not always defined in PHP.
-    curl_setopt($curl, CURLOPT_SSLVERSION, 1);
+
+    // The SSL version will be determined by the underlying library
+    // @see https://github.com/google/google-api-php-client/pull/644
+    //curl_setopt($curl, CURLOPT_SSLVERSION, 1);
+
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HEADER, true);
 
@@ -112,7 +123,7 @@ class App_Google_IO_Curl extends App_Google_IO_Abstract
       $map = $this->client->getClassConfig('Google_IO_Exception', 'retry_map');
 
       $this->client->getLogger()->error('cURL ' . $error);
-      throw new App_Google_IO_Exception($error, $code, null, $map);
+      throw new Google_IO_Exception($error, $code, null, $map);
     }
     $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 
@@ -172,8 +183,12 @@ class App_Google_IO_Curl extends App_Google_IO_Abstract
    */
   protected function needsQuirk()
   {
+    if ($this->disableProxyWorkaround) {
+      return false;
+    }
+
     $ver = curl_version();
     $versionNum = $ver['version_number'];
-    return $versionNum < App_Google_IO_Curl::NO_QUIRK_VERSION;
+    return $versionNum < Google_IO_Curl::NO_QUIRK_VERSION;
   }
 }

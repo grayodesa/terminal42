@@ -398,8 +398,8 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	 * @return string Formatted link to the venue website
 	 */
 	function tribe_get_venue_website_link( $post_id = null, $label = null ) {
-		$post_id = tribe_get_venue_id( $post_id );
-		$url     = tribe_get_event_meta( $post_id, '_VenueURL', true );
+		$url = tribe_get_venue_website_url( $post_id );
+
 		if ( ! empty( $url ) ) {
 			$label = is_null( $label ) ? $url : $label;
 			if ( ! empty( $url ) ) {
@@ -410,15 +410,31 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 			}
 			$html = sprintf(
 				'<a href="%s" target="%s">%s</a>',
-				esc_url( $url ),
+				esc_attr( esc_url( $url ) ),
 				apply_filters( 'tribe_get_venue_website_link_target', '_self' ),
-				apply_filters( 'tribe_get_venue_website_link_label', $label )
+				apply_filters( 'tribe_get_venue_website_link_label', esc_html( $label ) )
 			);
 		} else {
 			$html = '';
 		}
 
 		return apply_filters( 'tribe_get_venue_website_link', $html );
+	}
+
+	/**
+	 * Returns the venue website URL related to the current post or for the optionally
+	 * specified post.
+	 *
+	 * @param int|null $post_id
+	 *
+	 * @return string
+	 */
+	function tribe_get_venue_website_url( $post_id = null ) {
+		return (string) tribe_get_event_meta(
+			tribe_get_venue_id( $post_id ),
+			'_VenueURL',
+			true
+		);
 	}
 
 	/**

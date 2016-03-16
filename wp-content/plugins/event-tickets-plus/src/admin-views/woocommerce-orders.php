@@ -50,7 +50,7 @@
 							$sold_message = '';
 
 							if ( $ticket_sold['pending'] > 0 ) {
-								$pending = sprintf( _n( '(%d awaiting review)', '(%d awaiting review)', 'event-tickets-plus', $ticket_sold['pending'] ), (int) $ticket_sold['pending'] );
+								$pending = sprintf( _n( '(%d awaiting review)', '(%d awaiting review)', $ticket_sold['pending'], 'event-tickets-plus' ), (int) $ticket_sold['pending'] );
 							}
 
 							if ( ! $ticket_sold['has_stock'] ) {

@@ -169,11 +169,14 @@ class RevSliderUpdate {
 			
 			update_option('revslider-update-check-short', time());
 			
+			$purchase = (get_option('revslider-valid', 'false') == 'true') ? get_option('revslider-code', '') : '';
+			
 			$response = wp_remote_post($this->remote_url, array(
 				'user-agent' => 'WordPress/'.$wp_version.'; '.get_bloginfo('url'),
 				'body' => array(
 					'item' => urlencode('revslider'),
-					'version' => urlencode(RevSliderGlobals::SLIDER_REVISION)
+					'version' => urlencode(RevSliderGlobals::SLIDER_REVISION),
+					'code' => urlencode($purchase)
 				)
 			));
 			
@@ -202,6 +205,18 @@ class RevSliderUpdate {
 			
 			if(isset($version_info->dashboard)){
 				update_option('revslider-dashboard', $version_info->dashboard);
+			}
+
+			if(isset($version_info->addons)){
+				update_option('revslider-addons', $version_info->addons);
+			}
+			
+			if(isset($version_info->deactivated) && $version_info->deactivated === true){
+				if(get_option('revslider-valid', 'false') == 'true'){
+					//remove validation, add notice
+					update_option('revslider-valid', 'false');
+					update_option('revslider-deact-notice', true);
+				}
 			}
 			
 		}

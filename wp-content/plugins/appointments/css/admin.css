@@ -77,4 +77,30 @@ a.app-remove_break, a.app-remove_break:hover, a.app-remove_break:active { color:
 }
 
 
-/* 373982-1448811126-au */
+#dashboard_right_now a.app-pending:before,
+#dashboard_right_now a.app-active:before {
+	content: '\f469';
+}
+
+#dashboard_right_now a.app-active:before {
+	color: #56b086;
+}
+#dashboard_right_now a.app-pending:before {
+	color: #ffa26d;
+}
+
+.app-notice .app-dismiss {
+	color: #dc3232;
+	text-decoration: none;
+	float:right;
+}
+.app-notice .app-dismiss:hover {
+	color:red;
+}
+
+.app-notice .dashicons-dismiss {
+	font-size: 18px;
+}
+
+
+/* 373982-1457772005-au */

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -24,7 +24,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * @see https://developers.google.com/drive/web/handle-errors#implementing_exponential_backoff
  */
-class App_Google_Task_Runner
+class Google_Task_Runner
 {
   /**
    * @var integer $maxDelay The max time (in seconds) to wait before a retry.
@@ -83,7 +83,7 @@ class App_Google_Task_Runner
    * @throws Google_Task_Exception when misconfigured
    */
   public function __construct(
-      App_Google_Client $client,
+      Google_Client $client,
       $name,
       $action,
       array $arguments = array()
@@ -92,7 +92,7 @@ class App_Google_Task_Runner
 
     if (isset($config['initial_delay'])) {
       if ($config['initial_delay'] < 0) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task configuration `initial_delay` must not be negative.'
         );
       }
@@ -102,7 +102,7 @@ class App_Google_Task_Runner
 
     if (isset($config['max_delay'])) {
       if ($config['max_delay'] <= 0) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task configuration `max_delay` must be greater than 0.'
         );
       }
@@ -112,7 +112,7 @@ class App_Google_Task_Runner
 
     if (isset($config['factor'])) {
       if ($config['factor'] <= 0) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task configuration `factor` must be greater than 0.'
         );
       }
@@ -122,7 +122,7 @@ class App_Google_Task_Runner
 
     if (isset($config['jitter'])) {
       if ($config['jitter'] <= 0) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task configuration `jitter` must be greater than 0.'
         );
       }
@@ -132,7 +132,7 @@ class App_Google_Task_Runner
 
     if (isset($config['retries'])) {
       if ($config['retries'] < 0) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task configuration `retries` must not be negative.'
         );
       }
@@ -140,7 +140,7 @@ class App_Google_Task_Runner
     }
 
     if (!is_callable($action)) {
-        throw new App_Google_Task_Exception(
+        throw new Google_Task_Exception(
             'Task argument `$action` must be a valid callable.'
         );
     }
@@ -172,7 +172,7 @@ class App_Google_Task_Runner
     while ($this->attempt()) {
       try {
         return call_user_func_array($this->action, $this->arguments);
-      } catch (App_Google_Task_Retryable $exception) {
+      } catch (Google_Task_Retryable $exception) {
         $allowedRetries = $exception->allowedRetries();
 
         if (!$this->canAttmpt() || !$allowedRetries) {

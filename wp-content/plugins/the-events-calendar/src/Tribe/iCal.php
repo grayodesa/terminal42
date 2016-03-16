@@ -179,6 +179,11 @@ class Tribe__Events__iCal {
 			'hide_upcoming' => true,
 		);
 
+		// Verify the Intial Category
+		if ( $wp_query->get( Tribe__Events__Main::TAXONOMY, false ) !== false ) {
+			$args[ Tribe__Events__Main::TAXONOMY ] = $wp_query->get( Tribe__Events__Main::TAXONOMY );
+		}
+
 		/**
 		 * Provides an opportunity to modify the query args used to build a list of events
 		 * to export from month view.
@@ -229,8 +234,8 @@ class Tribe__Events__iCal {
 
 			$full_format = 'Ymd\THis';
 			$time = (object) array(
-				'start' => self::wp_strtotime( $event_post->EventStartDate ),
-				'end' => self::wp_strtotime( $event_post->EventEndDate ),
+				'start' => tribe_get_start_date( $event_post->ID, false, 'U' ),
+				'end' => tribe_get_end_date( $event_post->ID, false, 'U' ),
 				'modified' => self::wp_strtotime( $event_post->post_modified ),
 				'created' => self::wp_strtotime( $event_post->post_date ),
 			);
@@ -254,7 +259,11 @@ class Tribe__Events__iCal {
 				$item[] = "DTSTART;VALUE=$type:" . $tzoned->start;
 				$item[] = "DTEND;VALUE=$type:" . $tzoned->end;
 			} else {
-				$tz = get_option( 'timezone_string' );
+				// Are we using the sitewide timezone or the local event timezone?
+				$tz = Tribe__Events__Timezones::EVENT_TIMEZONE === Tribe__Events__Timezones::mode()
+					? Tribe__Events__Timezones::get_event_timezone_string( $event_post->ID )
+					: Tribe__Events__Timezones::wp_timezone_string();
+
 				$item[] = 'DTSTART;TZID="'.$tz.'":' . $tzoned->start;
 				$item[] = 'DTEND;TZID="'.$tz.'":' . $tzoned->end;
 			}
@@ -325,8 +334,19 @@ class Tribe__Events__iCal {
 			$events .= "BEGIN:VEVENT\r\n" . implode( "\r\n", $item ) . "\r\nEND:VEVENT\r\n";
 		}
 
+		$site = sanitize_title( get_bloginfo( 'name' ) );
+		$hash = substr( md5( implode( $event_ids ) ), 0, 11 );
+
+		/**
+		 * Modifies the filename provided in the Content-Disposition header for iCal feeds.
+		 *
+		 * @var string       $ical_feed_filename
+		 * @var WP_Post|null $post
+		 */
+		$filename = apply_filters( 'tribe_events_ical_feed_filename', $site . '-' . $hash . '.ics', $post );
+
 		header( 'Content-type: text/calendar; charset=UTF-8' );
-		header( 'Content-Disposition: attachment; filename="ical-event-' . implode( $event_ids ) . '.ics"' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 		$content = "BEGIN:VCALENDAR\r\n";
 		$content .= "VERSION:2.0\r\n";
 		$content .= 'PRODID:-//' . $blogName . ' - ECPv' . Tribe__Events__Main::VERSION . "//NONSGML v1.0//EN\r\n";

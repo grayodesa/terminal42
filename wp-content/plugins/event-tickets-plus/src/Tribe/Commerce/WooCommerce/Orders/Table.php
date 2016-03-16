@@ -20,6 +20,14 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 	public static $fee_flat = 0;
 
 	/**
+	 * In-memory cache of orders per event, where each key represents the event ID
+	 * and the value is an array of orders.
+	 *
+	 * @var array
+	 */
+	protected static $orders = array();
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct() {
@@ -339,6 +347,10 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 			return array();
 		}
 
+		if ( isset( self::$orders[ $event_id ] ) ) {
+			return self::$orders[ $event_id ];
+		}
+
 		WC()->api->includes();
 		WC()->api->register_resources( new WC_API_Server( '/' ) );
 
@@ -348,6 +360,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 
 		$args = array(
 			'post_type' => 'tribe_wooticket',
+			'posts_per_page' => -1,
 			'post_status' => array(
 				'wc-pending',
 				'wc-processing',
@@ -376,6 +389,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 			$orders[ $order_id ] = $order['order'];
 		}
 
+		self::$orders[ $event_id ] = $orders;
 		return $orders;
 	}
 

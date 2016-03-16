@@ -137,7 +137,9 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		add_action( 'wpsc_update_purchase_log_status', array( $this, 'generate_tickets' ), 10, 4 );
 		add_action( 'wpectickets-send-tickets-email', array( $this, 'send_email' ), 10    );
 		add_action( 'wpsc_purchlogitem_links_start', array( $this, 'add_resend_tickets_action' ) );
+
 		add_filter( 'wpsc_cart_item_url', array( $this, 'hijack_ticket_link' ), 10, 4 );
+		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
 	}
 
 
@@ -576,7 +578,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 			return false;
 		}
 
-		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types ) ) {
+		if ( in_array( get_post_type( $event ), Tribe__Tickets__Main::instance()->post_types() ) ) {
 			return get_post( $event );
 		}
 
@@ -766,7 +768,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		if ( ! empty( $ticket_id ) ) {
 			$ticket = $this->get_ticket( $event_id, $ticket_id );
 			if ( ! empty( $ticket ) ) {
-				$stock = $ticket->stock;
+				$stock = $ticket->managing_stock() ? $ticket->stock() : '';
 				$sku   = get_post_meta( $ticket_id, '_wpsc_sku', true );
 			}
 		}
@@ -886,6 +888,24 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		}
 
 		echo '<br/><br/>';
+	}
+
+
+	/**
+	 * Excludes WPEC product post types from the list of supported post types that Tickets can be attached to
+	 *
+	 * @since 4.0.5
+	 *
+	 * @param array $post_types Array of supported post types
+	 *
+	 * @return array
+	 */
+	public function exclude_product_post_type( $post_types ) {
+		if ( isset( $post_types['wpsc-product'] ) ) {
+			unset( $post_types['wpsc-product'] );
+		}
+
+		return $post_types;
 	}
 
 	/********** SINGLETON FUNCTIONS **********/

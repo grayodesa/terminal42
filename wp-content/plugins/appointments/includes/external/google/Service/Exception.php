@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
-class App_Google_Service_Exception extends App_Google_Exception implements App_Google_Task_Retryable
+class Google_Service_Exception extends Google_Exception implements Google_Task_Retryable
 {
   /**
    * Optional list of errors returned in a JSON body of an HTTP error response.

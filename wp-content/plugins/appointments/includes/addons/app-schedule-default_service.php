@@ -10,6 +10,8 @@ Author: WPMU DEV
 
 class App_Schedule_DefaultService {
 	private $_data;
+
+	/** @var  Appointments $_core */
 	private $_core;
 
 	private function __construct () {}
@@ -25,6 +27,24 @@ class App_Schedule_DefaultService {
 
 		add_action('app-settings-advanced_settings', array($this, 'show_settings'));
 		add_filter('app-options-before_save', array($this, 'save_settings'));
+
+		add_filter( 'appointments_services_shortcode_selected_service', array( $this, 'services_shortcode_selected_service' ), 10, 3 );
+	}
+
+	public function services_shortcode_selected_service( $selected, $args, $services ) {
+		if ( ! $selected ) {
+			return $this->_get_replacement();
+		}
+
+		if ( ! isset( $_REQUEST['app_service_id'] ) && $args['worker'] && appointments_get_worker( $args['worker'] ) ) {
+			$replacement = $this->_get_replacement();
+			$services_ids = wp_list_pluck( $services, 'ID' );
+			if ( in_array( $replacement, $services_ids ) ) {
+				return $replacement;
+			}
+		}
+
+		return $selected;
 	}
 
 	public function initialize () {
@@ -50,7 +70,7 @@ class App_Schedule_DefaultService {
 	}
 
 	public function show_settings () {
-		$services = $this->_core->get_services();
+		$services = appointments_get_services();
 		$replacement = $this->_get_replacement();
 		?>
 		<tr valign="top">

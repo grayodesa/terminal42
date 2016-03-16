@@ -29,6 +29,7 @@ if(isset($_GET['app_order_by']))
 else
 	$order_by = '';
 
+$status_count = appointments_count_appointments();
 ?>
 <div id="wpbody-content">
 <div class='wrap'>
@@ -38,11 +39,11 @@ else
 	</h2>
 
 	<ul class="subsubsub">
-		<li><a href="<?php echo add_query_arg('type', 'active'); ?>" class="rbutton <?php if($type == 'active') echo 'current'; ?>"><?php  _e('Active appointments', 'appointments'); ?></a> | </li>
-		<li><a href="<?php echo add_query_arg('type', 'pending'); ?>" class="rbutton <?php if($type == 'pending') echo 'current'; ?>"><?php  _e('Pending appointments', 'appointments'); ?></a> | </li>
-		<li><a href="<?php echo add_query_arg('type', 'completed'); ?>" class="rbutton <?php if($type == 'completed') echo 'current'; ?>"><?php  _e('Completed appointments', 'appointments'); ?></a> | </li>
-		<li><a href="<?php echo add_query_arg('type', 'reserved'); ?>" class="rbutton <?php if($type == 'reserved') echo 'current'; ?>"><?php  _e('Reserved by GCal', 'appointments'); ?></a> | </li>
-		<li><a href="<?php echo add_query_arg('type', 'removed'); ?>" class="rbutton <?php if($type == 'removed') echo 'current'; ?>"><?php  _e('Removed appointments', 'appointments'); ?></a></li>
+		<li><a href="<?php echo add_query_arg('type', 'active'); ?>" class="rbutton <?php if($type == 'active') echo 'current'; ?>"><?php  _e('Active appointments', 'appointments'); ?></a> (<?php echo $status_count['paid'] + $status_count['confirmed']; ?>) | </li>
+		<li><a href="<?php echo add_query_arg('type', 'pending'); ?>" class="rbutton <?php if($type == 'pending') echo 'current'; ?>"><?php  _e('Pending appointments', 'appointments'); ?></a> (<?php echo $status_count['pending']; ?>) | </li>
+		<li><a href="<?php echo add_query_arg('type', 'completed'); ?>" class="rbutton <?php if($type == 'completed') echo 'current'; ?>"><?php  _e('Completed appointments', 'appointments'); ?></a> (<?php echo $status_count['completed']; ?>) | </li>
+		<li><a href="<?php echo add_query_arg('type', 'reserved'); ?>" class="rbutton <?php if($type == 'reserved') echo 'current'; ?>"><?php  _e('Reserved by GCal', 'appointments'); ?></a> (<?php echo $status_count['reserved']; ?>) | </li>
+		<li><a href="<?php echo add_query_arg('type', 'removed'); ?>" class="rbutton <?php if($type == 'removed') echo 'current'; ?>"><?php  _e('Removed appointments', 'appointments'); ?></a> (<?php echo $status_count['removed']; ?>)</li>
 		<li><a href="javascript:void(0)" class="info-button" title="<?php _e('Click to toggle information about statuses', 'appointments')?>"><img src="<?php echo $appointments->plugin_url . '/images/information.png'?>" alt="" /></a></li>
 	</ul>
 <br /><br />
@@ -84,7 +85,7 @@ else
 			<input type="hidden" value="1" name="app_status_change" />
 			<select name="app_new_status" style='float:none;'>
 				<option value=""><?php _e('Bulk status change','appointments'); ?></option>
-				<?php foreach ( $appointments->get_statuses() as $value=>$name ) {
+				<?php foreach ( appointments_get_statuses() as $value=>$name ) {
 					echo '<option value="' . esc_attr($value) . '" class="hide-if-no-js">'.$name.'</option>';
 				} ?>
 			</select>
@@ -135,7 +136,7 @@ else
 				<select name="app_service_id" style='float:none;'>
 					<option value=""><?php _e('Filter by service','appointments'); ?></option>
 				<?php
-				$services = $appointments->get_services();
+				$services = appointments_get_services();
 				if ( $services ) {
 					foreach ( $services as $service ) {
 						if ( $service_id == $service->ID )
@@ -159,14 +160,14 @@ else
 				<select name="app_provider_id" style='float:none;'>
 					<option value=""><?php _e('Filter by service provider','appointments'); ?></option>
 				<?php
-				$workers = $appointments->get_workers();
+				$workers = appointments_get_workers();
 				if ( $workers ) {
 					foreach ( $workers as $worker ) {
 						if ( $worker_id == $worker->ID )
 							$selected = " selected='selected' ";
 						else
 							$selected = "";
-						echo '<option '.$selected.' value="' . esc_attr($worker->ID) . '">'. $appointments->get_worker_name( $worker->ID ) .'</option>';
+						echo '<option '.$selected.' value="' . esc_attr($worker->ID) . '">'. appointments_get_worker_name( $worker->ID ) .'</option>';
 					}
 				}
 				?>

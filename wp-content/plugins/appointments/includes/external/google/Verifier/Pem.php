@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -24,7 +24,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * @author Brian Eaton <beaton@google.com>
  */
-class App_Google_Verifier_Pem extends App_Google_Verifier_Abstract
+class Google_Verifier_Pem extends Google_Verifier_Abstract
 {
   private $publicKey;
 
@@ -39,11 +39,11 @@ class App_Google_Verifier_Pem extends App_Google_Verifier_Abstract
   public function __construct($pem)
   {
     if (!function_exists('openssl_x509_read')) {
-      throw new App_Google_Exception('Google API PHP client needs the openssl PHP extension');
+      throw new Google_Exception('Google API PHP client needs the openssl PHP extension');
     }
     $this->publicKey = openssl_x509_read($pem);
     if (!$this->publicKey) {
-      throw new App_Google_Auth_Exception("Unable to parse PEM: $pem");
+      throw new Google_Auth_Exception("Unable to parse PEM: $pem");
     }
   }
 
@@ -68,7 +68,7 @@ class App_Google_Verifier_Pem extends App_Google_Verifier_Abstract
     $hash = defined("OPENSSL_ALGO_SHA256") ? OPENSSL_ALGO_SHA256 : "sha256";
     $status = openssl_verify($data, $signature, $this->publicKey, $hash);
     if ($status === -1) {
-      throw new App_Google_Auth_Exception('Signature verification error: ' . openssl_error_string());
+      throw new Google_Auth_Exception('Signature verification error: ' . openssl_error_string());
     }
     return $status === 1;
   }

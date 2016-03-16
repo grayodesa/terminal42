@@ -54,6 +54,7 @@ jQuery(document).ready(function(){
 			}
 		}
 	});
+	
 });
 
 // EDIT Slider Functions
@@ -71,20 +72,22 @@ var UniteLayersRev = new function(){
 		g_stepTime = 0,
 		g_slideTime,
 
+
 		initText = "Caption Text",
 		layout = 'desktop', //can be also tablet and mobil
-		transSettings = [], //can be also tablet and mobil
+		transSettings = [],
 
 		t = this,
 		u = tpLayerTimelinesRev,
 		initArrFontTypes = [],
 		containerID = "#divLayers",
 		container,
-		arrLayers = {},
-		arrLayersDemo = {},
+		
+		update_layer_changes = true;
 		id_counter = 0,
 		initLayers = null,
 		initDemoLayers = null,
+		initStaticLayers = [], //only used in non static slides, to show static slides in the action tab
 		initDemoSettings = null,
 		layerresized = false,
 		layerGeneralParamsStatus = false,
@@ -105,10 +108,70 @@ var UniteLayersRev = new function(){
 		global_action_template = null,
 		global_layer_import_template = null,
 		updateRevTimer = 0,
-		import_slides = {};
+		updateRevChange = 0,
+		save_needed = false,
+		import_slides = {},
+		lastchangedinput = "",
+		timeline_timer = "";
+
+		t.arrLayers = {};
+		t.arrLayersClone = {};
+
+		t.arrLayersDemo = {};
+		t.arrLayersChanges = {undo:[], redo:[]};
+
+		t.attributegroups = [ 
+			{ id:"0",icon:"move", groupname:"Layer Position", keys:["left.desktop", "top.desktop", "align_hor.desktop", "align_vert.desktop", "left.notebook", "top.notebook", "align_hor.notebook", "align_vert.notebook", "left.tablet", "top.tablet", "align_hor.tablet", "align_vert.tablet", "left.mobile", "top.mobile", "align_hor.mobile", "align_vert.mobile"]},
+			{ id:"1",icon:"play", groupname:"Start Animation", keys:["splitdelay","animation","split","split_in_extratime","easing","speed","time","x_rotate_start","x_rotate_start_reverse","x_start","x_start_reverse","y_rotate_start","y_rotate_start_reverse","y_start","y_start_reverse","z_rotate_start","z_rotate_start_reverse","z_start"]},
+			{ id:"2",icon:"play", groupname:"End Animation", keys:["endsplitdelay","endanimation","endWithSlide","endeasing","endsplit","endsplitdelay","endtime","endspeed","x_end","x_end_reverse","x_origin_end","x_rotate_end","x_rotate_end_reverse","y_end","y_end_reverse","y_rotate_end","y_rotate_end_reverse","z_end","z_rotate_end","z_rotate_end_reverse"]},
+			{ id:"3",icon:"play", groupname:"Loop Animation", keys:["loop_angle","loop_animation","loop_easing","loop_enddeg","loop_radius","loop_speed","loop_startdeg","loop_xend","loop_xorigin","loop_xstart","loop_yend","loop_yorigin","loop_ystart","loop_zoomend","loop_zoomstart"]},
+			{ id:"4",icon:"play", groupname:"Mask Animation", keys:["mask_ease_end","mask_ease_start","mask_end","mask_speed_end","mask_speed_start","mask_start","mask_x_end","mask_x_end_reverse","mask_x_start","mask_x_start_reverse","mask_y_end","mask_y_end_reverse","mask_y_start","mask_y_start_reverse"]},
+			{ id:"5",icon:"font", groupname:"Formatting", keys:["autolinebreak","whitespace.desktop","whitespace.notebook","whitespace.tablet","whitespace.mobile","html_tag","layer-selectable"]},
+			{ id:"6",icon:"cog", groupname:"Behavior", keys:["basealign","lazy-load","resizeme","resize-full","responsive_offset"]},
+			{ id:"7",icon:"eye", groupname:"Visibilty", keys:["hiddenunder","visible-desktop","visible-notebook","visible-tablet","visible-mobile","show-on-hover"]},
+			{ id:"8",icon:"resize-full", groupname:"Sizing", keys:["scaleProportional","video_data.fullwidth", "video_data.cover", "originalWidth","originalHeight","cover_mode","height","width","image-size","video_height.desktop","video_height.notebook","video_height.tablet","video_height.mobile","video_width.desktop","video_width.notebook","video_width.tablet","video_width.mobile","max_height.desktop","max_height.notebook","max_height.tablet","max_height.mobile","max_width.desktop","max_width.notebook","max_width.tablet","max_width.mobile","scaleX.desktop","scaleX.notebook","scaleX.tablet","scaleX.mobile","scaleY.desktop","scaleY.notebook","scaleY.tablet","scaleY.mobile"]},			
+			{ id:"9",icon:"font", groupname:"Naming and Alias", keys:["text","alias"]},
+			{ id:"30",icon:"resize-vertical", groupname:"Order", keys:["order"]},
+
+			{ id:"10",icon:"cancel", groupname:"Deleted", keys:["deleted"]},
+			{ id:"11",icon:"plus", groupname:"Created", keys:["layer_unavailable"]},
+			{ id:"12",icon:"link", groupname:"Source", keys:["svg.src","image_url"]},						
+			{ id:"13",icon:"star", groupname:"SVG Style", keys:["svg.svgstroke-color","svg.svgstroke-dasharray","svg.svgstroke-dashoffset","svg.svgstroke-width","svg.svgstroke-hover-color","svg.svgstroke-hover-dasharray","svg.svgstroke-hover-dashoffset","svg.svgstroke-hover-transparency","svg.svgstroke-hover-width"]},
+			{ id:"14",icon:"palette", groupname:"Main Styling", keys:["static_styles.color.desktop","static_styles.color.notebook","static_styles.color.tablet","static_styles.color.mobile","static_styles.font-size.desktop","static_styles.font-size.notebook","static_styles.font-size.tablet","static_styles.font-size.mobile","static_styles.font-weight.desktop","static_styles.font-weight.notebook","static_styles.font-weight.tablet","static_styles.font-weight.mobile","static_styles.line-height.desktop","static_styles.line-height.notebook","static_styles.line-height.tablet","static_styles.line-height.mobile"]},
+
+			{ id:"15",icon:"thumbs-up", groupname:"Layer Action", keys:["layer_action","layer_action.action","layer_action.action_delay","layer_action.actioncallback","layer_action.image_link","layer_action.jump_to_slide","layer_action.jump_to_slide","layer_action.link_open_in","layer_action.link_type","layer_action.scrollunder_offset","layer_action.toggle_class","layer_action.toggle_layer_type","layer_action.tooltip_event"]},
+
+			
+			{ id:"16",icon:"droplet", groupname:"Styling Text", keys:["deformation.color-transparency","deformation.font-family","deformation.font-style","deformation.opacity","deformation.text-align","deformation.text-decoration"]},
+			{ id:"17",icon:"droplet", groupname:"Styling Padding", keys:["deformation.padding","deformation.padding.0","deformation.padding.1","deformation.padding.2","deformation.padding.3"]},
+			{ id:"18",icon:"droplet", groupname:"Styling Corners", keys:["deformation.corner_left","deformation.corner_right"]},
+			{ id:"19",icon:"droplet", groupname:"Styling Background", keys:["deformation.background-color","deformation.background-transparency"]},
+			{ id:"20",icon:"droplet", groupname:"Styling Border", keys:["deformation.border-color","deformation.border-radius.0","deformation.border-radius.1","deformation.border-radius.2","deformation.border-radius.3","deformation.border-style","deformation.border-transparency","deformation.border-width"]},
+			{ id:"21",icon:"droplet", groupname:"Styling Transforms", keys:["deformation.2d_origin_x","deformation.2d_origin_y","deformation.parallax","deformation.pers","deformation.scalex","deformation.scaley","deformation.skewx","deformation.skewy","deformation.text-transform","deformation.x","deformation.xrotate","deformation.y","deformation.yrotate","deformation.z"]},
+			
+			{ id:"22",icon:"droplet", groupname:"Styling Hover", keys:["hover","deformation-hover.css_cursor","deformation-hover.easing"]},
+			{ id:"23",icon:"droplet", groupname:"Styling Hover Text", keys:["deformation-hover.color","deformation-hover.color-transparency","deformation-hover.font-family","deformation-hover.font-style","deformation-hover.opacity","deformation-hover.text-align","deformation-hover.text-decoration"]},
+			{ id:"24",icon:"droplet", groupname:"Styling Hover Padding", keys:["deformation-hover.padding","deformation-hover.padding.0","deformation-hover.padding.1","deformation-hover.padding.2","deformation-hover.padding.3"]},
+			{ id:"25",icon:"droplet", groupname:"Styling Hover Corners", keys:["deformation-hover.corner_left","deformation-hover.corner_right"]},
+			{ id:"26",icon:"droplet", groupname:"Styling Hover Background", keys:["deformation-hover.background-color","deformation-hover.background-transparency"]},
+			{ id:"27",icon:"droplet", groupname:"Styling Hover Border", keys:["deformation-hover.border-color","deformation-hover.border-radius.0","deformation-hover.border-radius.1","deformation-hover.border-radius.2","deformation-hover.border-radius.3","deformation-hover.border-style","deformation-hover.border-transparency","deformation-hover.border-width"]},
+			{ id:"28",icon:"droplet", groupname:"Styling Hover Transforms", keys:["deformation-hover.2d_origin_x","deformation-hover.2d_origin_y","deformation-hover.parallax","deformation-hover.pers","deformation-hover.scalex","deformation-hover.scaley","deformation-hover.skewx","deformation-hover.skewy","deformation-hover.text-transform","deformation-hover.x","deformation-hover.xrotate","deformation-hover.y","deformation-hover.yrotate","deformation-hover.z"]},
+			{ id:"29",icon:"video", groupname:"Video/Audo Settings", keys:["video_data.urlAudio","video_data.previewimage","video_data.link","video_data.thumb_medium.url", "video_type","video_data.id","video_data.video_type","video_data.title","video_data.author","video_data.description", "video_data.args","video_data.autoplay","video_data.nextslide","video_data.forcerewind","video_data.controls","video_data.mute","video_data.stopallvideo","video_data.allowfullscreen","video_data.videoloop","video_data.show_cover_pause","video_data.start_at","video_data.end_at","video_data.volume","video_data.desc_small","video_data.thumb_small.url","video_data.thumb_small.width","video_data.thumb_small.height","video_data.thumb_medium.width","video_data.thumb_medium.height","video_data.video_height"]}
+			
+			];
+	
+
+
+	t.addon_callbacks = [];	 // Array of Callbacks.  { callback: function,  parameters: [ internalpar, par1, par2, par3]}
+
+	
+
 		
-
-
+	t.set_save_needed = function(setto){	
+		
+		save_needed = setto;
+	}
+	
 	t.ulff_core = 0;
 		
 	t.setGlobalAction = function (glfunc){
@@ -118,7 +181,7 @@ var UniteLayersRev = new function(){
 		global_layer_import_template = glfunc;
 	}
 	
-	t.arrLayers = arrLayers;
+	
 
 
 	t.setInitSlideIds = function(jsonIds){ slideIDs = jQuery.parseJSON(jsonIds); }
@@ -126,9 +189,12 @@ var UniteLayersRev = new function(){
 	// set init layers object (from db)
 	t.setInitLayersJson = function(jsonLayers){ initLayers = jQuery.parseJSON(jsonLayers); }
 
+	// set init static layers object in non static slides, for the usage of actions (from db)
+	t.setInitStaticLayersJson = function(jsonLayers){ initStaticLayers = jQuery.parseJSON(jsonLayers); }
+	
 	// set init demo layers object (from db)
 	t.setInitDemoLayersJson = function(jsonLayers){ initDemoLayers = jQuery.parseJSON(jsonLayers); }
-
+	
 	// set init demo settings object (from db)
 	t.setInitDemoSettingsJson = function(jsonLayers){ initDemoSettings = jQuery.parseJSON(jsonLayers); }
 
@@ -160,6 +226,7 @@ var UniteLayersRev = new function(){
 	t.setMaintime = function(a) { g_slideTime = a; }
 	
 	
+
 	t.sortFontTypesByUsage = function(){
 		for(var skey in sgfamilies){
 			for(var key in initArrFontTypes){
@@ -193,17 +260,20 @@ var UniteLayersRev = new function(){
 	/**
 	 * SET option to object depending on which size is choosen
 	 */
-	t.setVal = function(obj, handle, val, setall, setspecific){
+	t.setVal = function(obj, handle, val, setall, setspecific,set_all_force){		
 		if(jQuery.inArray(handle, transSettings) !== -1){ //handle is in the list, so save only on the current choosen size
-	
+			
 			if(setall){
-				if(typeof(obj[handle]) !== 'object') obj[handle] = {};
-				obj[handle][layout] = val;
-				//obj[handle]['desktop'] = val;
-				//obj[handle]['notebook'] = val;
-				//obj[handle]['tablet'] = val;
-				//obj[handle]['mobile'] = val;
-			}else if(setspecific !== undefined){
+				if(typeof(obj[handle]) !== 'object') obj[handle] = {};							
+				if (set_all_force==undefined || set_all_force==false) {
+					obj[handle][layout] = val;
+				} else {
+					obj[handle]['desktop'] = val;
+					obj[handle]['notebook'] = val;
+					obj[handle]['tablet'] = val;
+					obj[handle]['mobile'] = val;
+				}
+			}else if(setspecific !== undefined && setspecific!==null){
 				for(var i in setspecific){
 					if(typeof(obj[handle]) !== 'undefined' && typeof(obj[handle][setspecific[i]]) !== 'undefined'){
 						obj[handle][setspecific[i]] = val;
@@ -213,6 +283,7 @@ var UniteLayersRev = new function(){
 					}
 				}
 			}else{
+
 				if(typeof(obj[handle]) !== 'undefined' && typeof(obj[handle][layout]) !== 'undefined'){
 					obj[handle][layout] = val;
 				}else{
@@ -391,7 +462,7 @@ var UniteLayersRev = new function(){
 				vcl.find('.helplines').draggable({ handle:".helpline-drag", axis:"y" });
 		}
 
-		for(var key in arrLayers){
+		for(var key in t.arrLayers){
 			var layer = t.getHtmlLayerFromSerial(key);			
 			layer.draggable({
 					drag: t.onLayerDrag,						
@@ -424,16 +495,23 @@ var UniteLayersRev = new function(){
 			var objUpdate = {};
 			objUpdate.unique_id = unique_layer_id;
 			
+			update_layer_changes = false;
 			t.updateLayer(key, objUpdate);
+			update_layer_changes = true;
 		}
 		
 	}
 
-	t.timeLineTableDimensionUpdate = function() {
-
-		jQuery('#mastertimer-wrapper').height((jQuery('#layers-right ul li').length+1)*32);
-		jQuery('.layers-wrapper').height(jQuery('#mastertimer-wrapper').height()-40);			
-		jQuery('.master-rightcell .layers-wrapper, .master-leftcell .layers-wrapper, #divLayers-wrapper, .quick-layers-list').perfectScrollbar("update");
+	t.timeLineTableDimensionUpdate = function() {		
+		clearTimeout(timeline_timer);
+		timeline_timer = setTimeout(function() {		
+			u.resetTimeLineHeight();	
+			var maxh = ((jQuery('#layers-right ul li').length+1)*32) - ((jQuery('#layers-right ul li.layer-deleted').length+1)*32),	
+				curh = jQuery('#mastertimer-wrapper').height();
+			punchgs.TweenLite.set(jQuery('.layers-wrapper'),{height:maxh-5});
+			punchgs.TweenLite.set(jQuery('#mastertimer-wrapper'),{height:maxh-5})
+			jQuery('.master-rightcell .layers-wrapper, .master-leftcell .layers-wrapper, #divLayers-wrapper, .quick-layers-list').perfectScrollbar("update");
+		},50);
 	}
 
 	//======================================================
@@ -520,7 +598,6 @@ var UniteLayersRev = new function(){
 		
 		initBackgroundFunctions();
 		
-
 		
 		// STICKY CATEGORIES FOR SCROLL SELECTORS
 		jQuery('#tp-thelistofclasses ul, #tp-thelistoffonts ul').bind('scroll',function() {
@@ -563,6 +640,14 @@ var UniteLayersRev = new function(){
 				jQuery('#alt_attr').show();
 			}else{
 				jQuery('#alt_attr').hide();
+			}
+		});
+		
+		jQuery('#title_option').change(function(){
+			if(jQuery('#title_option option:selected').val() == 'custom'){
+				jQuery('#title_attr').show();
+			}else{
+				jQuery('#title_attr').hide();
 			}
 		});
 
@@ -706,11 +791,11 @@ var UniteLayersRev = new function(){
 			
 			jQuery(this).addClass('selected');
 
-			/*for(var serial in arrLayers){
+			/*for(var serial in t.arrLayers){
 				updateHtmlLayersFromObject(serial,true);
 			}
 
-			for(var serial in arrLayersDemo){
+			for(var serial in t.arrLayersDemo){
 				updateHtmlLayersFromObject(serial,true, true);
 			}
 
@@ -859,15 +944,49 @@ var UniteLayersRev = new function(){
 							t.updateCurrentLayer(objData);
 							
 							redrawLayerHtml(selectedLayerSerial);
-							
+							t.add_layer_change();
 							scaleNormal();
 						});	
 					break;
 					case 'shape':
 					break;
-					case 'typeA':
+					case 'svg':
+						//jQuery('#svg-items-filter').change();
+						jQuery('#dialog_addsvg').data('changesvg',true);						
+						jQuery('#dialog_addsvg').data('changesvgserial',layer.serial);
+						jQuery('#dialog_addsvg').dialog({				
+							minWidth: 651,
+							minHeight: 540,
+							modal: true,
+							dialogClass: 'tpdialogs',
+							create:function(ui) {											
+								jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+							},
+							open:function() {
+								 jQuery('#object_library_results').perfectScrollbar("update");
+								 if (jQuery('.obj_library_cats.selected').length==0)
+									jQuery('.obj_library_cats').first().click();
+							}
+						});
 					break;
-					case 'typeB':
+					case 'audio':
+						//do audio stuff here
+						var objVideoData = layer.video_data;
+						
+						//open video dialog
+						UniteAdminRev.openVideoDialog(function(videoData){
+							//update video layer
+							var objLayer = getVideoObjLayer(videoData);
+							
+							t.updateCurrentLayer(objLayer);
+							updateHtmlLayersFromObject(selectedLayerSerial);
+							updateLayerFormFields(selectedLayerSerial);
+							redrawLayerHtml(selectedLayerSerial);							
+							var mcurrent_layer = t.getCurrentLayer();
+							if(mcurrent_layer !== false)
+								u.drawAudioMap(mcurrent_layer);
+							
+						}, objVideoData, 'audio');
 					break;
 					//case 'no_edit':
 						//do nothing!!
@@ -881,9 +1000,16 @@ var UniteLayersRev = new function(){
 		}
 
 		jQuery('body').on('dblclick','.layer_selected',edit_content_current_layer);
+
+		setTimeout(function() {
+			jQuery('#form_slide_params').find('input, select').on('change',function() {
+				
+				t.set_save_needed(true);
+			});
+		},500);
 		
 		// EDIT LAYER CONTENT FROM QUICK LIST		
-		jQuery('body').on('click','.button_change_image_source, .button_edit_layer, .button_change_video_settings, .button_reset_size, .button_edit_shape',function() {
+		jQuery('body').on('click','.button_change_image_source, .button_edit_layer, .button_change_video_settings, .button_reset_size, .button_edit_shape, .button_change_audio_settings, .button_change_svg_settings',function() {
 			jQuery(':focus').blur(); // Blur Focused Elements first
 			var b = jQuery(this),
 				serial = b.closest('.layer-toolbar-li').data('serial');
@@ -922,8 +1048,8 @@ var UniteLayersRev = new function(){
 				//delete selected layer
 				deleteCurrentLayer();
 				unselectLayers();
-			
 
+				
 			}
 		});
 
@@ -941,7 +1067,7 @@ var UniteLayersRev = new function(){
 			duplicateCurrentLayer();			
 			return false;
 		});
-				
+		
 		t.showHideContentEditor(false);
 	
 		t.changeSlotBGs();
@@ -950,6 +1076,7 @@ var UniteLayersRev = new function(){
 		});
 
 		jQuery('#layer_animation, #layer_endanimation').change(function(){
+			
 			//set values from elements if existing
 			var set_anim = (jQuery(this).attr('id') == 'layer_animation') ? 'in' : 'out';
 			var anim_handle = jQuery(this).val();
@@ -996,8 +1123,6 @@ var UniteLayersRev = new function(){
 				}
 			}
 			
-			
-			
 			t.updateLayerFromFields();
 		});
 
@@ -1042,6 +1167,9 @@ var UniteLayersRev = new function(){
 					width: 300,
 					height: 200,
 					resizable: false,
+					create:function(ui) {				
+						jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+					},
 					buttons:{
 						'Save':function(){
 							var new_name = jQuery('#rs-save-under-animation').val();
@@ -1089,6 +1217,8 @@ var UniteLayersRev = new function(){
 				
 				if(confirm(rev_lang.overwrite_animation)){
 					updateAnimInDb(handle, anim, true);
+					//check every layer if animation is set, if yes, then update values
+					
 				}
 			}
 			
@@ -1119,6 +1249,9 @@ var UniteLayersRev = new function(){
 				width: 300,
 				height: 200,
 				resizable: false,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Save':function(){
 						var new_name = jQuery('#rs-save-as-animation').val();
@@ -1187,6 +1320,9 @@ var UniteLayersRev = new function(){
 				width: 300,
 				height: 200,
 				resizable: false,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Rename':function(){
 						var new_name = jQuery('#rs-rename-animation').val();
@@ -1328,6 +1464,9 @@ var UniteLayersRev = new function(){
 				resizable:false,
 				width:400,
 				closeOnEscape:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Rename':function(){
 						jQuery('#rs-rename-css').val(UniteAdminRev.sanitize_input(jQuery('#rs-rename-css').val()));
@@ -1363,6 +1502,9 @@ var UniteLayersRev = new function(){
 				resizable:false,
 				width:400,
 				closeOnEscape:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Save':function(){
 						jQuery('#rs-save-as-css').val(UniteAdminRev.sanitize_input(jQuery('#rs-save-as-css').val()));
@@ -1471,6 +1613,9 @@ var UniteLayersRev = new function(){
 					minHeight: 365,
 					modal: true,
 					dialogClass: 'tpdialogs',
+					create:function(ui) {				
+						jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+					},
 					close: function( event, ui ){
 					},
 					open:function() {
@@ -1692,6 +1837,8 @@ var UniteLayersRev = new function(){
 		
 		
 		t.sortFontTypesByUsage();
+
+		t.cloneArrLayers();
 	
 	}
 	
@@ -1973,14 +2120,22 @@ var UniteLayersRev = new function(){
 		if(jQuery('input[name="background_type"]:checked').val() == 'image'){
 			jQuery('.rs-img-source-size').show();
 			jQuery('#alt_option').show();
+			jQuery('#title_option').show();
 			if(jQuery('#alt_option option:selected').val() == 'custom'){
 				jQuery('#alt_attr').show();
 			}else{
 				jQuery('#alt_attr').hide();
 			}
+			if(jQuery('#title_option option:selected').val() == 'custom'){
+				jQuery('#title_attr').show();
+			}else{
+				jQuery('#title_attr').hide();
+			}
 		}else{
 			jQuery('#alt_option').hide();
+			jQuery('#title_option').hide();
 			jQuery('#alt_attr').show();
+			jQuery('#title_attr').hide();
 			jQuery('.rs-img-source-size').hide();
 		}
 		
@@ -2111,7 +2266,7 @@ var UniteLayersRev = new function(){
 			case "mute_video":
 			case "unmute_video":
 			case "toggle_video":
-			case "toggle_mute_video":
+			case "toggle_mute_video":			
 				li.find('.action-target-layer').show();
 			break;
 			case "toggle_layer":
@@ -2142,12 +2297,17 @@ var UniteLayersRev = new function(){
 			case "toggle_video":
 			case "mute_video":
 			case "unmute_video":
+			case "toggle_global_mute_video":
 			case "toggle_mute_video":
 			case "start_video":
 			case "stop_video":
 				li.find('.action-target-layer').find('select[name="layer_target[]"] option').each(function(){
-					if(jQuery(this).data('mytype') !== 'video' && jQuery(this).data('mytype') !== 'video-special'){
-						jQuery(this).hide();
+					if(jQuery(this).data('mytype') !== 'video' && jQuery(this).data('mytype') !== 'video-special' && jQuery(this).data('mytype') !== 'audio'){
+						if(jQuery(this).data('mytype') === 'all'){
+							jQuery(this).show(); //show if all
+						}else{
+							jQuery(this).hide();
+						}
 					}else{
 						jQuery(this).show();
 					}
@@ -2158,7 +2318,11 @@ var UniteLayersRev = new function(){
 					if(jQuery(this).data('mytype') !== 'video-special'){
 						jQuery(this).show();
 					}else{
-						jQuery(this).hide();
+						if(jQuery(this).data('mytype') === 'all'){
+							jQuery(this).show(); //show if all
+						}else{
+							jQuery(this).hide();
+						}
 					}
 				});
 			break;
@@ -2247,7 +2411,7 @@ var UniteLayersRev = new function(){
 							sgfamilies.push(font);
 						}
 						
-						if (gfamilies.length>0)
+						if (gfamilies!==null && gfamilies.length>0)
 						tpWebFont.load({
 							google:{
 								families:gfamilies
@@ -2440,6 +2604,7 @@ var UniteLayersRev = new function(){
 				updateLayerTextField("",jQuery('.sortlist li.ui-state-hover .tl-fullanim'),v);						
 				t.toolbarInPos();
 				t.updateLayerFromFields();
+				u.updateCurrentLayerTimeline();
 			},150);
 		});
 
@@ -2485,8 +2650,12 @@ var UniteLayersRev = new function(){
 			jQuery('#mastertimer-maxcurtime').html(u.convToTime(w));
 			jQuery('.slide-idle-section').css({left:w+15});
 			jQuery('.mastertimer-slide .tl-fullanim').css({width:(w)+"px"});
+			u.mainMaxTimeLeft = w+15;
+			u.masterTimerPositionChange(true);
+			u.compareLayerEndsVSSlideEnd();
 		});
 		
+
 		jQuery('.form_layers input').on("click",function() {
 			jQuery(this).select();
 		})
@@ -2503,7 +2672,8 @@ var UniteLayersRev = new function(){
 				usuffix = inp.data('suffix'),
 				asuffix = inp.data('suffixalt');
 			
-			
+			lastchangedinput = inp.attr('id');
+
 			if (usuffix!=undefined) {				
 				if (jQuery.isNumeric(cv) && cv > -9999999 && cv<9999999 ) {
 					if (min!=undefined && cv<min) cv = min;
@@ -2524,6 +2694,11 @@ var UniteLayersRev = new function(){
 					}
 				}
 			}						
+		});
+
+		jQuery('.form_layers select').on("change blur focus",function() {	
+			
+			lastchangedinput = jQuery(this).attr('id');
 		});
 
 		jQuery('#clayer_start_time, #clayer_end_time, #clayer_start_speed, #clayer_end_speed').on("change blur", function() {
@@ -2642,13 +2817,21 @@ var UniteLayersRev = new function(){
 
 		//add youtube actions:
 		jQuery('#button_add_layer_video').click(function(){
+			var gallery_type = jQuery('input[name="rs-gallery-type"]').val();
+			t.prepare_video_layer_add(gallery_type);
+		});
+		
+		
+		jQuery('#button_add_layer_audio').click(function(){
+			t.prepare_video_layer_add('audio');
+		});
+		
+		t.prepare_video_layer_add = function(gallery_type){
 			
 			jQuery('#video_dialog_form').trigger("reset");
 			jQuery('#reset_video_dialog_tab').click();
 			
 			//check if we are youtubestream or vimeostream. If yes, change what can be seen and edited
-			var gallery_type = jQuery('input[name="rs-gallery-type"]').val();
-			
 			switch(gallery_type){
 				case 'youtube':
 					jQuery('.rs-show-when-youtube-stream').show();
@@ -2662,16 +2845,17 @@ var UniteLayersRev = new function(){
 					jQuery('.rs-show-when-instagram-stream').show();
 					jQuery('.rs-hide-when-instagram-stream').show();
 				break;
+				case 'audio': //open as audio!
+					
+				break;
 			}
 			
 			
 			var par = jQuery(this).data('isstatic') == true ? 'static' : null;
 			UniteAdminRev.openVideoDialog(function(videoData){ 
-				addLayerVideo(videoData, par); 
-			});
-			
-		});
-		
+				addLayerVideo(videoData, par); //audio will be handled inside
+			}, false, gallery_type);
+		}
 		
 		jQuery('#button_add_layer_button').click(function(){
 			setExampleButtons();
@@ -2680,69 +2864,141 @@ var UniteLayersRev = new function(){
 				minWidth: 830,
 				minHeight: 500,
 				modal: true,
-				dialogClass: 'tpdialogs'
+				dialogClass: 'tpdialogs',
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 			});
 		});
+		
+		
+		jQuery('#button_add_layer_svg').click(function(){
+			setExampleButtons();
+			//jQuery('#svg-items-filter').change();
+
+			jQuery('#dialog_addsvg').dialog({				
+				minWidth: 651,
+				minHeight: 540,
+				modal: true,
+				dialogClass: 'tpdialogs',
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
+				open:function() {
+					 jQuery('#object_library_results-inner').perfectScrollbar("update");
+					 if (jQuery('.obj_library_cats.selected').length==0)
+						jQuery('.obj_library_cats').first().click();
+				}
+			});
+		});
+
+		jQuery('body').on('click','.svgadd-single-item',function() {			
+			if (jQuery('#dialog_addsvg').data('changesvg')!==true) {
+				var data = {},
+					w = jQuery(this).find('svg').attr('width'),
+					h = jQuery(this).find('svg').attr('height');
+
+				data['static_styles'] = {};
+				data['static_styles'] = t.setVal(data['static_styles'], 'color', "#000000", true);
+				data['deformation'] = {};
+				data['deformation-hover'] = {};
+				data.text = ' ';
+				data.alias = 'SVG';
+				data.type = 'svg';			
+				data.style = '';
+				data.svg = {};
+				data.svg.src = jQuery(this).data('src');
+				data = t.setVal(data, 'max_width', w, true);
+				data = t.setVal(data, 'max_height', h, true);				
+				data.createdOnInit = false;		
+				addLayer(data);						
+			} else {
+				var src = jQuery(this).data('src'),
+					w = jQuery(this).find('svg').attr('width'),
+					h = jQuery(this).find('svg').attr('height');
+
+				serial = jQuery('#dialog_addsvg').data('changesvgserial')				
+				jQuery.get(src, function(data) {
+					jQuery("#slide_layer_"+serial+" .innerslide_layer.tp-caption").html("");
+					jQuery("#slide_layer_"+serial+" .innerslide_layer.tp-caption")[0].innerHTML = new XMLSerializer().serializeToString(data.documentElement);
+					u.rebuildLayerIdle(jQuery("#slide_layer_"+serial));
+					var objLayer = t.getLayer(serial);
+					objLayer.svg.src = src;				  
+					objLayer = t.setVal(objLayer, 'max_width', w, true);
+					objLayer = t.setVal(objLayer, 'max_height', h, true);				
+				});
+				t.add_layer_change();
+				jQuery('#dialog_addsvg').data('changesvg',false);
+			}
+			jQuery('#dialog_addsvg').dialog('close');
+		});
+		
 		
 		
 		jQuery('#button_add_layer_shape').click(function(){
 			setExampleShape();
 			jQuery('#dialog_addshape').dialog({
-				buttons:{'Add':function(){
-					//get values for shape
-					var data = {};
-					data['static_styles'] = {};
-					data['deformation'] = {};
-					data['deformation-hover'] = {};
-					data.text = ' ';
-					data.alias = 'Shape';
-					data.type = 'shape';
-					//data.style = 'tp-shape tp-shapewrapper';
-					data.style = '';
-					
-					data.internal_class = 'tp-shape tp-shapewrapper';
-					
-					data.autolinebreak = false;
-					
-					data['deformation']['background-color'] = jQuery('input[name="adshape-color-1"]').val();
-					data['deformation']['background-transparency'] = jQuery('input[name="adshape-opacity-1"]').val();
-					data['deformation']['border-color'] = jQuery('input[name="adshape-border-color"]').val();
-					data['deformation']['border-opacity'] = jQuery('input[name="adshape-border-opacity"]').val();
-					data['deformation']['border-transparency'] = jQuery('input[name="adshape-border-opacity"]').val();
-					data['deformation']['border-width'] = jQuery('input[name="adshape-border-width"]').val();
-					data['deformation']['border-style'] = 'solid';
-					data['deformation']['border-radius'] = [jQuery('.example-shape').css('borderTopLeftRadius'),jQuery('.example-shape').css('borderTopRightRadius'),jQuery('.example-shape').css('borderBottomRightRadius'),jQuery('.example-shape').css('borderBottomLeftRadius')];
-					
-					if(jQuery('input[name="shape_fullwidth"]')[0].checked){
-						data['max_width'] = '100%';
-						data['cover_mode'] = 'fullwidth';
-					}else{
-						data['max_width'] = jQuery('input[name="shape_width"]').val();
-					}
-					
-					if(jQuery('input[name="shape_fullheight"]')[0].checked){
-						data['max_height'] = '100%';
-						data['cover_mode'] = 'fullheight';
-					}else{
-						data['max_height'] = jQuery('input[name="shape_height"]').val();
-					}
-					
-					if(jQuery('input[name="shape_fullheight"]')[0].checked && jQuery('input[name="shape_fullwidth"]')[0].checked){
-						data['cover_mode'] = 'cover';
-					}
-					
-					//if(jQuery('input[name="shape_fullwidth"]')[0].checked && jQuery('input[name="shape_fullheight"]')[0].checked){
-					//	data['deformation']['padding'] = [jQuery('.example-shape').css('paddingTop'), jQuery('.example-shape').css('paddingRight'), jQuery('.example-shape').css('paddingBottom'), jQuery('.example-shape').css('paddingLeft')];
-					//}
-					
-					addLayer(data);
-					
-					jQuery('#dialog_addshape').dialog('close');
-			
-				},'Close':function(){jQuery('#dialog_addshape').dialog('close');}},
+				buttons:{
+					'Add':function(){
+						//get values for shape
+						var data = {};
+						data['static_styles'] = {};
+						data['deformation'] = {};
+						data['deformation-hover'] = {};
+						data.text = ' ';
+						data.alias = 'Shape';
+						data.type = 'shape';
+						//data.style = 'tp-shape tp-shapewrapper';
+						data.style = '';
+						
+						data.internal_class = 'tp-shape tp-shapewrapper';
+						
+						data.autolinebreak = false;
+						
+						data['deformation']['background-color'] = jQuery('input[name="adshape-color-1"]').val();
+						data['deformation']['background-transparency'] = jQuery('input[name="adshape-opacity-1"]').val();
+						data['deformation']['border-color'] = jQuery('input[name="adshape-border-color"]').val();
+						data['deformation']['border-opacity'] = jQuery('input[name="adshape-border-opacity"]').val();
+						data['deformation']['border-transparency'] = jQuery('input[name="adshape-border-opacity"]').val();
+						data['deformation']['border-width'] = jQuery('input[name="adshape-border-width"]').val();
+						data['deformation']['border-style'] = 'solid';
+						data['deformation']['border-radius'] = [jQuery('.example-shape').css('borderTopLeftRadius'),jQuery('.example-shape').css('borderTopRightRadius'),jQuery('.example-shape').css('borderBottomRightRadius'),jQuery('.example-shape').css('borderBottomLeftRadius')];
+						
+						if(jQuery('input[name="shape_fullwidth"]')[0].checked){
+							data['max_width'] = '100%';
+							data['cover_mode'] = 'fullwidth';
+						}else{
+							data['max_width'] = jQuery('input[name="shape_width"]').val();
+						}
+						
+						if(jQuery('input[name="shape_fullheight"]')[0].checked){
+							data['max_height'] = '100%';
+							data['cover_mode'] = 'fullheight';
+						}else{
+							data['max_height'] = jQuery('input[name="shape_height"]').val();
+						}
+						
+						if(jQuery('input[name="shape_fullheight"]')[0].checked && jQuery('input[name="shape_fullwidth"]')[0].checked){
+							data['cover_mode'] = 'cover';
+						}
+						
+						//if(jQuery('input[name="shape_fullwidth"]')[0].checked && jQuery('input[name="shape_fullheight"]')[0].checked){
+						//	data['deformation']['padding'] = [jQuery('.example-shape').css('paddingTop'), jQuery('.example-shape').css('paddingRight'), jQuery('.example-shape').css('paddingBottom'), jQuery('.example-shape').css('paddingLeft')];
+						//}
+						
+						data.createdOnInit = false;
+						addLayer(data);
+						
+						jQuery('#dialog_addshape').dialog('close');
+						
+					},'Close':function(){jQuery('#dialog_addshape').dialog('close');}
+				},
 				minWidth: 830,
 				minHeight: 500,
 				modal: true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				dialogClass: 'tpdialogs'
 			});
 		});
@@ -2755,7 +3011,10 @@ var UniteLayersRev = new function(){
 				minWidth: 830,
 				minHeight: 500,
 				modal: true,
-				dialogClass: 'tpdialogs'
+				dialogClass: 'tpdialogs',
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 			});
 		});
 		
@@ -2820,12 +3079,13 @@ var UniteLayersRev = new function(){
 				var layers_to_add = t.get_layers_to_add_through_actions(import_slides[slider_id][slide_id]['layers'], unique_layer);
 				
 				//get the data, then use it to add a new layer
-				if(layers_to_add.length > 0){
+				if(layers_to_add!==null && layers_to_add.length > 0){
 					if(layers_to_add.length > 1 && confirm(rev_lang.import_all_layer_from_actions)){
 						var dependencies = [];
 						dependencies = t.get_action_dependencies(li, slide_id, dependencies);
 						
 						for(var lta in layers_to_add){
+							layers_to_add[lta].createdOnInit = false;
 							addLayer(layers_to_add[lta], true);
 							
 							li.addClass("layerimported");
@@ -2844,6 +3104,7 @@ var UniteLayersRev = new function(){
 						for(var lta in layers_to_add){
 							//remove actions of first layer that are connected to other layers
 							layers_to_add[lta] = t.remove_import_layer_actions(layers_to_add[lta]);
+							layers_to_add[lta].createdOnInit = false;
 							addLayer(layers_to_add[lta], true);
 							li.addClass("layerimported");
 							btn.find('i').addClass("eg-icon-ok").removeClass("eg-icon-plus");
@@ -2891,6 +3152,7 @@ var UniteLayersRev = new function(){
 						case 'toggle_video':
 						case 'mute_video':
 						case 'unmute_video':
+						case 'toggle_global_mute_video':
 						case 'toggle_mute_video':
 						case 'simulate_click':
 						case 'toggle_class':
@@ -2934,6 +3196,7 @@ var UniteLayersRev = new function(){
 								case 'mute_video':
 								case 'unmute_video':
 								case 'toggle_mute_video':
+								case 'toggle_global_mute_video':
 								case 'simulate_click':
 								case 'toggle_class':
 									//check layers
@@ -3057,6 +3320,7 @@ var UniteLayersRev = new function(){
 										case 'mute_video':
 										case 'unmute_video':
 										case 'toggle_mute_video':
+										case 'toggle_global_mute_video':
 										case 'simulate_click':
 										case 'toggle_class':
 											action_string.push(import_slides[im_slider_id][key]['layers'][lkey]['layer_action']['layer_target'][akey]);
@@ -3101,6 +3365,7 @@ var UniteLayersRev = new function(){
 						case 'mute_video':
 						case 'unmute_video':
 						case 'toggle_mute_video':
+						case 'toggle_global_mute_video':
 						case 'simulate_click':
 						case 'toggle_class':
 							if(typeof(layer['layer_action']['layer_target']) !== 'undefined' && typeof(layer['layer_action']['layer_target'][akey]) !== 'undefined' && layer['layer_action']['layer_target'][akey] !== 'backgroundvideo' && layer['layer_action']['layer_target'][akey] !== 'firstvideo' && jQuery.inArray(layer['layer_action']['layer_target'][akey], action_string) == -1){
@@ -3229,6 +3494,7 @@ var UniteLayersRev = new function(){
 			}
 			*/
 			
+			data.createdOnInit = false;
 			addLayer(data);
 			
 			jQuery('#dialog_addbutton').dialog('close');
@@ -3307,7 +3573,8 @@ var UniteLayersRev = new function(){
 			data['layer_action'].action_delay = [];
 			data['layer_action'].action_delay.push(0);
 			data['layer_action'].toggle_class = [];
-			data['layer_action'].toggle_class.push('open');			
+			data['layer_action'].toggle_class.push('open');		
+			data.createdOnInit = false;	
 			addLayer(data);			
 			jQuery('#dialog_addbutton').dialog('close');			
 		});
@@ -3328,7 +3595,7 @@ var UniteLayersRev = new function(){
 			data['deformation']['text-align'] = jQuery(this).css('text-align');
 			
 			
-			
+			data.createdOnInit = false;
 			addLayer(data);			
 			jQuery('#dialog_addbutton').dialog('close');			
 		});
@@ -3338,6 +3605,7 @@ var UniteLayersRev = new function(){
 			var data = addSpecialButton(jQuery(this));			
 			data.subtype = 'scrollbutton'; //no_edit
 			data.alias = 'Scroll Button';
+			data.createdOnInit = false;
 			addLayer(data);			
 			jQuery('#dialog_addbutton').dialog('close');
 		});
@@ -3358,7 +3626,10 @@ var UniteLayersRev = new function(){
 				buttons:buttons,
 				minWidth:700,
 				dialogClass:"tpdialogs",
-				modal:true
+				modal:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 			});
 
 		});
@@ -3373,13 +3644,32 @@ var UniteLayersRev = new function(){
 				buttons:buttons,
 				minWidth:700,
 				dialogClass:"tpdialogs",
-				modal:true
+				modal:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 			});
 
 		});
 
+		jQuery('#rs-undo-handler').click(function(){
+			t.undo_redo_layer('undo');
+		});
+		
+		jQuery('#rs-redo-handler').click(function(){
+			t.undo_redo_layer('redo');
+		});
 		
 		
+		jQuery('body').on('click', '.rs-undo-step', function(){
+			var step = jQuery(this).data('gotokey');
+			t.undo_redo_layer('undo', step);
+		});
+		
+		jQuery('body').on('click', '.rs-redo-step', function(){
+			var step = jQuery(this).data('gotokey');
+			t.undo_redo_layer('redo', step);
+		});
 	}
 
 	//======================================================
@@ -3497,8 +3787,7 @@ var UniteLayersRev = new function(){
 			if(obj_v['split'] !== undefined) { jQuery('select[name="layer_split"] option[value="'+obj_v['split']+'"]').attr('selected', 'selected'); }
 			if(obj_v['splitdelay'] !== undefined) { jQuery('input[name="layer_splitdelay"]').val(obj_v['splitdelay']); }
 			
-
-
+			
 			if(obj_v['movex_reverse'] !== undefined && (obj_v['movex_reverse'] == 'true' || obj_v['movex_reverse'] == true)) { jQuery('#layer_anim_xstart_reverse').attr('checked', true); }else{ jQuery('#layer_anim_xstart_reverse').attr('checked', false); }
 			if(obj_v['movey_reverse'] !== undefined && (obj_v['movey_reverse'] == 'true' || obj_v['movey_reverse'] == true)) { jQuery('#layer_anim_ystart_reverse').attr('checked', true); }else{ jQuery('#layer_anim_ystart_reverse').attr('checked', false); }
 			if(obj_v['rotationx_reverse'] !== undefined && (obj_v['rotationx_reverse'] == 'true' || obj_v['rotationx_reverse'] == true)) { jQuery('input[name="layer_anim_xrotate_start_reverse"]').attr('checked', true); }else{ jQuery('input[name="layer_anim_xrotate_start_reverse"]').attr('checked', false); }
@@ -3510,7 +3799,7 @@ var UniteLayersRev = new function(){
 			if(obj_v['skewy_reverse'] !== undefined && (obj_v['skewy_reverse'] == 'true' || obj_v['skewy_reverse'] == true)) { jQuery('#layer_skew_ystart_reverse').attr('checked', true); }else{ jQuery('#layer_skew_ystart_reverse').attr('checked', false); }
 			if(obj_v['mask_x_reverse'] !== undefined && (obj_v['mask_x_reverse'] == 'true' || obj_v['mask_x_reverse'] == true)) { jQuery('#mask_anim_xstart_reverse').attr('checked', true); }else{ jQuery('#mask_anim_xstart_reverse').attr('checked', false); }
 			if(obj_v['mask_y_reverse'] !== undefined && (obj_v['mask_y_reverse'] == 'true' || obj_v['mask_y_reverse'] == true)) { jQuery('#mask_anim_ystart_reverse').attr('checked', true); }else{ jQuery('#mask_anim_ystart_reverse').attr('checked', false); }
-					
+			
 		}else{
 			if(obj_v['movex'] !== undefined) { jQuery('#layer_anim_xend').val(obj_v['movex']); }else{ jQuery('#layer_anim_xend').val(0); }
 			if(obj_v['movey'] !== undefined) { jQuery('#layer_anim_yend').val(obj_v['movey']); }else{ jQuery('#layer_anim_yend').val(0); }
@@ -3695,8 +3984,85 @@ var UniteLayersRev = new function(){
 				t.updateInitLayerAnim(response.customfull);
 				updateLayerAnimsInput(response.customin, 'customin');
 				updateLayerAnimsInput(response.customout, 'customout');
-
+                
 				selectLayerAnim(handle);
+				
+				var raw_handle = handle.replace('customin-', '').replace('customout-', '');
+				
+				for(var key in t.arrLayers){
+					if(t.arrLayers[key]['endanimation'] == 'customout-'+raw_handle){
+						t.arrLayers[key].x_end = animObj['params']['movex'];
+						t.arrLayers[key].y_end = animObj['params']['movey'];
+						t.arrLayers[key].z_end = animObj['params']['movez'];
+						t.arrLayers[key].x_rotate_end = animObj['params']['rotationx'];
+						t.arrLayers[key].y_rotate_end = animObj['params']['rotationy'];
+						t.arrLayers[key].z_rotate_end = animObj['params']['rotationz'];
+						t.arrLayers[key].scale_x_end = animObj['params']['scalex'];
+						t.arrLayers[key].scale_y_end = animObj['params']['scaley'];
+						t.arrLayers[key].opacity_end = animObj['params']['captionopacity'];
+						t.arrLayers[key].skew_x_end = animObj['params']['skewx'];
+						t.arrLayers[key].skew_y_end = animObj['params']['skewy'];
+						t.arrLayers[key].mask_end = animObj['params']['mask'];
+						t.arrLayers[key].mask_x_end = animObj['params']['mask_x'];
+						t.arrLayers[key].mask_y_end = animObj['params']['mask_y'];
+						t.arrLayers[key].mask_ease_end = animObj['params']['mask_ease'];
+						t.arrLayers[key].mask_speed_end = animObj['params']['mask_speed'];
+							
+						t.arrLayers[key].x_end_reverse = animObj['params']['movex_reverse'];
+						t.arrLayers[key].y_end_reverse = animObj['params']['movey_reverse'];
+						
+						t.arrLayers[key].x_rotate_end_reverse = animObj['params']['rotationx_reverse'];
+						t.arrLayers[key].y_rotate_end_reverse = animObj['params']['rotationy_reverse'];
+						t.arrLayers[key].z_rotate_end_reverse = animObj['params']['rotationz_reverse'];
+						t.arrLayers[key].scale_x_end_reverse = animObj['params']['scalex_reverse'];
+						t.arrLayers[key].scale_y_end_reverse = animObj['params']['scaley_reverse'];
+						t.arrLayers[key].skew_x_end_reverse = animObj['params']['skewx_reverse'];
+						t.arrLayers[key].skew_y_end_reverse = animObj['params']['skewy_reverse'];
+						t.arrLayers[key].mask_x_end_reverse = animObj['params']['mask_x_reverse'];
+						t.arrLayers[key].mask_y_end_reverse = animObj['params']['mask_y_reverse'];
+
+						t.arrLayers[key].endeasing = animObj['params']['easing'];
+						t.arrLayers[key].endsplit = animObj['params']['split'];
+						t.arrLayers[key].endsplitdelay = animObj['params']['splitdelay'];
+						t.arrLayers[key].endspeed = animObj['params']['speed'];
+					}else if(t.arrLayers[key]['animation'] == 'customin-'+raw_handle){
+						t.arrLayers[key].x_start = animObj['params']['movex'];
+						t.arrLayers[key].y_start = animObj['params']['movey'];
+						t.arrLayers[key].z_start = animObj['params']['movez'];
+						t.arrLayers[key].x_rotate_start = animObj['params']['rotationx'];
+						t.arrLayers[key].y_rotate_start = animObj['params']['rotationy'];
+						t.arrLayers[key].z_rotate_start = animObj['params']['rotationz'];
+						t.arrLayers[key].scale_x_start = animObj['params']['scalex'];
+						t.arrLayers[key].scale_y_start = animObj['params']['scaley'];
+						t.arrLayers[key].opacity_start = animObj['params']['captionopacity'];
+						t.arrLayers[key].skew_x_start = animObj['params']['skewx'];
+						t.arrLayers[key].skew_y_start = animObj['params']['skewy'];
+						t.arrLayers[key].mask_start = animObj['params']['mask'];
+						t.arrLayers[key].mask_x_start = animObj['params']['mask_x'];
+						t.arrLayers[key].mask_y_start = animObj['params']['mask_y'];
+						t.arrLayers[key].mask_ease_start = animObj['params']['mask_ease'];
+						t.arrLayers[key].mask_speed_start = animObj['params']['mask_speed'];
+						
+						t.arrLayers[key].x_start_reverse = animObj['params']['movex_reverse'];
+						t.arrLayers[key].y_start_reverse = animObj['params']['movey_reverse'];
+						
+						t.arrLayers[key].x_rotate_start_reverse = animObj['params']['rotationx_reverse'];
+						t.arrLayers[key].y_rotate_start_reverse =  animObj['params']['rotationy_reverse'];
+						t.arrLayers[key].z_rotate_start_reverse = animObj['params']['rotationz_reverse'];
+						t.arrLayers[key].scale_x_start_reverse = animObj['params']['scalex_reverse'];
+						t.arrLayers[key].scale_y_start_reverse = animObj['params']['scaley_reverse'];
+						t.arrLayers[key].skew_x_start_reverse = animObj['params']['skewx_reverse'];
+						t.arrLayers[key].skew_y_start_reverse = animObj['params']['skewy_reverse'];
+						t.arrLayers[key].mask_x_start_reverse = animObj['params']['mask_x_reverse'];
+						t.arrLayers[key].mask_y_start_reverse = animObj['params']['mask_y_reverse'];
+
+						t.arrLayers[key].easing = animObj['params']['easing'];
+						t.arrLayers[key].split = animObj['params']['split'];
+						t.arrLayers[key].splitdelay = animObj['params']['splitdelay'];
+						t.arrLayers[key].speed = animObj['params']['speed'];
+					}
+					
+				}
 			});
 		}
 	}
@@ -3706,13 +4072,14 @@ var UniteLayersRev = new function(){
 	 */
 	var selectLayerAnim = function(handle){
 		
-		var animSelect = (currentAnimationType == 'customin') ? jQuery('#layer_animation option') : jQuery('#layer_endanimation option');
-		animSelect.each(function(){
+		var animSelectOption = (currentAnimationType == 'customin') ? jQuery('#layer_animation option') : jQuery('#layer_endanimation option');
+		animSelectOption.each(function(){
 			if(jQuery(this).text() == handle || jQuery(this).val() == handle)
 				jQuery(this).prop('selected', true);
 			else
 				jQuery(this).prop('selected', false);
 		});
+		var animSelect = (currentAnimationType == 'customin') ? jQuery('#layer_animation option:selected') : jQuery('#layer_endanimation option:selected');
 		animSelect.change();		
 	}
 
@@ -3835,7 +4202,7 @@ var UniteLayersRev = new function(){
 		}
 		//update sizes in images
 		updateLayersImageSizes();
-		return(arrLayers);
+		return(t.arrLayers);
 	}
 	
 	
@@ -3843,7 +4210,7 @@ var UniteLayersRev = new function(){
 	 * get only layers array
 	 */
 	t.getSimpleLayers = function(){
-		return(arrLayers);
+		return(t.arrLayers);
 	}
 
 
@@ -3852,9 +4219,8 @@ var UniteLayersRev = new function(){
 	 */
 	var updateLayersImageSizes = function(){
 		
-
-		for (serial in arrLayers){
-			var layer = arrLayers[serial];
+		for (serial in t.arrLayers){
+			var layer = t.arrLayers[serial];
 			if(layer.type == "image"){
 				var htmlLayer = t.getHtmlLayerFromSerial(serial);
 				var objUpdate = {};
@@ -3864,6 +4230,7 @@ var UniteLayersRev = new function(){
 				t.updateLayer(serial,objUpdate);
 			}
 		}
+		
 	}
 
 	/*! LAYER EVENTS */
@@ -3878,15 +4245,14 @@ var UniteLayersRev = new function(){
 
 		//update layer events.
 		layer.draggable({
-					start:onLayerDragStart,
-					drag: t.onLayerDrag,				//set ondrag event
-					cancel:" textbox, #layer_text, .layer_on_lock",
-					grid: [grid_size,grid_size],
-					stop: onLayerDragEnd	
-				});
+			start:onLayerDragStart,
+			drag: t.onLayerDrag,				//set ondrag event
+			cancel:" textbox, #layer_text, .layer_on_lock",
+			grid: [grid_size,grid_size],
+			stop: onLayerDragEnd	
+		});
 
 		layer.click(function(event){
-
 
 			//if (!u.isLayerLocked(serial)) {
 				jQuery(':focus').blur();
@@ -3906,12 +4272,7 @@ var UniteLayersRev = new function(){
 
 			//}
 		});
-
-
-
 	}
-
-
 
 
 	/**
@@ -3943,7 +4304,7 @@ var UniteLayersRev = new function(){
 	 */
 	t.lockAllLayers = function(serial){
 
-		for (serial in arrLayers) 			
+		for (serial in t.arrLayers) 			
 			u.lockLayer(serial);		
 	}
 
@@ -3953,7 +4314,7 @@ var UniteLayersRev = new function(){
 	 */
 	t.unlockAllLayers = function(serial){
 
-		for (serial in arrLayers)
+		for (serial in t.arrLayers)
 			u.unlockLayer(serial);
 	}
 
@@ -3961,7 +4322,7 @@ var UniteLayersRev = new function(){
 	 * show all layers
 	 */
 	t.showAllLayers = function(){
-		for (serial in arrLayers)
+		for (serial in t.arrLayers)
 			u.showLayer(serial,true);
 	}
 
@@ -3969,7 +4330,7 @@ var UniteLayersRev = new function(){
 	 * hide all layers
 	 */
 	t.hideAllLayers = function(){
-		for (serial in arrLayers)
+		for (serial in t.arrLayers)
 			u.hideLayer(serial,true);
 	}
 
@@ -3987,7 +4348,7 @@ var UniteLayersRev = new function(){
 		else
 			var htmlLayer = jQuery("#demo_layer_"+serial);
 
-		if(htmlLayer.length == 0)
+		if(htmlLayer!==null && htmlLayer.length == 0)
 			UniteAdminRev.showErrorMessage("Html Layer with serial: "+serial+" not found!");
 
 		return(htmlLayer);
@@ -3998,8 +4359,8 @@ var UniteLayersRev = new function(){
 	 * get layer object by the new Unique Id
 	 */
 	t.getLayerByUniqueId = function(uid){
-		for(var key in arrLayers){
-			if(arrLayers[key]['unique_id'] == uid) return t.getLayer(key);
+		for(var key in t.arrLayers){
+			if(t.arrLayers[key]['unique_id'] == uid) return t.getLayer(key);
 		}
 		
 		return false;
@@ -4009,8 +4370,8 @@ var UniteLayersRev = new function(){
 	 * get layer object by the new Unique Id
 	 */
 	t.getLayerIdByUniqueId = function(uid){
-		for(var key in arrLayers){
-			if(arrLayers[key]['unique_id'] == uid) return key;
+		for(var key in t.arrLayers){
+			if(t.arrLayers[key]['unique_id'] == uid) return key;
 		}
 		
 		return false;
@@ -4021,8 +4382,8 @@ var UniteLayersRev = new function(){
 	 * get unique ID by layer
 	 */
 	t.getUniqueIdByLayer = function(serial){
-		for(var key in arrLayers){
-			if(key == serial) return arrLayers[key]['unique_id'];
+		for(var key in t.arrLayers){
+			if(key == serial) return t.arrLayers[key]['unique_id'];
 		}
 		
 		return false;
@@ -4036,12 +4397,12 @@ var UniteLayersRev = new function(){
 	t.getLayer = function(serial, isDemo){
 		
 		if(isDemo){
-			var layer = arrLayersDemo[serial];
+			var layer = t.arrLayersDemo[serial];
 		}else{
-			var layer = arrLayers[serial];
+			var layer = t.arrLayers[serial];
 		}
 		if(!layer){ //check if still maybe demo layer
-			var layer = arrLayersDemo[serial];
+			var layer = t.arrLayersDemo[serial];
 		}
 		
 		if(!layer){
@@ -4123,7 +4484,7 @@ var UniteLayersRev = new function(){
 				style += ' font-weight: '+t.getVal(objLayer['static_styles'],'font-weight')+';';
 				style += ' color: '+t.getVal(objLayer['static_styles'],'color')+';';
 			}
-			var html = '<div id="demo_layer_' + serial + '" style="' + style + ' display: none;" class="demo_layer demo_layer_'+curDemoSlideID+' slide_layer" ><div class="innerslide_layer tp-caption '+objLayer.style+static_class+internal_class+'" >';
+			var html = '<div id="demo_layer_' + serial + '" style="' + style + ' display: none;" class="demo_layer_type_'+type+' demo_layer demo_layer_'+curDemoSlideID+' slide_layer" ><div class="innerslide_layer tp-caption '+objLayer.style+static_class+internal_class+'" >';
 		}
 
 		//add layer specific html
@@ -4172,9 +4533,36 @@ var UniteLayersRev = new function(){
 					break;
 				}
 				
-				html += "<div class='slide_layer_video' style='"+styleVideo+"'><div class='video-layer-inner video-icon-"+videoIcon+"'>"
+				html += "<div class='slide_layer_video' style='"+styleVideo+"'><div class='video-layer-inner video-icon-"+videoIcon+"'>";
 				html += "<div class='layer-video-title'>" + objLayer.video_title + "</div>";
 				html += "</div></div>";
+			break;
+			case 'audio':
+				var styleAudio = '';
+				var audioIcon = '';				
+				html += "<div class='slide_layer_audio' style='"+styleAudio+"'><div class='video-layer-inner video-icon-"+audioIcon+"'>";
+				html += '<div class="slide_layer_audio_c_wrapper">';
+				html += '<audio controls src="'+objLayer.video_data.urlAudio+'"></audio>';
+				html += '<div class="tp-video-controls">'+
+						'<div class="tp-video-button-wrap"><button type="button" class="tp-video-button tp-vid-play-pause">Play</button></div>'+
+						'<div class="tp-video-seek-bar-wrap"><input  type="range" class="tp-seek-bar" value="0"></div>'+
+						'<div class="tp-video-button-wrap"><button  type="button" class="tp-video-button tp-vid-mute">Mute</button></div>'+
+						'<div class="tp-video-vol-bar-wrap"><input  type="range" class="tp-volume-bar" min="0" max="1" step="0.1" value="1"></div>'+												
+						'</div>';
+				html += '<div class="slide_layer_audio_c_cover"></div>';
+				html += '</div>';
+				html += "<div class='layer-audio-title'><i class='rs-icon-layeraudio_n'></i>" + objLayer.audio_title + "</div>";
+				html += "</div></div>";
+			break;
+			case 'svg':				
+				if (objLayer.svg!=undefined && objLayer.svg.src!=undefined) 
+				jQuery.get(objLayer.svg.src, function(data) {
+					var pref = !isDemo ? "#slide_layer_" : "#demo_layer_"
+				  jQuery(pref+serial+" .innerslide_layer.tp-caption").html("");
+				  jQuery(pref+serial+" .innerslide_layer.tp-caption")[0].innerHTML = new XMLSerializer().serializeToString(data.documentElement);
+				  u.rebuildLayerIdle(jQuery(pref+serial));
+				});
+				
 			break;
 		}
 
@@ -4275,6 +4663,7 @@ var UniteLayersRev = new function(){
 	 */
 	t.updateLayer = function(serial,objData,del_certain){
 		
+
 		var layer = t.getLayer(serial);
 		if(!layer){
 			return(false);
@@ -4322,19 +4711,397 @@ var UniteLayersRev = new function(){
 			updateSubStyleParameters(layer);
 		}
 
-		if(!arrLayers[serial]){
+		if(!t.arrLayers[serial]){
 			UniteAdminRev.showErrorMessage("setLayer error, Layer with ID: "+serial+" not found");
 			return(false);
 		}
 
-		arrLayers[serial] = jQuery.extend({},layer);
+		if(update_layer_changes){
+			t.add_layer_change(serial, objData);
+		}
+
+		t.arrLayers[serial] = jQuery.extend({},layer);
+		
+		
 		
 		t.updateReverseList();
 		
 	}
 	
-	
 
+	/********************************************************************************************************/
+	/* 						-		UNDO / REDO FUNCTION 	-												*/
+	/********************************************************************************************************/
+
+	// UNDO - REDO FUNCTIONS DUE ALL LAYERS
+	t.cloneArrLayers = function() {
+		t.arrLayersClone = jQuery.extend(true,{},t.arrLayers);		
+	}
+
+
+	function checkKeyGroups(chain) {
+		
+		//Check if any History exists		
+		var c_chain_group = t.arrLayersChanges["undo"] && t.arrLayersChanges["undo"].length>0 ? t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].undogroup : "",
+			c_serial = t.arrLayersChanges["undo"] && t.arrLayersChanges["undo"].length>0 ? t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].serial : -77,
+			serial = chain.split(".")[0],
+			obj = {},
+			ai = -1;
+
+		chain = chain.substring(chain.indexOf(".")+1);		
+		obj.addtoarray = false;
+		obj.serial = serial;
+
+		var laction = chain.indexOf('layer_action')>=0,
+			searchfor = laction ? "layer_action" : chain;
+		
+		jQuery.each(t.attributegroups, function(i,gob) {			
+			if (jQuery.inArray(searchfor,gob.keys)!=-1) {
+				obj.undogroup = gob.groupname;			
+				obj.icon = gob.icon;
+				obj.id = gob.id;
+			}
+		});
+		
+		if (obj.serial == c_serial || (obj.id==30 && c_chain_group=="Order")) {
+			if (obj.undogroup != c_chain_group)			
+				obj.addtoarray = true;
+			else
+				obj.addtoarray="samegroup";
+		} else {
+			obj.addtoarray = true
+		}					
+
+		// FOR FURTHER DEBUGS
+		if (obj.undogroup==undefined) {
+			console.log("Attribute :"+chain+" Could not be Recorded as Undo / Redo Step");
+			obj.addtoarray = false;
+		}
+
+		return obj;
+	}
+
+
+	// REKURSIVE COMPARING OBJECTS
+	function objRek (a, b, chain,found) {	
+		chain = chain===undefined ? "" : chain;		
+		jQuery.each(a, function(key,val) {
+			if (found) return true;	
+
+			if (val instanceof(Object)) {				
+				var originalchain = chain;
+				chain = chain.length==0 ? key : chain+"."+key;		
+				found = objRek(val,b[key],chain,found);				
+				chain = originalchain;				
+			} else {				
+				var originalchain = chain;						
+				chain = chain == undefined || chain.length==0 ? key : chain+"."+key;				
+				// CHECK IF THE VALUES ARE DIFFERENT					
+				if (((val!==b[key] && parseInt(val,0) != parseInt(b[key],0) && val!=undefined && b[key]!=undefined) && key!="renderedData"))	{	
+					
+					if ((t.arrLayersChanges["undo"] && t.arrLayersChanges["undo"].length==0) ||  t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].chain != chain) {
+						var obj = checkKeyGroups(chain);						
+						if (obj.addtoarray===true) {
+							t.arrLayersChanges["redo"].splice(0,t.arrLayersChanges["redo"].length);
+							t.arrLayersChanges["undo"].push({amount:0, backup:jQuery.extend(true,{},t.arrLayersClone),restore:jQuery.extend(true,{},t.arrLayers),icon:obj.icon, id:obj.id, undogroup:obj.undogroup,serial:obj.serial, key:key, chain:chain, oldval:val, newval:b[key]});																		
+							t.set_save_needed(true);
+							found = true;
+						} else {
+							if (obj.addtoarray=="samegroup") {
+								t.arrLayersChanges["redo"].splice(0,t.arrLayersChanges["redo"].length);
+								t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].amount++;
+								t.set_save_needed(true);
+								found = true;
+							}
+						}		
+					} else {
+						if (t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].chain === chain) {
+							t.arrLayersChanges["redo"].splice(0,t.arrLayersChanges["redo"].length);
+							t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].amount++;
+							t.set_save_needed(true);
+							found = true;
+						}
+					}	
+				}																
+				chain = originalchain;
+			}
+		})		
+		return found;
+	}
+
+	// CHECK IF ANY CHANGES HAPPEND SINCE LAST ARRAY CLONE
+	t.add_layer_change = function() {	
+		
+		if (t.arrLayersChanges["undo"].length-1 > 27) 
+			var removed = t.arrLayersChanges["undo"].splice(0,1);
+		objRek(t.arrLayersClone,t.arrLayers,"");	
+		if (t.arrLayersChanges["redo"].length==0 && t.arrLayersChanges["undo"].length>0)
+			t.arrLayersChanges["undo"][t.arrLayersChanges["undo"].length-1].restore = jQuery.extend(true,{},t.arrLayers);
+		t.cloneArrLayers();		
+		t.update_undo_redo_list();	
+		
+	}
+	
+	t.oneStepUndo = function() {
+		if (t.arrLayersChanges["undo"].length-1 >=0)
+			t.undo_redo_layer("undo",t.arrLayersChanges["undo"].length-1);
+	}
+
+	t.oneStepRedo = function() {
+		if (t.arrLayersChanges["redo"].length-1 >=0)
+			t.undo_redo_layer("redo",0);
+	}
+	
+	t.update_undo_redo_list = function(){
+
+		if (jQuery('#rs-undo-list').length==0) {			
+			jQuery('#layer-settings-toolbar-bottom').append('<div id="rs-undo-list"><div id="undo-redo-wrapper"></div></div>');			
+			jQuery('body').on('click','.undostep',function() {
+				t.undo_redo_layer("undo",jQuery(this).data('undoindex'));
+			});		
+			jQuery('body').on('click','.redostep',function() {
+				t.undo_redo_layer("redo",jQuery(this).data('redoindex'));
+			});			
+
+			jQuery('body').on('click','#undo-last-action',function() {
+				if (t.arrLayersChanges["undo"].length-1 >=0)
+					t.undo_redo_layer("undo",t.arrLayersChanges["undo"].length-1);
+			});
+
+			jQuery('body').on('click','#showhide_undolist',function() {
+				var c = jQuery('#rs-undo-list');
+				
+				if (!c.hasClass("inactive")) {
+					c.slideDown(200).addClass("inactive");
+					jQuery('#showhide_undolist i').addClass("eg-icon-down-open").removeClass('eg-icon-menu');
+				}
+				else {
+					c.slideUp(200).removeClass("inactive");
+					jQuery('#showhide_undolist i').removeClass("eg-icon-down-open").addClass('eg-icon-menu');
+					setTimeout(function() {
+						var udl = jQuery('#undo-redo-wrapper');
+						udl.scrollTop(udl.prop("scrollHeight"));
+						udl.perfectScrollbar("update");	
+					},250);
+				}								
+			});	
+
+			jQuery('#undo-redo-wrapper').perfectScrollbar({wheelPropagation:true, suppressScrollX:true});
+
+		}
+
+		var udl = jQuery('#undo-redo-wrapper');
+		
+		udl.find('.undoredostep').remove();
+		
+		
+		jQuery.each(t.arrLayersChanges["undo"],function(i,obj) {
+			var quicksb = '<div data-undoindex="'+i+'" class="undoredostep undostep">',
+				name = t.arrLayers[obj.serial].alias,
+				type = t.arrLayers[obj.serial].type;
+			
+			switch (type) {
+				case "text":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerfont_n"></i></span>';					
+				break;	
+				case "shape":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layershape_n"></i></span>';
+					
+				break;
+				case "button":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerbutton_n"></i></span>';
+					
+				break;
+				case "image":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerimage_n"></i></span>';
+					
+				break;
+				case "video":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layervideo_n"></i></span>';
+					
+				break;
+				case "audio":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layeraudio_n"></i></span>';					
+				break;
+				case "svg":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layersvg_n"></i></span>';					
+				break;
+			}
+			var suf = "";
+			if (obj.amount >0) suf = ' ('+obj.amount+')';
+			if (i==t.arrLayersChanges["undo"].length-1)
+				jQuery('#quick-undo .single-undo-action').html('<span class="undo-name">'+name+'</span><span class="undo-action"><i class="eg-icon-'+obj.icon+'"></i>'+obj.undogroup+suf+'</span>');
+
+			quicksb += '<span class="undo-name">'+name+'</span><span class="undo-action"><i class="eg-icon-'+obj.icon+'"></i>'+obj.undogroup+suf+'</span><i class="eg-icon-cw"></i>';
+			quicksb += '</div>';
+			udl.append(quicksb);			
+		});
+
+		if (t.arrLayersChanges["undo"].length-1<0) 
+			jQuery('#quick-undo .single-undo-action').html('<span class="undo-name">'+jQuery(".single-undo-action").data("origtext")+'</span>');
+
+		jQuery.each(t.arrLayersChanges["redo"],function(i,obj) {
+			var quicksb = '<div data-redoindex="'+i+'" class="undoredostep redostep">',
+				name = t.arrLayers[obj.serial] ===undefined ?  obj["backup"][obj.serial].alias : t.arrLayers[obj.serial].alias;
+				type = t.arrLayers[obj.serial] ===undefined ?  obj["backup"][obj.serial].type : t.arrLayers[obj.serial].type;
+				
+			
+			switch (type) {
+				case "text":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerfont_n"></i></span>';					
+				break;	
+				case "shape":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layershape_n"></i></span>';
+					
+				break;
+				case "button":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerbutton_n"></i></span>';
+					
+				break;
+				case "image":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layerimage_n"></i></span>';
+					
+				break;
+				case "video":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layervideo_n"></i></span>';
+					
+				break;
+				case "audio":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layeraudio_n"></i></span>';					
+				break;
+				case "svg":
+					quicksb += '<span class="layer-title-with-icon"><i class="rs-icon-layersvg_n"></i></span>';					
+				break;
+			}
+			var suf = "";
+			if (obj.amount >0) suf = ' ('+obj.amount+')';
+			quicksb += '<span class="undo-name">'+name+'</span><span class="undo-action"><i class="eg-icon-'+obj.icon+'"></i>'+obj.undogroup+suf+'</span><i class="eg-icon-cw"></i>';
+			quicksb += '</div>';
+			udl.append(quicksb);			
+		});
+		
+		
+		if (udl.data('steps') != (t.arrLayersChanges["redo"].length+t.arrLayersChanges["undo"].length)) {
+			udl.scrollTop(udl.prop("scrollHeight"));
+			udl.data('steps',(t.arrLayersChanges["redo"].length+t.arrLayersChanges["undo"].length));
+		}
+
+		udl.perfectScrollbar("update");
+
+		
+	}
+	
+	function _len(a) {
+		var r = 0;
+		jQuery.each(a,function(i) { r++;});
+		return r;
+	}
+
+	function forceShowHideLayer(serial,todo) {
+		var htmlLayer = t.getHtmlLayerFromSerial(serial),
+			sortLayer = u.getHtmlSortItemFromSerial(serial),
+			sortLayerTime = u.getHtmlSortTimeItemFromSerial(serial),
+			quicksort = u.getHtmlQuickTimeItemFromSerial(serial);
+		if (todo=="hide") {
+			htmlLayer.addClass("layer-deleted");
+			sortLayer.addClass("layer-deleted");
+			quicksort.addClass("layer-deleted");
+			sortLayerTime.addClass("layer-deleted");
+		} else {
+			htmlLayer.removeClass("layer-deleted");
+			sortLayer.removeClass("layer-deleted");
+			quicksort.removeClass("layer-deleted");
+			sortLayerTime.removeClass("layer-deleted");				
+		}
+
+
+	}
+
+	function showHideDeletedLayers(force) {
+		jQuery.each(t.arrLayers,function(i,objLayer) {						
+			if (objLayer.layer_unavailable || objLayer.deleted===true) 	
+				forceShowHideLayer(objLayer.serial,"hide");
+			else					
+				forceShowHideLayer(objLayer.serial,"show");
+		});
+	}
+
+	function checkInvisibleRedoItems() {
+		jQuery.each(t.arrLayersChanges["redo"],function(i,change){
+			jQuery.each(change.backup,function(i,objLayer){
+				if (objLayer.layer_unavailable) 
+					forceShowHideLayer(objLayer.serial,"hide");
+			});					
+		});				
+	}
+
+
+
+	function checkChangedSources(d) {
+		function ccs_intern_check(change,direction) {			
+			if (change.id==12 || change.id==9 || change.id==29) {				
+				jQuery.each(change[d],function(i,objLayer){
+					if ((change.id==12 && (objLayer.type=="svg" || objLayer.type=="image")) || 
+						(change.id==29 && (objLayer.type=="audio" || objLayer.type=="video")) || 
+						(change.id==9 && objLayer.type=="text")) 
+						redrawLayerHtml(objLayer.serial);
+					if (change.id==29 && (objLayer.type=="audio")) {						
+						u.drawAudioMap(objLayer);
+					}
+				});					
+			}
+		}
+		jQuery.each(t.arrLayersChanges["redo"],function(i,change){
+			ccs_intern_check(change,d);
+		});
+		jQuery.each(t.arrLayersChanges["undo"],function(i,change){
+			ccs_intern_check(change,d);
+		});				
+	}
+
+	
+	
+	
+	t.undo_redo_layer = function(type, step){
+		t.set_save_needed(true);
+		if (type=="undo") {				
+			t.arrLayers = jQuery.extend(true,{},t.arrLayersChanges["undo"][step].backup);	
+			showHideDeletedLayers();
+			var j = t.arrLayersChanges["undo"].length-step;
+			for (var i=0;i<j;i++) {
+				t.arrLayersChanges["redo"].unshift(t.arrLayersChanges["undo"].pop())
+				
+			}
+			checkInvisibleRedoItems();
+			checkChangedSources("backup");			
+		} else
+
+		if (type=="redo") {				
+			t.arrLayers = jQuery.extend(true,{},t.arrLayersChanges["redo"][step].restore);
+			
+			showHideDeletedLayers();
+			for (var i=0;i<=step;i++) {
+				t.arrLayersChanges["undo"].push(t.arrLayersChanges["redo"].shift());				
+			}
+			checkChangedSources("restore");
+		} 
+
+		u.redrawSortbox();
+		unselectLayers();
+		t.cloneArrLayers();				
+		updateHtmlLayersFromObject();						
+		u.allLayerToIdle();
+		u.stopAllLayerAnimation();
+		setTimeout(function() {
+			t.update_undo_redo_list();
+			u.updateAllLayerTimeline();
+		},10);		
+	}
+
+
+	/********************************************************************************************************/
+	
+	
 	t.updateReverseList = function() {
 		clearTimeout(updateRevTimer);
 		updateRevTimer =  setTimeout(function() {
@@ -4369,11 +5136,11 @@ var UniteLayersRev = new function(){
 	 */
 	t.updateCurrentLayer = function(objData,del_certain){
 		
-		if(!arrLayers[selectedLayerSerial]){
-			UniteAdminRev.showErrorMessage("error! the layer with serial: "+selectedLayerSerial+" don't exists");
+		if(!t.arrLayers[selectedLayerSerial]){
+			UniteAdminRev.showErrorMessage("error! the layer with serial: "+selectedLayerSerial+" doesn't exists");
 			return(false);
 		}
-
+		
 		t.updateLayer(selectedLayerSerial,objData,del_certain);
 
 	}
@@ -4400,6 +5167,7 @@ var UniteLayersRev = new function(){
 		if(typeof special_type !== 'undefined')
 			objLayer['special_type'] = special_type;
 
+		objLayer.createdOnInit = false;
 		addLayer(objLayer);
 
 		
@@ -4470,6 +5238,16 @@ var UniteLayersRev = new function(){
 					objLayer.video_image_url = videoData.urlPoster;
 
 			break;
+			case 'audio':
+				objLayer.text = "Audio Layer";
+				objLayer.audio_title = objLayer.text;
+				objLayer.audio_image_url = "";
+
+				if(videoData.urlPoster != "")
+					objLayer.audio_image_url = videoData.urlPoster;
+				
+				objLayer.type = 'audio';
+			break;
 		}
 		return(objLayer);
 	}
@@ -4482,10 +5260,21 @@ var UniteLayersRev = new function(){
 		
 		var objLayer = getVideoObjLayer(videoData, true);
 
-		if(typeof special_type !== 'undefined')
+		if(typeof special_type !== 'undefined'){
 			objLayer['special_type'] = special_type;
-
+			
+		}
+		objLayer.createdOnInit = false;
 		addLayer(objLayer);
+		
+		if(typeof special_type !== 'undefined'){
+			if(special_type == 'audio'){
+				var mcurrent_layer = t.getCurrentLayer();
+				if(mcurrent_layer !== false) {
+					u.drawAudioMap(mcurrent_layer);					
+				}
+			}
+		}
 	}
 
 
@@ -4502,9 +5291,10 @@ var UniteLayersRev = new function(){
 		if(typeof special_type !== 'undefined')
 			objLayer['special_type'] = special_type;
 
+		objLayer.createdOnInit = false;
 		addLayer(objLayer);
 
-		setTimeout(function() {				
+		setTimeout(function() {
 				t.showHideContentEditor(true);				
 				jQuery('#layer_text').data('new_content',true);
 				jQuery('#layer_text').focus();						
@@ -4555,6 +5345,8 @@ var UniteLayersRev = new function(){
 		/*if(objLayer.type == 'no_edit'){
 			
 		}*/
+
+
 		
 		
 
@@ -4574,29 +5366,34 @@ var UniteLayersRev = new function(){
 
 		objLayer['alias'] = objLayer['alias'] || u.getSortboxText(objLayer.text).toLowerCase();
 
+		// PRESET DELETED INFO
+		objLayer.layer_unavailable = false;
+		objLayer.deleted = false;
+		objLayer.createdOnInit = objLayer.createdOnInit != undefined ? objLayer.createdOnInit : isInit==true ? true : false;
+
 		//set Loop Animations
-		objLayer.loop_animation = objLayer.loop_animation 	|| "disabled";//jQuery("#layer_loop_animation option:selected").val();
-		objLayer.loop_easing = objLayer.loop_easing 		|| "linearEaseNone";//jQuery("#layer_loop_easing").val();
-		objLayer.loop_speed = objLayer.loop_speed 			|| 2;//jQuery("#layer_loop_speed").val();
-		objLayer.loop_startdeg = objLayer.loop_startdeg 	|| -20;//jQuery("#layer_loop_startdeg").val();
-		objLayer.loop_enddeg = objLayer.loop_enddeg 		|| 20;//jQuery("#layer_loop_enddeg").val();
-		objLayer.loop_xorigin = objLayer.loop_xorigin 		|| 50;//jQuery("#layer_loop_xorigin").val();
-		objLayer.loop_yorigin = objLayer.loop_yorigin 		|| 50;//jQuery("#layer_loop_yorigin").val();
-		objLayer.loop_xstart = objLayer.loop_xstart 		|| 0;//jQuery("#layer_loop_xstart").val();
-		objLayer.loop_xend = objLayer.loop_xend 			|| 0;//jQuery("#layer_loop_xend").val();
-		objLayer.loop_ystart = objLayer.loop_ystart 		|| 0;//jQuery("#layer_loop_ystart").val();
-		objLayer.loop_yend = objLayer.loop_yend 			|| 0;//jQuery("#layer_loop_yend").val();
-		objLayer.loop_zoomstart = objLayer.loop_zoomstart 	|| 1;//jQuery("#layer_loop_zoomstart").val();
-		objLayer.loop_zoomend = objLayer.loop_zoomend 		|| 1;//jQuery("#layer_loop_zoomend").val();
-		objLayer.loop_angle = objLayer.loop_angle 			|| 0;//jQuery("#layer_loop_angle").val();
-		objLayer.loop_radius = objLayer.loop_radius 		|| 10;//jQuery("#layer_loop_radius").val();
+		objLayer.loop_animation = objLayer.loop_animation 	|| "none";
+		objLayer.loop_easing = objLayer.loop_easing 		|| "linearEaseNone";
+		objLayer.loop_speed = objLayer.loop_speed != undefined ? objLayer.loop_speed :  2;
+		objLayer.loop_startdeg = objLayer.loop_startdeg != undefined ? objLayer.loop_startdeg : -20;
+		objLayer.loop_enddeg = objLayer.loop_enddeg != undefined ? 	objLayer.loop_enddeg : 20;
+		objLayer.loop_xorigin = objLayer.loop_xorigin != undefined ? objLayer.loop_xorigin : 50;
+		objLayer.loop_yorigin = objLayer.loop_yorigin != undefined ? objLayer.loop_yorigin : 50;
+		objLayer.loop_xstart = objLayer.loop_xstart != undefined ? objLayer.loop_xstart : 0;
+		objLayer.loop_xend = objLayer.loop_xend != undefined ? objLayer.loop_xend : 0;
+		objLayer.loop_ystart = objLayer.loop_ystart != undefined ? objLayer.loop_ystart : 0;
+		objLayer.loop_yend = objLayer.loop_yend != undefined ? objLayer.loop_yend : 0;
+		objLayer.loop_zoomstart = objLayer.loop_zoomstart != undefined ? objLayer.loop_zoomstart : 1;
+		objLayer.loop_zoomend = objLayer.loop_zoomend != undefined ? objLayer.loop_zoomend : 1;
+		objLayer.loop_angle = objLayer.loop_angle != undefined ? objLayer.loop_angle : 0;
+		objLayer.loop_radius = objLayer.loop_radius != undefined ? objLayer.loop_radius : 10;
 		
-		objLayer.html_tag = objLayer.html_tag 		|| "div";//jQuery("#layer_html_tag").val();
-		objLayer.parallax_layer_ddd_zlevel = objLayer.parallax_layer_ddd_zlevel 		|| "front";//jQuery("#parallax_layer_ddd_zlevel").val();
+		objLayer.html_tag = objLayer.html_tag 		|| "div";
+		objLayer.parallax_layer_ddd_zlevel = objLayer.parallax_layer_ddd_zlevel 		|| "front";
 		
 		// set Mask Animation
-		objLayer.mask_start = objLayer.mask_start	 		|| false;//jQuery('#masking-start')[0].checked;
-		objLayer.mask_end = objLayer.mask_end		 		|| false;//jQuery('#masking-end')[0].checked;
+		objLayer.mask_start = objLayer.mask_start	 		|| false;
+		objLayer.mask_end = objLayer.mask_end		 		|| false;
 		
 
 		// Set Reverse Basics					
@@ -4623,20 +5420,35 @@ var UniteLayersRev = new function(){
 		objLayer.mask_x_end_reverse = objLayer.mask_x_end_reverse || false;
 		objLayer.mask_y_end_reverse = objLayer.mask_y_end_reverse || false;
 
-
-		objLayer.mask_x_start = objLayer.mask_x_start 			|| 0;//jQuery("#mask_anim_xstart").val();
-		objLayer.mask_y_start = objLayer.mask_y_start 			|| 0;//jQuery("#mask_anim_ystart").val();
-		objLayer.mask_speed_start = objLayer.mask_speed_start 	|| "inherit";//jQuery("#mask_speed").val();
-		objLayer.mask_ease_start = objLayer.mask_ease_start 	|| "inherit";//jQuery("#mask_easing").val();
+		objLayer.mask_x_start = objLayer.mask_x_start 			|| 0;
+		objLayer.mask_y_start = objLayer.mask_y_start 			|| 0;
+		objLayer.mask_speed_start = objLayer.mask_speed_start 	|| "inherit";
+		objLayer.mask_ease_start = objLayer.mask_ease_start 	|| "inherit";
 		
-		objLayer.mask_x_end = objLayer.mask_x_end 			|| 0;//jQuery("#mask_anim_xend").val();
-		objLayer.mask_y_end = objLayer.mask_y_end 			|| 0;//jQuery("#mask_anim_yend").val();
-		objLayer.mask_speed_end = objLayer.mask_speed_end 	|| "inherit";//jQuery("#mask_speed_end").val();
-		objLayer.mask_ease_end = objLayer.mask_ease_end 	|| "inherit";//jQuery("#mask_easing_end").val();
+		objLayer.mask_x_end = objLayer.mask_x_end 			|| 0;
+		objLayer.mask_y_end = objLayer.mask_y_end 			|| 0;
+		objLayer.mask_speed_end = objLayer.mask_speed_end 	|| "inherit";
+		objLayer.mask_ease_end = objLayer.mask_ease_end 	|| "inherit";
 		
 		objLayer.alt_option = objLayer.alt_option			|| 'media_library';
 		objLayer.alt = objLayer.alt							|| '';
-		
+
+		// Layer Action
+		objLayer.layer_action = objLayer.layer_action || {};
+		objLayer.layer_action.tooltip_event = objLayer.layer_action.tooltip_event || [];
+		objLayer.layer_action.action = objLayer.layer_action.action || [];
+		objLayer.layer_action.image_link = objLayer.layer_action.image_link || [];
+		objLayer.layer_action.link_open_in = objLayer.layer_action.link_open_in || [];
+		objLayer.layer_action.jump_to_slide = objLayer.layer_action.jump_to_slide || [];
+		objLayer.layer_action.scrollunder_offset = objLayer.layer_action.scrollunder_offset || [];
+		objLayer.layer_action.actioncallback = objLayer.layer_action.actioncallback || [];
+		objLayer.layer_action.layer_target = objLayer.layer_action.layer_target || [];
+		objLayer.layer_action.link_type = objLayer.layer_action.link_type || [];
+		objLayer.layer_action.action_delay = objLayer.layer_action.action_delay || [];
+		objLayer.layer_action.toggle_layer_type = objLayer.layer_action.toggle_layer_type || [];
+		objLayer.layer_action.toggle_class = objLayer.layer_action.toggle_class || [];
+
+				
 		//set animation:		
 		objLayer.animation = objLayer.animation || 'tp-fade';
 
@@ -4644,8 +5456,8 @@ var UniteLayersRev = new function(){
 		objLayer.easing = objLayer.easing || "Power2.easeInOut";
 		objLayer.split = objLayer.split || "none";
 		objLayer.endsplit = objLayer.endsplit || "none";
-		objLayer.splitdelay = objLayer.splitdelay || 10;
-		objLayer.endsplitdelay = objLayer.endsplitdelay || 10;
+		objLayer.splitdelay = objLayer.splitdelay != undefined ? objLayer.splitdelay : 10;
+		objLayer.endsplitdelay = objLayer.endsplitdelay != undefined ? objLayer.endsplitdelay : 10;
 		
 		objLayer = t.getVal(objLayer, 'max_height') == undefined ? 
 			t.setVal(objLayer, 'max_height', "auto", true) : 
@@ -4653,8 +5465,7 @@ var UniteLayersRev = new function(){
 				t.setVal(objLayer, 'max_height', objLayer.max_height, true) : 
 				objLayer;
 				
-		if(t.getVal(objLayer, 'max_width') == undefined){
-			
+		if(t.getVal(objLayer, 'max_width') == undefined){			
 			objLayer = t.setVal(objLayer, 'max_width', "auto", true);
 		}else{
 			if(typeof(objLayer.max_width) !== 'object'){				
@@ -4680,15 +5491,12 @@ var UniteLayersRev = new function(){
 			}
 		}
 
-		if(objLayer['2d_rotation'] == undefined && isInit)
-			objLayer['2d_rotation'] = "inherit";
-
-		if(objLayer['2d_origin_x'] == undefined)
-			objLayer['2d_origin_x'] = "inherit";
-
-		if(objLayer['2d_origin_y'] == undefined)
-			objLayer['2d_origin_y'] = "inherit";
-
+		// ORIGIN AND 2D ROTATION
+		objLayer['2d_rotation'] = objLayer['2d_rotation'] == undefined && isInit ? 0 : objLayer['2d_rotation'];
+		objLayer['2d_origin_x'] = objLayer['2d_origin_x'] != undefined ? objLayer['2d_origin_x'] : 50;
+		objLayer['2d_origin_y'] = objLayer['2d_origin_y'] != undefined ?  objLayer['2d_origin_y'] : 50;
+		
+		
 		if(t.getVal(objLayer, 'whitespace') == undefined){
 			objLayer = t.setVal(objLayer, 'whitespace', jQuery("#layer_whitespace option:selected").val(), true);
 		}else{
@@ -4701,11 +5509,11 @@ var UniteLayersRev = new function(){
 			objLayer.static_start = jQuery("#layer_static_start option:selected").val();
 
 		if(objLayer.static_end == undefined)
-			objLayer.static_end = 'last'; //jQuery("#layer_static_end option:selected").val();
+			objLayer.static_end = 'last'; 
 
 		//set speed:
-		if(objLayer.speed == undefined)
-			objLayer.speed = initSpeed;
+		objLayer.speed = objLayer.speed || initSpeed;
+		
 
 		if(t.getVal(objLayer, 'align_hor') == undefined){
 			objLayer = t.setVal(objLayer, 'align_hor', 'left', true);
@@ -4723,92 +5531,52 @@ var UniteLayersRev = new function(){
 		}
 
 		//set animation:
-		if(objLayer.hiddenunder == undefined)
-			objLayer.hiddenunder = "";
-
-		if(objLayer.resizeme == undefined)
-			objLayer.resizeme = "true";
+		objLayer.hiddenunder = objLayer.hiddenunder || false;	
+		objLayer.resizeme = objLayer.resizeme || true;			
+		objLayer['seo-optimized'] = objLayer['seo-optimized'] || false;
 		
-		if(objLayer['seo-optimized'] == undefined)
-			objLayer['seo-optimized'] = false;
-		
-		//set image link
-		if(objLayer.link == undefined)
-			objLayer.link = "";
+		//set image link		
+		objLayer.link = objLayer.link || "";
 
 		//set image link open in
-		if(objLayer.link_open_in == undefined)
-			objLayer.link_open_in = "same";
+		objLayer.link_open_in = objLayer.link_open_in || "same";
 
-		//set slide link:
-		if(objLayer.link_slide == undefined)
-			objLayer.link_slide = "nothing";
+		//set slide link:		
+		objLayer.link_slide = objLayer.link_slide || "nothing";
 
-		//set scroll under offset
-		if(objLayer.scrollunder_offset == undefined)
-			objLayer.scrollunder_offset = "";
+		//set scroll under offset		
+		objLayer.scrollunder_offset = objLayer.scrollunder_offset || "";
 
-		//set style, if empty, add first style from the list
-		if(objLayer.style == undefined)
-			objLayer.style = '';//jQuery("#layer_caption").val();
-
-		if(objLayer['visible-desktop'] == undefined)
-			objLayer['visible-desktop'] = true;
-		if(objLayer['visible-notebook'] == undefined)
-			objLayer['visible-notebook'] = true;
-		if(objLayer['visible-tablet'] == undefined)
-			objLayer['visible-tablet'] = true;
-		if(objLayer['visible-mobile'] == undefined)
-			objLayer['visible-mobile'] = true;
+		//set style, if empty, add first style from the list		
+			objLayer.style = objLayer.style || '';
 		
-		if(objLayer['resize-full'] == undefined)
-			objLayer['resize-full'] = true;
-		
-		if(objLayer['show-on-hover'] == undefined)
-			objLayer['show-on-hover'] = false;
-		
-		if(objLayer.basealign == undefined)
-			objLayer.basealign = 'grid';
-		
-		
-		if(objLayer.responsive_offset == undefined)
-			objLayer.responsive_offset = true;
-		
-		
+		objLayer['visible-desktop'] = objLayer['visible-desktop'] || true;		
+		objLayer['visible-notebook'] = objLayer['visible-notebook'] || true;		
+		objLayer['visible-tablet'] = objLayer['visible-tablet'] || true;		
+		objLayer['visible-mobile'] = objLayer['visible-mobile'] || true;				
+		objLayer['resize-full'] = objLayer['resize-full'] || true;				
+		objLayer['show-on-hover'] = objLayer['show-on-hover'] || false;				
+		objLayer.basealign = objLayer.basealign || 'grid';						
+		objLayer.responsive_offset = objLayer.responsive_offset || true;				
 		objLayer.style = jQuery.trim(objLayer.style);
-		if(isInit == false && objLayer.type == "text" && (!objLayer.style || objLayer.style == "")){
-			//objLayer.style = getFirstStyle();
-			do_style_reset = true;
-		}
 
-		if(objLayer['lazy-load'] == undefined)
-			objLayer['lazy-load'] = 'auto';
+		if(isInit == false && objLayer.type == "text" && (!objLayer.style || objLayer.style == ""))	do_style_reset = true;				
 		
-		if(objLayer['image-size'] == undefined)
-			objLayer['image-size'] = 'auto';
-
+		objLayer['lazy-load'] = objLayer['lazy-load'] || 'auto';			
+		objLayer['image-size'] = objLayer['image-size'] || 'auto';
 		
-		//add time
-		if(objLayer.time == undefined)
-			objLayer.time = getNextTime();
-
+		//add time		
+		
+		objLayer.time = objLayer.time != undefined ? objLayer.time : getNextTime();				
 		objLayer.time = Number(objLayer.time);	//casting
 
 		
-		if(objLayer.endspeed == undefined)
-			objLayer.endspeed = initSpeed;
 
-		//end time:
-		if(objLayer.endtime == undefined)
-			objLayer.endtime = parseInt(g_slideTime,0)+parseInt(objLayer.endspeed,0);
-
-		//set end animation:
-		if(objLayer.endanimation == undefined) //objLayer.endanimation = jQuery("#layer_endanimation").val();
-			objLayer.endanimation = 'fadeout';
-
-		//set end easing:
-		if(objLayer.endeasing == undefined)
-			objLayer.endeasing = jQuery("#layer_endeasing").val();
+		// END ANIMATION		
+		objLayer.endspeed = objLayer.endspeed!=undefined ? objLayer.endspeed : initSpeed;		
+		objLayer.endtime = objLayer.endtime!=undefined ? objLayer.endtime : parseInt(g_slideTime,0)+parseInt(objLayer.endspeed,0);		
+		objLayer.endanimation = objLayer.endanimation || 'fadeout';		
+		objLayer.endeasing = objLayer.endeasing || jQuery("#layer_endeasing").val();
 
 		if(t.getVal(objLayer, 'width') == undefined){
 			objLayer = t.setVal(objLayer, 'width', -1, true);
@@ -4946,18 +5714,7 @@ var UniteLayersRev = new function(){
 
 		if(objLayer.skew_y_end == undefined)
 			objLayer.skew_y_end = "inherit";
-
-		if(objLayer.x_origin_start == undefined)
-			objLayer.x_origin_start = "inherit";
-
-		if(objLayer.y_origin_start == undefined)
-			objLayer.y_origin_start = "inherit";
-
-		if(objLayer.x_origin_end == undefined)
-			objLayer.x_origin_end = "inherit";
-
-		if(objLayer.y_origin_end == undefined)
-			objLayer.y_origin_end = "inherit";
+		
 
 		if(objLayer.pers_start == undefined)
 			objLayer.pers_start = "inherit";
@@ -4998,6 +5755,9 @@ var UniteLayersRev = new function(){
 		if(objLayer['deformation']['text-align'] == undefined)
 			objLayer['deformation']['text-align'] = "left";
 
+		if(objLayer['deformation']['text-transform'] == undefined)
+			objLayer['deformation']['text-transform'] = "none";
+
 		if(objLayer['deformation']['background-color'] == undefined)
 			objLayer['deformation']['background-color'] = "transparent";
 		
@@ -5023,6 +5783,40 @@ var UniteLayersRev = new function(){
 			});
 			objLayer['deformation']['border-radius'] = cur_bor; //4 []
 		}
+
+		if (objLayer.svg==undefined) 
+			objLayer.svg = {};
+
+		if(objLayer.svg['svgstroke-color'] == undefined)
+			objLayer.svg['svgstroke-color'] = "transparent";
+
+		if(objLayer.svg['svgstroke-transparency'] == undefined)
+			objLayer.svg['svgstroke-transparency'] = 1;
+
+		if(objLayer.svg['svgstroke-dasharray'] == undefined)
+			objLayer.svg['svgstroke-dasharray'] = "0";
+
+		if(objLayer.svg['svgstroke-dashoffset'] == undefined)
+			objLayer.svg['svgstroke-dashoffset'] = "0";
+
+		if(objLayer.svg['svgstroke-width'] == undefined)
+			objLayer.svg['svgstroke-width'] = "0"
+
+		if(objLayer.svg['svgstroke-hover-color'] == undefined)
+			objLayer.svg['svgstroke-hover-color'] = "transparent";
+
+		if(objLayer.svg['svgstroke-hover-transparency'] == undefined)
+			objLayer.svg['svgstroke-hover-transparency'] = 1;
+
+		if(objLayer.svg['svgstroke-hover-dasharray'] == undefined)
+			objLayer.svg['svgstroke-hover-dasharray'] = "0";
+
+		if(objLayer.svg['svgstroke-hover-dashoffset'] == undefined)
+			objLayer.svg['svgstroke-hover-dashoffset'] = "0";
+
+		if(objLayer.svg['svgstroke-hover-width'] == undefined)
+			objLayer.svg['svgstroke-hover-width'] = "0";
+		//}
 		if(objLayer['deformation']['x'] == undefined)
 			objLayer['deformation']['x'] = 0;
 
@@ -5080,7 +5874,8 @@ var UniteLayersRev = new function(){
 		if(objLayer['deformation-hover'] == undefined || jQuery.isEmptyObject(objLayer['deformation-hover'])){
 			objLayer['deformation-hover'] = {};
 		}
-		
+				
+
 		if(objLayer['deformation-hover']['color'] == undefined)
 			objLayer['deformation-hover']['color'] = "#ffffff";
 			
@@ -5115,6 +5910,24 @@ var UniteLayersRev = new function(){
 			});
 			objLayer['deformation-hover']['border-radius'] = cur_bor; //4 []
 		}
+
+		if (objLayer.svg != undefined) {
+			if(objLayer.svg['svgstroke-hover-color'] == undefined)
+				objLayer.svg['svgstroke-hover-color'] = "transparent";
+
+			if(objLayer.svg['svgstroke-hover-transparency'] == undefined)
+				objLayer.svg['svgstroke-hover-transparency'] = 1;
+
+			if(objLayer.svg['svgstroke-hover-dasharray'] == undefined)
+				objLayer.svg['svgstroke-hover-dasharray'] = "0";
+
+			if(objLayer.svg['svgstroke-hover-dashoffset'] == undefined)
+				objLayer.svg['svgstroke-hover-dashoffset'] = "0";
+
+			if(objLayer.svg['svgstroke-hover-width'] == undefined)
+				objLayer.svg['svgstroke-hover-width'] = "0"
+		}
+
 		if(objLayer['deformation-hover']['x'] == undefined)
 			objLayer['deformation-hover']['x'] = 0;
 
@@ -5155,13 +5968,13 @@ var UniteLayersRev = new function(){
 			objLayer['deformation-hover']['2d_origin_y'] = 50;
 		
 		if(objLayer['deformation-hover']['speed'] == undefined)
-			objLayer['deformation-hover']['speed'] = jQuery('#hover_speed').val();
+			objLayer['deformation-hover']['speed'] = 0;
 		
 		if(objLayer['deformation-hover']['easing'] == undefined)
-			objLayer['deformation-hover']['easing'] = jQuery('#hover_easing option:selected').val();
+			objLayer['deformation-hover']['easing'] = 'Linear.easeNone';
 		
 		if(objLayer['deformation-hover']['css_cursor'] == undefined)
-			objLayer['deformation-hover']['css_cursor'] = jQuery('#css_cursor option:selected').val();
+			objLayer['deformation-hover']['css_cursor'] = "auto";
 		//deformation hover part end
 		
 		if(objLayer['visible'] == undefined) objLayer['visible'] = true;
@@ -5172,14 +5985,12 @@ var UniteLayersRev = new function(){
 		if(objLayer.trigger_memory == undefined)
 			objLayer.trigger_memory = 'keep';
 		
-		objLayer.serial = id_counter;
-
-		
+		objLayer.serial = id_counter;			
 		
 		if(!isDemo){
-			arrLayers[id_counter] = jQuery.extend({},objLayer);
+			t.arrLayers[id_counter] = jQuery.extend({},objLayer);
 		}else{
-			arrLayersDemo[id_counter] = jQuery.extend({},objLayer);
+			t.arrLayersDemo[id_counter] = jQuery.extend({},objLayer);
 		}
 		//add html
 
@@ -5192,7 +6003,7 @@ var UniteLayersRev = new function(){
 		
 		
 		var objHtmlLayer = t.getHtmlLayerFromSerial(id_counter,isDemo);
-						
+		
 		//add layer to sortbox
 		if(!isDemo) {
 			u.addToSortbox(id_counter,objLayer);	
@@ -5202,17 +6013,31 @@ var UniteLayersRev = new function(){
 		}
 		
 		
-		
 		if(objLayer['visible'] == false && !isDemo){
 			u.hideLayer(id_counter);
 		}
 		
 		
-
-		
 		//refresh draggables
 		if(!isDemo)
 			refreshEvents(id_counter);
+
+		// UNDO / REDO FUNCTION "Added Layer"
+		if (objLayer.createdOnInit===false) {
+			if(!isDemo)
+				t.arrLayers[id_counter].layer_unavailable = true;				
+			else
+				t.arrLayersDemo[id_counter].layer_unavailable = true;
+			
+			t.cloneArrLayers();
+			
+			if(!isDemo)
+				t.arrLayers[id_counter].layer_unavailable = false;
+			else
+				t.arrLayersDemo[id_counter].layer_unavailable = false;
+			
+			t.add_layer_change();
+		}
 
 		id_counter++;
 
@@ -5228,45 +6053,14 @@ var UniteLayersRev = new function(){
 		}
 		
 		
-		
 		if(do_style_reset){ //trigger change event so that element gets first styles
 			t.reset_to_default_static_styles(objLayer);
 			// Reset Fields from Style Template
 			updateSubStyleParameters(objLayer, true);
 		}
 		
-	}
-
-
-
-	/**
-	 *
-	 * delete layer from layers object
-	 */
-	var deleteLayerFromObject = function(serial){
-		
-		var arrLayersNew = {};
-		var flagFound = false;
-		for (key in arrLayers){
-			if(key != serial)
-				arrLayersNew[key] = arrLayers[key];
-			else
-				flagFound = true;
-		}
-
-		if(flagFound == false)
-			UniteAdminRev.showErrorMessage("Can't delete layer, serial: "+serial+" not found");
-
-		arrLayers = jQuery.extend({},arrLayersNew);
-	}
-
-	/**
-	 * delete the layer from html.
-	 */
-	var deleteLayerFromHtml = function(serial){
-		
-		var htmlLayer = t.getHtmlLayerFromSerial(serial);
-		htmlLayer.remove();
+		t.cloneArrLayers();		
+		t.timeLineTableDimensionUpdate();				
 	}
 
 
@@ -5275,13 +6069,17 @@ var UniteLayersRev = new function(){
 	 */
 	var deleteLayer = function(serial){
 		
-		t.checkActionsOnLayers(serial);
+		/*t.checkActionsOnLayers(serial);
 		deleteLayerFromObject(serial);
 		deleteLayerFromHtml(serial);
 		u.deleteLayerFromSortbox(serial);
+		t.timeLineTableDimensionUpdate();*/
 		
+		t.arrLayers[serial].deleted = true;
+		forceShowHideLayer(serial,"hide")	
+		t.add_layer_change();
+		t.timeLineTableDimensionUpdate();
 	}
-
 
 
 	/**
@@ -5300,7 +6098,7 @@ var UniteLayersRev = new function(){
 		selectedLayerSerial = -1;
 
 		//clear form and disable buttons
-		disableFormFields();
+		disableFormFields();		
 	}
 
 
@@ -5312,7 +6110,7 @@ var UniteLayersRev = new function(){
 		if(selectedLayerSerial == -1)
 			return(false);
 
-		var obj = arrLayers[selectedLayerSerial];
+		var obj = t.arrLayers[selectedLayerSerial];
 		var obj2 = jQuery.extend(true, {}, obj);	//duplicate object
 		
 		t.getVal(objLayer, 'top');
@@ -5320,7 +6118,8 @@ var UniteLayersRev = new function(){
 		obj2 = t.setVal(obj2, 'left', t.getVal(obj2, 'left')+5);
 		obj2 = t.setVal(obj2, 'top', t.getVal(obj2, 'top')+5);
 		obj2.order = undefined;
-		obj2.time = undefined;		
+		obj2.time = undefined;
+		obj2.createdOnInit = false;
 		addLayer(obj2);		
 		initDisallowCaptionsOnClick();
 		var key;
@@ -5328,7 +6127,8 @@ var UniteLayersRev = new function(){
 			key = k;
 		});
 		
-		t.setLayerSelected(key);		
+		t.setLayerSelected(key);	
+		t.timeLineTableDimensionUpdate();	
 	}
 
 	
@@ -5349,6 +6149,8 @@ var UniteLayersRev = new function(){
 		htmlLayer.find('.backcorner').remove();
 		htmlLayer.find('.backcornertop').remove();
 
+
+		if (objLayer==undefined || objLayer==false) return false;
 		switch(objLayer['deformation']['corner_left']){
 			case "curved":
 
@@ -5534,19 +6336,24 @@ var UniteLayersRev = new function(){
 			break;
 			default:
 			case "text":				
-			case "button":		
-				
+			case "button":						
 				htmlLayer.find('.innerslide_layer').html(objLayer.text);
 				t.makeCurrentLayerRotatable(serial);
 				t.updateHtmlLayerCorners(htmlLayer,objLayer);				
+			break;
+			case "svg":
+				objLayer.svg.renderedData = htmlLayer.find('.innerslide_layer').html();
+				t.makeCurrentLayerRotatable(serial);
+			break;
+			case 'audio':				
+				//htmlLayer.find('audio').attr('src',objLayer.video_data.urlAudio);
 			break;
 			/*case 'no_edit':
 				
 			break;*/
 		}					
 		
-		u.rebuildLayerIdle(getjQueryLayer());	
-				
+		u.rebuildLayerIdle(getjQueryLayer());
 	}
 	
 	// MAKE THINGS ROTATABLE
@@ -5560,7 +6367,7 @@ var UniteLayersRev = new function(){
 		var el = jQuery('.slide_layer.layer_selected .innerslide_layer');
 
 
-		if (el!=undefined && el.length>0) {
+		if (el!=undefined && el!==null && el.length>0) {
 			try{el.rotatable("destroy");} 
 			catch(e) {}
 			el.rotatable({
@@ -5664,12 +6471,23 @@ var UniteLayersRev = new function(){
 	 }
 
 	t.updateLayerFromFields_Core = function(){
-				
 		
+		var objUpdate = {};
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "updateLayerFromFields_Core" && env_sub=="start") 				
+				objUpdate = callback(objUpdate);
+			
+		});
+
+
 		if(selectedLayerSerial == -1) return(false);		
 		UniteCssEditorRev.compare_to_original(); //compare style changes and mark elements depending on state
 		
-		var objUpdate = {};
 
 		objUpdate.style = jQuery("#layer_caption").val();			
 		objUpdate['hover'] = jQuery('#hover_allow')[0].checked;
@@ -5826,10 +6644,7 @@ var UniteLayersRev = new function(){
 		objUpdate.skew_y_start = jQuery("#layer_skew_ystart").val();
 		objUpdate.skew_x_end = jQuery("#layer_skew_xend").val();
 		objUpdate.skew_y_end = jQuery("#layer_skew_yend").val();
-		objUpdate.x_origin_start = jQuery('#layer_2d_origin_x').val(); //jQuery("#layer_anim_xoriginstart").val();
-		objUpdate.y_origin_start = jQuery('#layer_2d_origin_y').val(); //jQuery("#layer_anim_yoriginstart").val();
-		objUpdate.x_origin_end = jQuery('#layer_2d_origin_x').val(); //jQuery("#layer_anim_xoriginend").val();
-		objUpdate.y_origin_end = jQuery('#layer_2d_origin_y').val(); //jQuery("#layer_anim_yoriginend").val();				
+		
 		objUpdate.x_start_reverse =  jQuery('#layer_anim_xstart_reverse')[0].checked || false;
 		objUpdate.y_start_reverse =  jQuery('#layer_anim_ystart_reverse')[0].checked || false;
 		objUpdate.x_end_reverse =  jQuery('#layer_anim_xend_reverse')[0].checked || false;
@@ -5882,12 +6697,24 @@ var UniteLayersRev = new function(){
 		jQuery('#clayer_start_speed').val(objUpdate.speed);
 		jQuery('#clayer_end_speed').val(objUpdate.endspeed);
 		
-		if(objUpdate['static_styles'] == undefined) objUpdate['static_styles'] = {};
-		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'font-size', jQuery("#layer_font_size_s").val());
-		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'line-height', jQuery("#layer_line_height_s").val());
-		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'font-weight', jQuery("#layer_font_weight_s option:selected").val());
-		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'color', jQuery("#layer_color_s").val());
+		
+		
+		// CHECK IF THE INPUT FIELD NEED TO BE UPDATED FOR ALL DEVICE SIZES
+		var set_all_color = lastchangedinput == "layer_color_s",
+			set_all_color_force = jQuery('#on_all_devices_color').attr("checked")=="checked" || false,
+			set_all_fontsize = lastchangedinput == "layer_font_size_s",
+			set_all_fontsize_force =  jQuery('#on_all_devices_fontsize').attr("checked")=="checked" || false,
+			set_all_fontweight = lastchangedinput == "layer_font_weight_s",
+			set_all_fontweight_force = jQuery('#on_all_devices_fontweight').attr("checked")=="checked" || false,
+			set_all_lineheight = lastchangedinput == "layer_line_height_s",
+			set_all_lineheight_force = jQuery('#on_all_devices_lineheight').attr("checked")=="checked" || false;
 
+		if(objUpdate['static_styles'] == undefined) objUpdate['static_styles'] = {};
+		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'font-size', jQuery("#layer_font_size_s").val(),set_all_fontsize,null,set_all_fontsize_force);
+		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'line-height', jQuery("#layer_line_height_s").val(),set_all_lineheight,null,set_all_lineheight_force);
+		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'font-weight', jQuery("#layer_font_weight_s option:selected").val(),set_all_fontweight,null,set_all_fontweight_force);
+		objUpdate['static_styles'] = t.setVal(objUpdate['static_styles'], 'color', jQuery("#layer_color_s").val(),set_all_color,null,set_all_color_force);
+		
 		//deformation part
 		if(objUpdate.deformation == undefined) objUpdate.deformation = {};
 		if (objUpdate["deformation"]["padding"] == undefined) objUpdate["deformation"]["padding"]=["0","0","0","0"];
@@ -5898,6 +6725,8 @@ var UniteLayersRev = new function(){
 		
 		
 
+		objUpdate['layer-selectable'] = jQuery('#css_layer_selectable option:selected').val();
+		
 		//objUpdate = updateSubStyleParameters(objUpdate);
 		objUpdate['deformation']['color-transparency'] = jQuery('#css_font-transparency').val();
 		objUpdate['deformation']['font-style'] = (jQuery('#css_font-style')[0].checked) ? 'italic' : 'normal';
@@ -5905,14 +6734,18 @@ var UniteLayersRev = new function(){
 		jQuery('input[name="css_padding[]"]').each(function(i){ objUpdate['deformation']['padding'][i] = jQuery(this).val();});
 		objUpdate['deformation']['text-decoration'] = jQuery('#css_text-decoration option:selected').val();
 		objUpdate['deformation']['text-align'] = jQuery('#css_text-align option:selected').val();
+		objUpdate['deformation']['text-transform'] = jQuery('#css_text-transform option:selected').val();
 		objUpdate['deformation']['background-color'] = jQuery('#css_background-color').val();
 		objUpdate['deformation']['background-transparency'] = jQuery('#css_background-transparency').val();
 		objUpdate['deformation']['border-color'] = jQuery('#css_border-color-show').val();
 		objUpdate['deformation']['border-transparency'] = jQuery('#css_border-transparency').val();
 		objUpdate['deformation']['border-style'] = jQuery('#css_border-style option:selected').val();
 		objUpdate['deformation']['border-width'] = jQuery('#css_border-width').val();
-		if(objUpdate.deformation['border-radius'] == undefined) objUpdate.deformation['border-radius'] = new Array();
+		if(objUpdate.deformation['border-radius'] == undefined) objUpdate.deformation['border-radius'] = new Array();		
 		jQuery('input[name="css_border-radius[]"]').each(function(i){ objUpdate['deformation']['border-radius'][i] = jQuery(this).val();});
+
+
+		
 		objUpdate['deformation']['x'] = 0; //parseInt(jQuery('input[name="layer__x"]').val(),0);
 		objUpdate['deformation']['y'] = 0; //parseInt(jQuery('input[name="layer__y"]').val(),0);
 		objUpdate['deformation']['z'] = parseInt(jQuery('#layer__z').val(),0);
@@ -5928,7 +6761,7 @@ var UniteLayersRev = new function(){
 		objUpdate['deformation']['2d_origin_y'] = jQuery('#layer_2d_origin_y').val();
 		objUpdate['deformation']['pers'] = jQuery('#layer__pers').val();
 		objUpdate['deformation']['corner_left'] = jQuery('#layer_cornerleft option:selected').val();
-		objUpdate['deformation']['corner_right'] = jQuery('#layer_cornerleft option:selected').val();
+		objUpdate['deformation']['corner_right'] = jQuery('#layer_cornerright option:selected').val();
 		objUpdate['deformation']['parallax'] = jQuery('#parallax_level option:selected').val();
 		
 		//deformation hover part start
@@ -5938,6 +6771,9 @@ var UniteLayersRev = new function(){
 		objUpdate['deformation-hover']['text-decoration'] = jQuery('#hover_css_text-decoration option:selected').val();
 		objUpdate['deformation-hover']['background-color'] = jQuery('#hover_css_background-color').val();
 		objUpdate['deformation-hover']['background-transparency'] = jQuery('#hover_css_background-transparency').val();
+		
+
+
 		objUpdate['deformation-hover']['border-color'] = jQuery('#hover_css_border-color-show').val();
 		objUpdate['deformation-hover']['border-transparency'] = jQuery('#hover_css_border-transparency').val();
 		objUpdate['deformation-hover']['border-style'] = jQuery('#hover_css_border-style option:selected').val();
@@ -5957,6 +6793,21 @@ var UniteLayersRev = new function(){
 		objUpdate['deformation-hover']['easing'] = jQuery('#hover_easing option:selected').val();
 		objUpdate['deformation-hover']['css_cursor'] = jQuery('#css_cursor option:selected').val();
 		
+		// READ SVG BASED CONTENT
+		if (objUpdate['svg']==undefined) objUpdate['svg']={};
+		objUpdate['svg']['svgstroke-color'] = jQuery('#css_svgstroke-color-show').val();
+		objUpdate['svg']['svgstroke-transparency'] = jQuery('#css_svgstroke-transparency').val();
+		objUpdate['svg']['svgstroke-dasharray'] = jQuery('#css_svgstroke-dasharray').val();
+		objUpdate['svg']['svgstroke-dashoffset'] = jQuery('#css_svgstroke-dashoffset').val();
+		objUpdate['svg']['svgstroke-width'] = jQuery('#css_svgstroke-width').val();
+		objUpdate['svg']['svgstroke-hover-color'] = jQuery('#css_svgstroke-hover-color-show').val();
+		objUpdate['svg']['svgstroke-hover-transparency'] = jQuery('#css_svgstroke-hover-transparency').val();
+		objUpdate['svg']['svgstroke-hover-dasharray'] = jQuery('#css_svgstroke-hover-dasharray').val();
+		objUpdate['svg']['svgstroke-hover-dashoffset'] = jQuery('#css_svgstroke-hover-dashoffset').val();
+		objUpdate['svg']['svgstroke-hover-width'] = jQuery('#css_svgstroke-hover-width').val();
+
+		
+
 		//deformation hover part end				
 		if(objUpdate['layer_action'] == undefined || jQuery.isEmptyObject(objUpdate['layer_action'])) objUpdate['layer_action'] = {};
 		
@@ -6023,12 +6874,13 @@ var UniteLayersRev = new function(){
 		objUpdate.animation_overwrite = jQuery('#layer-animation-overwrite option:selected').val();
 		objUpdate.trigger_memory = jQuery('#layer-tigger-memory option:selected').val();
 
+
+		
 		
 		
 		//ONLY FOR DEBUG!!
 		//objUpdate.internal_class = jQuery('#internal_classes').val();
 		//objUpdate.type = jQuery('#layer_type option:selected').val();
-				
 
 		//update object - Write back changes in ObjArray
 		t.updateCurrentLayer(objUpdate, ['layer_action']);	
@@ -6036,23 +6888,30 @@ var UniteLayersRev = new function(){
 
 		//update html layers
 		updateHtmlLayersFromObject();
-				
+		
 		//update html sortbox
 		updateHtmlSortboxFromObject();
-						
+		
 		//event on element for href
-		initDisallowCaptionsOnClick();				
+		initDisallowCaptionsOnClick();
 
 		var type = objLayer.type || "text";
 		
-		
 		u.rebuildLayerIdle(t.getHtmlLayerFromSerial(selectedLayerSerial));
 
-		
-		
-		t.set_cover_mode();			
-		
-				
+		t.set_cover_mode();
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "updateLayerFromFields_Core" && env_sub=="end") 				
+				objUpdate = callback(objUpdate);
+			
+		});
+
+		//t.add_layer_change();
 
 	}
 
@@ -6065,7 +6924,7 @@ var UniteLayersRev = new function(){
 	var updateHtmlSortboxFromObject = function(serial){
 
 
-		serial = serial || selectedLayerSerial;
+		serial = serial!=undefined ? serial : selectedLayerSerial;
 
 		var objLayer = t.getLayer(serial),
 			htmlSortItem = u.getHtmlSortItemFromSerial(serial);
@@ -6086,10 +6945,10 @@ var UniteLayersRev = new function(){
 	 */
 	var redrawAllLayerHtml = function() {
 		
-		jQuery.each(arrLayers,function(i,obj) {
+		jQuery.each(t.arrLayers,function(i,obj) {
 			redrawLayerHtml(obj.serial);
 		});
-		jQuery.each(arrLayersDemo,function(i,obj) {
+		jQuery.each(t.arrLayersDemo,function(i,obj) {
 			redrawLayerHtml(obj.serial, true);
 		});
 		jQuery('.slide_layer').each(function() {
@@ -6132,7 +6991,8 @@ var UniteLayersRev = new function(){
 		
 		var fullstyles = UniteCssEditorRev.getStyleSettingsByHandle(objLayer["style"]);
 
-		var styles = fullstyles.params;
+		var styles = fullstyles.params,
+			svgstyles = UniteCssEditorRev.getStyleSettingsByHandle(objLayer["svg"]);
 		var hover_styles = fullstyles.hover;
 		if(hover_styles == undefined) hover_styles = {};
 		
@@ -6205,6 +7065,7 @@ var UniteLayersRev = new function(){
 			// BORDER WIDTH
 			if (nix(objLayer['deformation']['border-width']) || reset)
 				objLayer['deformation']['border-width'] = !nix(styles['border-width']) ? styles['border-width'] : "0";
+
 				
 			// BORDER RADIUS
 			if (nix(objLayer['deformation']['border-radius']) || (nix(objLayer['deformation']['border-radius'][0]) && nix(objLayer['deformation']['border-radius'][1]) && nix(objLayer['deformation']['border-radius'][2]) && nix(objLayer['deformation']['border-radius'][3])) || reset) {
@@ -6247,6 +7108,50 @@ var UniteLayersRev = new function(){
 			
 		}
 
+		if (objLayer['svg']!=undefined && svgstyles!=undefined) {
+			// SVG STROKE COLOR
+			if (nix(objLayer['svg']['svgstroke-color']) || reset)
+				objLayer['svg']['svgstroke-color'] = !nix(svgstyles['svgstroke-color']) ? UniteAdminRev.rgb2hex(svgstyles['svgstroke-color']) : "transparent";
+			
+			// SVG STROKE TRANSPARENCY
+			if(nix(objLayer['svg']['svgstroke-transparency']) || reset)
+				objLayer['svg']['svgstroke-transparency'] = !nix(svgstyles["svgstroke-transparency"]) ? svgstyles["svgstroke-transparency"] : "1";
+			
+			// SVG STROKE DASH ARRAY
+			if (nix(objLayer['svg']['svgstroke-dasharray']) || reset)
+				objLayer['svg']['svgstroke-dasharray'] = !nix(svgstyles['svgstroke-dasharray']) ? svgstyles['svgstroke-dasharray'] : "0";
+
+			// SVG STROKE DASH OFFSET
+			if (nix(objLayer['svg']['svgstroke-dashoffset']) || reset)
+				objLayer['svg']['svgstroke-dashoffset'] = !nix(svgstyles['svgstroke-dashoffset']) ? svgstyles['svgstroke-dashoffset'] : "0";
+				
+			// SVG STROKE WIDTH
+			if (nix(objLayer['svg']['svgstroke-width']) || reset)
+				objLayer['svg']['svgstroke-width'] = !nix(svgstyles['svgstroke-width']) ? svgstyles['svgstroke-width'] : "0";
+
+			// SVG STROKE COLOR
+			if (nix(objLayer['svg']['svgstroke-hover-color']) || reset)
+				objLayer['svg']['svgstroke-hover-color'] = !nix(svgstyles['svgstroke-hover-color']) ? UniteAdminRev.rgb2hex(svgstyles['svgstroke-hover-color']) : "transparent";
+			
+			// SVG STROKE TRANSPARENCY
+			if(nix(objLayer['svg']['svgstroke-hover-transparency']) || reset)
+				objLayer['svg']['svgstroke-hover-transparency'] = !nix(svgstyles["svgstroke-hover-transparency"]) ? svgstyles["svgstroke-hover-transparency"] : "1";
+			
+			// SVG STROKE DASH ARRAY
+			if (nix(objLayer['svg']['svgstroke-hover-dasharray']) || reset)
+				objLayer['svg']['svgstroke-hover-dasharray'] = !nix(svgstyles['svgstroke-hover-dasharray']) ? svgstyles['svgstroke-hover-dasharray'] : "0";
+
+			// SVG STROKE DASH OFFSET
+			if (nix(objLayer['svg']['svgstroke-hover-dashoffset']) || reset)
+				objLayer['svg']['svgstroke-hover-dashoffset'] = !nix(svgstyles['svgstroke-hover-dashoffset']) ? svgstyles['svgstroke-hover-dashoffset'] : "0";
+				
+			// SVG STROKE WIDTH
+			if (nix(objLayer['svg']['svgstroke-hover-width']) || reset)
+				objLayer['svg']['svgstroke-hover-width'] = !nix(svgstyles['svgstroke-hover-width']) ? svgstyles['svgstroke-hover-width'] : "0";
+		}
+
+
+
 		if(reset){
 			if(is_hover === 'true' || is_hover === true){
 				jQuery('#hover_allow').attr('checked', true);
@@ -6261,19 +7166,29 @@ var UniteLayersRev = new function(){
 		RevSliderSettings.onoffStatus(jQuery('#toggle_use_hover'));
 		
 		
+		jQuery('#css_layer_selectable option[value="'+objLayer['layer-selectable']+'"]').attr('selected', true);
+		
 		if(objLayer.deformation != undefined){
 			jQuery('#css_font-family').val(objLayer['deformation']['font-family']);
 			jQuery('input[name="css_padding[]"]').each(function(i){ jQuery(this).val(objLayer['deformation']['padding'][i]);});
 			if(objLayer['deformation']['font-style'] == 'italic')
 				jQuery('#css_font-style').attr('checked', true); // checkbox
 			else
-				jQuery('#css_font-style').attr('checked', false); // checkbox
-			
+				jQuery('#css_font-style').attr('checked', false); // checkbox						
 			RevSliderSettings.onoffStatus(jQuery('#css_font-style'));
+			
+			
+			
+			/*if(objLayer['layer-selectable'] == 'on')
+				jQuery('#css_layer_selectable').attr('checked', true); // checkbox
+			else
+				jQuery('#css_layer_selectable').attr('checked', false); // checkbox
+			RevSliderSettings.onoffStatus(jQuery('#css_layer_selectable'));*/
 			
 			jQuery('#css_font-transparency').val(objLayer['deformation']['color-transparency']);
 			jQuery('#css_text-decoration option[value="'+objLayer['deformation']['text-decoration']+'"]').attr('selected', true);
 			jQuery('#css_text-align option[value="'+objLayer['deformation']['text-align']+'"]').attr('selected', true);
+			jQuery('#css_text-transform option[value="'+objLayer['deformation']['text-transform']+'"]').attr('selected', true);
 			jQuery('#css_background-color').val(objLayer['deformation']['background-color']);
 			jQuery('#css_background-transparency').val(objLayer['deformation']['background-transparency']);
 			jQuery('#css_border-color-show').val(objLayer['deformation']['border-color']);
@@ -6296,7 +7211,7 @@ var UniteLayersRev = new function(){
 			jQuery('#layer_2d_origin_y').val(objLayer['deformation']['2d_origin_y']);//
 			jQuery('#layer__pers').val(objLayer['deformation']['pers']);
 			jQuery('#layer_cornerleft option[value="'+objLayer['deformation']['corner_left']+'"]').attr('selected', true);
-			jQuery('#layer_cornerleft option[value="'+objLayer['deformation']['corner_right']+'"]').attr('selected', true);
+			jQuery('#layer_cornerright option[value="'+objLayer['deformation']['corner_right']+'"]').attr('selected', true);
 			jQuery('#parallax_level option[value="'+objLayer['deformation']['parallax']+'"]').attr('selected', true);
 			
 			
@@ -6412,7 +7327,17 @@ var UniteLayersRev = new function(){
 	 */
 	var updateLayerFormFields = function(serial){
 		
-		var objLayer = arrLayers[serial];
+		var objLayer = t.arrLayers[serial];
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "updateLayerFormFields" && env_sub=="start") 								
+				objLayer = callback(objLayer);
+			
+		});
 		
 		if(typeof(objLayer) == 'undefined') return true;
 		
@@ -6559,6 +7484,19 @@ var UniteLayersRev = new function(){
 		jQuery("#layer_loop_zoomend").val(objLayer.loop_zoomend);
 		jQuery("#layer_loop_angle").val(objLayer.loop_angle);
 		jQuery("#layer_loop_radius").val(objLayer.loop_radius);
+
+		if (objLayer['svg']!=undefined) {
+			jQuery('#css_svgstroke-color-show').val(objLayer['svg']['svgstroke-color']);
+			jQuery('#css_svgstroke-transparency').val(objLayer['svg']['svgstroke-transparency']);
+			jQuery('#css_svgstroke-dasharray').val(objLayer['svg']['svgstroke-dasharray']);
+			jQuery('#css_svgstroke-dashoffset').val(objLayer['svg']['svgstroke-dashoffset']);
+			jQuery('#css_svgstroke-width').val(objLayer['svg']['svgstroke-width']);
+			jQuery('#css_svgstroke-hover-color-show').val(objLayer['svg']['svgstroke-hover-color']);
+			jQuery('#css_svgstroke-hover-transparency').val(objLayer['svg']['svgstroke-hover-transparency']);
+			jQuery('#css_svgstroke-hover-dasharray').val(objLayer['svg']['svgstroke-hover-dasharray']);
+			jQuery('#css_svgstroke-hover-dashoffset').val(objLayer['svg']['svgstroke-hover-dashoffset']);
+			jQuery('#css_svgstroke-hover-width').val(objLayer['svg']['svgstroke-hover-width']);
+		}
 		
 		jQuery("#layer_html_tag option[value='"+objLayer.html_tag+"']").attr('selected', 'selected');
 		jQuery("#parallax_layer_ddd_zlevel option[value='"+objLayer.parallax_layer_ddd_zlevel+"']").attr('selected', 'selected');
@@ -6680,14 +7618,16 @@ var UniteLayersRev = new function(){
 		jQuery("#layer_skew_ystart").val(objLayer.skew_y_start);
 		jQuery("#layer_skew_xend").val(objLayer.skew_x_end);
 		jQuery("#layer_skew_yend").val(objLayer.skew_y_end);
-		jQuery("#layer_anim_xoriginstart").val(objLayer.loop_xorigin); //objLayer.x_origin_start
-		jQuery("#layer_anim_yoriginstart").val(objLayer.loop_yorigin); //objLayer.y_origin_start
-		jQuery("#layer_anim_xoriginend").val(); //objLayer.x_origin_end
-		jQuery("#layer_anim_yoriginend").val(objLayer.loop_yorigin); //objLayer.y_origin_end
-
+		
 		jQuery("#layer_pers_start").val(objLayer.pers_start);
 		jQuery("#layer_pers_end").val(objLayer.pers_end);
-				
+		
+		if(typeof(objLayer['layer-selectable']) !== 'undefined'){
+			jQuery('#css_layer_selectable option[value="'+objLayer['layer-selectable']+'"]').attr('selected', true);
+		}else{
+			jQuery('#css_layer_selectable option[value="default"]').attr('selected', true);
+		}
+		
 		if(typeof(objLayer.x_start_reverse) !== 'undefined' && (objLayer.x_start_reverse == "true" || objLayer.x_start_reverse == true)) { jQuery('#layer_anim_xstart_reverse').attr('checked',true); }else{ jQuery('#layer_anim_xstart_reverse').removeAttr('checked'); }
 		if(typeof(objLayer.y_start_reverse) !== 'undefined' && (objLayer.y_start_reverse == "true" || objLayer.y_start_reverse == true)) { jQuery('#layer_anim_ystart_reverse').attr('checked',true); }else{ jQuery('#layer_anim_ystart_reverse').removeAttr('checked'); }
 		if(typeof(objLayer.x_end_reverse) !== 'undefined' && (objLayer.x_end_reverse == "true" || objLayer.x_end_reverse == true)) { jQuery('#layer_anim_xend_reverse').attr('checked',true); }else{ jQuery('#layer_anim_xend_reverse').removeAttr('checked'); }
@@ -6778,7 +7718,16 @@ var UniteLayersRev = new function(){
 		});
 		showHideToolTip();
 		showHideLoopFunctions(); //has to be the last thing done to not interrupt settings
-		
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "updateLayerFormFields" && env_sub=="end") 								
+				objLayer = callback(objLayer);
+			
+		});
 	}
 
 
@@ -6787,6 +7736,15 @@ var UniteLayersRev = new function(){
 	 */
 	var unselectHtmlLayers = function(){
 		
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "unselectHtmlLayers" && env_sub=="start") 				
+				callback();			
+		});
+
 		jQuery(containerID + " .slide_layer.layer_selected").each(function() {
 			try {
 				jQuery(this).resizable("destroy");
@@ -6797,6 +7755,15 @@ var UniteLayersRev = new function(){
 		jQuery(containerID + " .slide_layer").removeClass("layer_selected");
 		
 		jQuery('.edit_slide_wrapper').attr('class', '').addClass('edit_slide_wrapper');
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "unselectHtmlLayers" && env_sub=="end") 				
+				callback();			
+		});
 		
 	}
 
@@ -6874,6 +7841,7 @@ var UniteLayersRev = new function(){
 					jQuery('#layer-short-tool-placeholder-a').hide();
 					jQuery('#layer-short-tool-placeholder-b').hide();
 				break;
+				case 'audio':
 				case "video":					
 					jQuery('#button_edit_layer').hide();
 					jQuery('#button_change_image_source').hide();
@@ -6896,9 +7864,16 @@ var UniteLayersRev = new function(){
 					jQuery('#button_edit_layer').hide();
 					jQuery('#button_reset_size').hide();
 				break;*/
-				case 'typeA':
-				break;
-				case 'typeB':
+				case 'svg':
+					jQuery('#button_change_image_source').hide();
+					jQuery('#button_edit_layer').hide();
+					jQuery('#button_reset_size').hide();
+					jQuery('#button_change_video_settings').hide();
+					jQuery('#layer-short-tool-placeholder-a').show();
+					jQuery('#layer-short-tool-placeholder-b').hide();
+					jQuery('#button_edit_layer').show();
+					jQuery('#layer-short-tool-placeholder-b').hide();
+					//show/hide elements depending
 				break;
 			}
 
@@ -6936,6 +7911,7 @@ var UniteLayersRev = new function(){
 						case 'mute_video':
 						case 'unmute_video':
 						case 'toggle_mute_video':
+						case 'toggle_global_mute_video':
 						case 'simulate_click':
 						case 'toggle_class':
 							
@@ -7126,6 +8102,13 @@ var UniteLayersRev = new function(){
 				jQuery(this).append(jQuery('<option data-mytype="'+clayers[key].type+'"></option>').val(clayers[key]['unique_id']).text(clayers[key].alias));
 			}
 			
+			if(initStaticLayers !== null && initStaticLayers.length > 0){
+				jQuery(this).append(jQuery('<option data-mytype="all" disabled="disabled"></option>').text(rev_lang.static_layers));
+				for(var key in initStaticLayers){
+					jQuery(this).append(jQuery('<option data-mytype="'+initStaticLayers[key].type+'"></option>').val('static-'+initStaticLayers[key]['unique_id']).text(initStaticLayers[key].alias));
+				}
+			}
+			
 			var do_sel = jQuery(this).data('selectoption');
 			
 			jQuery(this).find('option[value="'+do_sel+'"]').attr('selected', true);
@@ -7167,6 +8150,7 @@ var UniteLayersRev = new function(){
 	 * set layer selected representation
 	 */
 	t.setLayerSelected = function(serial,videoRefresh){
+
 		
 		if(selectedLayerSerial == serial && !videoRefresh)
 			return(false);
@@ -7192,11 +8176,12 @@ var UniteLayersRev = new function(){
 		
 		t.showHideContentEditor(false);
 		t.toolbarInPos(objLayer);
-		
+
 		// SOME TOOLBAR ACTION FOR SELECTED LAYER
 		var layer = t.getHtmlLayerFromSerial(serial),
 			tbar = jQuery('#layer-short-toolbar');
 
+				
 		jQuery('#the_current-editing-layer-title').val(objLayer.alias).removeAttr('disabled');		
 		jQuery('#layer-short-toolbar').data('serial',serial);
 
@@ -7235,6 +8220,8 @@ var UniteLayersRev = new function(){
 		//unselect all other layers
 		unselectHtmlLayers();
 
+		
+
 		//set selected class
 		layer.addClass("layer_selected");		
 
@@ -7248,6 +8235,19 @@ var UniteLayersRev = new function(){
 		//enable form fields
 		enableFormFields();
 
+
+		
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];			
+			if (env === "setLayerSelected" && env_sub=="start") 							
+				callback(serial);						
+			
+		});
+		
+		
 		jQuery('#layer_text_wrapper').removeClass('currently_editing_txt');
 		
 		jQuery('.rs-lazy-load-images-wrap').hide();
@@ -7292,7 +8292,8 @@ var UniteLayersRev = new function(){
 
 		//do specific operations depends on type
 		switch(objLayer.type){
-			case "video":	//show edit video button
+			case 'audio':
+			case 'video':	//show edit video button
 				
 				jQuery("#linkInsertTemplate").addClass("disabled");
 				jQuery("#layer_2d_rotation_row").hide();
@@ -7306,6 +8307,7 @@ var UniteLayersRev = new function(){
 					aspectRatio:aspectratio,
 					handles:"all",
 					start:function(event,ui) {
+						
 						if(jQuery("#layer_proportional_scale")[0].checked) {
 							punchgs.TweenLite.set(ui.element,{width:ui.originalSize.width,height:ui.originalSize.height})
 							punchgs.TweenLite.set(ui.element.find('img'),{width:"100%",height:"auto"})
@@ -7348,7 +8350,7 @@ var UniteLayersRev = new function(){
 				t.makeCurrentLayerRotatable();
 				
 			break;
-			case "image":
+			case 'image':
 				//disable the insert button
 				
 				jQuery("#linkInsertTemplate").addClass("disabled");
@@ -7370,6 +8372,7 @@ var UniteLayersRev = new function(){
 				jQuery("#layer_2d_rotation_row").show();
 				jQuery("#layer_2d_origin_x_row").show();
 				jQuery("#layer_2d_origin_y_row").show();
+				jQuery("#layer-prop-wrapper").show();
 				
 				jQuery("#layer-covermode-wrapper").show();
 				
@@ -7384,6 +8387,7 @@ var UniteLayersRev = new function(){
 					aspectRatio:aspectratio,
 					handles:"all",
 					start:function(event,ui) {
+						
 						// IF IMAGE IS IN ASPECT RATIO MODE
 						if(jQuery("#layer_proportional_scale")[0].checked) {
 							punchgs.TweenLite.set(ui.element,{width:ui.originalSize.width,height:ui.originalSize.height})
@@ -7420,12 +8424,100 @@ var UniteLayersRev = new function(){
 				t.makeCurrentLayerRotatable();
 
 			break;
+			case 'svg':
+				//show things for svg specific if svg layer is selected
+				jQuery('#layer-covermode-wrapper').hide();
+				jQuery('#layer-prop-wrapper').hide();
+				jQuery('#reset-scale').hide();
+				jQuery('#layer-linebreak-wrapper').hide();
+				jQuery("#layer_max_width").show();
+				jQuery("#layer_max_height").show();
+				jQuery("#layer_2d_rotation_row").show();
+				jQuery("#layer_2d_origin_x_row").show();
+				jQuery("#layer_2d_origin_y_row").show();
+				layer.resizable({
+					handles:"all",
+					aspectRatio:true,
+					start:function() {						
+						jQuery('.rs-linebreak-check').removeClass('notselected');					
+						jQuery("#layer_whitespace option[value='normal']").attr('selected', 'selected');												
+						layer.find('.innerslide_layer.tp-caption').css({maxHeight:"none",minHeight:0,maxWidth:"none"});						
+					},
+					resize:function(event,ui) {								
+						jQuery('#layer_max_width').val(ui.size.width+"px");
+						jQuery('#layer_max_height').val(ui.size.height+"px");
+					},
+					stop:function(event,ui) {
+
+						layerresized = true;
+						setTimeout(function() {
+							layerresized = false;							
+						},200);
+						t.updateLayerFromFields();
+					}
+				});
+				t.makeCurrentLayerRotatable();
+			break; 
 			case 'shape':
 				jQuery("#layer-covermode-wrapper").show();
+				jQuery("#layer_max_width").show();
+				jQuery("#layer_max_height").show();
+				jQuery("#layer_whitespace_row").show();
+				jQuery("#layer_2d_rotation_row").show();
+				jQuery("#layer_2d_origin_x_row").show();
+				jQuery("#layer_2d_origin_y_row").show();
+				jQuery('#layer_text_wrapper').addClass('currently_editing_txt');
+				jQuery('#layer-linebreak-wrapper').show();
 				
+				if(objLayer.type == 'shape'){
+					jQuery('#layer-linebreak-wrapper').hide();
+					jQuery('#layer_text_wrapper').removeClass('currently_editing_txt');
+				}
+				
+				if(objLayer.type == 'typeB'){}
+				//if(objLayer.type == 'no_edit'){}
+					
+				layer.resizable({
+					handles:"all",
+					start:function() {
+						
+						jQuery('.rs-linebreak-check').removeClass('notselected');					
+						jQuery("#layer_whitespace option[value='normal']").attr('selected', 'selected');
+						
+						var mw = layer.outerWidth(),
+							mh = layer.outerHeight();
+						layer.css({height:"auto"});
+						
+						//if(objLayer.type == 'shape')
+							
+						layer.find('.innerslide_layer.tp-caption').css({height:"auto",maxHeight:"none",minHeight:mh,maxWidth:mw});
+						
+					},
+					resize:function(event,ui) {
+						var il = ui.element.find('.innerslide_layer'),
+							minheight = il.outerHeight(),
+							ilwidth = il.outerWidth(),
+							maxheight = ui.size.height+1,
+							maxwidth = ui.size.width+1;
+							
+						il.css({"maxWidth":maxwidth});
+
+						//maxheight = minheight>=maxheight ? "auto" : maxheight+"px";
+						jQuery('#layer_max_width').val(maxwidth+"px");
+						jQuery('#layer_max_height').val(maxheight);
+					},
+					stop:function(event,ui) {
+						layerresized = true;
+						setTimeout(function() {
+							layerresized = false;							
+						},200);
+						t.updateLayerFromFields();
+					}
+				});
+
+				t.makeCurrentLayerRotatable();
+			break;
 			//case 'no_edit':
-			case 'typeA':
-			case 'typeB':
 			case 'button':
 			default:  //set layer text to default height
 				jQuery("#layer_max_width").show();
@@ -7441,13 +8533,14 @@ var UniteLayersRev = new function(){
 					jQuery('#layer-linebreak-wrapper').hide();
 					jQuery('#layer_text_wrapper').removeClass('currently_editing_txt');
 				}
-				if(objLayer.type == 'typeA'){}
+				
 				if(objLayer.type == 'typeB'){}
 				//if(objLayer.type == 'no_edit'){}
 					
 				layer.resizable({
 					handles:"all",
 					start:function() {
+						
 						jQuery('.rs-linebreak-check').removeClass('notselected');					
 						jQuery("#layer_whitespace option[value='normal']").attr('selected', 'selected');
 						
@@ -7568,6 +8661,15 @@ var UniteLayersRev = new function(){
 		t.updateReverseList();
 		
 		jQuery('#parallax_level').change();
+
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(t.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["envifunction_position"];			
+			if (env === "setLayerSelected" && env_sub=="end") 							
+				callback(serial);									
+		});
 		
 	}
 
@@ -7613,8 +8715,8 @@ var UniteLayersRev = new function(){
 		var maxTime = 0;
 
 		//get max time
-		for (key in arrLayers){
-			var layer = arrLayers[key];
+		for (key in t.arrLayers){
+			var layer = t.arrLayers[key];
 
 			layerTime = (layer.time)?Number(layer.time):0;
 
@@ -7628,6 +8730,8 @@ var UniteLayersRev = new function(){
 		else
 			outputTime = Number(maxTime) + Number(g_stepTime);
 
+
+		if (outputTime>=g_slideTime) outputTime = g_slideTime / 2;
 		return(outputTime);
 	}
 
@@ -7822,16 +8926,16 @@ var UniteLayersRev = new function(){
 
 		switch(dir){
 			case "down":
-				arrLayers[serial] = t.setVal(arrLayers[serial], 'top', t.getVal(arrLayers[serial], 'top') + step);
+				t.arrLayers[serial] = t.setVal(t.arrLayers[serial], 'top', t.getVal(t.arrLayers[serial], 'top') + step);
 			break;
 			case "up":
-				arrLayers[serial] = t.setVal(arrLayers[serial], 'top', t.getVal(arrLayers[serial], 'top') - step);
+				t.arrLayers[serial] = t.setVal(t.arrLayers[serial], 'top', t.getVal(t.arrLayers[serial], 'top') - step);
 			break;
 			case "right":
-				arrLayers[serial] = t.setVal(arrLayers[serial], 'left', t.getVal(arrLayers[serial], 'left') + step);
+				t.arrLayers[serial] = t.setVal(t.arrLayers[serial], 'left', t.getVal(t.arrLayers[serial], 'left') + step);
 			break;
 			case "left":
-				arrLayers[serial] = t.setVal(arrLayers[serial], 'left', t.getVal(arrLayers[serial], 'left') - step);
+				t.arrLayers[serial] = t.setVal(t.arrLayers[serial], 'left', t.getVal(t.arrLayers[serial], 'left') - step);
 			break;
 			default:
 				UniteAdminRev.showErrorMessage("wrong direction: "+dir);
@@ -7914,6 +9018,7 @@ var UniteLayersRev = new function(){
 					layer.resizable("destroy").resizable({
 						aspectRatio:aspectratio,
 						start:function(event,ui) {
+							
 							// IF IMAGE IS IN ASPECT RATIO MODE
 							if(jQuery("#layer_proportional_scale")[0].checked) {								
 								punchgs.TweenLite.set(ui.element,{width:ui.originalSize.width,height:ui.originalSize.height})
@@ -7977,9 +9082,7 @@ var UniteLayersRev = new function(){
 			});
 
 			jQuery("#reset-scale, #button_reset_size").click(resetCurrentElementSize);
-
-				
-
+			
 		}
 
 		var resetCurrentElementSize = function() {
@@ -7989,9 +9092,10 @@ var UniteLayersRev = new function(){
 					return false;
 				}else /*if (objLayer.type == "no_edit") {
 					return false;
-				}else*/ if (objLayer.type == "typeA") {
+				}else*/ if (objLayer.type == 'svg') {
+					//reset svg size
 					return false;
-				}else if (objLayer.type == "typeB") {
+				}else if (objLayer.type == 'audio') {
 					return false;
 				}else if (objLayer.type=="text" || objLayer.type=="button") {
 					var ww = jQuery('.slide_layer.layer_selected .innerslide_layer').outerWidth();
@@ -8007,14 +9111,14 @@ var UniteLayersRev = new function(){
 						jQuery('#layer_cover_mode option[value="custom"]').attr('selected', true);
 					}
 					
-					resetImageDimensions();
+					var rsdimensions = resetImageDimensions();
 					jQuery("#layer_proportional_scale").attr('checked', false);
 					jQuery('.rs-proportion-check').addClass('notselected');
 	
 					jQuery("#layer_scaleX_text").html(jQuery("#layer_scaleX_text").data("textnormal")).css("width", "10px");
 					
-					var mwidth = specOrVal(t.getVal(objLayer,'originalWidth'),["auto"],"px");
-					var mheight = specOrVal(t.getVal(objLayer,'originalHeight'),["auto"],"px");
+					var mwidth = rsdimensions['width'];
+					var mheight = rsdimensions['height'];
 					
 					jQuery("#layer_scaleX").val(mwidth);
 					jQuery("#layer_scaleY").val(mheight);
@@ -8164,7 +9268,9 @@ var UniteLayersRev = new function(){
 			
 			objUpdate.animation_overwrite = new_val;
 			
+			update_layer_changes = false;
 			t.updateLayer(lid,objUpdate);
+			update_layer_changes = true;
 			
 			jQuery('select[name="layer_target[]"] option:selected').each(function(){
 				if(jQuery(this).val() == do_sel){
@@ -8183,7 +9289,9 @@ var UniteLayersRev = new function(){
 			
 			objUpdate.trigger_memory = new_val;
 			
+			update_layer_changes = false;
 			t.updateLayer(lid,objUpdate);
+			update_layer_changes = true;
 			
 			jQuery('select[name="layer_target[]"] option:selected').each(function(){
 				if(jQuery(this).val() == do_sel){
@@ -8473,6 +9581,25 @@ var UniteLayersRev = new function(){
 	
 	t.get_current_selected_layer = function(){
 		return selectedLayerSerial;
+	}
+	
+	t.addPreventLeave = function(){
+		/**
+		 * warn the user if changes are made and not saved yet
+		 */
+		window.onbeforeunload = function (e) {
+			if(save_needed){
+				var message = rev_lang.leave_not_saved,
+				e = e || window.event;
+				// For IE and Firefox
+				if (e) {
+					e.returnValue = message;
+				}
+
+				// For Safari
+				return message;
+			}
+		};
 	}
 	
 }

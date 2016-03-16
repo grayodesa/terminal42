@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-
-require_once dirname(__FILE__) . '/autoload.php';
+if (!class_exists('Google_Client')) {
+  require_once dirname(__FILE__) . '/autoload.php';
+}
 
 /**
  * The Google API Client
- * http://code.google.com/p/google-api-php-client/
+ * https://github.com/google/google-api-php-client
  */
-class App_Google_Client
+class Google_Client
 {
-  const LIBVER = "1.1.4";
+  const LIBVER = "1.1.5";
   const USER_AGENT_SUFFIX = "google-api-php-client/";
   /**
    * @var Google_Auth_Abstract $auth
@@ -74,27 +75,27 @@ class App_Google_Client
   public function __construct($config = null)
   {
     if (is_string($config) && strlen($config)) {
-      $config = new App_Google_Config($config);
-    } else if ( !($config instanceof App_Google_Config)) {
-      $config = new App_Google_Config();
+      $config = new Google_Config($config);
+    } else if ( !($config instanceof Google_Config)) {
+      $config = new Google_Config();
 
       if ($this->isAppEngine()) {
         // Automatically use Memcache if we're in AppEngine.
-        $config->setCacheClass('App_Google_Cache_Memcache');
+        $config->setCacheClass('Google_Cache_Memcache');
       }
 
       if (version_compare(phpversion(), "5.3.4", "<=") || $this->isAppEngine()) {
         // Automatically disable compress.zlib, as currently unsupported.
-        $config->setClassConfig('App_Google_Http_Request', 'disable_gzip', true);
+        $config->setClassConfig('Google_Http_Request', 'disable_gzip', true);
       }
     }
 
-    if ($config->getIoClass() == App_Google_Config::USE_AUTO_IO_SELECTION) {
+    if ($config->getIoClass() == Google_Config::USE_AUTO_IO_SELECTION) {
       if (function_exists('curl_version') && function_exists('curl_exec')
           && !$this->isAppEngine()) {
-        $config->setIoClass("App_Google_IO_Curl");
+        $config->setIoClass("Google_IO_Curl");
       } else {
-        $config->setIoClass("App_Google_IO_Stream");
+        $config->setIoClass("Google_IO_Stream");
       }
     }
 
@@ -113,15 +114,18 @@ class App_Google_Client
 
   /**
    * Attempt to exchange a code for an valid authentication token.
+   * If $crossClient is set to true, the request body will not include
+   * the request_uri argument
    * Helper wrapped around the OAuth 2.0 implementation.
    *
    * @param $code string code from accounts.google.com
+   * @param $crossClient boolean, whether this is a cross-client authentication
    * @return string token
    */
-  public function authenticate($code)
+  public function authenticate($code, $crossClient = false)
   {
     $this->authenticated = true;
-    return $this->getAuth()->authenticate($code);
+    return $this->getAuth()->authenticate($code, $crossClient);
   }
 
   /**
@@ -140,14 +144,14 @@ class App_Google_Client
     $data = json_decode(file_get_contents($jsonLocation));
     if (isset($data->type) && $data->type == 'service_account') {
       // Service Account format.
-      $cred = new App_Google_Auth_AssertionCredentials(
+      $cred = new Google_Auth_AssertionCredentials(
           $data->client_email,
           $scopes,
           $data->private_key
       );
       return $cred;
     } else {
-      throw new App_Google_Exception("Invalid service account JSON file.");
+      throw new Google_Exception("Invalid service account JSON file.");
     }
   }
 
@@ -164,7 +168,7 @@ class App_Google_Client
     $data = json_decode($json);
     $key = isset($data->installed) ? 'installed' : 'web';
     if (!isset($data->$key)) {
-      throw new App_Google_Exception("Invalid client secret JSON file.");
+      throw new Google_Exception("Invalid client secret JSON file.");
     }
     $this->setClientId($data->$key->client_id);
     $this->setClientSecret($data->$key->client_secret);
@@ -193,7 +197,7 @@ class App_Google_Client
   public function prepareScopes()
   {
     if (empty($this->requestedScopes)) {
-      throw new App_Google_Auth_Exception("No scopes specified");
+      throw new Google_Auth_Exception("No scopes specified");
     }
     $scopes = implode(' ', $this->requestedScopes);
     return $scopes;
@@ -220,7 +224,7 @@ class App_Google_Client
    * Set the authenticator object
    * @param Google_Auth_Abstract $auth
    */
-  public function setAuth(App_Google_Auth_Abstract $auth)
+  public function setAuth(Google_Auth_Abstract $auth)
   {
     $this->config->setAuthClass(get_class($auth));
     $this->auth = $auth;
@@ -230,7 +234,7 @@ class App_Google_Client
    * Set the IO object
    * @param Google_IO_Abstract $io
    */
-  public function setIo(App_Google_IO_Abstract $io)
+  public function setIo(Google_IO_Abstract $io)
   {
     $this->config->setIoClass(get_class($io));
     $this->io = $io;
@@ -240,7 +244,7 @@ class App_Google_Client
    * Set the Cache object
    * @param Google_Cache_Abstract $cache
    */
-  public function setCache(App_Google_Cache_Abstract $cache)
+  public function setCache(Google_Cache_Abstract $cache)
   {
     $this->config->setCacheClass(get_class($cache));
     $this->cache = $cache;
@@ -250,7 +254,7 @@ class App_Google_Client
    * Set the Logger object
    * @param Google_Logger_Abstract $logger
    */
-  public function setLogger(App_Google_Logger_Abstract $logger)
+  public function setLogger(Google_Logger_Abstract $logger)
   {
     $this->config->setLoggerClass(get_class($logger));
     $this->logger = $logger;
@@ -490,7 +494,7 @@ class App_Google_Client
    */
   public function verifySignedJwt($id_token, $cert_location, $audience, $issuer, $max_expiry = null)
   {
-    $auth = new App_Google_Auth_OAuth2($this);
+    $auth = new Google_Auth_OAuth2($this);
     $certs = $auth->retrieveCertsFromLocation($cert_location);
     return $auth->verifySignedJwtWithCerts($id_token, $certs, $audience, $issuer, $max_expiry);
   }
@@ -498,7 +502,7 @@ class App_Google_Client
   /**
    * @param $creds Google_Auth_AssertionCredentials
    */
-  public function setAssertionCredentials(App_Google_Auth_AssertionCredentials $creds)
+  public function setAssertionCredentials(Google_Auth_AssertionCredentials $creds)
   {
     $this->getAuth()->setAssertionCredentials($creds);
   }
@@ -576,7 +580,7 @@ class App_Google_Client
    */
   public function execute($request)
   {
-    if ($request instanceof App_Google_Http_Request) {
+    if ($request instanceof Google_Http_Request) {
       $request->setUserAgent(
           $this->getApplicationName()
           . " " . self::USER_AGENT_SUFFIX
@@ -586,11 +590,11 @@ class App_Google_Client
         $request->enableGzip();
       }
       $request->maybeMoveParametersToBody();
-      return App_Google_Http_REST::execute($this, $request);
-    } else if ($request instanceof App_Google_Http_Batch) {
+      return Google_Http_REST::execute($this, $request);
+    } else if ($request instanceof Google_Http_Batch) {
       return $request->execute();
     } else {
-      throw new App_Google_Exception("Do not know how to execute this type of object.");
+      throw new Google_Exception("Do not know how to execute this type of object.");
     }
   }
 

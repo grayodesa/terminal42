@@ -36,7 +36,7 @@ class RevSliderDB{
 			$message = $wpdb->last_error;
 			
 			if($prefix) $message = $prefix.' - <b>'.$message.'</b>';
-			if($query) $message .=  '<br>---<br> Query: ' . $query;
+			if($query) $message .=  '<br>---<br> Query: ' . esc_attr($query);
 			
 			$this->throwError($message);
 		}
@@ -102,6 +102,19 @@ class RevSliderDB{
 	
 	/**
 	 * 
+	 * run some sql query
+	 */
+	public function runSqlR($query){
+		global $wpdb;
+		
+		$return = $wpdb->get_results($query, ARRAY_A);
+		
+		return $return;
+	}
+	
+	
+	/**
+	 * 
 	 * insert variables to some table
 	 */
 	public function update($table,$arrItems,$where){
@@ -147,13 +160,16 @@ class RevSliderDB{
 		return($record);
 	}
 	
+	
 	/**
-	 * 
-	 * escape data to avoid sql errors and injections.
+	 * prepare statement to avoid sql injections
 	 */
-	public function escape($string){
-		$string = esc_sql($string);
-		return($string);
+	public function prepare($query, $array){
+		global $wpdb;
+		
+		$query = $wpdb->prepare($query, $array);
+		
+		return($query);
 	}
 	
 }

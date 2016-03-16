@@ -21,7 +21,7 @@
  * http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5
  *
  */
-class App_Google_Model implements ArrayAccess
+class Google_Model implements ArrayAccess
 {
   /**
    * If you need to specify a NULL JSON value, use Google_Model::NULL_VALUE
@@ -102,7 +102,7 @@ class App_Google_Model implements ArrayAccess
         property_exists($this, $key)) {
           $this->$key = $val;
           unset($array[$key]);
-      } elseif (property_exists($this, $camelKey = App_Google_Utils::camelCase($key))) {
+      } elseif (property_exists($this, $camelKey = Google_Utils::camelCase($key))) {
           // This checks if property exists as camelCase, leaving it in array as snake_case
           // in case of backwards compatibility issues.
           $this->$camelKey = $val;
@@ -160,7 +160,7 @@ class App_Google_Model implements ArrayAccess
    */
   private function getSimpleValue($value)
   {
-    if ($value instanceof App_Google_Model) {
+    if ($value instanceof Google_Model) {
       return $value->toSimpleObject();
     } else if (is_array($value)) {
       $return = array();
@@ -240,7 +240,7 @@ class App_Google_Model implements ArrayAccess
   public function assertIsArray($obj, $method)
   {
     if ($obj && !is_array($obj)) {
-      throw new App_Google_Exception(
+      throw new Google_Exception(
           "Incorrect parameter type passed to $method(). Expected an array."
       );
     }

@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//BizzThemes//WooCommerce Appointments 1.7.7//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Терминал 42
+X-ORIGINAL-URL:http://terminal42.com.ua/
+X-WR-CALDESC:Appointments from Терминал 42
+X-WR-TIMEZONE:Europe/Kiev
+BEGIN:VEVENT
+DTEND:20160313T130000
+UID:wc_appointments_11965
+DTSTAMP:20160312T231906
+LOCATION:
+DESCRIPTION:Staff #1 - Сергей Петренко\n\n
+URL;VALUE=URI:http://terminal42.com.ua/my-account/view-order/11967
+SUMMARY:#11965 - Консультация
+DTSTART:20160313T120000
+END:VEVENT
+END:VCALENDAR

@@ -45,7 +45,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							</select>
 						
 							<div class="description_container">
-								<span class="description"><?php _e("The role of user that can view and edit the plugin",'revslider'); ?></span>					
+								<span class="description"><?php _e("The role of user that can view and edit the plugin",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>								
@@ -67,7 +67,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							</span>
 				
 							<div class="description_container">
-								<span class="description"><?php _e("ON - Add CSS and JS Files to all pages. </br>Off - CSS and JS Files will be only loaded on Pages where any rev_slider shortcode exists.",'revslider'); ?></span>					
+								<span class="description"><?php _e("ON - Add CSS and JS Files to all pages. </br>Off - CSS and JS Files will be only loaded on Pages where any rev_slider shortcode exists.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>								
@@ -76,7 +76,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							<?php _e("Pages to include RevSlider libraries:", 'revslider'); ?>
 						</th>
 						<td>
-							<input type="text" class="regular-text" id="pages_for_includes" name="pages_for_includes" value="<?php echo $pages_for_includes; ?>">			
+							<input type="text" class="regular-text" id="pages_for_includes" name="pages_for_includes" value="<?php echo $pages_for_includes; ?>">
 							<div class="description_container">
 								<span class="description"><?php _e("Specify the page id's that the front end includes will be included in. Example: 2,3,5 also: homepage,3,4",'revslider'); ?></span>
 			
@@ -100,7 +100,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 								</div>					
 							</span>					
 							<div class="description_container">
-								<span class="description"><?php _e("Putting the js to footer (instead of the head) is good for fixing some javascript conflicts.",'revslider'); ?></span>				
+								<span class="description"><?php _e("Putting the js to footer (instead of the head) is good for fixing some javascript conflicts.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>
@@ -121,7 +121,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 								</div>					
 							</span>					
 							<div class="description_container">
-								<span class="description"><?php _e("Defer the loading of the JavaScript libraries to maximize page loading speed.",'revslider'); ?></span>				
+								<span class="description"><?php _e("Defer the loading of the JavaScript libraries to maximize page loading speed.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>
@@ -142,7 +142,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 								</div>					
 							</span>					
 							<div class="description_container">
-								<span class="description"><?php _e("This will enable the option to export the Slider Markups to copy/paste it directly into websites.",'revslider'); ?></span>				
+								<span class="description"><?php _e("This will enable the option to export the Slider Markups to copy/paste it directly into websites.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>							
@@ -173,7 +173,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							<input name="width_mobile" type="text" class="textbox-small" value="<?php echo $width_mobile; ?>"></div>
 							
 							<div class="description_container">
-								<span class="description"><?php _e("Define the default Grid Sizes for devices: Desktop, Tablet and Mobile",'revslider'); ?></span>				
+								<span class="description"><?php _e("Define the default Grid Sizes for devices: Desktop, Tablet and Mobile",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>
@@ -183,7 +183,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							<?php _e("Enable Notifications:",'revslider'); ?>
 						</th>
 						<td>
-							<span id="enable_logs_wrapper" class="radio_settings_wrapper">
+							<span id="enable_newschannel_wrapper" class="radio_settings_wrapper">
 								<div class="radio_inner_wrapper">
 									<input type="radio" id="" value="on" name="enable_newschannel" <?php checked($enable_newschannel, 'on'); ?>>
 									<label for="" style="cursor:pointer;"><?php _e("On",'revslider'); ?></label>
@@ -195,7 +195,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 								</div>
 							</span>
 							<div class="description_container">
-								<span class="description"><?php _e("Enable/Disable ThemePunch Notifications in the Admin Notice bar.",'revslider'); ?></span>				
+								<span class="description"><?php _e("Enable/Disable ThemePunch Notifications in the Admin Notice bar.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>
@@ -217,7 +217,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 								</div>
 							</span>
 							<div class="description_container">
-								<span class="description"><?php _e("Enable console logs for debugging.",'revslider'); ?></span>				
+								<span class="description"><?php _e("Enable console logs for debugging.",'revslider'); ?></span>
 							</div>
 						</td>
 					</tr>	
@@ -226,7 +226,7 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							<?php _e("Enable Missing Activation Area:",'revslider'); ?>
 						</th>
 						<td>
-							<span id="enable_logs_wrapper" class="radio_settings_wrapper">
+							<span id="force_activation_box_wrapper" class="radio_settings_wrapper">
 								<div class="radio_inner_wrapper">
 									<input type="radio" id="" value="on" name="force_activation_box" <?php checked($force_activation_box, 'on'); ?>>
 									<label for="" style="cursor:pointer;"><?php _e("On",'revslider'); ?></label>
@@ -242,8 +242,21 @@ $force_activation_box = RevSliderBase::getVar($arrValues, 'force_activation_box'
 							</div>
 						</td>
 					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<?php _e("Run Slider Revolution database creation:",'revslider'); ?>
+						</th>
+						<td>
+							<span id="trigger_database_creation_wrapper" class="radio_settings_wrapper">
+								<a id="trigger_database_creation" class="button-primary" original-title="" href="javascript:void(0);"><?php _e('Go!', 'revslider'); ?></a>
+							</span>
+							<div class="description_container">
+								<span class="description"><?php _e("Force creation of Slider Revolution database structure to fix table issues that may occur for example at the Slider creation process.",'revslider'); ?></span>
+							</div>
+						</td>
+					</tr>
 				</tbody>
-			</table>				
+			</table>
 		</form>
 	</div>
 <br>

@@ -160,12 +160,7 @@ class RevSliderCssParser{
 			$styles = json_decode(str_replace("'", '"', $attr['params']), true);
 			$styles_adv = $attr['advanced']['idle'];
 			
-			if($stripped == '.News-Title'){
-				/*echo '<pre>';
-				print_r($attr);
-				echo '</pre>';
-				exit;*/
-			}
+			
 			$css.= $attr['handle'];
 			if(!empty($stripped)) $css.= ', '.$stripped;
 			$css.= " {".$nl;
@@ -521,33 +516,34 @@ class RevSliderCssParser{
 	public static function get_deformation_css_tags(){
 		
 		return array(
-			'x',
-			'y',
-			'z',
-			'skewx',
-			'skewy',
-			'scalex',
-			'scaley',
-			'opacity',
-			'xrotate',
-			'yrotate',
-			'2d_rotation',
-			'layer_2d_origin_x',
-			'layer_2d_origin_y',
-			'2d_origin_x',
-			'2d_origin_y',
-			'pers',
+			'x' => 'x',
+			'y' => 'y',
+			'z' => 'z',
+			'skewx' => 'skewx',
+			'skewy' => 'skewy',
+			'scalex' => 'scalex',
+			'scaley' => 'scaley',
+			'opacity' => 'opacity',
+			'xrotate' => 'xrotate',
+			'yrotate' => 'yrotate',
+			'2d_rotation' => '2d_rotation',
+			'layer_2d_origin_x' => 'layer_2d_origin_x',
+			'layer_2d_origin_y' => 'layer_2d_origin_y',
+			'2d_origin_x' => '2d_origin_x',
+			'2d_origin_y' => '2d_origin_y',
+			'pers' => 'pers',
 			
-			'color-transparency',
-			'background-transparency',
-			'border-transparency',
-			'css_cursor',
-			'speed',
-			'easing',
-			'corner_left',
-			'corner_right',
-			'parallax',
-			'type'
+			'color-transparency' => 'color-transparency',
+			'background-transparency' => 'background-transparency',
+			'border-transparency' => 'border-transparency',
+			'css_cursor' => 'css_cursor',
+			'speed' => 'speed',
+			'easing' => 'easing',
+			'corner_left' => 'corner_left',
+			'corner_right' => 'corner_right',
+			'parallax' => 'parallax',
+			'type' => 'type'/*,
+			'text-align' => 'text-align'*/
 			
 		);
 		
@@ -577,6 +573,71 @@ class RevSliderCssParser{
 		
 		return $sorted;
 	}
+	
+	
+	/**
+	 * Handles media queries
+	 * @since: 5.2.0
+	 **/
+	public static function parse_media_blocks($css){
+		$mediaBlocks = array();
+
+		$start = 0;
+		while(($start = strpos($css, '@media', $start)) !== false){
+			$s = array();
+			
+			$i = strpos($css, '{', $start);
+			
+			if ($i !== false){
+				
+				$block = trim(substr($css, $start, $i - $start));
+				
+				array_push($s, $css[$i]);
+
+				$i++;
+
+				while(!empty($s)){
+					if ($css[$i] == '{'){
+						array_push($s, '{');
+					}elseif ($css[$i] == '}'){
+						array_pop($s);
+					}else{
+						//broken css?
+					}
+					$i++;
+				}
+				
+				$mediaBlocks[$block] = substr($css, $start, ($i + 1) - $start);
+				$start = $i;
+			}
+		}
+
+		return $mediaBlocks;
+	}
+	
+	
+	/**
+	 * removes @media { ... } queries from CSS
+	 * @since: 5.2.0
+	 **/
+	public static function clear_media_block($css){
+		
+		$start = 0;
+		if($start = strpos($css, '@media', $start) !== false){
+			$i = strpos($css, '{', $start) + 1;
+			
+			//remove @media ... first {
+			$remove = substr($css, $start - 1, $i - $start + 1);
+			$css = str_replace($remove, '', $css);
+			
+			//remove last }
+			$css = preg_replace('/}$/', '', $css);
+			
+		}
+		
+		return $css;
+	}
+	
 }
 
 /**

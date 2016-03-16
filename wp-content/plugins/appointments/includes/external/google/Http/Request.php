@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -27,7 +27,7 @@ if (!class_exists('App_Google_Client')) {
  * @author Chirag Shah <chirags@google.com>
  *
  */
-class App_Google_Http_Request
+class Google_Http_Request
 {
   const GZIP_UA = " (gzip)";
 
@@ -83,7 +83,7 @@ class App_Google_Http_Request
    */
   public function setBaseComponent($baseComponent)
   {
-    $this->baseComponent = $baseComponent;
+    $this->baseComponent = rtrim($baseComponent, '/');
   }
 
   /**
@@ -222,7 +222,7 @@ class App_Google_Http_Request
    */
   public function setResponseHeaders($headers)
   {
-    $headers = App_Google_Utils::normalize($headers);
+    $headers = Google_Utils::normalize($headers);
     if ($this->responseHeaders) {
       $headers = array_merge($this->responseHeaders, $headers);
     }
@@ -340,7 +340,7 @@ class App_Google_Http_Request
    */
   public function setRequestHeaders($headers)
   {
-    $headers = App_Google_Utils::normalize($headers);
+    $headers = Google_Utils::normalize($headers);
     if ($this->requestHeaders) {
       $headers = array_merge($this->requestHeaders, $headers);
     }

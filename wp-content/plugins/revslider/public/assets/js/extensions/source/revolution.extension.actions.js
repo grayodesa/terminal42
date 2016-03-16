@@ -1,6 +1,6 @@
 /********************************************
- * REVOLUTION 5.0 EXTENSION - ACTIONS
- * @version: 1.1 (25.11.2015)
+ * REVOLUTION 5.2 EXTENSION - ACTIONS
+ * @version: 1.3.1 (03.03.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -72,6 +72,16 @@ if (as)
 					_tnc.data('videomutetoggledby',videomutetoggledby);				
 				});
 			break;
+			case "toggle_global_mute_video":
+				jQuery.each(tnc,function(i,_tnc) {
+					_tnc = jQuery(_tnc);
+					var videomutetoggledby = _tnc.data('videomutetoggledby');
+					if (videomutetoggledby == undefined)
+						videomutetoggledby = new Array();
+					videomutetoggledby.push(_nc);					
+					_tnc.data('videomutetoggledby',videomutetoggledby);				
+				});
+			break;
 			case "toggleslider":
 				if (opt.slidertoggledby == undefined) opt.slidertoggledby = new Array();
 					opt.slidertoggledby.push(_nc);
@@ -80,11 +90,12 @@ if (as)
 				if (opt.fullscreentoggledby == undefined) opt.fullscreentoggledby = new Array();
 				opt.fullscreentoggledby.push(_nc);													
 			break;
+
 		}
 		
 		_nc.on(a.event,function() {			
 			var tnc = a.layer == "backgroundvideo" ? jQuery(".active-revslide .slotholder .rs-background-video-layer") : a.layer == "firstvideo" ? jQuery(".active-revslide .tp-videolayer").first() : jQuery("#"+a.layer);
-			
+
 			if (a.action=="stoplayer" || a.action=="togglelayer" || a.action=="startlayer") {
 				if (tnc.length>0) 												
 					if (a.action=="startlayer" || (a.action=="togglelayer" && tnc.data('animdirection')!="in")) {
@@ -108,11 +119,11 @@ if (as)
 						tnc.data('triggerstate',"off");
 						if (_R.stopVideo) _R.stopVideo(tnc,opt);
 						if (_R.endMoveCaption)												
-						punchgs.TweenLite.delayedCall(a.delay,_R.endMoveCaption,[tnc,null,null,opt]);
+							punchgs.TweenLite.delayedCall(a.delay,_R.endMoveCaption,[tnc,null,null,opt]);
 						_R.unToggleState(tnc.data('layertoggledby'))														
 					}															
 			} else 	{
-				if (_ISM && (a.action=='playvideo' || a.action=='stopvideo' || a.action=='togglevideo' || a.action=='mutevideo' || a.action=='unmutevideo' || a.action=='toggle_mute_video')) {
+				if (_ISM && (a.action=='playvideo' || a.action=='stopvideo' || a.action=='togglevideo' || a.action=='mutevideo' || a.action=='unmutevideo' || a.action=='toggle_mute_video' || a.action=='toggle_global_mute_video')) {
 						actionSwitches(tnc,opt,a,_nc);
 				} else {
 					punchgs.TweenLite.delayedCall(a.delay,function() {
@@ -178,9 +189,11 @@ var actionSwitches = function(tnc,opt,a,_nc) {
 			opt.noloopanymore=0;								
 			if (opt.sliderstatus=="playing") {
 				opt.c.revpause();
+				opt.forcepause_viatoggle = true;
 				_R.unToggleState(opt.slidertoggledby);
 			}
 			else {
+				opt.forcepause_viatoggle = false;
 				opt.c.revresume();	
 				_R.toggleState(opt.slidertoggledby);							
 			}
@@ -219,11 +232,32 @@ var actionSwitches = function(tnc,opt,a,_nc) {
 				if (_R.unMuteVideo) _R.unMuteVideo(tnc,opt);									
 		break;
 		case "toggle_mute_video":
-			if (tnc.length>0) 											
-				if (_R.isVideoMuted(tnc,opt))
-					_R.unMuteVideo(tnc,opt);
-				else
-					if (_R.muteVideo) _R.muteVideo(tnc,opt);		
+			
+			if (tnc.length>0) 		
+				if (_R.isVideoMuted(tnc,opt)) {
+					_R.unMuteVideo(tnc,opt);			
+				} else {
+					if (_R.muteVideo) _R.muteVideo(tnc,opt);					
+				}
+			_nc.toggleClass('rs-toggle-content-active');
+		break;
+		case "toggle_global_mute_video":
+		    if (_nc.hasClass("rs-toggle-content-active")) {
+		    	opt.globalmute = false;				    	
+		    	if (opt.playingvideos != undefined && opt.playingvideos.length>0) {			
+					jQuery.each(opt.playingvideos,function(i,_nc) {							
+						if (_R.unMuteVideo) _R.unMuteVideo(_nc,opt);
+					});
+				}
+			 	
+		    } else {
+		    	opt.globalmute = true;			    	
+		    	if (opt.playingvideos != undefined && opt.playingvideos.length>0) {			
+					jQuery.each(opt.playingvideos,function(i,_nc) {									
+						if (_R.muteVideo) _R.muteVideo(_nc,opt);
+					});
+				}			 	
+		    }			
 			_nc.toggleClass('rs-toggle-content-active');
 		break;
 		case "simulateclick":

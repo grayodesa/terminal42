@@ -61,4 +61,13 @@
 <b>[26.11.2015 13:00]</b> Status changed from pending to confirmed by Gray for appointment ID:25
 <b>[26.11.2015 14:04]</b> Reminder message sent to nataly@odesseya.net for appointment ID:25
 <b>[27.11.2015 10:05]</b> Reminder message sent to gray@odesseya.net for appointment ID:25
+<b>[09.12.2015 11:37]</b> Notification message sent to gray@odesseya.net for appointment ID:26
+<b>[09.12.2015 11:49]</b> Status changed from pending to confirmed by Gray for appointment ID:26
+<b>[09.12.2015 11:49]</b> Confirmation message sent to ivanodessasound@gmail.com for appointment ID:26
+<b>[09.12.2015 11:51]</b> Reminder message sent to ivanodessasound@gmail.com for appointment ID:26
+<b>[09.12.2015 13:03]</b> Reminder message sent to gray@odesseya.net for appointment ID:26
+<b>[20.02.2016 22:06]</b> Notification message sent to gray@odesseya.net for appointment ID:27
+<b>[21.02.2016 03:23]</b> Confirmation message sent to dovganich.s@gmail.com for appointment ID:27
+<b>[22.02.2016 12:09]</b> Reminder message sent to dovganich.s@gmail.com for appointment ID:27
+<b>[23.02.2016 08:07]</b> Reminder message sent to gray@odesseya.net for appointment ID:27
 

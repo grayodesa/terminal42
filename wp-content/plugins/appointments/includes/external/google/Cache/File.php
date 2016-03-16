@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-if (!class_exists('App_Google_Client')) {
+if (!class_exists('Google_Client')) {
   require_once dirname(__FILE__) . '/../autoload.php';
 }
 
@@ -27,7 +27,7 @@ if (!class_exists('App_Google_Client')) {
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-class App_Google_Cache_File extends App_Google_Cache_Abstract
+class Google_Cache_File extends Google_Cache_Abstract
 {
   const MAX_LOCK_RETRIES = 10;
   private $path;
@@ -38,7 +38,7 @@ class App_Google_Cache_File extends App_Google_Cache_Abstract
    */
   private $client;
 
-  public function __construct(App_Google_Client $client)
+  public function __construct(Google_Client $client)
   {
     $this->client = $client;
     $this->path = $this->client->getClassConfig($this, 'directory');
@@ -120,7 +120,7 @@ class App_Google_Cache_File extends App_Google_Cache_Abstract
           'File cache delete failed',
           array('key' => $key, 'file' => $file)
       );
-      throw new App_Google_Cache_Exception("Cache file could not be deleted");
+      throw new Google_Cache_Exception("Cache file could not be deleted");
     }
 
     $this->client->getLogger()->debug(
@@ -146,12 +146,12 @@ class App_Google_Cache_File extends App_Google_Cache_Abstract
     // and thus give some basic amount of scalability
     $storageDir = $this->path . '/' . substr(md5($file), 0, 2);
     if ($forWrite && ! is_dir($storageDir)) {
-      if (! mkdir($storageDir, 0755, true)) {
+      if (! mkdir($storageDir, 0700, true)) {
         $this->client->getLogger()->error(
             'File cache creation failed',
             array('dir' => $storageDir)
         );
-        throw new App_Google_Cache_Exception("Could not create storage directory: $storageDir");
+        throw new Google_Cache_Exception("Could not create storage directory: $storageDir");
       }
     }
     return $storageDir;
@@ -185,6 +185,9 @@ class App_Google_Cache_File extends App_Google_Cache_Abstract
           array('file' => $storageFile)
       );
       return false;
+    }
+    if ($type == LOCK_EX) {
+      chmod($storageFile, 0600);
     }
     $count = 0;
     while (!flock($this->fh, $type | LOCK_NB)) {

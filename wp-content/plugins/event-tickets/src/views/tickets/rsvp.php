@@ -6,7 +6,7 @@ $is_there_any_product_to_sell = false;
 ob_start();
 ?>
 <form action="" class="cart" method="post" enctype='multipart/form-data'>
-	<h2 class="tribe-events-tickets-title"><?php esc_html_e( 'RSVP', 'event-tickets' ) ?></h2>
+	<h2 class="tribe-events-tickets-title"><?php esc_html_e( 'Регистрация', 'event-tickets' ) ?></h2>
 	<?php
 	$messages = Tribe__Tickets__RSVP::get_instance()->get_messages();
 
@@ -52,7 +52,7 @@ ob_start();
 								?>
 								<span class="tribe-tickets-remaining">
 									<?php
-									echo sprintf( esc_html__( '%1$s out of %2$s available', 'event-tickets' ), $ticket->remaining(), $ticket->original_stock() );
+									echo sprintf( esc_html__( '%1$s из %2$s доступны', 'event-tickets' ), $ticket->remaining(), $ticket->original_stock() );
 									?>
 								</span>
 								<?php
@@ -60,7 +60,7 @@ ob_start();
 						}//end if
 						else {
 							?>
-							<span class="tickets_nostock"><?php esc_html_e( 'Out of stock!', 'event-tickets' ); ?></span>
+							<span class="tickets_nostock"><?php esc_html_e( 'Билеты закончились!', 'event-tickets' ); ?></span>
 							<?php
 						}
 						?>
@@ -102,7 +102,7 @@ ob_start();
 			</tr>
 			<tr>
 				<td colspan="4" class="add-to-cart">
-					<button type="submit" name="tickets_process" value="1" class="button alt"><?php esc_html_e( 'Confirm RSVP', 'event-tickets' );?></button>
+					<button type="submit" name="tickets_process" value="1" class="button alt"><?php esc_html_e( 'Зарегистрироваться', 'event-tickets' );?></button>
 				</td>
 			</tr>
 			<?php
