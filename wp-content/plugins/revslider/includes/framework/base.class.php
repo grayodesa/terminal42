@@ -603,6 +603,32 @@ class RevSliderBase {
 		}
 	}
 	
+	/**
+	 * prints out debug text if constant TP_DEBUG is defined and true
+ 	 * @since: 5.2.4
+	 */
+	public static function debug($value , $message, $where = "console"){
+		if( defined('TP_DEBUG') && TP_DEBUG ){
+			if($where=="console"){
+				echo '<script>
+					jQuery(document).ready(function(){
+						if(window.console) {
+							console.log("'.$message.'");
+							console.log('.json_encode($value).');
+						}
+					});
+				</script>
+				';
+			}
+			else{
+				var_dump($value);
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
 }
 
 /**

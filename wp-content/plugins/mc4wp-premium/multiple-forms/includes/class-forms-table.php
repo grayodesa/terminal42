@@ -165,11 +165,11 @@ class MC4WP_Forms_Table extends WP_List_Table {
 	public function column_form_name( $form ) {
 
 		if( $this->is_trash ) {
-			return sprintf( '<strong>%s</strong>', $form->name );
+			return sprintf( '<strong>%s</strong>', esc_html( $form->name ) );
 		}
 
 		$edit_link = mc4wp_get_edit_form_url( $form->ID );
-		$title      = '<strong><a class="row-title" href="' . $edit_link . '">' . $form->name . '</a></strong>';
+		$title      = '<strong><a class="row-title" href="' . $edit_link . '">' . esc_html( $form->name ) . '</a></strong>';
 
 		$actions    = array(
 			'edit'   => '<a href="' . $edit_link . '">' . __( 'Fields', 'mailchimp-for-wp' ) . '</a>',

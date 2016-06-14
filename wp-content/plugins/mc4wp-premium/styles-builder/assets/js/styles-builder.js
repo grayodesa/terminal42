@@ -454,13 +454,14 @@ module.exports = Option;
 var $ = window.jQuery;
 var iframeElement = document.getElementById('mc4wp-css-preview');
 var FormPreview = require('./_form-preview.js');
-var preview = new FormPreview( iframeElement );
+var preview;
 var $imageUploadTarget;
 var original_send_to_editor = window.send_to_editor;
 var Accordion = require('./_accordion.js'),
 	accordion;
 
 // init
+preview = new FormPreview( iframeElement );
 $(iframeElement).load(preview.init);
 
 // turn settings page into accordion
@@ -469,15 +470,10 @@ accordion.init();
 
 // show generated CSS button
 $(".mc4wp-show-css").click(function() {
-
 	var $generatedCss = $("#mc4wp_generated_css");
 	$generatedCss.toggle();
-
-	if( $generatedCss.is(":visible")) {
-		$(this).text("Hide generated CSS");
-	} else {
-		$(this).text("Show generated CSS");
-	}
+	var text = ( $generatedCss.is(':visible') ? 'Hide' : 'Show' ) + " generated CSS";
+	$(this).text(text);
 });
 
 $(".mc4wp-form-select").change( function() {

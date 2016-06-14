@@ -10,7 +10,6 @@ class Appointments_AJAX {
 		global $appointments;
 		add_action( 'wp_ajax_nopriv_app_paypal_ipn', array(&$this, 'handle_paypal_return')); // Send Paypal to IPN function
 
-		add_action( 'wp_ajax_delete_log', array( &$this, 'delete_log' ) ); 				// Clear log
 		add_action( 'wp_ajax_inline_edit', array( &$this, 'inline_edit' ) ); 			// Add/edit appointments
 		add_action( 'wp_ajax_inline_edit_save', array( &$this, 'inline_edit_save' ) ); 	// Save edits
 		add_action( 'wp_ajax_js_error', array( &$this, 'js_error' ) ); 					// Track js errors
@@ -27,9 +26,6 @@ class Appointments_AJAX {
 
 		add_action( 'wp_ajax_services_load_thumbnail', array( $this, 'load_service_thumbnail' ) );
 		add_action( 'wp_ajax_nopriv_services_load_thumbnail', array( $this, 'load_service_thumbnail' ) );
-
-		// API login after the options have been initialized
-		add_action('init', array($this, 'setup_api_logins'), 10);
 	}
 
 	public function load_service_thumbnail() {
@@ -79,6 +75,26 @@ class Appointments_AJAX {
 
 		$data = apply_filters('app-appointment-inline_edit-save_data', $data);
 
+		$error = apply_filters( 'appointments_inline_edit_error', false, $data, $_REQUEST );
+		if ( is_wp_error( $error ) ) {
+			$result = array(
+				'app_id' => $app_id,
+				'message' => '<strong style="color:red;">' . _x( 'Error', 'Error while editing an appointment', 'appointments' ) . ': ' . $error->get_error_message() . '</strong>'
+			);
+			wp_send_json( $result );
+		}
+		elseif ( true === $error ) {
+			// Unknown error
+			$result = array(
+				'app_id' => $app_id,
+				'message' => '<strong style="color:red;">' . _x( 'Error', 'Error while editing an appointment', 'appointments' ) . ': ' . __( 'Record could not be saved OR you did not make any changes!', 'appointments' ) . '</strong>'
+			);
+			wp_send_json( $result );
+		}
+
+		do_action( 'appointments_inline_edit', $app_id, $data );
+
+
 		$update_result = $insert_result = false;
 		if ( $app ) {
 			// Update
@@ -89,13 +105,11 @@ class Appointments_AJAX {
 
 		} else {
 			// Insert
-			$app_id = appointments_insert_appointment( $data );
-			if ( $app_id ) {
-				$insert_result = true;
-				if ( $resend ) {
-					appointments_send_confirmation( $app_id );
-				}
+			if ( ! $resend ) {
+				add_filter( 'appointments_send_confirmation', '__return_false', 50 );
 			}
+			$app_id = appointments_insert_appointment( $data );
+			$insert_result = true;
 		}
 
 		do_action('app-appointment-inline_edit-after_save', $app_id, $data);
@@ -209,8 +223,9 @@ class Appointments_AJAX {
 		$html = '';
 		$html .= '<tr class="inline-edit-row inline-edit-row-post quick-edit-row-post">';
 
+		$columns = isset( $_POST['columns'] ) ? absint( $_POST['columns'] ) : absint( $_POST['col_len'] );
 		$html .= isset($_POST['col_len']) && is_numeric($_POST['col_len'])
-			? '<td colspan="' . (int)$_POST["col_len"] . '" class="colspanchange">'
+			? '<td colspan="' . $columns . '" class="colspanchange">'
 			: '<td colspan="6" class="colspanchange">'
 		;
 
@@ -369,7 +384,7 @@ class Appointments_AJAX {
 		/* Note */
 		$html .= '<label>';
 		$html .= '<span class="title">'.$appointments->get_field_name('note'). '</span>';
-		$html .= '<textarea cols="22" rows=1">';
+		$html .= '<textarea name="note" cols="22" rows=1">';
 		$html .= esc_textarea(stripslashes($app->note));
 		$html .= '</textarea>';
 		$html .= '</label>';
@@ -436,16 +451,6 @@ class Appointments_AJAX {
 		die( json_encode( array( 'result'=>$html)));
 
 	}
-
-	function delete_log(){
-		global $appointments;
-		// check_ajax_referer( );
-		if ( !unlink( $appointments->log_file ) )
-			die( json_encode( array('error' => esc_js( __('Log file could not be deleted','appointments')))));
-		die();
-	}
-
-
 
 
 	/**
@@ -611,6 +616,15 @@ class Appointments_AJAX {
 			'duration' => $duration
 		);
 
+		$error = apply_filters( 'appointments_post_confirmation_error', false, $args, $_REQUEST );
+		if ( is_wp_error( $error ) ) {
+			wp_send_json( array( 'error' => $error->get_error_message() ) );
+		}
+		elseif ( true === $error ) {
+			// Unknown error
+			wp_send_json( array( 'error' => __( 'Appointment could not be saved. Please contact website admin.', 'appointments') ) );
+		}
+
 		$insert_id = appointments_insert_appointment( $args );
 
 		appointments_clear_appointment_cache();
@@ -632,13 +646,10 @@ class Appointments_AJAX {
 			'yes' == $appointments->options["send_notification"] &&
 			'pending' == $status
 		) {
-			$appointments->send_notification( $insert_id );
+			appointments_send_notification( $insert_id );
 		}
 
-		// Send confirmation if we forced it
-		if ('confirmed' == $status && isset($appointments->options["send_confirmation"]) && 'yes' == $appointments->options["send_confirmation"]) {
-			$appointments->send_confirmation( $insert_id );
-		}
+
 
 		// GCal button
 		if (isset($appointments->options["gcal"]) && 'yes' == $appointments->options["gcal"] && $gcal) {
@@ -769,9 +780,7 @@ class Appointments_AJAX {
 					$currency = $_POST['mc_currency'];
 
 					$appointments->record_transaction($_POST['custom'], $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '');
-					if ( $appointments->change_status( 'paid', $_POST['custom'] ) )
-						$appointments->send_confirmation( $_POST['custom'] );
-					else {
+					if ( ! appointments_update_appointment_status( $_POST['custom'], 'paid' ) ) {
 						// Something wrong. Warn admin
 						$message = sprintf( __('Paypal confirmation arrived, but status could not be changed for some reason. Please check appointment with ID %s', 'appointments'), $_POST['custom'] );
 
@@ -1034,352 +1043,6 @@ class Appointments_AJAX {
 			$value = appointments_get_worker_name( $value );
 	}
 
-	function setup_api_logins () {
-		global $appointments;
-
-		if (!@$this->options['accept_api_logins']) return false;
-
-		add_action('wp_ajax_nopriv_app_facebook_login', array($this, 'handle_facebook_login'));
-		add_action('wp_ajax_nopriv_app_get_twitter_auth_url', array($this, 'handle_get_twitter_auth_url'));
-		add_action('wp_ajax_nopriv_app_twitter_login', array($this, 'handle_twitter_login'));
-		add_action('wp_ajax_nopriv_app_ajax_login', array($this, 'ajax_login'));
-		add_action('wp_ajax_nopriv_app_google_plus_login', array($this, 'handle_gplus_login'));
-
-		// Google+ login
-		if (!class_exists('LightOpenID')) {
-			if( function_exists('curl_init') || in_array('https', stream_get_wrappers()) ) {
-				include_once( $appointments->plugin_dir . '/includes/external/lightopenid/openid.php' );
-				$appointments->openid = new LightOpenID;
-			}
-		}
-		else
-			$appointments->openid = new LightOpenID;
-
-		if ( @$appointments->openid ) {
-
-			if ( !session_id() )
-				@session_start();
-
-			add_action('wp_ajax_nopriv_app_get_google_auth_url', array($this, 'handle_get_google_auth_url'));
-			add_action('wp_ajax_nopriv_app_google_login', array($this, 'handle_google_login'));
-
-			$appointments->openid->identity = 'https://www.google.com/accounts/o8/id';
-			$appointments->openid->required = array('namePerson/first', 'namePerson/last', 'namePerson/friendly', 'contact/email');
-			if (!empty($_REQUEST['openid_ns'])) {
-				$cache = $appointments->openid->getAttributes();
-				if (isset($cache['namePerson/first']) || isset($cache['namePerson/last']) || isset($cache['contact/email'])) {
-					$_SESSION['app_google_user_cache'] = $cache;
-				}
-			}
-			if ( isset( $_SESSION['app_google_user_cache'] ) )
-				$this->_google_user_cache = $_SESSION['app_google_user_cache'];
-			else
-				$this->_google_user_cache = '';
-		}
-	}
-
-	/**
-	 * Handles Facebook user login and creation
-	 * Modified from Events and Bookings by Ve
-	 */
-	function handle_facebook_login () {
-		header("Content-type: application/json");
-		$resp = array(
-			"status" => 0,
-		);
-		$fb_uid = @$_POST['user_id'];
-		$token = @$_POST['token'];
-		if (!$token) die(json_encode($resp));
-
-		$request = new WP_Http;
-		$result = $request->request(
-			'https://graph.facebook.com/me?oauth_token=' . $token,
-			array('sslverify' => false) // SSL certificate issue workaround
-		);
-		if (200 != $result['response']['code']) die(json_encode($resp)); // Couldn't fetch info
-
-		$data = json_decode($result['body']);
-		if (!$data->email) die(json_encode($resp)); // No email, can't go further
-
-		$email = is_email($data->email);
-		if (!$email) die(json_encode($resp)); // Wrong email
-
-		$wp_user = get_user_by('email', $email);
-
-		if (!$wp_user) { // Not an existing user, let's create a new one
-			$password = wp_generate_password(12, false);
-			$username = @$data->name
-				? preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->name))
-				: preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->first_name)) . '_' . preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->last_name))
-			;
-
-			$wp_user = wp_create_user($username, $password, $email);
-			if (is_wp_error($wp_user)) die(json_encode($resp)); // Failure creating user
-		} else {
-			$wp_user = $wp_user->ID;
-		}
-
-		$user = get_userdata($wp_user);
-
-		wp_set_current_user($user->ID, $user->user_login);
-		wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
-		do_action('wp_login', $user->user_login);
-
-		die(json_encode(array(
-			"status" => 1,
-			"user_id"=>$user->ID
-		)));
-	}
-
-	/**
-	 * Get OAuth request URL and token.
-	 */
-	function handle_get_twitter_auth_url () {
-		header("Content-type: application/json");
-		$twitter = $this->_get_twitter_object();
-		$request_token = $twitter->getRequestToken($_POST['url']);
-		echo json_encode(array(
-			'url' => $twitter->getAuthorizeURL($request_token['oauth_token']),
-			'secret' => $request_token['oauth_token_secret']
-		));
-		die;
-	}
-
-	/**
-	 * Spawn a TwitterOAuth object.
-	 */
-	function _get_twitter_object ($token=null, $secret=null) {
-		// Make sure options are loaded and fresh
-		if ( !$this->options['twitter-app_id'] )
-			$this->options = get_option( 'appointments_options' );
-		if (!class_exists('TwitterOAuth'))
-			include WP_PLUGIN_DIR . '/appointments/includes/external/twitteroauth/twitteroauth.php';
-		$twitter = new TwitterOAuth(
-			$this->options['twitter-app_id'],
-			$this->options['twitter-app_secret'],
-			$token, $secret
-		);
-		return $twitter;
-	}
-
-
-	/**
-	 * Login or create a new user using whatever data we get from Twitter.
-	 */
-	function handle_twitter_login () {
-		header("Content-type: application/json");
-		$resp = array(
-			"status" => 0,
-		);
-		$secret = @$_POST['secret'];
-		$data_str = @$_POST['data'];
-		$data_str = ('?' == substr($data_str, 0, 1)) ? substr($data_str, 1) : $data_str;
-		$data = array();
-		parse_str($data_str, $data);
-		if (!$data) die(json_encode($resp));
-
-		$twitter = $this->_get_twitter_object($data['oauth_token'], $secret);
-		$access = $twitter->getAccessToken($data['oauth_verifier']);
-
-		$twitter = $this->_get_twitter_object($access['oauth_token'], $access['oauth_token_secret']);
-		$tw_user = $twitter->get('account/verify_credentials');
-
-		// Have user, now register him/her
-		$domain = preg_replace('/www\./', '', parse_url(site_url(), PHP_URL_HOST));
-		$username = preg_replace('/[^_0-9a-z]/i', '_', strtolower($tw_user->name));
-		$email = $username . '@twitter.' . $domain; //STUB email
-		$wp_user = get_user_by('email', $email);
-
-		if (!$wp_user) { // Not an existing user, let's create a new one
-			$password = wp_generate_password(12, false);
-			$count = 0;
-			while (username_exists($username)) {
-				$username .= rand(0,9);
-				if (++$count > 10) break;
-			}
-
-			$wp_user = wp_create_user($username, $password, $email);
-			if (is_wp_error($wp_user)) die(json_encode($resp)); // Failure creating user
-		} else {
-			$wp_user = $wp_user->ID;
-		}
-
-		$user = get_userdata($wp_user);
-		wp_set_current_user($user->ID, $user->user_login);
-		wp_set_auth_cookie($user->ID); // Logged in with Twitter, yay
-		do_action('wp_login', $user->user_login);
-
-		die(json_encode(array(
-			"status" => 1,
-			"user_id"=>$user->ID
-		)));
-	}
-
-	/**
-	 * Login from front end by Wordpress
-	 */
-	function ajax_login( ) {
-
-		header("Content-type: application/json");
-		$user = wp_signon( );
-
-		if ( !is_wp_error($user) ) {
-
-			die(json_encode(array(
-				"status" => 1,
-				"user_id"=>$user->ID
-			)));
-		}
-		die(json_encode(array(
-			"status" => 0,
-			"error" => $user->get_error_message()
-		)));
-	}
-
-	/**
-	 * Handles the Google+ OAuth type login.
-	 */
-	function handle_gplus_login () {
-		header("Content-type: application/json");
-		$resp = array(
-			"status" => 0,
-		);
-		if (empty($this->options['google-client_id'])) die(json_encode($resp)); // Yeah, we're not equipped to deal with this
-
-		$data = stripslashes_deep($_POST);
-		$token = !empty($data['token']) ? $data['token'] : false;
-		if (empty($token)) die(json_encode($resp));
-
-		// Start verifying
-		$page = wp_remote_get('https://www.googleapis.com/userinfo/v2/me', array(
-			'sslverify' => false,
-			'timeout' => 5,
-			'headers' => array(
-				'Authorization' => sprintf('Bearer %s', $token),
-			)
-		));
-		if (200 != wp_remote_retrieve_response_code($page)) die(json_encode($resp));
-
-		$body = wp_remote_retrieve_body($page);
-		$response = json_decode($body, true); // Body is JSON
-		if (empty($response['id'])) die(json_encode($resp));
-
-		$first = !empty($response['given_name']) ? $response['given_name'] : '';
-		$last = !empty($response['family_name']) ? $response['family_name'] : '';
-		$email = !empty($response['email']) ? $response['email'] : '';
-
-		if (empty($email) || (empty($first) && empty($last))) die(json_encode($resp)); // In case we're missing stuff
-
-		$username = false;
-		if (!empty($last) && !empty($first)) $username = "{$first}_{$last}";
-		else if (!empty($first)) $username = $first;
-		else if (!empty($last)) $username = $last;
-
-		if (empty($username)) die(json_encode($resp)); // In case we're missing stuff
-
-		$wordp_user = get_user_by('email', $email);
-
-		if (!$wordp_user) { // Not an existing user, let's create a new one
-			$password = wp_generate_password(12, false);
-			$count = 0;
-			while (username_exists($username)) {
-				$username .= rand(0,9);
-				if (++$count > 10) break;
-			}
-
-			$wordp_user = wp_create_user($username, $password, $email);
-			if (is_wp_error($wordp_user))
-				die(json_encode($resp)); // Failure creating user
-			else {
-				update_user_meta($wordp_user, 'first_name', $first);
-				update_user_meta($wordp_user, 'last_name', $last);
-			}
-		}
-		else {
-			$wordp_user = $wordp_user->ID;
-		}
-
-		$user = get_userdata($wordp_user);
-		wp_set_current_user($user->ID, $user->user_login);
-		wp_set_auth_cookie($user->ID); // Logged in with Google, yay
-		do_action('wp_login', $user->user_login);
-
-		die(json_encode(array(
-			"status" => 1,
-		)));
-	}
-
-	/**
-	 * Get OAuth request URL and token.
-	 */
-	function handle_get_google_auth_url () {
-		global $appointments;
-		header("Content-type: application/json");
-
-		$appointments->openid->returnUrl = $_POST['url'];
-
-		/** @var LightOpenID $appointments->openid */
-		echo json_encode(array(
-			'url' => $appointments->openid->authUrl()
-		));
-		exit();
-	}
-
-	/**
-	 * Login or create a new user using whatever data we get from Google.
-	 */
-	function handle_google_login () {
-		global $appointments;
-
-		header("Content-type: application/json");
-		$resp = array(
-			"status" => 0,
-		);
-
-		/** @var LightOpenID $appointments->openid */
-		$cache = $appointments->openid->getAttributes();
-
-		if (isset($cache['namePerson/first']) || isset($cache['namePerson/last']) || isset($cache['namePerson/friendly']) || isset($cache['contact/email'])) {
-			$this->_google_user_cache = $cache;
-		}
-
-		// Have user, now register him/her
-		if ( isset( $this->_google_user_cache['namePerson/friendly'] ) )
-			$username = $this->_google_user_cache['namePerson/friendly'];
-		else
-			$username = $this->_google_user_cache['namePerson/first'];
-		$email = $this->_google_user_cache['contact/email'];
-		$wordp_user = get_user_by('email', $email);
-
-		if (!$wordp_user) { // Not an existing user, let's create a new one
-			$password = wp_generate_password(12, false);
-			$count = 0;
-			while (username_exists($username)) {
-				$username .= rand(0,9);
-				if (++$count > 10) break;
-			}
-
-			$wordp_user = wp_create_user($username, $password, $email);
-			if (is_wp_error($wordp_user))
-				die(json_encode($resp)); // Failure creating user
-			else {
-				update_user_meta($wordp_user, 'first_name', $this->_google_user_cache['namePerson/first']);
-				update_user_meta($wordp_user, 'last_name', $this->_google_user_cache['namePerson/last']);
-			}
-		}
-		else {
-			$wordp_user = $wordp_user->ID;
-		}
-
-		$user = get_userdata($wordp_user);
-		wp_set_current_user($user->ID, $user->user_login);
-		wp_set_auth_cookie($user->ID); // Logged in with Google, yay
-		do_action('wp_login', $user->user_login);
-
-		die(json_encode(array(
-			"status" => 1,
-		)));
-	}
 
 
 }

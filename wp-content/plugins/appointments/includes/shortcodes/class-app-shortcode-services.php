@@ -81,7 +81,7 @@ class App_Shortcode_Services extends App_Shortcode {
 			}
 		}
 		else {
-			$services = appointments_get_services( $args['order_by'] );
+			$services = appointments_get_services( array( 'orderby' => $args['order_by'] ) );
 		}
 
 		$services = apply_filters( 'app_services', $services );

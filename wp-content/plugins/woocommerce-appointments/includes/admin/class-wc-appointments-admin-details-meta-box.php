@@ -21,6 +21,8 @@ class WC_Appointments_Admin_Details_Meta_Box {
 	}
 
 	public function meta_box_inner( $post ) {
+		global $wp_locale;
+		
 		wp_nonce_field( 'wc_appointments_details_meta_box', 'wc_appointments_details_meta_box_nonce' );
 
 		// Scripts.
@@ -31,6 +33,24 @@ class WC_Appointments_Admin_Details_Meta_Box {
 			wp_enqueue_script( 'wc-enhanced-select' );
 		}
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		
+		//* Localize the datepicker
+		$localize_datepicker_args = array(
+			'closeText'						=> __( 'Close', 'woocommerce-appointments' ),
+			'currentText'					=> __( 'Today', 'woocommerce-appointments' ),
+			'prevText'						=> __( 'Previous', 'woocommerce-appointments' ),
+			'nextText'						=> __( 'Next', 'woocommerce-appointments' ),
+			'monthNames'					=> array_values( $wp_locale->month ),
+			'monthNamesShort'				=> array_values( $wp_locale->month_abbrev ),
+			'dayNames'						=> array_values( $wp_locale->weekday ),
+			'dayNamesShort'					=> array_values( $wp_locale->weekday_abbrev ),
+			'dayNamesMin'					=> array_values( $wp_locale->weekday_initial ),
+			'firstDay'						=> get_option( 'start_of_week' ),
+			'current_time'					=> date( 'Ymd', current_time( 'timestamp' ) )
+		);
+	 
+		// Pass the localized array to the enqueued JS
+		wp_localize_script( 'jquery-ui-datepicker', 'wc_appointment_form_params', $localize_datepicker_args );
 
 		$customer_id = get_post_meta( $post->ID, '_appointment_customer_id', true );
 		$order_parent_id = apply_filters( 'woocommerce_order_number', _x( '#', 'hash before order number', 'woocommerce-appointments' ) . $post->post_parent, $post->post_parent );
@@ -215,6 +235,7 @@ class WC_Appointments_Admin_Details_Meta_Box {
 		</div>
 
 		<?php
+			global $wp_locale;
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.3', '<' ) ) {
 				wc_enqueue_js( "
 					$( 'select#_appointment_status' ).chosen({
@@ -316,6 +337,16 @@ class WC_Appointments_Admin_Details_Meta_Box {
 					dateFormat: 'yy-mm-dd',
 					numberOfMonths: 1,
 					showButtonPanel: true,
+					closeText: wc_appointment_form_params.closeText,
+					currentText: wc_appointment_form_params.currentText,
+					prevText: wc_appointment_form_params.prevText,
+					nextText: wc_appointment_form_params.nextText,
+					monthNames: wc_appointment_form_params.monthNames,
+					monthNamesShort: wc_appointment_form_params.monthNamesShort,
+					dayNames: wc_appointment_form_params.dayNames,
+					/* dayNamesShort: wc_appointment_form_params.dayNamesShort, */
+					dayNamesMin: wc_appointment_form_params.dayNamesShort,
+					firstDay: wc_appointment_form_params.firstDay,
 				});
 			" );
 	}
@@ -433,14 +464,16 @@ class WC_Appointments_Admin_Details_Meta_Box {
 						
 			// Update order metas
 			foreach ( $order->get_items() as $item_id => $item ) {
-				if ( 'line_item' != $item['type'] || ! in_array( $post_id, $item['item_meta']['Appointment ID'] ) ) {
+				$appointment_id = __( 'Appointment ID', 'woocommerce-appointments' );
+				
+				if ( 'line_item' != $item['type'] || ! in_array( $post_id, $item['item_meta'][$appointment_id] ) ) {
 					continue;
 				}
 
 				$is_all_day = isset( $_POST['_appointment_all_day'] ) && $_POST['_appointment_all_day'] == 'yes';
 				
-				if ( ! metadata_exists( 'order_item', $item_id, __( 'Appointment ID', 'woocommerce-appointments' ) ) ) {
-					wc_add_order_item_meta( $item_id, __( 'Appointment ID', 'woocommerce-appointments' ), intval( $post_id ) );
+				if ( ! metadata_exists( 'order_item', $item_id, $appointment_id ) ) {
+					wc_add_order_item_meta( $item_id, $appointment_id, intval( $post_id ) );
 				}
 				
 				//* Update product ID

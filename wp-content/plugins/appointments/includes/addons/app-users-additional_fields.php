@@ -25,30 +25,18 @@ class App_Users_AdditionalFields {
 		add_action('plugins_loaded', array($this, 'initialize'));
 
 		// Settings
-		add_action('app-settings-display_settings', array($this, 'show_settings'));
+		add_action('appointments_settings_tab-main-section-display', array($this, 'show_settings'));
 		add_filter('app-options-before_save', array($this, 'save_settings'));
 
 		// Field injection
 		add_filter('app_additional_fields', array($this, 'inject_additional_fields'));
-		add_filter('app-footer_scripts-after', array($this, 'inject_additional_fields_script'));
+		add_action('app-footer_scripts-after', array($this, 'inject_additional_fields_script'), 900);
 		add_filter('app_get_field_name', array($this, 'field_names'));
 
-		// Values processing
-		add_action('app-additional_fields-validate', array($this, 'validate_submitted_fields'));
-		add_action('app_new_appointment', array($this, 'save_submitted_fields'));
-
-		// Auto-cleanup
-		add_action('app_remove_expired', array($this, 'cleanup_data'));
-		add_action('app_remove_pending', array($this, 'cleanup_data'));
-		// Manual cleanup
-		add_action('wpmudev_appointments_update_appointment_status', array($this, 'manual_cleanup_data'), 10, 2);
-		add_action('app_bulk_status_change', array($this, 'bulk_cleanup_data'));
-		// Delete filters
-		add_action('app_deleted', array($this, 'permanently_deleted_cleanup'));
 
 		// Display additional notes
 		add_filter('app-appointments_list-edit-client', array($this, 'display_inline_data'), 10, 2);
-		add_action('app-appointment-inline_edit-before_response', array($this, 'save_admin_submitted_data'), 10, 2);
+
 
 		// Email filters
 		add_filter('app_notification_message', array($this, 'expand_email_macros'), 10, 3);
@@ -66,6 +54,235 @@ class App_Users_AdditionalFields {
 
 		// General fields substitution
 		add_filter('app-internal-additional_fields-expand', array($this, 'expand_general_fields'), 10, 2);
+
+		// Since 1.8.2
+
+		// Validate fields in front-end
+		add_filter( 'appointments_post_confirmation_error', array( $this, 'validate_additional_fields' ), 10, 3 );
+
+		// And Admin
+		add_filter( 'appointments_inline_edit_error', array( $this, 'validate_additional_fields' ), 10, 3 );
+
+		// Values processing
+		add_action( 'wpmudev_appointments_insert_appointment', array( $this, 'save_additional_fields' ), 2 );
+
+		// This will be triggered once the appointment is updated
+		add_action( 'wpmudev_appointments_update_appointment_result', array( $this, 'update_additional_fields' ), 2, 2 );
+	}
+
+	/**
+	 * Validate the submitted additional fields but do not save them
+	 *
+	 * @param bool|WP_Error $error
+	 * @param array $args
+	 * @param array $input $_REQUEST input values sent through a form
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function validate_additional_fields( $error, $args, $input ) {
+		if ( is_wp_error( $error ) ) {
+			// There's already an error
+			return $error;
+		}
+
+		if ( isset( $_REQUEST['action'] ) && 'inline_edit_save' === $_REQUEST['action'] && ! $this->_are_editable() ) {
+			// Trying to edit fields not editable from Appointments list
+			return $error;
+		}
+
+		$additional_fields = $this->_get_additional_fields();
+
+		if ( empty( $additional_fields ) ) {
+			// No additional fields to process
+			return $error;
+		}
+
+		foreach ( $additional_fields as $field ) {
+			if ( ! $field->required ) {
+				// Not required, no need of validation
+				continue;
+			}
+
+			if ( empty( $input['additional_fields'][ $field->name ] ) ) {
+				return new WP_Error( 'missing_required_additional_field', sprintf( __( 'The field %s is required', 'appointments' ), $field->label ) );
+			}
+
+		}
+
+		return $error;
+	}
+
+
+	/**
+	 * Check if additional fields are editable
+	 *
+	 * @return bool
+	 */
+	private function _are_editable() {
+		$options = appointments_get_options();
+		return ! empty( $options['additional_fields-admin_edit'] );
+	}
+
+
+	/**
+	 * Return the list of the additional fields for this site
+	 *
+	 * @return array of stdClass {
+	 *      bool    $required
+	 *      string  $label
+	 *      string  $name       Slug of the field
+	 *      string  $type       Checkbox or text
+	 * }
+	 */
+	private function _get_additional_fields() {
+		$fields = array();
+		$options = appointments_get_options();
+		$options_fields = $options['additional_fields'];
+
+		foreach ( $options_fields as $field ) {
+			$_field = new stdClass();
+			if ( empty( $field['required'] ) ) {
+				$_field->required = false;
+			}
+			else {
+				$_field->required = true;
+			}
+
+			$_field->label = esc_html( $field['label'] );
+
+			$name = $this->_to_clean_name( $field['label'] );
+			$_field->name = $name;
+
+			$_field->type = $field['type'];
+
+			$fields[] = $_field;
+		}
+
+		return $fields;
+	}
+
+	public function update_additional_fields( $result, $app_id ) {
+		if ( ! appointments_get_appointment( $app_id ) ) {
+			return $result;
+		}
+
+		$updated = $this->save_additional_fields( $app_id );
+		if ( $updated ) {
+			return true;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Saves additional fields if they have been sent
+	 *
+	 * @param $app_id
+	 *
+	 * @return bool If the data has been saved or updated
+	 */
+	public function save_additional_fields( $app_id ) {
+		if ( isset( $_REQUEST['action'] ) && 'inline_edit_save' === $_REQUEST['action'] && ! $this->_are_editable() ) {
+			// Trying to edit fields not editable from Appointments list
+			return false;
+		}
+
+		$additional_fields = $this->_get_additional_fields();
+
+		if ( empty( $additional_fields ) ) {
+			return false;
+		}
+
+		if ( empty( $_REQUEST['additional_fields'] ) ) {
+			return false;
+		}
+
+		$data = array();
+		$raw = stripslashes_deep( $_REQUEST['additional_fields'] );
+
+		foreach ( $additional_fields as $field ) {
+			$data[ $field->name ] = '';
+			if ( ! empty( $raw[ $field->name ] ) ) {
+				$data[ $field->name ] = wp_strip_all_tags( rawurldecode( $raw[ $field->name ] ) );
+			}
+		}
+
+		$result = $this->_add_appointment_meta( $app_id, $data );
+
+		if ( ! $result ) {
+			return $result;
+		}
+
+		add_filter( 'app-appointment-inline_edit-result', array( $this, 'mark_successful_save' ) );
+
+		return true;
+	}
+
+	/**
+	 * Display additional fields when editing an appointment
+	 *
+	 * @param string $form Form markup
+	 * @param Appointments_Appointment $app Edited appointment
+	 *
+	 * @return string
+	 */
+	public function display_inline_data( $form, $app ) {
+		$fields = $this->_get_additional_fields();
+		if ( empty( $fields ) ) {
+			return $form;
+		}
+
+		$disabled = disabled( $this->_are_editable(), false, false );
+
+		$app_meta = $this->_get_appointment_meta( $app->ID );
+
+		foreach ( $fields as $field ) {
+			$value = ! empty( $app_meta[ $field->name ] ) ? esc_attr( $app_meta[ $field->name ] ) : '';
+
+			ob_start();
+			?>
+			<label for="additional_fields-<?php echo $field->name; ?>"><span class="title"><?php echo $field->label; ?></span>
+				<span class='input-text-wrap'>
+					<?php if ( 'checkbox' === $field->type ): ?>
+						<input type="checkbox" class="appointments-field-entry additional_field" data-name="additional_fields[<?php echo $field->name; ?>]" id="additional_fields-<?php echo $field->name; ?>" <?php echo $disabled; ?> <?php checked( '1', $value ); ?> value="1" />
+					<?php else: ?>
+						<input type="text" class="widefat appointments-field-entry additional_field" data-name="additional_fields[<?php echo $field->name; ?>]" id="additional_fields-<?php echo $field->name; ?>" <?php echo $disabled; ?> value="<?php echo esc_attr( $value ); ?>" />
+					<?php endif; ?>
+				</span>
+			</label>
+			<br class="clear">
+			<?php
+			$form = $form . ob_get_clean();
+		}
+
+		if ( ! $this->_are_editable() ) {
+			return $form;
+		}
+
+		$form .=<<<EO_ADMIN_JS
+<script>
+(function ($) {
+	$.ajaxSetup({
+		beforeSend: function (jqxhr, settings) {
+			if (!(settings && "data" in settings && settings.data.match(/action=inline_edit_save/))) return;
+			var matches = settings.data.match(/\bapp_id=(\d+)/),
+				app_id = matches && matches.length ? matches[1] : false,
+				root = app_id ? $(':hidden[name="app_id"][value="' + app_id + '"]').closest("tr") : $("body"),
+				fields = root.find(".appointments-field-entry")
+			;
+			fields.each(function () {
+				var me = $(this),
+					name = me.attr("data-name"),
+					value = me.is(":checkbox") ? (me.is(":checked") ? 1 : 0) : me.val()
+				;
+				settings.data += '&' + encodeURIComponent(name) + '=' + encodeURIComponent(value);
+			});
+		}
+	});
+})(jQuery);
+</script>
+EO_ADMIN_JS;
+		return $form;
 	}
 
 	public function inject_additional_columns ($cols) {
@@ -138,112 +355,11 @@ class App_Users_AdditionalFields {
 		return $body;
 	}
 
-	public function display_inline_data ($form, $app) {
-		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		if (empty($fields)) return $form;
-
-		$is_editable = !empty($this->_data['additional_fields-admin_edit']);
-
-		$app_meta = $this->_get_appointment_meta($app->ID);
-		if (!$is_editable && empty($app_meta)) return $form;
-
-		$disabled = $is_editable
-			? ''
-			: "disabled='disabled'"
-		;
-
-		foreach ($fields as $field) {
-			$label = esc_html($field['label']);
-			$name = $this->_to_clean_name($field['label']);
-			$value = !empty($app_meta[$name]) ? esc_attr($app_meta[$name]) : '';
-
-			$form .= '<label>' .
-				"<span class='title'>{$label}</span>" .
-				"<span class='input-text-wrap'><input type='text' class='widefat appointments-field-entry' data-name='{$name}' {$disabled} value='{$value}' /></span>" .
-			'</label>';
-		}
-		if (!$is_editable) return $form;
-
-		$form .=<<<EO_ADMIN_JS
-<script>
-(function ($) {
-	$.ajaxSetup({
-		beforeSend: function (jqxhr, settings) {
-			if (!(settings && "data" in settings && settings.data.match(/action=inline_edit_save/))) return;
-			var matches = settings.data.match(/\bapp_id=(\d+)/),
-				app_id = matches && matches.length ? matches[1] : false,
-				root = app_id ? $(':hidden[name="app_id"][value="' + app_id + '"]').closest("tr") : $("body"),
-				fields = root.find(".appointments-field-entry")
-			;
-			fields.each(function () {
-				var me = $(this),
-					name = me.attr("data-name"),
-					value = me.is(":checkbox") ? (me.is(":checked") ? 1 : 0) : me.val()
-				;
-				settings.data += '&' + encodeURIComponent(name) + '=' + encodeURIComponent(value);
-			});
-		}
-	});
-})(jQuery);
-</script>
-EO_ADMIN_JS;
-		return $form;
-	}
-
-	public function save_admin_submitted_data ($app_id, $data) {
-		if (empty($this->_data['additional_fields-admin_edit'])) return false;
-		if (empty($app_id) && !empty($data['ID']) && is_numeric($data['ID'])) $app_id = (int)$data['ID'];
-		$this->validate_submitted_fields();
-		if ($this->save_submitted_fields($app_id)) {
-			// Okay, so we saved the data...
-			// ... now let's say so!
-			add_filter('app-appointment-inline_edit-result', array($this, 'mark_successful_save'));
-		}
-	}
-
 	public function mark_successful_save ($result) {
 		if (!empty($result['message'])) $result['message'] = __('<span style="color:green;font-weight:bold">Changes saved.</span>', 'appointments');
 		return $result;
 	}
 
-	public function bulk_cleanup_data ($app_ids) {
-		$status = !empty($_POST["app_new_status"]) ? $_POST['app_new_status'] : false;
-		if ('removed' != $status) return false;
-		$app_ids = !empty($app_ids) && is_array($app_ids) ? $app_ids : array();
-		foreach ($app_ids as $app_id) {
-			$app_id = (int)$app_id;
-			if (!$app_id) continue;
-			$this->cleanup_data(appointments_get_appointment($app_id));
-		}
-	}
-
-	public function permanently_deleted_cleanup ($app_ids) {
-		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		if (empty($fields)) return false;
-		$app_ids = !empty($app_ids) && is_array($app_ids) ? $app_ids : array();
-		foreach ($app_ids as $app_id) {
-			$app_id = (int)$app_id;
-			if (!$app_id) continue;
-			$this->_remove_appointment_meta($app_id);
-		}
-	}
-
-	public function manual_cleanup_data ($app_id, $new_status) {
-		if ('removed' != $new_status) return false;
-		$this->cleanup_data(appointments_get_appointment($app_id));
-	}
-
-	public function cleanup_data ($app) {
-		$cleanup = !isset($this->_data['additional_fields-cleanup']) || !empty($this->_data['additional_fields-cleanup']);
-		if (!$cleanup) return false;
-
-		$status = !empty($app->status) ? $app->status : '';
-		if ('removed' != $status) return false;
-
-		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		if (empty($fields)) return false;
-		if (!empty($app->ID)) $this->_remove_appointment_meta($app->ID);
-	}
 
 	public function field_names ($map) {
 		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
@@ -256,33 +372,7 @@ EO_ADMIN_JS;
 		return $map;
 	}
 
-	public function validate_submitted_fields () {
-		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		if (empty($fields)) return false;
 
-		foreach ($fields as $field) {
-			if (empty($field['required'])) continue;
-			$name = $this->_to_clean_name($field['label']);
-			if (empty($_POST[$name])) $this->_core->json_die($name);
-		}
-	}
-
-	public function save_submitted_fields ($appointment_id) {
-		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		if (empty($fields)) return false;
-
-		$data = array();
-		$raw = stripslashes_deep($_POST);
-
-		foreach ($fields as $field) {
-			$name = $this->_to_clean_name($field['label']);
-			$data[$name] = !empty($raw[$name]) ? wp_strip_all_tags(rawurldecode($raw[$name])) : '';
-		}
-		//$data['__fields__'] = $fields;
-
-		return $this->_add_appointment_meta($appointment_id, $data);
-
-	}
 
     public function inject_additional_fields ($form) {
         global $current_user;
@@ -299,7 +389,7 @@ EO_ADMIN_JS;
             $value = $user_meta_value ? $user_meta_value : ('checkbox' == $type ? 1 : '');
             $form .= "<div class='appointments-field appointments-{$clean}-field'>" .
                 '<label for="' . $id . '"><span>' . $label . '</span></label>' .
-                "<input type='{$type}' id='{$id}' class='appointments-field-entry appointments-{$clean}-field-entry' data-name='{$clean}' value='{$value}' />" .
+                "<input type='{$type}' id='{$id}' class='appointments-field-entry appointments-{$clean}-field-entry' data-name='additional_fields[{$clean}]' value='{$value}' />" .
                 "</div>";
         }
         return $form;
@@ -335,8 +425,6 @@ $(document).ajaxSend(function(e, xhr, opts) {
 	}
 
 	public function save_settings ($options) {
-		if (isset($_POST['app-additional_fields-cleanup'])) $options['additional_fields-cleanup'] = (int)$_POST['app-additional_fields-cleanup'];
-		if (isset($_POST['app-additional_fields-admin_edit'])) $options['additional_fields-admin_edit'] = (int)$_POST['app-additional_fields-admin_edit'];
 		//if (empty($_POST['app-additional_fields'])) return $options; // Allow additional fields cleaning up
 		if (empty($_POST['app-additional_fields'])) $_POST['app-additional_fields'] = array();
 		$data = stripslashes_deep($_POST['app-additional_fields']);
@@ -356,141 +444,124 @@ $(document).ajaxSend(function(e, xhr, opts) {
 			'checkbox' => __('Checkbox', 'appointments'),
 		);
 		$fields = !empty($this->_data['additional_fields']) ? $this->_data['additional_fields'] : array();
-		$cleanup = !isset($this->_data['additional_fields-cleanup']) || !empty($this->_data['additional_fields-cleanup']) ? 'checked="checked"' : '';
 		$admin_edit = !empty($this->_data['additional_fields-admin_edit']) ? 'checked="checked"' : '';
 		?>
-<tr valign="top" class="api_detail" <?php echo $style?>>
-	<th scope="row" ><?php _e('Additional fields', 'appointments')?></th>
-	<td colspan="2">
-		<div id="app-additional_fields-settings">
-			<p>
-				<label for="app-additional_fields-cleanup">
-					<input type="hidden" name="app-additional_fields-cleanup" value="" />
-					<input type="checkbox" name="app-additional_fields-cleanup" id="app-additional_fields-cleanup" value="1" <?php echo $cleanup; ?> />
-					<?php echo esc_html(__('Cleanup saved data for removed appointments', 'appointments')); ?>
-				</label>
-				<br />
-				<span class="description"><?php _e('This setting controls whether your additional fields data will be kept around when appointments change state to &quot;removed&quot;', 'appointments'); ?></span>
-			</p>
-			<p>
-				<label for="app-additional_fields-admin_edit">
-					<input type="hidden" name="app-additional_fields-admin_edit" value="" />
-					<input type="checkbox" name="app-additional_fields-admin_edit" id="app-additional_fields-admin_edit" value="1" <?php echo $admin_edit; ?> />
-					<?php echo esc_html(__('Allow admin-side fields editing', 'appointments')); ?>
-				</label>
-				<br />
-				<span class="description"><?php _e('Enabling this setting will allow you to manually add/edit additional fields for your appointments.', 'appointments'); ?></span>
-			</p>
-		</div>
-		<div id="app-additional_fields">
-		<?php foreach ($fields as $field) { ?>
+		<h3><?php _e( 'Additional Fields', 'appointments' ); ?></h3>
+		<table class="form-table">
+			<tr valign="top" class="api_detail" <?php echo $style?>>
+				<th scope="row" ><?php _e('Additional fields', 'appointments')?></th>
+				<td colspan="2">
+					<div id="app-additional_fields">
+						<?php foreach ($fields as $field) { ?>
+							<div class="app-field">
+								<b><?php echo esc_html($field['label']); ?></b> <em><small>(<?php echo esc_html($field['type']); ?>)</small></em>
+								<br />
+								<?php echo esc_html('Required', 'appointments'); ?>: <b><?php echo esc_html(($field['required'] ? __('Yes', 'appointments') : __('No', 'appointments'))); ?></b>
+								<br />
+								<?php _e('E-mail macro:', 'appointments'); ?> <code><?php echo esc_html($this->_to_email_macro($field['label'])); ?></code>
+								<span class="description"><?php _e('This is the placeholder you can use in your emails.', 'appointments'); ?></span>
+								<input type="hidden" name="app-additional_fields[]" value="<?php echo rawurlencode(json_encode($field)); ?>" />
+								<a href="#remove" class="app-additional_fields-remove"><?php echo esc_html('Remove', 'appointments'); ?></a>
+							</div>
+						<?php } ?>
+					</div>
+					<div id="app-new_additional_field">
+						<h4><?php _e('Add new field', 'appointments'); ?></h4>
+						<label for="app-new_additional_field-label">
+							<?php _e('Field label:', 'appointments'); ?>
+							<input type="text" value="" id="app-new_additional_field-label" />
+						</label>
+						<label for="app-new_additional_field-type">
+							<?php _e('Field type:', 'appointments'); ?>
+							<select id="app-new_additional_field-type">
+								<?php foreach ($_types as $type => $label) { ?>
+									<option value="<?php esc_attr_e($type); ?>"><?php echo esc_html($label); ?></option>
+								<?php } ?>
+							</select>
+						</label>
+						<label for="app-new_additional_field-required">
+							<input type="checkbox" value="" id="app-new_additional_field-required" />
+							<?php _e('Required?', 'appointments'); ?>
+						</label>
+						<button type="button" class="button-secondary" id="app-new_additional_field-add"><?php _e('Add', 'appointments'); ?></button>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<script id="app-additional_fields-template" type="text/template">
 			<div class="app-field">
-				<b><?php echo esc_html($field['label']); ?></b> <em><small>(<?php echo esc_html($field['type']); ?>)</small></em>
+				<b>{{ label }}</b> <em><small>({{ type }})</small></em>
 				<br />
-				<?php echo esc_html('Required', 'appointments'); ?>: <b><?php echo esc_html(($field['required'] ? __('Yes', 'appointments') : __('No', 'appointments'))); ?></b>
-				<br />
-				<?php _e('E-mail macro:', 'appointments'); ?> <code><?php echo esc_html($this->_to_email_macro($field['label'])); ?></code>
-				<span class="description"><?php _e('This is the placeholder you can use in your emails.', 'appointments'); ?></span>
-				<input type="hidden" name="app-additional_fields[]" value="<?php echo rawurlencode(json_encode($field)); ?>" />
+				<?php echo esc_html('Required', 'appointments'); ?>: <b>{{ required ? '<?php echo esc_js(__("Yes", "appointments")); ?>' : '<?php echo esc_js(__("No", "appointments")); ?>' }}</b>
+				<input type="hidden" name="app-additional_fields[]" value="{{ encodeURIComponent(_value) }}" />
 				<a href="#remove" class="app-additional_fields-remove"><?php echo esc_html('Remove', 'appointments'); ?></a>
 			</div>
-		<?php } ?>
-		</div>
-		<div id="app-new_additional_field">
-			<h4><?php _e('Add new field', 'appointments'); ?></h4>
-			<label for="app-new_additional_field-label">
-				<?php _e('Field label:', 'appointments'); ?>
-				<input type="text" value="" id="app-new_additional_field-label" />
-			</label>
-			<label for="app-new_additional_field-type">
-				<?php _e('Field type:', 'appointments'); ?>
-				<select id="app-new_additional_field-type">
-				<?php foreach ($_types as $type => $label) { ?>
-					<option value="<?php esc_attr_e($type); ?>"><?php echo esc_html($label); ?></option>
-				<?php } ?>
-				</select>
-			</label>
-			<label for="app-new_additional_field-required">
-				<input type="checkbox" value="" id="app-new_additional_field-required" />
-				<?php _e('Required?', 'appointments'); ?>
-			</label>
-			<button type="button" class="button-secondary" id="app-new_additional_field-add"><?php _e('Add', 'appointments'); ?></button>
-		</div>
-	</td>
-</tr>
-<script id="app-additional_fields-template" type="text/template">
-	<div class="app-field">
-		<b>{{ label }}</b> <em><small>({{ type }})</small></em>
-		<br />
-		<?php echo esc_html('Required', 'appointments'); ?>: <b>{{ required ? '<?php echo esc_js(__("Yes", "appointments")); ?>' : '<?php echo esc_js(__("No", "appointments")); ?>' }}</b>
-		<input type="hidden" name="app-additional_fields[]" value="{{ encodeURIComponent(_value) }}" />
-		<a href="#remove" class="app-additional_fields-remove"><?php echo esc_html('Remove', 'appointments'); ?></a>
-	</div>
-</script>
-<script>
-(function ($) {
+		</script>
+		<script>
+			(function ($) {
 
-var tpl = $("#app-additional_fields-template").html();
+			var tpl = $("#app-additional_fields-template").html();
 
-function parse_template (str, data) {
-	var orig_settings = _.templateSettings,
-		t = false
-	;
-	_.templateSettings = {
-		evaluate : /\{\[([\s\S]+?)\]\}/g,
-		interpolate : /\{\{([\s\S]+?)\}\}/g
-	};
+			function parse_template (str, data) {
+				var orig_settings = _.templateSettings,
+					t = false
+				;
+				_.templateSettings = {
+					evaluate : /\{\[([\s\S]+?)\]\}/g,
+					interpolate : /\{\{([\s\S]+?)\}\}/g
+				};
 
-	t = _.template(str, data);
+				var compiled = _.template(str);
 
-	_.templateSettings = orig_settings;
+				_.templateSettings = orig_settings;
 
-	return t;
-}
+				return compiled(data);
+			}
 
-function add_new_field () {
-	var $new_fields = $("#app-new_additional_field").find("input,select"),
-		$root = $("#app-additional_fields"),
-		data = {}
-	;
-	$new_fields.each(function () {
-		var $me = $(this),
-			name = $me.attr("id").replace(/app-new_additional_field-/, ''),
-			value = $me.is(":checkbox") ? $me.is(":checked") : $me.val()
-		;
-		data[name] = value;
-	});
-	data._value = JSON.stringify(data);
-	$root.append(parse_template(tpl, data));
-	return false;
-}
+			function add_new_field () {
+				var $new_fields = $("#app-new_additional_field").find("input,select"),
+					$root = $("#app-additional_fields"),
+					data = {}
+				;
+				$new_fields.each(function () {
+					var $me = $(this),
+						name = $me.attr("id").replace(/app-new_additional_field-/, ''),
+						value = $me.is(":checkbox") ? $me.is(":checked") : $me.val()
+					;
+					data[name] = value;
+				});
+				data._value = JSON.stringify(data);
+				$root.append(parse_template(tpl, data));
+				return false;
+			}
 
-function remove_field () {
-	var $me = $(this);
-	$me.closest(".app-field").remove();
-	return false;
-}
+			function remove_field () {
+				var $me = $(this);
+				$me.closest(".app-field").remove();
+				return false;
+			}
 
-$(function () {
-	$(document).on("click", "#app-new_additional_field-add", add_new_field);
-	$(document).on("click", ".app-additional_fields-remove", remove_field);
-});
+			$(function () {
+				$(document).on("click", "#app-new_additional_field-add", add_new_field);
+				$(document).on("click", ".app-additional_fields-remove", remove_field);
+			});
 
-})(jQuery);
-</script>
-<style>
-.app-field {
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	padding: 1em;
-	margin-bottom: 1em;
-	width: 40%;
-}
-.app-field .app-additional_fields-remove {
-	display: block;
-	float: right;
-}
-</style>
+			})(jQuery);
+		</script>
+		<style>
+			.app-field {
+				border: 1px solid #ccc;
+				border-radius: 3px;
+				padding: 1em;
+				margin-bottom: 1em;
+				width: 40%;
+			}
+			.app-field .app-additional_fields-remove {
+				display: block;
+				float: right;
+			}
+		</style>
 		<?php
 	}
 
@@ -505,23 +576,36 @@ $(function () {
 	}
 
 	private function _add_appointment_meta ($appointment_id, $data) {
-		$appointments_data = get_option('appointments_data', array());
-		if (!empty($appointment_id)) $appointments_data[$appointment_id] = $data;
-		return update_option("appointments_data", $appointments_data);
+		$appointment = appointments_get_appointment( $appointment_id );
+		if ( ! $appointment ) {
+			return false;
+		}
+
+		if ( ! empty( $appointment_id ) ) {
+			return appointments_update_appointment_meta( $appointment_id, 'additional_fields', $data );
+		}
+
+		return false;
 	}
 
 	private function _remove_appointment_meta ($appointment_id) {
-		$appointments_data = get_option('appointments_data', array());
-		if (!empty($appointment_id) && !empty($appointments_data[$appointment_id])) unset($appointments_data[$appointment_id]);
-		update_option("appointments_data", $appointments_data);
+		appointments_delete_appointment_meta( $appointment_id, 'additional_fields' );
 	}
 
 	private function _get_appointment_meta ($appointment_id) {
-		$appointments_data = get_option('appointments_data', array());
-		return empty($appointments_data[$appointment_id])
-			? array()
-			: $appointments_data[$appointment_id]
-		;
+		// Fill defaults with empty strings
+		$defaults = array();
+		foreach ( $this->_get_additional_fields() as $field ) {
+			$defaults[ $field->name ] = '';
+		}
+		$app_data = appointments_get_appointment_meta( $appointment_id, 'additional_fields' );
+
+		if ( empty( $app_data ) ) {
+			$app_data = array();
+		}
+
+		$app_data = wp_parse_args( $app_data, $defaults );
+		return $app_data;
 	}
 
 }

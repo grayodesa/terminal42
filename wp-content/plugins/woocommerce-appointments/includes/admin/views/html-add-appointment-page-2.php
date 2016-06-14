@@ -5,7 +5,7 @@
 
 	<?php $this->show_errors(); ?>
 
-	<form method="POST">
+	<form method="POST" class="wc-appointments-appointment-form-wrap">
 		<table class="form-table">
 			<tbody>
 				<tr>
@@ -25,6 +25,18 @@
 				<tr valign="top">
 					<th scope="row">&nbsp;</th>
 					<td>
+						<?php
+							/* Show qunatity only when no Staff is assigned and qty is larger than 1 ... duuuuuuh
+							 * Why hide if Staff is assigned? - because only 1 staff is available per appointment
+							 */
+							if ( $product->get_qty() > 1 ) {
+								woocommerce_quantity_input( array(
+									'min_value'   => apply_filters( 'woocommerce_quantity_input_min', 1, $product ),
+									'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_qty(), $product ),
+									'input_value' => ( isset( $_POST['quantity'] ) ? wc_stock_amount( $_POST['quantity'] ) : 1 )
+								) );
+							}
+						?>
 						<input type="submit" name="add_appointment_2" class="button-primary" value="<?php _e( 'Add Appointment', 'woocommerce-appointments' ); ?>" />
 						<input type="hidden" name="customer_id" value="<?php echo esc_attr( $customer_id ); ?>" />
 						<input type="hidden" name="appointable_product_id" value="<?php echo esc_attr( $appointable_product_id ); ?>" />

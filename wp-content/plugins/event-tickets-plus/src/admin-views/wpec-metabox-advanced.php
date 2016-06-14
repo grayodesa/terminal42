@@ -27,7 +27,13 @@ if ( class_exists( 'Tribe__Events__Pro__Main' ) ) {
 				<?php esc_html_e( 'Selling tickets for recurring events', 'event-tickets-plus' ); ?> <span id="selling-tickets-info" class="target dashicons dashicons-editor-help bumpdown-trigger"></span>
 			</p>
 			<div class="bumpdown" data-trigger="selling-tickets-info">
-				<?php esc_html_e( 'Currently, WPECTickets will only show up on the frontend once per full event. For PRO users this means the same ticket will appear across all events in the series. Please configure your events accordingly.', 'event-tickets-plus' ); ?>
+				<?php
+					if ( is_admin() ) {
+						esc_html_e( 'Currently, WPECTickets will only show up on the frontend once per full event. For PRO users this means the same ticket will appear across all events in the series. Please configure your events accordingly.', 'event-tickets-plus' );
+					} else {
+						esc_html_e( 'If you are creating a recurring event, Tickets will only show up once per Event Series, meaning that the same ticket will apper across all events. Please configure your events accordingly.', 'event-tickets-plus' );
+					}
+				?>
 			</div>
 		</td>
 	</tr>

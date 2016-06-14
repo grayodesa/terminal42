@@ -191,6 +191,9 @@ class WC_Appointments_Admin {
 					'sort_order'  => $loop
 				)
 			);
+			
+			// set default availability quantity
+			//update_post_meta( $staff_id, 'qty', 1 );
 
 			$staff = get_user_by( 'id', $staff_id );
 			ob_start();
@@ -254,6 +257,7 @@ class WC_Appointments_Admin {
 	public function appointment_general() {
 		global $post;
 		$post_id = $post->ID;
+		
 		include( 'views/html-appointment-general.php' );
 	}
 
@@ -262,7 +266,6 @@ class WC_Appointments_Admin {
 	 */
 	public function appointment_panels() {
 		global $post;
-
 		$post_id = $post->ID;
 
 		wp_enqueue_script( 'wc_appointments_writepanel_js' );
@@ -290,13 +293,17 @@ class WC_Appointments_Admin {
 
 		wp_register_script( 'wc_appointments_writepanel_js', WC_APPOINTMENTS_PLUGIN_URL . '/assets/js/writepanel' . $suffix . '.js', array( 'jquery', 'jquery-ui-datepicker' ), WC_APPOINTMENTS_VERSION, true );
 		
+		$padding_duration_unit = isset ( $post->ID ) ? get_post_meta( $post->ID, '_wc_appointment_padding_duration_unit', true ) : '';
+		
 		$params = array(
 			'i18n_remove_staff'		=> esc_js( __( 'Are you sure you want to remove this staff?', 'woocommerce-appointments' ) ),
 			'nonce_delete_staff'	=> wp_create_nonce( 'delete-appointable-staff' ),
 			'nonce_add_staff'		=> wp_create_nonce( 'add-appointable-staff' ),
 			'nonce_staff_html'		=> wp_create_nonce( 'appointable-staff-html' ),
 			
+			'padding_duration_unit' => $padding_duration_unit ? $padding_duration_unit : 0,
 			'i18n_minutes'          => esc_js( __( 'minutes', 'woocommerce-appointments' ) ),
+			'i18n_hours'           	=> esc_js( __( 'hours', 'woocommerce-appointments' ) ),
 			'i18n_days'             => esc_js( __( 'days', 'woocommerce-appointments' ) ),
 			'firstDay'				=> get_option( 'start_of_week' ),
 
@@ -556,10 +563,12 @@ class WC_Appointments_Admin {
 		if ( $product->is_type( 'appointment' ) ) {
 			// Duplicate relationships
 			$relationships = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wc_appointment_relationships WHERE product_id = %d;", $post->ID ), ARRAY_A );
-			foreach ( $relationships as $relationship ) {
-				$relationship['product_id'] = $new_post_id;
-				unset( $relationship['ID'] );
-				$wpdb->insert( "{$wpdb->prefix}wc_appointment_relationships", $relationship );
+			if ( $relationships ) {
+				foreach ( $relationships as $relationship ) {
+					$relationship['product_id'] = $new_post_id;
+					unset( $relationship['ID'] );
+					$wpdb->insert( "{$wpdb->prefix}wc_appointment_relationships", $relationship );
+				}
 			}
 		}
 	}

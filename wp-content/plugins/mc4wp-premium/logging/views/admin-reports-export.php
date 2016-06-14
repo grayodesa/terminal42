@@ -1,6 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or exit;
 
+$begin_year = 2012;
 $current_year = date('Y');
 $current_month = date('n');
 ?>
@@ -17,7 +18,7 @@ $current_month = date('n');
 				<label for="start_year" class="screen-reader-text"><?php _e( 'Start year', 'mailchimp-for-wp' ); ?></label>
 				<select name="start_year" id="start_year">
 					<option disabled><?php _e( 'Year' ); ?></option>
-					<?php for( $i=2012; $i <= $current_year; $i++) { ?>
+					<?php for( $i = $begin_year; $i <= $current_year; $i++) { ?>
 						<option><?php echo $i; ?></option>
 					<?php } ?>
 				</select>
@@ -25,7 +26,7 @@ $current_month = date('n');
 				<label for="start_month" class="screen-reader-text"><?php _e( 'Start month', 'mailchimp-for-wp' ); ?></label>
 				<select name="start_month" id="start_month">
 					<option disabled><?php _e( 'Month' ); ?></option>
-					<?php foreach( range( 1, 12) as $month_number) { ?>
+					<?php foreach( range( 1, 12 ) as $month_number) { ?>
 						<option value="<?php echo $month_number; ?>"><?php echo $month_number; ?></option>
 					<?php }?>
 				</select>
@@ -34,7 +35,7 @@ $current_month = date('n');
 				<label for="end_year" class="screen-reader-text"><?php _e( 'End year', 'mailchimp-for-wp' ); ?></label>
 				<select name="end_year" id="end_year">
 					<option disabled><?php _e( 'Year' ); ?></option>
-					<?php for( $i=2012; $i <= $current_year; $i++) { ?>
+					<?php for( $i = $begin_year; $i <= $current_year; $i++) { ?>
 						<option <?php selected( $i, $current_year ); ?>><?php echo $i; ?></option>
 					<?php
 					}
@@ -44,7 +45,7 @@ $current_month = date('n');
 				<label for="end_month" class="screen-reader-text"><?php _e( 'End month', 'mailchimp-for-wp' ); ?></label>
 				<select name="end_month" id="end_month">
 					<option disabled><?php _e( 'Month' ); ?></option>
-					<?php foreach( range( 1, 12) as $month_number) { ?>
+					<?php foreach( range( 1, 12 ) as $month_number) { ?>
 						<option value="<?php echo $month_number; ?>" <?php selected( $month_number, $current_month ); ?>><?php echo $month_number; ?></option>
 					<?php }?>
 				</select>

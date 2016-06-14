@@ -30,16 +30,17 @@ function triggerFormEvents(form, action, errors, data) {
 	}
 }
 
-function handleFormRequest(form,action,errors,data){
+function handleFormRequest(form, action, errors, data){
 
 	// re-populate form
 	if( errors ) {
 		form.setData(data);
 	}
 
-	if( scroll ) {
-		var animate = (scroll === 'animated');
-		form.placeIntoView(animate);
+	if( config.auto_scroll ) {
+		var animate = ( config.auto_scroll === 'animated' );
+		var arg = animate ? { behavior: 'smooth' } : false;
+		form.element.scrollIntoView(arg);
 	}
 
 	// trigger events on window.load so all other scripts have loaded
@@ -63,8 +64,10 @@ Gator(document.body).on('submit', '.mc4wp-form', function(event) {
 Gator(document.body).on('focus', '.mc4wp-form', function(event) {
 	event = event || window.event;
 	var form = forms.getByElement(event.target || event.srcElement);
+
 	if( ! form.started ) {
-		forms.trigger('start', [form, event]);
+		forms.trigger('started', [form, event]);
+		form.started = true;
 	}
 });
 
@@ -79,12 +82,13 @@ if( config.submitted_form ) {
 		element = document.getElementById(formConfig.element_id),
 		form = forms.getByElement(element);
 
-	handleFormRequest(form,formConfig.action, formConfig.errors,formConfig.data);
+	handleFormRequest(form, formConfig.action, formConfig.errors, formConfig.data);
 }
 
 // expose forms object
 mc4wp.forms = forms;
 window.mc4wp = mc4wp;
+
 },{"./forms/forms.js":3,"gator":6}],2:[function(require,module,exports){
 'use strict';
 
@@ -103,7 +107,11 @@ var Form = function(id, element) {
 	this.started = false;
 
 	this.setData = function(data) {
-		populate(form.element, data);
+		try {
+			populate(form.element, data);
+		} catch(e) {
+			console.error(e);
+		}
 	};
 
 	this.getData = function() {
@@ -118,37 +126,17 @@ var Form = function(id, element) {
 		form.element.querySelector('.mc4wp-response').innerHTML = msg;
 	};
 
-	this.placeIntoView = function( animate ) {
-		var scrollToHeight = 0;
-		var windowHeight = window.innerHeight;
-		var obj = form.element;
+	// revert back to original state
+	this.reset = function() {
+		this.setResponse('');
+		form.element.querySelector('.mc4wp-form-fields').style.display = '';
+		form.element.reset();
+	}
 
-		if (obj.offsetParent) {
-			do {
-				scrollToHeight += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		} else {
-			scrollToHeight = form.element.offsetTop;
-		}
-
-		if((windowHeight - 80) > form.element.clientHeight) {
-			// vertically center the form, but only if there's enough space for a decent margin
-			scrollToHeight = scrollToHeight - ((windowHeight - form.element.clientHeight) / 2);
-		} else {
-			// the form doesn't fit, scroll a little above the form
-			scrollToHeight = scrollToHeight - 80;
-		}
-
-		// scroll there. if jQuery is loaded, do it with an animation.
-		if( animate && window.jQuery ) {
-			window.jQuery('html, body').animate({ scrollTop: scrollToHeight }, 800);
-		} else {
-			window.scrollTo(0, scrollToHeight);
-		}
-	};
 };
 
 module.exports = Form;
+
 },{"../third-party/form2js.js":4,"../third-party/serialize.js":5,"populate.js":7}],3:[function(require,module,exports){
 'use strict';
 
@@ -179,19 +167,20 @@ function get(formId) {
 // get form by <form> element (or any input in form)
 function getByElement(element) {
 	var formElement = element.form || element;
-	for(var i=0; i<forms.length;i++) {
+
+	for(var i=0; i < forms.length; i++) {
 		if(forms[i].element == formElement) {
 			return forms[i];
 		}
 	}
 
-	return createFromElement(element);
+	return createFromElement(formElement);
 }
 
 // create form object from <form> element
-function createFromElement(formElement,id) {
+function createFromElement(formElement, id) {
 	id = id || parseInt( formElement.getAttribute('data-id') ) || 0;
-	var form = new Form(id,formElement);
+	var form = new Form(id, formElement);
 	forms.push(form);
 	return form;
 }

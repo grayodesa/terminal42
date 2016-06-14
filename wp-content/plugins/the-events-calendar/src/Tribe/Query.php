@@ -45,6 +45,10 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 				$can_inject = false;
 			}
 
+			if ( isset( $query->query_vars['do_not_inject_date'] ) && $query->query_vars['do_not_inject_date'] ) {
+				$can_inject = false;
+			}
+
 			return apply_filters( 'tribe_query_can_inject_date_field', $can_inject );
 		}
 
@@ -217,12 +221,16 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 							// if the eventDisplay is 'custom', all we're gonna do is make sure the start and end dates are formatted
 							$start_date = $query->get( 'start_date' );
 							if ( $start_date ) {
-								$start_date_string = $start_date instanceof DateTime ? $start_date->date : $start_date;
+								$start_date_string = $start_date instanceof DateTime
+									? $start_date->format( Tribe__Date_Utils::DBDATETIMEFORMAT )
+									: $start_date;
 								$query->set( 'start_date', date_i18n( Tribe__Date_Utils::DBDATETIMEFORMAT, strtotime( $start_date_string ) ) );
 							}
 							$end_date = $query->get( 'end_date' );
 							if ( $end_date ) {
-								$end_date_string = $end_date instanceof DateTime ? $end_date->date : $end_date;
+								$end_date_string = $end_date instanceof DateTime
+									? $end_date->format( Tribe__Date_Utils::DBDATETIMEFORMAT )
+									: $end_date;
 								$query->set( 'end_date', date_i18n( Tribe__Date_Utils::DBDATETIMEFORMAT, strtotime( $end_date_string ) ) );
 							}
 							break;

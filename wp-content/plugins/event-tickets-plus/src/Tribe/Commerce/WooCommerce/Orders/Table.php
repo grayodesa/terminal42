@@ -453,7 +453,15 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 
 		$total = 0;
 
-		foreach ( $valid_order_items as $order ) {
+		foreach ( $valid_order_items as $order_id => $order ) {
+			if (
+				'cancelled' === $orders[ $order_id ]['status']
+				|| 'refunded' === $orders[ $order_id ]['status']
+				|| 'failed' === $orders[ $order_id ]['status']
+			) {
+				continue;
+			}
+
 			$order_total = 0;
 
 			foreach ( $order as $line_item ) {
@@ -483,7 +491,15 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Table extends WP_List_
 
 		$fees = 0;
 
-		foreach ( $valid_order_items as $order ) {
+		foreach ( $valid_order_items as $order_id => $order ) {
+			if (
+				'cancelled' === $orders[ $order_id ]['status']
+				|| 'refunded' === $orders[ $order_id ]['status']
+				|| 'failed' === $orders[ $order_id ]['status']
+			) {
+				continue;
+			}
+
 			$order_total = 0;
 
 			foreach ( $order as $line_item ) {

@@ -16,6 +16,9 @@ class WC_Appointment {
 
 	/** @public string */
 	public $end;
+	
+	/** @public string */
+	public $qty;
 
 	/** @public bool */
 	public $all_day;
@@ -87,18 +90,15 @@ class WC_Appointment {
 	 * Schedule events for this appointment
 	 */
 	public function schedule_events() {
-		$offset = get_option( 'gmt_offset' ) * 60 * 60; // Time offset in seconds
 		if ( in_array( get_post_status( $this->id ), get_wc_appointment_statuses( 'scheduled' ) ) ) {
 			if ( $this->start && $this->get_order() ) {
 				$order_status = $this->get_order()->get_status();
-				$utc_start_timestamp = $this->start + $offset;
 				if ( ! in_array( $order_status, array( 'cancelled', 'refunded', 'pending', 'on-hold' ) ) ) {
-					wp_schedule_single_event( strtotime( '-' . absint( apply_filters( 'woocommerce_appointments_remind_before_days', 1 ) ) . ' day', $utc_start_timestamp ), 'wc-appointment-reminder', array( $this->id ) );
+					wp_schedule_single_event( strtotime( '-' . absint( apply_filters( 'woocommerce_appointments_remind_before_days', 1 ) ) . ' day', $this->start ), 'wc-appointment-reminder', array( $this->id ) );
 				}
 			}
 			if ( $this->end ) {
-				$utc_end_timestamp = $this->end + $offset;
-				wp_schedule_single_event( $utc_end_timestamp, 'wc-appointment-complete', array( $this->id ) );
+				wp_schedule_single_event( $this->end, 'wc-appointment-complete', array( $this->id ) );
 			}
 		} else {
 			wp_clear_scheduled_hook( 'wc-appointment-reminder', array( $this->id ) );

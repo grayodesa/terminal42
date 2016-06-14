@@ -109,7 +109,8 @@ function work() {
 		onSuccess: function(data) {
 			updateProgress(data);
 
-			// If we hit the query limit, go at it again.
+			// Keep going if there's more
+			// TODO: This needs a failsafe
 			if( data > 0 ) {
 				work();
 			}
@@ -132,10 +133,11 @@ function updateProgress(new_count) {
 function fetchProgress() {
 
 	if( progress_bar.done() ) {
+
 		// refresh page
 		window.setTimeout( function() {
 			window.location.reload()
-		}, 1000 );
+		}, 2500 );
 
 		return;
 	}

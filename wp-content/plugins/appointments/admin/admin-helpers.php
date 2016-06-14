@@ -43,3 +43,57 @@ function _appointments_get_user_dismissed_notices( $user_id ) {
 	}
 	return $dismissed;
 }
+
+/**
+ * @param $name
+ * @internal
+ * @return bool|string
+ */
+function _appointments_get_view_path( $name ) {
+	$file = appointments_plugin_dir() . 'admin/views/' . $name . '.php';
+	$file = apply_filters( 'appointments_admin_view_path', $file );
+	if ( is_file( $file ) ) {
+		return $file;
+	}
+
+	return false;
+}
+
+/**
+ * @param $tab
+ * @internal
+ * @return bool|string
+ */
+function _appointments_get_settings_tab_view_file_path( $tab ) {
+	$file = "page-settings-tab-$tab";
+	return apply_filters( "appointments_get_settings_tab_view-$tab", _appointments_get_view_path( $file ) );
+}
+
+/**
+ * @param $tab
+ * @param $section
+ * @internal
+ * @return bool|string
+ */
+function _appointments_get_settings_section_view_file_path( $tab, $section ) {
+	$file = "page-settings-tab-$tab-section-$section";
+	return apply_filters( "appointments_get_settings_tab_section_view-$tab", _appointments_get_view_path( $file ) );
+}
+
+/**
+ * @internal
+ * @param string $tab
+ * @param string $text Submit button text
+ * @param string $class primary|secondary
+ */
+function _appointments_settings_submit_block( $tab, $text = '', $class = 'primary' ) {
+	if (  ! $text ) {
+		$text = __( 'Save Changes', 'appointments' );
+	}
+
+	?>
+		<input type="hidden" name="action_app" value="save_<?php echo $tab; ?>"/>
+		<?php wp_nonce_field( 'update_app_settings', 'app_nonce' ); ?>
+		<?php submit_button( $text, $class ); ?>
+	<?php
+}

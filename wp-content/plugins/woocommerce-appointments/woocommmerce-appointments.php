@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce Appointments
 Plugin URI: http://www.bizzthemes.com/plugins/woocommerce-appointments/
 Description: Setup appointable products for WooCommerce
-Version: 1.7.7
+Version: 1.8.4
 Author: BizzThemes
 Author URI: https://bizzthemes.com
 Text Domain: woocommerce-appointments
@@ -79,7 +79,7 @@ class WC_Appointments {
 	 * Constructor
 	 */
 	public function __construct() {
-		define( 'WC_APPOINTMENTS_VERSION', '1.7.7' );
+		define( 'WC_APPOINTMENTS_VERSION', '1.8.4' );
 		define( 'WC_APPOINTMENTS_TEMPLATE_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/templates/' );
 		define( 'WC_APPOINTMENTS_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 		define( 'WC_APPOINTMENTS_MAIN_FILE', __FILE__ );

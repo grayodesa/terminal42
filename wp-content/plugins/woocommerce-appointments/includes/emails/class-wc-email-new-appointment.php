@@ -95,7 +95,6 @@ class WC_Email_New_Appointment extends WC_Email {
 				$this->replace[] = __( 'N/A', 'woocommerce-appointments' );
 			}
 
-
 			if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
 				return;
 			}
@@ -108,7 +107,7 @@ class WC_Email_New_Appointment extends WC_Email {
 				$recipients = implode( ', ', $recipients );
 				$this->recipient = implode( ', ', array( $recipients, $staff_member->user_email ) );
 			}
-			
+						
 			$this->recipient = apply_filters( 'woocommerce_email_new_recipients', $this->recipient );
 
 			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

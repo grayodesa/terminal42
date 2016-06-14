@@ -770,7 +770,7 @@ function load_pagespecific_scripts() {
 
             if ( is_page_template('template-contact.php') OR is_page_template('template-contact-half-left.php') OR is_page_template('template-contact-half-right.php') OR is_page_template('template-contact-sidebar.php') OR is_page_template('template-contact-split.php') OR content_has_shortcode( 'gmap' ) ){
 
-                wp_register_script('gmapsAPI', 'http://maps.google.com/maps/api/js?sensor=false', '', SEMICOLON_VERSION);
+                wp_register_script('gmapsAPI', '//maps.google.com/maps/api/js?sensor=false', '', SEMICOLON_VERSION);
                 wp_enqueue_script('gmapsAPI');
 
                 wp_register_script('gmapsScript', get_template_directory_uri() . '/js/jquery.gmap.js', 'jquery', SEMICOLON_VERSION);
@@ -1185,9 +1185,9 @@ add_action( 'tribe_events_single_event_before_the_content', array( Tribe__Ticket
  */
 function tribe_etp_move_tickets_purchase_form ( $ticket_location_action, $ticket_location_priority = 10 ) {
     $etp_classes = array(
-	'Tribe__Tickets_Plus__Commerce__EDD__Main',
+//	'Tribe__Tickets_Plus__Commerce__EDD__Main',
     //	'Tribe__Tickets_Plus__Commerce__Shopp__Main', // As of ETP v4.0 Shopp will generate errors when referenced, if not active. Uncomment this line if you have Shopp Active
-	'Tribe__Tickets_Plus__Commerce__WPEC__Main',
+//	'Tribe__Tickets_Plus__Commerce__WPEC__Main',
 	'Tribe__Tickets_Plus__Commerce__WooCommerce__Main'
     );
     foreach ( $etp_classes as $ticket_class ) {
@@ -1214,6 +1214,38 @@ function tribe_etp_move_tickets_purchase_form ( $ticket_location_action, $ticket
  * Uncomment to Move Ticket Form Above the Event Description
  */
 tribe_etp_move_tickets_purchase_form( 'tribe_events_single_event_before_the_content' );
+?>
+<?php
+/**
+ * Example for adding event data to WooCommerce checkout for Events Calendar tickets.
+ * @link http://theeventscalendar.com/support/forums/topic/event-title-and-date-in-cart/
+ */
+add_filter( 'woocommerce_cart_item_name', 'woocommerce_cart_item_name_event_title', 10, 3 );
+function woocommerce_cart_item_name_event_title( $title, $values, $cart_item_key ) {
+    $ticket_meta = get_post_meta( $values['product_id'] );
+    $event_id = absint( $ticket_meta['_tribe_wooticket_for_event'][0] );
+    if ( $event_id ) {
+	$title = sprintf( '%s for <a href="%s" target="_blank"><strong>%s</strong></a>', $title, get_permalink( $event_id ), get_the_title( $event_id ) );
+    }
+    return $title;
+}
 
+/* add_action( 'wp_footer', 'tribe_limit_rsvps_to_one' );
 
+function tribe_limit_rsvps_to_one() {
+    wp_enqueue_script( 'jquery' );
+?>
+    <script>
+	jQuery(document).ready(function($){
+	    if ( $('.tribe-events-tickets' ).length ) {
+		var $input = $('.tribe-events-tickets' ).find( 'input.tribe-ticket-quantity' );
+		$input.attr( 'type', 'text' );
+		$input.attr( 'disabled', 'disabled' );
+		$input.attr( 'max', '1' );
+		$input.val( '1' );
+	    }
+	});
+    </script>
+<?php 
+} */
 ?>

@@ -44,9 +44,9 @@ class Tribe__Admin__Notice__Archive_Slug_Conflict {
 			return;
 		}
 		$this->page = $page;
-		$dimissed_notices = get_user_meta( get_current_user_id(), 'tribe-dismiss-notice' );
+		$dismissed_notices = get_user_meta( get_current_user_id(), 'tribe-dismiss-notice' );
 
-		if ( in_array( 'archive-slug-conflict', $dimissed_notices ) ) {
+		if ( is_array( $dismissed_notices ) && in_array( 'archive-slug-conflict', $dismissed_notices ) ) {
 			return;
 		}
 		add_action( 'admin_notices', array( $this, 'notice' ) );
@@ -80,8 +80,8 @@ class Tribe__Admin__Notice__Archive_Slug_Conflict {
 	 */
 	public function notice() {
 		// What's happening?
-		$page_title = apply_filters( 'the_title', $this->page->post_title );
-		$line_1     = __( sprintf( 'The page "%1$s" uses the "%2$s" slug: the Events Calendar plugin will show its calendar in place of the page.', $page_title, $this->archive_slug ), 'tribe-common' );
+		$page_title = apply_filters( 'the_title', $this->page->post_title, $this->page->ID );
+		$line_1     = __( sprintf( 'The page "%1$s" uses the "/%2$s" slug: the Events Calendar plugin will show its calendar in place of the page.', $page_title, $this->archive_slug ), 'tribe-common' );
 
 		// What the user can do
 		$page_edit_link = get_edit_post_link( $this->page->ID );

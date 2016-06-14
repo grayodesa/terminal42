@@ -4,7 +4,7 @@
  *
  * @package   Essential_Grid
  * @author    ThemePunch <info@themepunch.com>
- * @link      http://www.revolution.themepunch.com/
+ * @link      http://revolution.themepunch.com/
  * @copyright 2015 ThemePunch
  */
 

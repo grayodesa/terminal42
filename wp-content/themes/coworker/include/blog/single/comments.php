@@ -15,7 +15,7 @@
                                 /* * * DON'T EDIT BELOW THIS LINE * * */
                                 (function() {
                                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
                                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
                                 })();
                             </script>
@@ -63,7 +63,7 @@ elseif( get_post_meta( get_the_ID(), 'semi_post_comments_system', TRUE ) == 'dis
                                 /* * * DON'T EDIT BELOW THIS LINE * * */
                                 (function() {
                                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                                    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
                                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
                                 })();
                             </script>

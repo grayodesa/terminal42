@@ -23,16 +23,18 @@ add_filter( 'mc4wp_settings', function( $options ) {
 
 // setup objects
 $plugin = new MC4WP_Plugin( __FILE__, MC4WP_PREMIUM_VERSION );
+$opts = mc4wp_get_options();
+$enabled = $opts['ecommerce'];
 
 // setup admin stuffs?
 if( is_admin() ) {
-	$admin = new MC4WP_Ecommerce_Admin( $plugin );
+	$admin = new MC4WP_Ecommerce_Admin( $plugin, $enabled );
 	$admin->add_hooks();
 }
 
 // are we enabled?
-$opts = mc4wp_get_options();
-if( $opts['ecommerce'] ) {
+
+if( $enabled ) {
 
 	// setup tracker
 	$tracker = new MC4WP_Ecommerce_Tracker();

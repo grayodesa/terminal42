@@ -2,22 +2,27 @@
 /**
  * Edit account form
  *
+ * This template can be overridden by copying it to yourtheme/woocommerce/myaccount/form-edit-account.php.
+ *
+ * HOWEVER, on occasion WooCommerce will need to update template files and you (the theme developer).
+ * will need to copy the new files to your theme to maintain compatibility. We try to do this.
+ * as little as possible, but it does happen. When this occurs the version of the template file will.
+ * be bumped and the readme will list any important changes.
+ *
+ * @see 	    http://docs.woothemes.com/document/template-structure/
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
- * @version     2.2.7
+ * @version     2.5.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
-
 ?>
 
 <?php wc_print_notices(); ?>
 
-<h3><?php _e( 'Edit your Account Details', 'coworker' ); ?></h3>
-
-<form action="" method="post">
+<form class="edit-account" action="" method="post">
 
 	<?php do_action( 'woocommerce_edit_account_form_start' ); ?>
 
@@ -33,11 +38,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<p class="form-row form-row-wide">
 		<label for="account_email"><?php _e( 'Email address', 'woocommerce' ); ?> <span class="required">*</span></label>
-		<input type="text" class="input-text" name="account_email" id="account_email" value="<?php echo esc_attr( $user->user_email ); ?>" />
+		<input type="email" class="input-text" name="account_email" id="account_email" value="<?php echo esc_attr( $user->user_email ); ?>" />
 	</p>
 
-	<fieldset class="topmargin">
-		<h4><?php _e( 'Password Change', 'woocommerce' ); ?></h4>
+	<fieldset>
+		<legend><?php _e( 'Password Change', 'woocommerce' ); ?></legend>
 
 		<p class="form-row form-row-wide">
 			<label for="password_current"><?php _e( 'Current Password (leave blank to leave unchanged)', 'woocommerce' ); ?></label>
@@ -58,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<p>
 		<?php wp_nonce_field( 'save_account_details' ); ?>
-		<input type="submit" class="btn btn-default noleftmargin" name="save_account_details" value="<?php _e( 'Save changes', 'woocommerce' ); ?>" />
+		<input type="submit" class="button" name="save_account_details" value="<?php esc_attr_e( 'Save changes', 'woocommerce' ); ?>" />
 		<input type="hidden" name="action" value="save_account_details" />
 	</p>
 

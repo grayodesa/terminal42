@@ -460,8 +460,6 @@ if($slide->isStaticSlide() || $slider->isSlidesFromPosts()){ //insert sliderid f
 	?><input type="hidden" id="sliderid" value="<?php echo $slider->getID(); ?>" /><?php
 }
 
-require self::getPathTemplate('template-selector');
-
 ?>
 
 <div class="wrap settings_wrap">
@@ -1297,3 +1295,7 @@ require self::getPathTemplate("../system/dialog-copy-move");
 		});
 	});
 </script>
+
+<?php
+require self::getPathTemplate('template-selector');
+?>

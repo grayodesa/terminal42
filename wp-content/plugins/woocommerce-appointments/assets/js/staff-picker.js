@@ -1,4 +1,3 @@
-/* globals wc_appointment_form_params, console */
 jQuery( function( $ ) {
 
 	/*

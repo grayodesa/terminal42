@@ -25,17 +25,21 @@ if ( isset( $_GET['app_provider_id'] ) && $_GET['app_provider_id'] ) {
 	$args['worker'] = $_GET['app_provider_id'];
 }
 
-$args['order']   = 'DESC';
 if ( isset( $_GET['app_order_by']) && $_GET['app_order_by'] ) {
 	$_orderby        = explode( '_', $_GET['app_order_by'] );
 	if ( count( $_orderby ) == 1 ) {
-		$args['order']   = $_orderby[0];
+		$args['orderby']   = $_orderby[0];
+		$args['order'] = 'ASC';
 	}
 	elseif ( count( $_orderby ) == 2 ) {
 		$args['order']   = $_orderby[1];
 		$args['orderby'] = $_orderby[0];
 	}
 
+}
+else {
+	$args['orderby']   = 'ID';
+	$args['order'] = 'DESC';
 }
 
 switch($type) {
@@ -56,14 +60,14 @@ $total = appointments_get_appointments( $args );
 
 $columns = array();
 
-if ( true || isset( $_GET["type"] ) && 'removed' == $_GET["type"] )
-	$columns['delete'] = '<input type="checkbox" />';
+if ( true || isset( $_GET["type"] ) && 'removed' == $_GET["type"] )$columns['delete'] = '<input type="checkbox" />';
 $columns['app_ID'] = __('ID','appointments');
 $columns['user'] = __('Client','appointments');
 $columns['date'] = __('Date/Time','appointments');
 $columns['service'] = __('Service','appointments');
 $columns['worker'] = __('Provider','appointments');
 $columns['status'] = __('Status','appointments');
+$columns = apply_filters( 'appointments_my_appointments_list_columns', $columns );
 
 $pag_args = array(
 	'base' => add_query_arg( 'paged', '%#%' ),
@@ -170,6 +174,7 @@ if ( true || isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 								}
 							?>
 						</td>
+						<?php do_action( 'appointments_my_appointments_list_row', $app ); ?>
 					</tr>
 					<?php
 
@@ -217,7 +222,7 @@ if ( isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 			}
 		});
 		var th_sel = $("th.column-delete input:checkbox");
-		var td_sel = $("td.column-delete input:checkbox");
+		var td_sel = $("th.column-check input:checkbox");
 		th_sel.change( function() {
 			if ( $(this).is(':checked') ) {
 				td_sel.attr("checked","checked");
@@ -299,7 +304,7 @@ if ( isset( $_GET["type"] ) && 'removed' == $_GET["type"] ) {
 			var price = save_parent.find('input[name="price"]').val();
 			var date = save_parent.find('input[name="date"]').val();
 			var time = save_parent.find('select[name="time"] option:selected').val();
-			var note = save_parent.find('textarea').val();
+			var note = save_parent.find('textarea[name="note"]').val();
 			var status = save_parent.find('select[name="status"] option:selected').val();
 
 			var dt = save_parent.find('input[name="date"]').attr("data-timestamp");

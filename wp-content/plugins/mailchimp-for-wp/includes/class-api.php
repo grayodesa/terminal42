@@ -134,7 +134,7 @@ class MC4WP_API {
 	public function subscribe($list_id, $email, array $merge_vars = array(), $email_type = 'html', $double_optin = true, $update_existing = false, $replace_interests = true, $send_welcome = false ) {
 		$data = array(
 			'id' => $list_id,
-			'email' => array( 'email' => $email),
+			'email' => array( 'email' => $email ),
 			'merge_vars' => $merge_vars,
 			'email_type' => $email_type,
 			'double_optin' => $double_optin,
@@ -277,7 +277,7 @@ class MC4WP_API {
 	}
 
 	/**
-	 * @param        $list_id
+	 * @param string $list_id
 	 * @param array|string $email
 	 * @param array  $merge_vars
 	 * @param string $email_type
@@ -288,7 +288,7 @@ class MC4WP_API {
 	public function update_subscriber( $list_id, $email, $merge_vars = array(), $email_type = 'html', $replace_interests = false ) {
 
 		// default to using email for updating
-		if( ! is_array( $email ) ) {
+		if( is_string( $email ) ) {
 			$email = array(
 				'email' => $email
 			);
@@ -363,6 +363,7 @@ class MC4WP_API {
 	 * @return boolean
 	 */
 	public function add_ecommerce_order( array $order_data ) {
+
 		$response = $this->call( 'ecomm/order-add', array( 'order' => $order_data ) );
 
 		if( is_object( $response ) ) {
@@ -372,8 +373,8 @@ class MC4WP_API {
 				return true;
 			}
 
-			// 330 means order was already added: great
-			if( isset( $response->code ) && $response->code == 330 ) {
+			// if order was already added: great
+			if( isset( $response->code, $response->error ) && $response->code == 330 && strpos( $response->error, 'already been recorded' ) !== false ) {
 				return true;
 			}
 		}
@@ -430,6 +431,8 @@ class MC4WP_API {
 
 		// do not make request when no api key was provided.
 		if( empty( $this->api_key ) ) {
+			$this->error_message = "Missing MailChimp API key.";
+			$this->error_code = 001;
 			return false;
 		}
 

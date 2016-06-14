@@ -1,5 +1,19 @@
 *** Product Addons Changelog ***
 
+2016.04.04 - version 2.7.17
+* Fix - Options total/grand total does not work with "Free" product.
+* Fix - Missing minified quickview.js.
+
+2016.03.20 - version 2.7.16
+* Fix - When fields are not required and left empty, prevented add to cart from working.
+* Fix - Compatibility with Subscriptions title when addon is present.
+* Tweak - Compatibility with Composite Products.
+* Tweak - Clear addon fields when clear variations link is clicked.
+* Tweak - Using custom multiplier if zero is entered, don't show addons in cart.
+* Update - POT file.
+* Remove - accounting.js file in favor of using the one that comes with WC core.
+
+
 2016.01.26 - version 2.7.15
 * Tweak - Show the price display suffix on the grand total.
 

@@ -190,6 +190,7 @@ class RevSliderPluginUpdate {
 			'opacity' => 'opacity',
 			'padding' => 'padding',
 			'text-decoration' => 'textDecoration',
+			'text-align' => 'textAlign'
 		);
 		
 		$cs = array_merge($cs, RevSliderCssParser::get_deformation_css_tags());

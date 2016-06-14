@@ -28,7 +28,7 @@ class Product_Addon_Cart {
 		add_filter( 'woocommerce_add_to_cart_validation', array( $this, 'validate_add_cart_item' ), 999, 3 );
 
 		// Add meta to order
-		add_action( 'woocommerce_add_order_item_meta', array( $this, 'order_item_meta' ), 60, 2 );
+		add_action( 'woocommerce_add_order_item_meta', array( $this, 'order_item_meta' ), 10, 2 );
 
 		// order again functionality
 		add_filter( 'woocommerce_order_again_cart_item_data', array( $this, 're_add_cart_item_data' ), 10, 3 );
@@ -96,7 +96,7 @@ class Product_Addon_Cart {
 				$name = $addon['name'];
 
 				if ( $addon['price'] > 0 && apply_filters( 'woocommerce_addons_add_price_to_name', '__return_true' ) ) {
-					$name .= ' (' . wc_price( get_product_addon_price_for_display ( $addon['price'] ) ) . ')';
+					$name .= ' (' . wc_price( get_product_addon_price_for_display ( $addon['price'], $cart_item[ 'data' ], true ) ) . ')';
 				}
 
 				$other_data[] = array(
@@ -271,7 +271,7 @@ class Product_Addon_Cart {
 				$name = $addon['name'];
 
 				if ( $addon['price'] > 0 && apply_filters( 'woocommerce_addons_add_price_to_name', true ) ) {
-					$name .= ' (' . strip_tags( wc_price( get_product_addon_price_for_display ( $addon['price'] ) ) ) . ')';
+					$name .= ' (' . strip_tags( wc_price( get_product_addon_price_for_display ( $addon['price'], $values[ 'data' ], true ) ) ) . ')';
 				}
 
 				wc_add_order_item_meta( $item_id, $name, $addon['value'] );

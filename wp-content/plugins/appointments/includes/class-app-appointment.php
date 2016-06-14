@@ -9,7 +9,7 @@ class Appointments_Appointment {
 	public $phone = '';
 	public $address = '';
 	public $city = '';
-	public $location = '';
+	private $location = '';
 	public $service = '';
 	public $worker = '';
 	public $price = '';
@@ -26,6 +26,15 @@ class Appointments_Appointment {
 		foreach ( get_object_vars( $appointment ) as $key => $value ) {
 			$this->$key = $this->_sanitize_field( $key, $value );
 		}
+	}
+
+	public function __get( $name ) {
+		$value = false;
+		if ( isset( $this->$name ) ) {
+			$value = $this->$name;
+		}
+
+		return apply_filters( 'appointments_get_appointment_attribute', $value, $name );
 	}
 
 	private function _sanitize_field( $field, $value ) {
@@ -80,6 +89,26 @@ class Appointments_Appointment {
 		return get_gmt_from_date( $this->end, $format );
 	}
 
+	public function get_formatted_start_date() {
+		$appointments = appointments();
+		return mysql2date( $appointments->datetime_format, $this->start );
+	}
+
+	public function get_formatted_created_date() {
+		$appointments = appointments();
+		return mysql2date( $appointments->datetime_format, $this->created );
+	}
+
+	public function get_service_name() {
+		$appointments = appointments();
+		return $appointments->get_service_name( $this->service );
+	}
+
+	public function get_client_name() {
+		$appointments = appointments();
+		return $appointments->get_client_name( $this->ID );
+	}
+
 	public function get_email() {
 		global $appointments;
 
@@ -92,6 +121,20 @@ class Appointments_Appointment {
 		else {
 			return $appointments->get_admin_email();
 		}
+	}
+
+	public function get_customer_email() {
+		$email = '';
+		if ( empty( $this->email ) && $wp_user = get_user_by( 'id', absint( $this->user ) ) ) {
+			if ( $wp_user && ! empty( $wp_user->user_email ) ) {
+				$email = $wp_user->user_email;
+			}
+		}
+		elseif ( is_email( $this->email ) ) {
+			$email = $this->email;
+		}
+
+		return $email;
 	}
 
 
@@ -149,24 +192,52 @@ function appointments_get_appointment_by_gcal_id( $gcal_id ) {
 	global $wpdb;
 
 	$table = appointments_get_table( 'appointments' );
-	$app = $wpdb->get_row(
-		$wpdb->prepare(
-			"SELECT * FROM $table WHERE gcal_ID = %d",
-			$gcal_id
-		)
-	);
 
-	if ( ! $app ) {
-		return false;
+	$_app = wp_cache_get( $gcal_id, 'app_appointments_by_gcal' );
+	if ( false === $_app ) {
+		$_app = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $table WHERE gcal_ID = %s",
+				$gcal_id
+			)
+		);
+
+		if ( ! $_app ) {
+			return false;
+		}
 	}
 
-	return appointments_get_appointment( $app );
+	wp_cache_add( $gcal_id, $_app, 'app_appointments_by_gcal' );
+	return appointments_get_appointment( $_app );
 }
 
 /**
  * Insert a new Appointment
  *
- * @param array $args
+ * @param array $args {
+ *      An array of elements that make up an appointment to insert.
+ *
+ *      @type int            $user           The user ID assigned to the Appointment. 0 = no user,
+ *                                           Default 0
+ *      @type string         $email          The email of the user. Default empty.
+ *      @type string         $name           Name of the user. Default empty.
+ *      @type string         $phone          Phone of the user. Default empty.
+ *      @type string         $address        Address of the user. Default empty.
+ *      @type string         $city           City of the user. Default empty.
+ *      @type string         $note           Notes for the appointments. Default empty.
+ *      @type int|string     $service        Service ID assigned to the Appointment,
+ *                                           Default empty string.
+ *      @type int|string     $worker         Worker ID assigned to the Appointment,
+ *                                           Default empty string.
+ *      @type float|string   $price          Price of the Appointment. Default empty string.
+ *      @type int            $date           Timestamp of the date of the appointment. Default empty.
+ *      @type string         $created        Date when the appointment was created. Default current time.
+ *      @type string         $status         Status of the appointment. Default 'pending'
+ *      @type string         $location       Appointment location. Default empty.
+ *      @type string         $gcal_updated   Date when the GCal Event was updated. Default empty.
+ *      @type string         $gcal_ID        Gcal ID. Default empty.
+ *      @type int            $duration       Duration of the appointment.
+ * }
  *
  * @return bool|int
  */
@@ -183,14 +254,14 @@ function appointments_insert_appointment( $args ) {
 		'service' => '',
 		'worker' => '',
 		'price' => '',
-		'date' => '',
-		'time' => '',
+		'date' => '', // Set this always as integer
+		'time' => '', // Do not use this one
 		'created' => current_time( 'mysql' ),
 		'note' => '',
 		'status' => 'pending',
 		'location' => '',
 		'gcal_updated' => '',
-		'gcal_ID' => '',
+		'gcal_ID' => null,
 		'duration' => false
 	);
 
@@ -321,7 +392,7 @@ function appointments_insert_appointment( $args ) {
 
 	appointments_update_user_appointment_data( $app_id );
 
-	do_action( 'app_new_appointment', $app_id );
+	//do_action( 'app_new_appointment', $app_id );
 	do_action( 'wpmudev_appointments_insert_appointment', $app_id );
 
 	return $app_id;
@@ -330,26 +401,6 @@ function appointments_insert_appointment( $args ) {
 function appointments_is_busy( $start, $end, $capacity ) {
 	global $appointments;
 	return $appointments->is_busy( $start, $end, $capacity );
-}
-
-/**
- * Send a confirmation email fro this appointment
- *
- * @param $app_id
- */
-function appointments_send_confirmation( $app_id ) {
-	global $appointments;
-	$appointments->send_confirmation( $app_id );
-}
-
-/**
- * Send an email when an appointment has been removed
- *
- * @param $app_id
- */
-function appointments_send_removal_notification( $app_id ) {
-	global $appointments;
-	$appointments->send_removal_notification( $app_id );
 }
 
 
@@ -388,9 +439,33 @@ function appointments_update_user_appointment_data( $app_id ) {
 /**
  * Update an appointment data
  *
- * @param $app_id
- * @param $args
- * @param bool $resend
+ * @param int $app_id
+ * @param array $args {
+ *      An array of elements that make up an appointment to insert.
+ *
+ *      @type int            $user           The user ID assigned to the Appointment. 0 = no user,
+ *                                           Default 0
+ *      @type string         $email          The email of the user. Default empty.
+ *      @type string         $name           Name of the user. Default empty.
+ *      @type string         $phone          Phone of the user. Default empty.
+ *      @type string         $address        Address of the user. Default empty.
+ *      @type string         $city           City of the user. Default empty.
+ *      @type string         $note           Notes for the appointments. Default empty.
+ *      @type int|string     $service        Service ID assigned to the Appointment,
+ *                                           Default empty string.
+ *      @type int|string     $worker         Worker ID assigned to the Appointment,
+ *                                           Default empty string.
+ *      @type float|string   $price          Price of the Appointment. Default empty string.
+ *      @type int            $date           Timestamp of the date of the appointment. Default empty.
+ *      @type string         $created        Date when the appointment was created. Default current time.
+ *      @type string         $status         Status of the appointment. Default 'pending'
+ *      @type string         $location       Appointment location. Default empty.
+ *      @type string         $gcal_updated   Date when the GCal Event was updated. Default empty.
+ *      @type string         $gcal_ID        Gcal ID. Default empty.
+ *      @type int            $duration       Duration of the appointment.
+ *      @type string         $sent_worker    Notification times sent to worker
+ *      @type string         $sent           Notification times sent to user
+ * }
  *
  * @return bool True in case of success
  */
@@ -510,11 +585,15 @@ function appointments_update_appointment( $app_id, $args ) {
 	}
 
 	// Change status?
-	$updated_status = false;
 	if ( ! empty( $args['status'] ) ) {
 		// Yeah, maybe change status
 		$update['status'] = $args['status'];
 		$update_wildcards[] = '%s';
+	}
+
+	if ( isset( $update['gcal_ID'] ) && $update['gcal_ID'] === '' ) {
+		// Prevent duplicate gcal IDs
+		$update['gcal_ID'] = null;
 	}
 
 
@@ -535,7 +614,9 @@ function appointments_update_appointment( $app_id, $args ) {
 	}
 
 
-	if ( ! $result && ! $updated_status ) {
+	$result = apply_filters( 'wpmudev_appointments_update_appointment_result', $result, $app_id, $args, $old_appointment );
+
+	if ( ! $result ) {
 		// Nothing has changed
 		return false;
 	}
@@ -544,6 +625,34 @@ function appointments_update_appointment( $app_id, $args ) {
 	appointments_clear_appointment_cache( $app_id );
 
 	do_action( 'wpmudev_appointments_update_appointment', $app_id, $args, $old_appointment );
+
+	$new_app = appointments_get_appointment( $app_id );
+	$old_status = $old_appointment->status;
+	$new_status = $new_app->status;
+	if ( $old_status != $new_status ) {
+
+		if ( 'removed' == $new_status ) {
+			do_action( 'app_removed', $app_id );
+		}
+
+		appointments_clear_appointment_cache( $app_id );
+
+		/**
+		 * Fired when an Appointment changes its status
+		 *
+		 * @used-by AppointmentsGcal::app_change_status()
+		 */
+		do_action( 'wpmudev_appointments_update_appointment_status', $app_id, $new_status, $old_status );
+
+		/**
+		 * Fired when an Appointment changes its status
+		 *
+		 * @deprecated since 1.5.7.1
+		 */
+		do_action( 'app_change_status', $new_status, $app_id );
+
+		return true;
+	}
 
 	return true;
 }
@@ -557,8 +666,6 @@ function appointments_update_appointment( $app_id, $args ) {
  * @return bool True in case of success
  */
 function appointments_update_appointment_status( $app_id, $new_status ) {
-	global $wpdb;
-
 	$app = appointments_get_appointment( $app_id );
 	if ( ! $app ) {
 		return false;
@@ -574,40 +681,9 @@ function appointments_update_appointment_status( $app_id, $new_status ) {
 		return false;
 	}
 
-	$table = appointments_get_table( 'appointments' );
-
 	$result = appointments_update_appointment( $app->ID, array( 'status' => $new_status ) );
 
-	if ( $result ) {
-		if ( 'removed' == $new_status ) {
-			do_action( 'app_removed', $app_id );
-		}
-
-		appointments_clear_appointment_cache( $app_id );
-
-		if ( 'removed' === $new_status ) {
-			appointments_send_removal_notification( $app_id );
-		}
-
-		/**
-		 * Fired when an Appointment changes its status
-		 *
-		 * @used-by AppointmentsGcal::app_change_status()
-		 * @used-by App_Users_AdditionalFields::manual_cleanup_data()
-		 */
-		do_action( 'wpmudev_appointments_update_appointment_status', $app_id, $new_status, $old_status );
-
-		/**
-		 * Fired when an Appointment changes its status
-		 *
-		 * @deprecated since 1.5.7.1
-		 */
-		do_action( 'app_change_status', $new_status, $app_id );
-
-		return true;
-	}
-
-	return false;
+	return $result;
 }
 
 /**
@@ -715,6 +791,11 @@ function appointments_get_appointments_filtered_by_services( $args = array() ) {
 }
 
 
+/**
+ * @param array $args
+ *
+ * @return array|mixed|null|object|string
+ */
 function appointments_get_appointments( $args = array() ) {
 	global $wpdb;
 
@@ -777,7 +858,9 @@ function appointments_get_appointments( $args = array() ) {
 
 				$where_services[] = absint( $service_id );
 			}
-			$where[] = 'service IN (' . implode( ',', $where_services ) . ')';
+			if ( ! empty( $where_services ) ) {
+				$where[] = 'service IN (' . implode( ',', $where_services ) . ')';
+			}
 		}
 
 		if ( ! empty( $args['date_query'] ) && is_array( $args['date_query'] ) ) {
@@ -836,7 +919,10 @@ function appointments_get_appointments( $args = array() ) {
 			if ( $args['s'] ) {
 				// Search by user name
 				$where[] = $wpdb->prepare(
-					"name LIKE %s OR email LIKE %s OR ID IN ( SELECT ID FROM $wpdb->users WHERE user_login LIKE %s )",
+					"( name LIKE %s OR email LIKE %s OR user IN ( SELECT ID FROM $wpdb->users WHERE user_login LIKE %s OR user_nicename LIKE %s OR display_name LIKE %s OR user_email LIKE %s ) )",
+					'%' . $args['s'] . '%',
+					'%' . $args['s'] . '%',
+					'%' . $args['s'] . '%',
 					'%' . $args['s'] . '%',
 					'%' . $args['s'] . '%',
 					'%' . $args['s'] . '%'
@@ -978,29 +1064,18 @@ function appointments_get_month_appointments( $args ) {
  * @return array
  */
 function appointments_get_user_appointments( $user_id ) {
-	global $wpdb;
-
 	$user_id = absint( $user_id );
 	$user = get_userdata( $user_id );
 	if ( ! $user ) {
 		return array();
 	}
 
-	$table = appointments_get_table( 'appointments' );
-	$statuses_in = array( 'paid', 'confirmed' );
-	$where = "WHERE status IN ( '" . implode( "','", $statuses_in ) . "' ) AND user = $user_id";
-	$results = $wpdb->get_results( "SELECT * FROM $table $where" );
-
-	if ( ! $results ) {
-		return array();
-	}
-
-	$appointments = array();
-	foreach ( $results as $row ) {
-		$appointments[] = new Appointments_Appointment( $row );
-	}
-
-	return $appointments;
+	return appointments_get_appointments(
+		array(
+			'user' => $user_id,
+			'status' => array( 'paid', 'confirmed' )
+		)
+	);
 }
 
 /**
@@ -1013,16 +1088,19 @@ function appointments_clear_appointment_cache( $app_id = false ) {
 
 	if ( $app_id ) {
 		wp_cache_delete( $app_id, 'app_appointments' );
+		wp_cache_delete( $app_id, 'app_appointments_by_gcal' );
 	}
 	else {
 		$table = appointments_get_table( 'appointments' );
-		$ids = $wpdb->get_col( "SELECT ID FROM $table" );
-		foreach ( $ids as $id ) {
-			wp_cache_delete( $id, 'app_appointments' );
+		$apps = $wpdb->get_results( "SELECT ID, gcal_ID FROM $table" );
+		foreach ( $apps as $app ) {
+			wp_cache_delete( $app->ID, 'app_appointments' );
+			if ( $app->gcal_ID ) {
+				wp_cache_delete( $app->ID, 'app_appointments_by_gcal' );
+			}
 		}
 	}
 
-	wp_cache_delete( 'app_count_appointments' );
 	wp_cache_delete( 'app_get_appointments_filtered_by_service' );
 	wp_cache_delete( 'app_get_appointments' );
 	wp_cache_delete( 'app_get_month_appointments' );
@@ -1048,6 +1126,15 @@ function appointments_get_statuses() {
 	);
 }
 
+function appointments_get_status_name( $status ) {
+	$statuses = appointments_get_statuses();
+	if ( isset( $statuses[ $status ] ) ) {
+		return $statuses[ $status ];
+	}
+
+	return __( 'None yet', 'appointments' );
+}
+
 /**
  * Delete an appointment forever
  *
@@ -1064,6 +1151,13 @@ function appointments_delete_appointment( $app_id ) {
 
 	$table = appointments_get_table( 'appointments' );
 	$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $table WHERE ID = %d", $app_id ) );
+
+	$meta_table = appointments_get_table( 'appmeta' );
+	$meta_ids = $wpdb->get_col( $wpdb->prepare( "SELECT meta_id FROM $meta_table WHERE app_appointment_id = %d ", $app_id ));
+	foreach ( $meta_ids as $mid ) {
+		delete_metadata_by_mid( 'app_appointment', $mid );
+	}
+
 
 	appointments_clear_appointment_cache( $app_id );
 
@@ -1096,7 +1190,7 @@ function appointments_get_expired_appointments( $pending_seconds = 0 ) {
 		$wpdb->prepare(
 			"SELECT * FROM $table
 			WHERE start < %s
-			AND status NOT IN ('completed', 'removed')",
+			AND status NOT IN ( 'completed', 'removed' )",
 			date( 'Y-m-d H:i:s', $current_time )
 		)
 	);
@@ -1156,23 +1250,18 @@ function _appointments_parse_date_query( $date_query = array() ) {
 	return $date_query;
 }
 
-
-function appointments_count_appointments() {
-	global $wpdb;
-
-	$counts = wp_cache_get( 'app_count_appointments' );
-
-	if ( false === $counts ) {
-		$table = appointments_get_table( 'appointments' );
-
-		$results = $wpdb->get_results( "SELECT status, COUNT(*) num_apps FROM $table GROUP BY status", ARRAY_A );
-		$counts = array_fill_keys( array_keys( appointments_get_statuses() ), 0 );
-
-		foreach ( $results as $row ) {
-			$counts[ $row['status'] ] = absint( $row['num_apps'] );
-		}
-
-		wp_cache_set( 'app_count_appointments', $counts );
+/**
+ * Return the number of Appointments for every status
+ *
+ * @param array $args See appointments_get_appointments()
+ *
+ * @return array
+ */
+function appointments_count_appointments( $args = array() ) {
+	$apps = appointments_get_appointments( $args );
+	$counts = array_fill_keys( array_keys( appointments_get_statuses() ), 0 );
+	foreach ( $apps as $app ) {
+		$counts[ $app->status ]++;
 	}
 
 
@@ -1183,7 +1272,7 @@ function appointments_count_appointments() {
 	 *
 	 * @param array $counts  An array containing the counts by status.
 	 */
-	return apply_filters( 'appointments_count_appontments', $counts );
+	return apply_filters( 'appointments_count_appointments', $counts, $args );
 }
 
 /**
@@ -1225,4 +1314,47 @@ function appointments_get_unsent_appointments( $hour, $type = 'user' ) {
 	}
 
 	return $apps;
+}
+
+/**
+ * Return a list of Google Calendar Event IDs saved on Database
+ *
+ * @param integer|boolean $worker_id Filter by Worker ID
+ *
+ * @return array
+ */
+function appointments_get_gcal_ids( $worker_id = false ) {
+	global $wpdb;
+
+	$table = appointments_get_table( 'appointments' );
+	$query = "SELECT gcal_ID FROM $table WHERE gcal_ID IS NOT NULL";
+	if ( false !== $worker_id ) {
+		$query .= $wpdb->prepare( " AND worker = %d", $worker_id );
+	}
+	$current_gcal_event_ids = $wpdb->get_col( $query );
+
+	if ( ! $current_gcal_event_ids ) {
+		$current_gcal_event_ids = array();
+	}
+
+	return $current_gcal_event_ids;
+}
+
+function appointments_get_appointment_meta( $app_id, $meta_key = '' ) {
+	$value = get_metadata( 'app_appointment', $app_id, $meta_key, true );
+	if ( '' === $meta_key && is_array( $value ) ) {
+		foreach ( $value as $key => $val ) {
+			$value[ $key ] = $val[0];
+		}
+	}
+
+	return $value;
+}
+
+function appointments_update_appointment_meta( $app_id, $meta_key, $meta_value ) {
+	return update_metadata( 'app_appointment', $app_id, $meta_key, $meta_value );
+}
+
+function appointments_delete_appointment_meta( $app_id, $meta_key ) {
+	return delete_metadata( 'app_appointment', $app_id, $meta_key );
 }

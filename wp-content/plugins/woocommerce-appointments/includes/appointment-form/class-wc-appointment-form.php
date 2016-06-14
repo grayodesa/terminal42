@@ -53,8 +53,10 @@ class WC_Appointment_Form {
 			'current_time'					=> date( 'Ymd', current_time( 'timestamp' ) ),
 			'availability_span' 			=> $this->product->wc_appointment_availability_span,
 			'duration_unit'					=> $this->product->wc_appointment_duration_unit,
+			'has_staff'       		 		=> $this->product->has_staff(),
+			'staff_assignment'       		=> $this->product->wc_appointment_staff_assignment,
 			'nonce_staff_html'				=> wp_create_nonce( 'appointable-staff-html' ),
-			'ajax_url'						=> WC()->ajax_url(),
+			'ajax_url'						=> admin_url( 'admin-ajax.php' ),
 			'i18n_date_unavailable'			=> __( 'This date is unavailable', 'woocommerce-appointments' ),
 			'i18n_date_fully_scheduled'		=> __( 'This date is fully scheduled and unavailable', 'woocommerce-appointments' ),
 			'i18n_date_partially_scheduled'	=> __( 'This date is partially scheduled - but appointments still remain', 'woocommerce-appointments' ),
@@ -465,12 +467,41 @@ class WC_Appointment_Form {
 		$slot_unit						= $this->product->get_duration_unit();
 		// As we have converted the hourly duration earlier to minutes, convert back
 		if ( isset( $data['_duration'] ) ) {
-			$slots_scheduled			= 'hour' === $this->product->get_duration_unit() ? ceil( absint( $data['_duration'] ) / 60 ) : absint( $data['_duration'] );
+			$slots_scheduled			= 'hour' === $slot_unit ? ceil( absint( $data['_duration'] ) / 60 ) : absint( $data['_duration'] );
 		} else {
 			$slots_scheduled			= $slot_duration;
 		}
 		$slots_scheduled 				= ceil( $slots_scheduled / $slot_duration );
 		$slot_timestamp					= $data['_start_date'];
+		
+		//* Padding duration		
+		$padding_duration = $this->product->wc_appointment_padding_duration;
+		if ( ! empty( $padding_duration ) ) {
+			// handle day paddings
+			if ( ! in_array( $slot_unit, array( 'minute', 'hour' ) ) ) {
+				$padding_days = WC_Appointments_Controller::find_padding_day_slots( $this->product->id );
+				$contains_padding_days = false;
+				// Evaluate costs for each scheduled slot
+				for ( $slot = 0; $slot < $slots_scheduled; $slot ++ ) {
+					$slot_start_time_offset = $slot * $slot_duration;
+					$slot_end_time_offset   = ( ( $slot + 1 ) * $slot_duration ) - 1;
+					$slot_start_time        = date( 'Y-n-j', strtotime( "+{$slot_start_time_offset} {$slot_unit}", $slot_timestamp ) );
+					$slot_end_time          = date( 'Y-n-j', strtotime( "+{$slot_end_time_offset} {$slot_unit}", $slot_timestamp ) );
+
+					if ( in_array( $slot_end_time, $padding_days ) ) {
+						$contains_padding_days = true;
+					}
+
+					if ( in_array( $slot_start_time, $padding_days ) ) {
+						$contains_padding_days = true;
+					}
+				}
+
+				if ( $contains_padding_days ) {
+					return new WP_Error( 'Error', __( 'Sorry, the selected day is not available.', 'woocommerce-appointments' ) );
+				}
+			}
+		}
 		
 		$override_slots = array();
 		
@@ -482,7 +513,7 @@ class WC_Appointment_Form {
 			$slot_start_time        = $this->get_formatted_times( strtotime( "+{$slot_start_time_offset} {$slot_unit}", $slot_timestamp ) );
 			$slot_end_time          = $this->get_formatted_times( strtotime( "+{$slot_end_time_offset} {$slot_unit}", $slot_timestamp ) );
 
-			if ( in_array( $this->product->get_duration_unit(), array( 'night' ) ) ) {
+			if ( in_array( $slot_unit, array( 'night' ) ) ) {
 				$slot_start_time = $this->get_formatted_times( strtotime( "+{$slot_start_time_offset} day", $slot_timestamp ) );
 				$slot_end_time = $this->get_formatted_times( strtotime( "+{$slot_end_time_offset} day", $slot_timestamp ) );
 			}
@@ -492,7 +523,7 @@ class WC_Appointment_Form {
 				$rules = $rule[1];
 
 				if ( strrpos( $type, 'time' ) === 0 ) {
-					if ( ! in_array( $this->product->get_duration_unit(), array( 'minute', 'hour' ) ) ) {
+					if ( ! in_array( $slot_unit, array( 'minute', 'hour' ) ) ) {
 						continue;
 					}
 
@@ -558,6 +589,12 @@ class WC_Appointment_Form {
 							while ( $check_date < $slot_end_time['timestamp'] ) {
 								$checking_date = $this->get_formatted_times( $check_date );
 								$date_key      = $type == 'days' ? 'day_of_week' : substr( $type, 0, -1 );
+								
+								// cater to months beyond this year
+								if ( 'month' === $date_key && intval( $checking_date['year'] ) > intval( date( 'Y' ) ) ) {
+									$month_beyond_this_year = intval( $checking_date['month'] ) + 12;
+									$checking_date['month'] = (string) $month_beyond_this_year;
+								}
 
 								if ( isset( $rules[ $checking_date[ $date_key ] ] ) ) {
 									$rule       = $rules[ $checking_date[ $date_key ] ];
@@ -594,6 +631,14 @@ class WC_Appointment_Form {
 								}
 							}
 						break;
+						case 'quant' :
+							if ( ! empty( $data['_qty'] ) ) {
+								if ( $rules['from'] <= $data['_qty'] && $rules['to'] >= $data['_qty'] ) {
+									$slot_cost = $this->apply_cost( $slot_cost, $rules['rule']['slot'][0], $rules['rule']['slot'][1] );
+									$base_cost  = $this->apply_base_cost( $base_cost, $rules['rule']['base'][0], $rules['rule']['base'][1], $rule_key );
+								}
+							}
+						break;
 					}
 				}
 			}
@@ -623,7 +668,7 @@ class WC_Appointment_Form {
 	 * @param  float $cost
 	 * @return float
 	 */
-	private function apply_cost( $base, $multiplier, $cost) {
+	public function apply_cost( $base, $multiplier, $cost) {
 		switch ( $multiplier ) {
 			case 'times' :
 				$new_cost = $base * $cost;

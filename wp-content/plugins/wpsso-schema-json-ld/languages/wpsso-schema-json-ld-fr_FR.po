@@ -1,0 +1,168 @@
+# Copyright (C) 2016 WPSSO Schema JSON-LD (WPSSO JSON)
+# This file is distributed under the same license as the WPSSO Schema JSON-LD (WPSSO JSON) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WPSSO Schema JSON-LD (WPSSO JSON) 1.7.4-1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-schema-json-ld\n"
+"POT-Creation-Date: 2016-06-04 08:24-0400\n"
+"PO-Revision-Date: 2016-06-04 08:24-0400\n"
+"Last-Translator: JS Morisset <jsm@surniaulula.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: lib/config-gettext-extract.php:3
+msgctxt "lib file description"
+msgid "Schema Markup"
+msgstr "Balises Schéma"
+
+#: lib/config-gettext-extract.php:4
+msgctxt "plugin description"
+msgid "WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest."
+msgstr "Une extension WPSSO pour ajouter des balises de Schéma JSON-LD (BlogPosting, Article, Place, Produit, etc.) pour Google et Pinterest."
+
+#: lib/filters.php:118
+msgid "The Free / Basic version of WPSSO JSON does not include support for the Schema type <a href=\"%1$s\">%1$s</a> &mdash; only the basic Schema properties <em>url</em>, <em>name</em>, and <em>description</em> will be included in the Schema JSON-LD markup."
+msgstr "La version gratuite / de base WPSSO JSON n'inclut pas de support spécifique / personnalisé pour le type de Schéma <a href=\"%1$s\">%1$s</a> &mdash; seulement les propriétés de Schéma de base <em>url</em>, <em>name</em>, et <em>description</em> seront inclues dans les balises de Schéma JSON-LD."
+
+#: lib/filters.php:118
+msgid "The <a href=\"%1$s\">Pro version of WPSSO JSON</a> includes a wide selection of supported Schema types, including the Schema type <a href=\"%2$s\">%2$s</a>."
+msgstr "La <a href=\"%1$s\">version Pro de WPSSO JSON</a> comprend une grande sélection de types de Schéma, y compris le type de Schéma <a href=\"%2$s\">%2$s</a>."
+
+#: lib/filters.php:118
+msgid "If this Schema is an important classification for your content, you should consider purchasing the Pro version."
+msgstr "Si ce Schéma est une classification importante pour votre contenu, vous devriez considérer l'achat de la version Pro."
+
+#: lib/filters.php:122
+msgid "This notice is only shown to users with Administrative privileges."
+msgstr "Cet avis apparaît uniquement aux utilisateurs avec privilèges administratifs."
+
+#: lib/gpl/admin/post.php:42 lib/pro/admin/post.php:53
+msgctxt "metabox title"
+msgid "Google Structured Data / Schema Markup"
+msgstr "Données Structurées Google / Balises de Schéma"
+
+#: lib/gpl/admin/post.php:45 lib/pro/admin/post.php:56
+msgctxt "option label"
+msgid "Main Entity of Page"
+msgstr "Entité principale de page"
+
+#: lib/gpl/admin/post.php:50 lib/pro/admin/post.php:61
+msgctxt "option label"
+msgid "Schema Item Type"
+msgstr "Type de Schéma"
+
+#: lib/gpl/admin/post.php:57 lib/pro/admin/post.php:68
+msgctxt "option label"
+msgid "Schema Item Name"
+msgstr "Nom / titre de l'item"
+
+#: lib/gpl/admin/post.php:65 lib/pro/admin/post.php:76
+msgctxt "option label"
+msgid "Article Headline"
+msgstr "Manchette d'Article"
+
+#: lib/gpl/admin/post.php:72 lib/pro/admin/post.php:83
+msgctxt "option label"
+msgid "Schema Description"
+msgstr "Description de l'item"
+
+#: lib/gpl/admin/post.php:80 lib/pro/admin/post.php:91
+msgid "Save a draft version or publish the %s to update this value."
+msgstr "Enregistrer un brouillon ou publiez pour mettre à jour cette valeur."
+
+#: lib/submenu/schema-json-ld.php:29
+msgctxt "metabox title"
+msgid "Schema JSON-LD Markup"
+msgstr "Balisage de Schéma JSON-LD"
+
+#: lib/submenu/schema-json-ld.php:48
+msgctxt "option label"
+msgid "Website Alternate Name"
+msgstr "Autre nom du site Web"
+
+#: lib/submenu/schema-json-ld.php:53
+msgctxt "option label"
+msgid "Business / Organization Logo URL"
+msgstr "Logo de l'entreprise / organisation"
+
+#: lib/submenu/schema-json-ld.php:57
+msgctxt "option label"
+msgid "Business Banner 600x60px Image URL"
+msgstr "Image bannière 600x60px d'entreprise"
+
+#: lib/submenu/schema-json-ld.php:61
+msgctxt "option label"
+msgid "Maximum Images to Include"
+msgstr "Images maximum a inclure"
+
+#: lib/submenu/schema-json-ld.php:66
+msgctxt "option comment"
+msgid "<em>video preview images are enabled</em> (and included first)"
+msgstr "<em>images d'aperçu vidéo sont activés</em> (et inclus en premier)"
+
+#: lib/submenu/schema-json-ld.php:69
+msgctxt "option label"
+msgid "Schema Image Dimensions"
+msgstr "Dimensions d'images Schéma"
+
+#: lib/submenu/schema-json-ld.php:74
+msgctxt "option label"
+msgid "Maximum Description Length"
+msgstr "Longueur de description maximale"
+
+#: lib/submenu/schema-json-ld.php:77
+msgctxt "option comment"
+msgid "characters or less"
+msgstr "caractères ou moins"
+
+#: lib/submenu/schema-json-ld.php:80
+msgctxt "option label"
+msgid "Author / Person Name Format"
+msgstr "Format du nom d’auteur"
+
+#: lib/submenu/schema-json-ld.php:92
+msgctxt "option label"
+msgid "Default Item Type for Home Page"
+msgstr "Type de schéma pour page d'accueil"
+
+#: lib/submenu/schema-json-ld.php:97
+msgctxt "option label"
+msgid "Default Item Type by Post Type"
+msgstr "Type de schéma par type d'article"
+
+#: wpsso-schema-json-ld.php:80
+msgid "The %1$s extension requires the %2$s plugin &mdash; please install and activate the %3$s plugin before trying to re-activate the %4$s extension."
+msgstr "L'extension %1$s requiert %2$s &mdash; s'il vous plaît installer et activer l'extension %3$s avant d'essayer de re-activer %4$s."
+
+#: wpsso-schema-json-ld.php:82
+msgid "The %1$s extension requires the %2$s plugin &mdash; please install and activate the %3$s plugin."
+msgstr "L'extension %1$s requiert %2$s &mdash; s'il vous plaît installer et activer l'extension %3$s."
+
+#: wpsso-schema-json-ld.php:138
+msgid "The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed)."
+msgstr "L'extension %1$s version %2$s requiert l'utilisation de %3$s version %4$s ou plus récente (la version %5$s est actuellement installée)."
+
+#. Plugin Name of the plugin/theme
+msgid "WPSSO Schema JSON-LD Markup (WPSSO JSON)"
+msgstr "WPSSO Schema JSON-LD Markup (WPSSO JSON)"
+
+#. Plugin URI of the plugin/theme
+msgid "http://surniaulula.com/extend/plugins/wpsso-schema-json-ld/"
+msgstr "http://surniaulula.com/extend/plugins/wpsso-schema-json-ld/"
+
+#. Description of the plugin/theme
+msgid "WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest."
+msgstr "Une extension WPSSO pour ajouter des balises de Schéma JSON-LD (BlogPosting, Article, Place, Produit, etc.) pour Google et Pinterest."
+
+#. Author of the plugin/theme
+msgid "JS Morisset"
+msgstr "JS Morisset"
+
+#. Author URI of the plugin/theme
+msgid "http://surniaulula.com/"
+msgstr "http://surniaulula.com/"

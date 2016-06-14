@@ -69,9 +69,20 @@ class Tribe__Tickets_Plus__QR {
 			return;
 		}
 
-		echo '<div class="updated"><p>';
-		printf( esc_html__( 'The ticket with ID %d was checked in.', 'event-tickets-plus' ), absint( $_GET['qr_checked_in'] ) );
-		echo '</p></div>';
+		$checked_status = get_post_meta( absint( $_GET['qr_checked_in'] ), '_tribe_qr_status', true );
+		//if status is qr then display already checked in warning
+		if ( $checked_status ) {
+			echo '<div class="error"><p>';
+			printf( esc_html__( 'The ticket with ID %d has already been checked in.', 'event-tickets-plus' ), absint( $_GET['qr_checked_in'] ) );
+			echo '</p></div>';
+		} else {
+			echo '<div class="updated"><p>';
+			printf( esc_html__( 'The ticket with ID %d was checked in.', 'event-tickets-plus' ), absint( $_GET['qr_checked_in'] ) );
+			echo '</p></div>';
+			//update the checked in status when using the qr code here
+			update_post_meta( absint( $_GET['qr_checked_in'] ), '_tribe_qr_status', 1 );
+		}
+
 	}
 
 	/**
@@ -103,10 +114,11 @@ class Tribe__Tickets_Plus__QR {
 									<span style="color:#0a0a0e !important"><?php esc_html_e( 'Check in for this event', 'event-tickets-plus' ); ?></span>
 								</h3>
 								<p>
-									Scan this QR code at the event to check in.
+									<?php esc_html_e( 'Scan this QR code at the event to check in.', 'event-tickets-plus' ); ?>
 								</p>
 							</td>
 						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
@@ -169,7 +181,7 @@ class Tribe__Tickets_Plus__QR {
 				continue;
 			}
 			$obj = call_user_func( array( $class, 'get_instance' ) );
-			$obj->checkin( $ticket_id );
+			$obj->checkin( $ticket_id, false );
 		}
 	}
 }

@@ -16,7 +16,14 @@ class WC_Appointments_Admin_Calendar {
 		}
 
 		$product_filter = isset( $_REQUEST['filter_appointments'] ) ? absint( $_REQUEST['filter_appointments'] ) : '';
-		$view           = isset( $_REQUEST['view'] ) && $_REQUEST['view'] == 'day' ? 'day' : 'month';
+		
+		$default_view = apply_filters( 'woocommerce_appointments_calendar_view', 'month' );
+
+		if ( $default_view === 'day' ) {
+			$view = isset( $_REQUEST['view'] ) && $_REQUEST['view'] == 'month' ? 'month' : 'day';
+		} else {
+			$view = isset( $_REQUEST['view'] ) && $_REQUEST['view'] == 'day' ? 'day' : 'month';
+		}
 
 		if ( $view == 'day' ) {
 			$day            = isset( $_REQUEST['calendar_day'] ) ? wc_clean( $_REQUEST['calendar_day'] ) : date( 'Y-m-d' );
@@ -99,7 +106,7 @@ class WC_Appointments_Admin_Calendar {
 					}
 					echo '</strong>';
 					echo '<ul>';
-						if ( ( $customer = $appointment->get_customer() ) && ! empty( $customer->name ) ) {
+						if ( ( $customer = $appointment->get_customer() ) && ! empty( $customer->name ) && $customer->user_id ) {
 							echo '<li>' . __( 'Scheduled by', 'woocommerce-appointments' ) . ' ' . $customer->name . '</li>';
 						}
 						echo '<li>';
@@ -203,14 +210,20 @@ class WC_Appointments_Admin_Calendar {
 		$return = "";
 
 		$return .= '#' . $appointment->id . ' - ';
+		
 		if ( $product = $appointment->get_product() ) {
 			$return .= $product->get_title();
 		}
-		if ( ( $customer = $appointment->get_customer() ) && ! empty( $customer->name ) ) {
+		
+		$return .= '<br/>' . $appointment->get_start_date( '', get_option( 'time_format' ) ) . ' &mdash; ' . $appointment->get_end_date( '', get_option( 'time_format' ) );
+		
+		if ( ( $customer = $appointment->get_customer() ) && ! empty( $customer->name ) && $customer->user_id ) {
 			$return .= '<br/>' . __( 'Scheduled by', 'woocommerce-appointments' ) . ' ' . $customer->name;
 		}
-		if ( $staff = $appointment->get_staff_member() )
+		
+		if ( $staff = $appointment->get_staff_member() ) {
 			$return .= '<br/>' . __( 'Staff #', 'woocommerce-appointments' ) . $staff->ID . ' - ' . $staff->display_name;
+		}
 
 		return esc_attr( $return );
 	}

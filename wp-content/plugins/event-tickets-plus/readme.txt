@@ -3,8 +3,8 @@
 Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, shane.pearlman, thatdudebutch,  zbtirrell
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Shopp, EDD, WPEC, WP-eCommerce, WPEC Tickets, Shopp Tickets, Easy Digital Downloads, EDDTickets
 Requires at least: 3.9
-Tested up to: 4.4
-Stable tag: 4.0.5
+Tested up to: 4.4.2
+Stable tag: 4.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,6 +143,31 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.1.2] 2016-04-11 =
+
+* Tweak - The front-end list of RSVP attendees is now hidden by default
+* Fix - WooCommerce status change on orders will no longer trigger an empty email (Thanks @W David for the report here)
+* Fix - The broken link in the EDD ticket email no longer links to a hole in the internet (Thanks to @Safety for the report in the forums)
+
+= [4.1.1] 2016-03-30 =
+
+* Tweak - Add filters for generated attendee and order data; tribe_tickets_attendee_data and tribe_tickets_order_data, respectively
+* Fix - Resolved issue where QR checkins were falsely reporting that attendees were already checked in (Thanks to Christopher from our forums for reporting this!)
+* Fix - Resolved issue where cancelled and refunded orders were still being used in the WooCommerce order report revenue calculations (Props to Ameet for reporting this issue!)
+
+= [4.1] 2016-03-15 =
+
+* Feature - Added the ability to collect custom attendee data with ticket reservation/purchases
+* Feature - Pending attendees can now be displayed on the Attendees report for WooCommerce-driven ticket purchases
+* Feature - Added ticket sales and ticket stock field support for Advanced Post Manager
+* Feature - Added the ability to display the list of attendees on the event page (complete with attendee opt-out support)
+* Tweak - Adjusted text on some ticket setting fields
+* Fix - Resolved issue where the "Email" link on the Attendees Report would sometimes error out rather than send an email of the attendees
+* Fix - Fixed an incorrect image URL on the Attendees Report
+* Fix - Prevent multiple check-ins by QR codes for RSVP and ecommerce tickets
+* Fix - Add missing `<table>` tag on the QR code HTML
+* Fix - Improve front-end notices for recurring event
 
 = [4.0.5] 2016-02-17 =
 

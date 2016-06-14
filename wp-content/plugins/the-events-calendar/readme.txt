@@ -1,11 +1,11 @@
 === The Events Calendar ===
 
-Contributors: ModernTribe, borkweb, zbtirrell, barry.hughes, bordoni, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, mat-lipe, mdbitz, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, thatdudebutch
+Contributors: ModernTribe, borkweb, zbtirrell, barry.hughes, bordoni, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, mat-lipe, mdbitz, MZAWeb, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, thatdudebutch
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
-Tested up to: 4.4.2
-Stable tag: 4.0.7
+Tested up to: 4.5.1
+Stable tag: 4.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -308,6 +308,59 @@ Patch = 1
 At no point during the 3.0 lifecycle will the major version change. But you can expect that either minor version and/or patch will change with each release.
 
 == Changelog ==
+
+= [4.1.3] 2016-04-28 =
+
+* Fix - Month View single days are now ordered as follows: sticky events, ongoing multi-day events, all day events, then start time. In other words, all events should be ordered as you'd expect when viewing events in Month View.
+* Fix - Updated the compatibility of CSV importer with WordPress 4.5 due to a change in the `post_status` filter. This will help prevent some of the errors you may have seen when importing events using a CSV file.
+* Tweak - Added new event names for AJAX success to the List, Month, and Day views to help The Events Calendar's compatibility with our other premium plugins.
+
+= [4.1.2] 2016-04-11 =
+
+* Tweak - Removed an unneeded hook that attempted to add a query argument to event tag links
+* Fix - Resolved an issue where events marked as "sticky" would not display as such in Month View
+* Fix - Dashes, hyphens, or whatever you like to call them in the events archive slug no longer breaks the URL
+* Fix - The notice that pops up when a conflicting "events" page exists can now be dismissed
+
+= [4.1.1.1] 2016-04-07 =
+
+* Security - Tightened up security with post type link filtering (props to Nadal Soler for reporting this issue!)
+* Security - Tightened up security around tribe bar submissions (props to Paul Mynarsky for reporting this issue!)
+
+= [4.1.1] 2016-03-30 =
+
+* Fix - Resolved bug where array notices were output on single event pages when venues were not set (props to zaxiscreative for reporting this issue!)
+* Fix - Resolved issue where the Month View in mobile sizes retained the long day-of-week names when the abbreviations should have been used (props to Lucy for the bug report!)
+* Fix - Fixed bug where a "0" was added to the default Venue name when creating a new event
+* Fix - Fixed notice that caused Ajax requests to fail (props to cgrymala on WP.org for reporting this!)
+* Fix - Removed quotes from around TZID-specified timezones in iCal feeds which causes problems with some parsers (props to factory44 for reporting the issue that lead to this fix)
+* Fix - Resolved various capitalization issues with German translations (props to oheinrich in our forums for pointing out this issue!)
+
+= [4.1.0.1] 2016-03-17 =
+
+* Fix - Resolved multiple issues with the German `de_DE` language file that caused a number of site-breaking issues
+
+= [4.1] 2016-03-15 =
+
+* Feature - Added a tribe_get_venue_website_url() function for fetching Venue website URLs (props to fervorcreative in our forums for this request!)
+* Performance - Lazy-load venue and organizer selector data
+* Tweak - Allow iCal filenames to be filtered via a new filter: tribe_events_ical_feed_filename
+* Tweak - Added a hook to allow single day queries in month view to be filtered: tribe_events_month_daily_events_query_args
+* Tweak - Improved the logic around rebuilding known date ranges
+* Tweak - Always show the "Merge Duplicates" button for venues and organizers in the Events General Settings page
+* Tweak - Allow the "same slug" notice to be dismissed and fix some text in that message
+* Tweak - Ignore alpha/beta/rc suffixes on version numbers when checking template versions
+* Tweak - Add a filter for month view daily events query: tribe_events_month_daily_events_query_args
+* Tweak - Added a more flexible cost range parsing function
+* Tweak - Obfuscate license keys Events > Help > System Information
+* Fix - Fixed a fatal that sometimes occurred when refreshing the import CSV page
+* Fix - Fixed issue where some characters were not escaped appropriately for month and year formats
+* Fix - Added missing tribe-loading@2x.gif
+* Fix - Fixed a warning produced by passing a DateTime() object into start_date or end_date args of tribe_get_events (props to iamhexcoder for the pull request!)
+* Fix - Fixed bug where events in month view were not always sorted in chronological order
+* Fix - Fixed the System Info URL in Events > Help
+* Fix - Resolved issue where the default country would be "Array" if no default country is set
+* Fix - Fixed bug where ajaxurl was sometimes undefined
 
 = [4.0.7] 2016-03-02 =
 

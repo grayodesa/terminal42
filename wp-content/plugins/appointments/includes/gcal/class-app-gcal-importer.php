@@ -63,8 +63,6 @@ class Appointments_Google_Calendar_Importer {
 	 * @return array|WP_Error
 	 */
 	function import( $worker_id = false ) {
-		global $wpdb;
-
 		if ( $worker_id && ! appointments_get_worker( $worker_id ) ) {
 			return array(
 				'inserted' => 0,
@@ -78,16 +76,7 @@ class Appointments_Google_Calendar_Importer {
 			return $events;
 		}
 
-		$table = appointments_get_table( 'appointments' );
-		$query = "SELECT gcal_ID FROM $table WHERE gcal_ID IS NOT NULL";
-		if ( $worker_id ) {
-			$query .= $wpdb->prepare( " AND worker = %d", $worker_id );
-		}
-		$current_gcal_event_ids = $wpdb->get_col( $query );
-
-		if ( ! $current_gcal_event_ids ) {
-			$current_gcal_event_ids = array();
-		}
+		$current_gcal_event_ids = appointments_get_gcal_ids( $worker_id );
 
 		$updated = array();
 		$inserted = array();
@@ -110,7 +99,7 @@ class Appointments_Google_Calendar_Importer {
 			if ( ! in_array( $gcal_event_id, $processed ) ) {
 				// The event is no longer in the calendar, let's delete it locally
 				$app = appointments_get_appointment_by_gcal_id( $gcal_event_id );
-				if ( 'reserved' === $status ) {
+				if ( $app && 'reserved' === $app->status ) {
 					appointments_delete_appointment( $app->ID );
 					$deleted[] = $gcal_event_id;
 				}
@@ -127,13 +116,34 @@ class Appointments_Google_Calendar_Importer {
 	 * @return bool|string
 	 */
 	public function import_event( $event, $worker_id = 0 ) {
-		// Service ID is not important as we will use this record for blocking our time slots only
-		$service_id = appointments_get_services_min_id();
-
 		$current_gmt_time = current_time( 'timestamp', true );
 
 		$event_id = $event->getId();
 		$app = appointments_get_appointment_by_gcal_id( $event_id );
+
+		$worker_id = false;
+		if ( $app && ! $worker_id ) {
+			$worker = appointments_get_worker( $app->worker );
+			if ( $worker ) {
+				$worker_id = $worker->ID;
+			}
+		}
+
+		$worker_id = apply_filters( 'appointments_import_gcal_event_worker_id', $worker_id, $event );
+
+		$service_id = false;
+		if ( $app ) {
+			$service = appointments_get_service( $app->service );
+			if ( $service ) {
+				$service_id = $service->ID;
+			}
+		}
+
+		if ( ! $service_id ) {
+			// Service ID is not important as we will use this record for blocking our time slots only
+			$service_id = apply_filters( 'appointments_import_gcal_event_service_id', appointments_get_services_min_id(), $event );
+		}
+
 
 		$event_start = $event->getStart();
 		$event_start_gmt_date = gmdate( 'Y-m-d H:i:s', strtotime( $event_start->dateTime ) );
@@ -155,24 +165,37 @@ class Appointments_Google_Calendar_Importer {
 			$args = array(
 				'service' => $service_id,
 				'worker' => $worker_id ? $worker_id : false,
-				'date' => strtotime( $event_start_date ),
 				'duration' => $duration,
-				'status' => 'reserved',
 				'gcal_ID' => $event_id,
 				'gcal_updated' => $event_updated_date,
-				'note' => $event->getSummary()
 			);
+
+			if ( empty( $app->note ) ) {
+				// Override not only if is empty
+				$args['note'] = $event->getSummary();
+			}
 
 			if ( ! $app ) {
 				// New Appointment
-				appointments_insert_appointment( $args );
-				return 'inserted';
+				$args['date'] = strtotime( $event_start_date );
+				$args['status'] = 'reserved';
+				$app_id = appointments_insert_appointment( $args );
+				$app = appointments_get_appointment( $app_id );
+				$result = 'inserted';
 			}
 			else {
 				// Update Appointment
+				$args['datetime'] = strtotime( $event_start_date );
 				appointments_update_appointment( $app->ID, $args );
-				return 'updated';
+				$result = 'updated';
 			}
+
+			$description = $event->getDescription();
+			if ( $description ) {
+				appointments_update_appointment_meta( $app->ID, 'gcal_description', $description );
+			}
+
+			return $result;
 		}
 
 		return false;

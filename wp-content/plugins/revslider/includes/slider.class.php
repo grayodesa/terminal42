@@ -444,9 +444,20 @@ class RevSliderSlider extends RevSliderElementsBase{
 	 * 
 	 * duplicate slider in datatase
 	 */
-	private function duplicateSlider($title = false){
+	private function duplicateSlider($title = false, $prefix = false){
 		
 		$this->validateInited();
+		
+		//insert a new slider
+		$sqlSelect = $this->db->prepare("select ".RevSliderGlobals::FIELDS_SLIDER." from ".RevSliderGlobals::$table_sliders." where id = %s", array($this->id));
+		$sqlInsert = "insert into ".RevSliderGlobals::$table_sliders." (".RevSliderGlobals::FIELDS_SLIDER.") ($sqlSelect)";
+		
+		$this->db->runSql($sqlInsert);
+		$lastID = $this->db->getLastInsertID();
+		RevSliderFunctions::validateNotEmpty($lastID);
+		
+		
+		$params = $this->arrParams;
 		
 		if($title === false){
 			//get slider number:
@@ -457,11 +468,15 @@ class RevSliderSlider extends RevSliderElementsBase{
 			$newSliderTitle = "Slider".$newSliderSerial;
 			$newSliderAlias = "slider".$newSliderSerial;
 		}else{
-			$newSliderTitle = sanitize_text_field($title);
-			$newSliderAlias = sanitize_title($title);
-			
+			if($prefix !== false){
+				$newSliderTitle = sanitize_text_field($title.' '.$params['title']);
+				$newSliderAlias = sanitize_title($title.' '.$params['title']);
+			}else{
+				$newSliderTitle = sanitize_text_field($title);
+				$newSliderAlias = sanitize_title($title);
+			}
 			// Check Duplicate Alias
-			$sqlTitle = $this->db->fetch(RevSliderGlobals::$table_sliders, $this->db->prepare("alias = %s", array(sanitize_title($title))));
+			$sqlTitle = $this->db->fetch(RevSliderGlobals::$table_sliders, $this->db->prepare("alias = %s", array($newSliderAlias)));
 			if(!empty($sqlTitle)){
 				$response = $this->db->fetch(RevSliderGlobals::$table_sliders);
 				$numSliders = count($response);
@@ -471,24 +486,18 @@ class RevSliderSlider extends RevSliderElementsBase{
 			}
 		}
 		
-		//insert a new slider
-		$sqlSelect = $this->db->prepare("select ".RevSliderGlobals::FIELDS_SLIDER." from ".RevSliderGlobals::$table_sliders." where id = %s", array($this->id));
-		$sqlInsert = "insert into ".RevSliderGlobals::$table_sliders." (".RevSliderGlobals::FIELDS_SLIDER.") ($sqlSelect)";
+		//update params
 		
-		$this->db->runSql($sqlInsert);
-		$lastID = $this->db->getLastInsertID();
-		RevSliderFunctions::validateNotEmpty($lastID);
+		$params["title"] = $newSliderTitle;
+		$params["alias"] = $newSliderAlias;
+		$params["shortcode"] = "[rev_slider alias=\"". $newSliderAlias ."\"]";
 		
 		//update the new slider with the title and the alias values
 		$arrUpdate = array();
 		$arrUpdate["title"] = $newSliderTitle;
 		$arrUpdate["alias"] = $newSliderAlias;
 		
-		//update params
-		$params = $this->arrParams;
-		$params["title"] = $newSliderTitle;
-		$params["alias"] = $newSliderAlias;
-		$params["shortcode"] = "[rev_slider alias=\"". $newSliderAlias ."\"]";
+		
 
 		$jsonParams = json_encode($params);
 		$arrUpdate["params"] = $jsonParams;
@@ -817,7 +826,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 			$animation = array();
 			foreach($usedAnimations as $anim => $val){
 				$anima = RevSliderOperations::getFullCustomAnimationByID($anim);
-				if($anima !== false) $animation[] = RevSliderOperations::getFullCustomAnimationByID($anim);
+				if($anima !== false) $animation[] = $anima;
 				
 			}
 			if(!empty($animation)) $animations = serialize($animation);
@@ -1123,8 +1132,6 @@ class RevSliderSlider extends RevSliderElementsBase{
 						$content = str_replace(array('customin-'.$animation['id'].'"', 'customout-'.$animation['id'].'"'), array('customin-'.$anim_id.'"', 'customout-'.$anim_id.'"'), $content);	
 					}
 					dmp(__("animations imported!",'revslider'));
-				}else{
-					dmp(__("no custom animations found, if slider uses custom animations, the provided export may be broken...",'revslider'));
 				}
 				
 				//overwrite/append static-captions.css
@@ -1143,7 +1150,6 @@ class RevSliderSlider extends RevSliderElementsBase{
 				//overwrite/create dynamic-captions.css
 				//parse css to classes
 				$dynamicCss = RevSliderCssParser::parseCssToArray($dynamic);
-				
 				if(is_array($dynamicCss) && $dynamicCss !== false && count($dynamicCss) > 0){
 					foreach($dynamicCss as $class => $styles){
 						//check if static style or dynamic style
@@ -1186,8 +1192,6 @@ class RevSliderSlider extends RevSliderElementsBase{
 						}
 					}
 					dmp(__("dynamic styles imported!",'revslider'));
-				}else{
-					dmp(__("no dynamic styles found, if slider uses dynamic styles, the provided export may be broken...",'revslider'));
 				}
 				
 				//update/insert custom animations
@@ -1291,7 +1295,12 @@ class RevSliderSlider extends RevSliderElementsBase{
 				
 				if($is_template !== false){ //add that we are an template
 					$arrInsert['type'] = 'template';
+					$sliderParams['uid'] = $is_template;
+					$json_params = json_encode($sliderParams);
+					$arrInsert['params'] = $json_params;
 				}
+				
+				
 				
 				$sliderID = $this->db->insert(RevSliderGlobals::$table_sliders,$arrInsert);
 			}
@@ -1873,6 +1882,33 @@ class RevSliderSlider extends RevSliderElementsBase{
 		RevSliderFunctions::validateNotEmpty($sliderID,"Slider ID");
 		$this->initByID($sliderID);
 		$this->duplicateSlider(RevSliderFunctions::getVal($data, "title"));
+	}
+
+	
+	/**
+	 * delete slider from input data
+	 * @since: 5.2.5
+	 */
+	public function duplicateSliderPackageFromData($data){
+		$tmpl = new RevSliderTemplate();
+		
+		$slider_uid = RevSliderFunctions::getVal($data, "slideruid");
+		
+		$uids = $tmpl->get_package_uids($slider_uid);
+		
+		foreach($uids as $sid => $uid){
+			if($sid < 0){ //one or more still needs to be downloaded...
+				return __('Please install Package first to use this feature', 'revslider');
+			}
+		}
+		
+		foreach($uids as $sliderID => $uid){
+			$slider = new RevSlider();
+			$slider->initByID($sliderID);
+			$slider->duplicateSlider(RevSliderFunctions::getVal($data, "title"), true);
+		}
+		
+		return true;
 	}
 	
 	
@@ -3270,6 +3306,8 @@ class RevSliderSlider extends RevSliderElementsBase{
 			if(isset($gal_ids[0])){
 				unset($gal_ids[0]);
 				$strPosts = implode(",", $gal_ids);
+				$additional['order'] = "none";
+				$additional['orderby'] = "post__in";
 			}else {
 				$strPosts = $this->getParam("posts_list", "");	
 				$additional['order'] = $this->getParam("posts_sort_direction", "DESC");

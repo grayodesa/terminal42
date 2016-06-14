@@ -99,8 +99,10 @@ class MC4WP_Ecommerce {
 		$data_items = array();
 
 		foreach( $items as $item_id => $item ) {
-
 			$category = $this->get_lowest_term( $item['product_id'], 'product_cat' );
+
+			// calculate cost of a single item
+			$item_cost = $item['line_total'] / $item['qty'];
 
 			$item_data = array(
 				'product_id' => $item['product_id'],
@@ -108,17 +110,22 @@ class MC4WP_Ecommerce {
 				'qty' => $item['qty'],
 				'category_id' => $category->term_id,
 				'category_name' => $category->name,
-				'cost' => $item['line_total'],
+				'cost' => $item_cost,
 			);
 
-			// find product & add SKU if given
+			// find product
 			$product = wc_get_product( $item['product_id'] );
 			if( $product instanceof WC_Product ) {
-				$sku = $product->get_sku();
 
+				// add SKU if set
+				$sku = $product->get_sku();
 				if( ! empty( $sku ) ) {
 					$item_data['sku'] = $sku;
 				}
+
+				// use item price
+				$item_data['cost'] = $product->get_price();
+				$item_data['product_name'] = $product->get_title();
 			}
 
 			$data_items[] = $item_data;
@@ -128,9 +135,9 @@ class MC4WP_Ecommerce {
 			'id' => $order_id,
 			'order_date' => date('Y-m-d', strtotime( $order->order_date ) ),
 			'email' => $order->billing_email,
-			'total' => $order->order_total,
-			'tax' => $order->order_tax,
-			'shipping' => $order->order_shipping,
+			'total' => $order->get_total(),
+			'tax' => $order->get_total_tax(),
+			'shipping' => $order->get_total_shipping(),
 			'items' => $data_items
 		);
 
@@ -245,6 +252,8 @@ class MC4WP_Ecommerce {
 	}
 
 	/**
+	 * TODO: Generate string of subcategories here.
+	 *
 	 * @param $post_id
 	 * @param $taxonomy
 	 *

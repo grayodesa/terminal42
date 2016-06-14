@@ -36,7 +36,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 		 * Check if WooCommerce is installed and active.
 		 * If it is and the version is compatible, load our WooCommerce connector.
 		 */
-		protected function woocommerce() {
+		public function woocommerce() {
 			// Check if the legacy plugin exists
 			if ( class_exists( 'Tribe__Events__Tickets__Woo__Main' ) ) {
 				$args = array(
@@ -84,7 +84,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 		 * Check if EDD is installed and active.
 		 * If it is and the version is compatible, load our EDD connector.
 		 */
-		protected function easy_digital_downloads() {
+		public function easy_digital_downloads() {
 			// Check if the legacy plugin exists
 			if ( class_exists( 'Tribe__Events__Tickets__EDD__Main' ) ) {
 				$args = array(
@@ -131,7 +131,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 		 * Check if WPEC is installed and active.
 		 * If it is and the version is compatible, load our WPEC connector.
 		 */
-		protected function wpecommerce() {
+		public function wpecommerce() {
 			// Check if the legacy plugin exists
 			if ( class_exists( 'Tribe__Events__Tickets__Wpec__Main' ) ) {
 				$args = array(
@@ -178,7 +178,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 		 * Check if Shopp is installed and active.
 		 * If it is and the version is compatible, load our Shopp connector.
 		 */
-		protected function shopp() {
+		public function shopp() {
 			// Check if the legacy plugin exists
 			if ( class_exists( 'Tribe__Events__Tickets__Shopp__Main' ) ) {
 				$args = array(

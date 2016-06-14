@@ -1,0 +1,286 @@
+#facebook-pixel-panel-2, #facebook-pixel-panel-3, #facebook-pixel-panel-4, #facebook-pixel-panel-5, #facebook-pixel-panel-6{
+  display: none;
+}
+
+
+
+
+.facebook-pixel-content {
+    overflow: hidden;
+    clear: both;
+    width: auto;
+    border: 1px solid #d3d3d3;
+    padding: 0 10px;
+}
+
+.facebook-pixel-panel .form-table td p{
+
+    font-size: 11px;
+}
+
+.woofp-input-value, .woofp-input-currency{
+    width: 130px;
+}
+
+.woofp-input-desc{
+    font-size: 10px;
+}
+
+.woofp-input-pageurl{
+    width: 300px;
+}
+
+.facebook-pixel-panel .woofp-pageurl-tr .woofp-remove-event {
+  font-size: 10px;
+  font-weight: normal;
+  margin-top: 2px;
+  padding: 1px 6px;
+  display: block;
+}
+
+.facebook-pixel-panel .form-table th {
+  font-weight: 600;
+  line-height: 1.3;
+  padding: 10px 0px 10px 0;
+  text-align: left;
+  vertical-align: top;
+  width: 170px;
+}
+
+#facebook-pixel-panel-3 .form-table th {
+    width: auto;
+}
+
+
+.woofp-events-help {
+  display: inline-block;
+  position: relative;
+}
+
+
+.woofp-events-help b.woofp-help-icon {
+  background-color: #00a0d2;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  height: 16px;
+  line-height: 16px;
+  margin-right: 10px;
+  padding: 4px 2px;
+  position: relative;
+  text-align: center;
+  width: 20px;
+}
+
+.woofp-events-help ul {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #333;
+  color: #333;
+  display: none;
+  font-size: 11px;
+  height: 200px;
+  margin: 8px 5px 0 10px;
+  overflow-y: scroll;
+  padding: 5px 0;
+  position: absolute;
+  top: 0;
+  width: 300px;
+  z-index: 99;
+  font-weight: normal;
+}
+.woofp-events-help ul li {
+  margin: 4px;
+  padding: 3px 2px;
+}
+
+.woofp-events-help:hover ul{
+    display: block;
+}
+
+
+.woofp-events-help:hover ul li b {
+  clear: both;
+  color: #00a0d2;
+  float: left;
+  font-size: 12px;
+  width: 100%;
+}
+
+.facebook-pixel-panel td p b.woofpimportant {
+    font-size: 16px;
+    color: #00a0d2;
+}
+
+.facebook-pixel-panel .standarevent-value, .facebook-pixel-panel .standarevent-currency{
+  display: none;
+}
+
+.facebook-pixel-panel td p b.event_param, .facebook-pixel-panel td .event_param_wrap b.event_param {
+  color: #333;
+  display: inline-block;
+  font-size: 12px;
+  width: 120px;
+}
+
+
+.facebook-pixel-panel td .event_param_wrap input, .facebook-pixel-panel td .woofp-input-pageurl{
+  width: 30em;
+}
+
+.facebook-pixel-panel a {
+    color: #DD4E4E;
+    font-size: 14px;
+}
+
+tr.hide-standardevent{
+  /*display: none;*/
+}
+
+tr.show-standardevent{
+  
+}
+
+
+.woofp-sub-option{
+}
+
+tr th input.woofp-reset-event{
+  display: block !important;
+  margin-top: 10px !important;
+
+}
+
+.event_param_wrap {
+    padding: 4px 0;
+}
+
+tr.woofp-pageurl-tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.woofp-asterik{
+  color: #dd4e4e;
+}
+
+/* menu css */
+
+#facebook-pixel-wrap .facebook-pixel-menu{
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0;
+  padding-left: 10px;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 29px;
+  color: #23282d;
+  margin-bottom: -1px;
+}
+
+
+
+#facebook-pixel-wrap .facebook-pixel-menu li {
+
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 24px;
+  padding: 6px 10px;
+  cursor: pointer;
+    
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-top-color: none;
+  border-bottom-color: none;
+  border-left-color: none;
+  border-right-color: none;
+
+  background: #e4e4e4 none repeat scroll 0 0;
+  border-color: #ccc #ccc -moz-use-text-color;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 1px medium;
+  color: #555;
+  margin: -4px 4px -1px 0;
+
+}
+
+
+#facebook-pixel-wrap .facebook-pixel-menu li:hover {
+  background-color: #fff;
+  color: #464646;
+}
+
+#facebook-pixel-wrap .facebook-pixel-menu li.selected{
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 24px;
+  padding: 6px 10px;
+  display: inline-block;
+  cursor: pointer;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-top-color: none;
+  border-bottom-color: none;
+  border-left-color: none;
+  border-right-color: none;
+  border-image: none;
+  margin: -4px 4px -1px 0;
+
+}
+
+#facebook-pixel-wrap .facebook-pixel-menu li.selected, #facebook-pixel-wrap .facebook-pixel-menu li.selected:hover {
+  background: #f1f1f1 none repeat scroll 0 0;
+  border-bottom: 1px solid #f1f1f1;
+  color: #000;
+}
+
+
+span.woofpbold{
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.affiliate_row td p label {
+    width: 132px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.woofp-or{
+  display: inline-block;
+  text-align: center;
+  width: 300px;
+  padding: 10px 0;
+}
+
+#pysf_notice_tab {
+    padding-right: 38px;
+    position: relative;
+    margin: 5px 0 15px;
+    display: inline-block;
+    line-height: 19px;
+    padding: 0px 15px;
+    font-size: 14px;
+    text-align: left;
+    background-color: #fff;
+    border-left: 4px solid #ffba00;
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    background: #fff;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-left-width: 10px;
+}
+
+#pysf_notice_tab p, #pysf_notice p{
+  margin: .5em 0;
+  padding: 2px;
+  width: 98%;
+}
+
+#pysf_notice_tab p { font-size:14px;}

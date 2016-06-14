@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Revolution Slider\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: Mon Jul 13 2015 10:02:33 GMT+0200 (CEST)\n"
-"PO-Revision-Date: Wed Aug 05 2015 12:50:32 GMT+0200 (CEST)\n"
+"PO-Revision-Date: Tue Apr 05 2016 17:28:04 GMT+0200 (CEST)\n"
 "Last-Translator: admin <info@themepunch.com>\n"
 "Language-Team: \n"
 "Language: Hungarian\n"
@@ -21,437 +21,6 @@ msgstr ""
 "esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
 "X-Loco-Target-Locale: hu_HU\n"
 "X-Generator: Loco - https://localise.biz/"
-
-#: ../admin/revslider-admin.class.php:236 ../admin/views/templates/slide-selector.
-#: php:227 ../admin/views/templates/slides-list.php:146
-msgid "Copy / Move"
-msgstr "Copy / Move"
-
-#: ../admin/views/slide-editor.php:419
-msgid "Flickr Placeholders:"
-msgstr "Flickr Helyhalto:"
-
-#: ../admin/views/slide-editor.php:440
-msgid "Instagram Placeholders:"
-msgstr "Instagram Helyhalto:"
-
-#: ../admin/views/slide-editor.php:462
-msgid "Twitter Placeholders:"
-msgstr ""
-"Twitter\n"
-" Helyhalto:"
-
-#: ../admin/views/slide-editor.php:469
-msgid "Retweet Count"
-msgstr "Retweet Szama"
-
-#: ../admin/views/slide-editor.php:470
-msgid "Favorite Count"
-msgstr "Favori Szama"
-
-#: ../admin/views/slide-editor.php:484
-msgid "Facebook Placeholders:"
-msgstr ""
-"Facebook\n"
-" Helyhalto:"
-
-#: ../admin/views/slide-editor.php:506
-msgid "YouTube Placeholders:"
-msgstr ""
-"YouTube\n"
-" Helyhalto:"
-
-#: ../admin/views/slide-editor.php:526
-msgid "Vimeo Placeholders:"
-msgstr ""
-"Vimeo\n"
-" Helyhalto:"
-
-#: ../admin/views/slider-overview.php:76
-msgid "Revolution Sliders"
-msgstr "Revolution Sliderek"
-
-#: ../admin/views/slider-overview.php:279 ../admin/views/templates/slider-main-
-#: options.php:3721 ../admin/views/templates/template-selector.php:256 ..
-#: admin/views/templates/template-slider-selector.php:241
-msgid "ignore"
-msgstr "mellőz"
-
-#: ../admin/views/templates/slide-stage.php:68
-msgid "Save Static Styles"
-msgstr "Statikus Stilusok Mentese"
-
-#: ../admin/views/templates/slide-stage.php:69
-msgid "Overwrite current static styles?"
-msgstr "Felülirja az aktualis Statikus Stilusokat?"
-
-#: ../admin/views/templates/slide-stage.php:76
-msgid "Caption Style"
-msgstr "Layer Stilus"
-
-#: ../admin/views/templates/slide-stage.php:77
-msgid "Style Template"
-msgstr "Stilus Sablon"
-
-#: ../admin/views/templates/slide-stage.php:79
-msgid "More Style Settings"
-msgstr "További beállítások"
-
-#: ../admin/views/templates/slide-stage.php:80
-msgid "Reset Style Template"
-msgstr ""
-"Stilus \n"
-"Sablon\n"
-" Visszaállítása"
-
-#: ../admin/views/templates/slide-stage.php:84
-msgid "Style Options"
-msgstr "Stilus Opciok"
-
-#: ../admin/views/templates/slide-stage.php:85 ../admin/views/templates/slide-
-#: stage.php:700 ../admin/views/templates/slide-stage.php:875
-msgid "Save"
-msgstr "Mentés"
-
-#: ../admin/views/templates/slide-stage.php:87 ../admin/views/templates/slide-
-#: stage.php:702 ../admin/views/templates/slide-stage.php:877
-msgid "Rename"
-msgstr "Atnevezés"
-
-#: ../admin/views/templates/slide-stage.php:88 ../admin/views/templates/slide-
-#: stage.php:703 ../admin/views/templates/slide-stage.php:878
-msgid "Reset"
-msgstr "Visszaállítás"
-
-#: ../admin/views/templates/slide-stage.php:99
-msgid "Font Size (px)"
-msgstr "Font Meret (px)"
-
-#: ../admin/views/templates/slide-stage.php:100 ../admin/views/templates/slide-
-#: stage.php:2220
-msgid "Font Size"
-msgstr "Font Meret"
-
-#: ../admin/views/templates/slide-stage.php:105
-msgid "Line Height (px)"
-msgstr "Sormagasság (px)"
-
-#: ../admin/views/templates/slide-stage.php:106 ../admin/views/templates/slide-
-#: stage.php:2221
-msgid "Line Height"
-msgstr "sormagasság"
-
-#: ../admin/views/templates/slide-stage.php:112
-msgid "White Space"
-msgstr "White Space"
-
-#: ../admin/views/templates/slide-stage.php:126
-msgid "Layer Align Left"
-msgstr ""
-"Layer \n"
-"Balra igazítás"
-
-#: ../admin/views/templates/slide-stage.php:127
-msgid "Layer Align Center"
-msgstr "Layer Közepre igazítás"
-
-#: ../admin/views/templates/slide-stage.php:128
-msgid "Layer Align Right"
-msgstr "Layer Jobbra igazítás"
-
-#: ../admin/views/templates/slide-stage.php:135 ../admin/views/templates/slide-
-#: stage.php:136
-msgid "Horizontal Offset from Aligned Position (px)"
-msgstr "Vízszintes Eltolás a kiigazított helyzetben ( px )"
-
-#: ../admin/views/templates/slide-stage.php:140 ../admin/views/templates/slide-
-#: stage.php:141
-msgid "Vertical Offset from Aligned Position (px)"
-msgstr "Függöleges Eltolás a kiigazított helyzetben ( px )"
-
-#: ../admin/views/templates/slide-stage.php:164 ../admin/views/templates/slide-
-#: stage.php:165 ../admin/views/templates/slide-stage.php:2222
-msgid "Font Weight"
-msgstr "Font vastagsag"
-
-#: ../admin/views/templates/slide-stage.php:179 ../admin/views/templates/slide-
-#: stage.php:180 ../admin/views/templates/slide-stage.php:522 ..
-#: admin/views/templates/slide-stage.php:523 ../admin/views/templates/slider-
-#: main-options.php:2127 ../admin/views/templates/slider-main-options.php:2260 ..
-#: admin/views/templates/slider-main-options.php:2364
-msgid "Font Color"
-msgstr "Font Szin"
-
-#: ../admin/views/templates/slide-stage.php:186
-msgid "Layer Align Top"
-msgstr "Layer igazitas felülre"
-
-#: ../admin/views/templates/slide-stage.php:187
-msgid "Layer Align Middle"
-msgstr "Layer igazitas közepre"
-
-#: ../admin/views/templates/slide-stage.php:188
-msgid "Layer Align Bottom"
-msgstr "Layer igazitas alulra"
-
-#: ../admin/views/templates/slide-stage.php:194 ../admin/views/templates/slide-
-#: stage.php:195 ../admin/views/templates/slide-stage.php:196
-msgid "Layer Width (px). Use 'auto' to respect White Space"
-msgstr ""
-"Layer szélessége ( px ) . Használj \"auto-t\" , hogy \n"
-"tiszteletben  \n"
-"tartsa a White Space-t"
-
-#: ../admin/views/templates/slide-stage.php:197
-msgid "Video Width (px). Use 'auto' to respect White Space"
-msgstr ""
-"Video szélessége ( px ) . Használj \"auto-t\" , hogy \n"
-"tiszteletben  \n"
-"tartsa a White Space-t"
-
-#: ../admin/views/templates/slide-stage.php:200 ../admin/views/templates/slide-
-#: stage.php:201
-msgid "Layer Height (px). Use 'auto' to respect White Space"
-msgstr ""
-"Layer magassaga ( px ) . Használj \"auto-t\" , hogy \n"
-"tiszteletben  \n"
-"tartsa a White Space-t"
-
-#: ../admin/views/templates/slide-stage.php:202
-msgid "Layer Height (px) Use 'auto' to respect White Space"
-msgstr ""
-"Layer magassaga ( px ) . Használj \"auto-t\" , hogy \n"
-"tiszteletben  \n"
-"tartsa a White Space-t"
-
-#: ../admin/views/templates/slide-stage.php:203
-msgid "Video Height (px). Use 'auto' to respect White Space"
-msgstr ""
-"Video magassaga ( px ) . Használj \"auto-t\" , hogy \n"
-"tiszteletben  \n"
-"tartsa a White Space-t"
-
-#: ../admin/views/templates/slide-stage.php:206
-msgid "Cover Mode"
-msgstr "Fedö Mod"
-
-#: ../admin/views/templates/slide-stage.php:217
-msgid "Auto Linebreak (on/off - White Space:normal / nowrap).  "
-msgstr "Automatikus Sortöres (on/off - White Space: normal/nowrap)"
-
-#: ../admin/views/templates/slide-stage.php:222
-msgid "Keep Aspect Ratio (on/off)"
-msgstr ""
-"Oldalviszony\n"
-" megtartasa (on/off)"
-
-#: ../admin/views/templates/slide-stage.php:227
-msgid "Reset original size"
-msgstr ""
-"Original \n"
-"méret visszaállítása"
-
-#: ../admin/views/templates/slide-stage.php:242 ../admin/views/templates/slide-
-#: stage.php:510 ../admin/views/templates/slider-main-options.php:4509
-msgid "Font"
-msgstr "Font"
-
-#: ../admin/views/templates/slide-stage.php:243 ../admin/views/templates/slide-
-#: stage.php:511 ../admin/views/templates/slide-stage.php:1975 ..
-#: admin/views/templates/slide-stage.php:2041 ../admin/views/templates/slide-
-#: stage.php:2123
-msgid "Background"
-msgstr "Hatter"
-
-#: ../admin/views/templates/slide-stage.php:245 ../admin/views/templates/slide-
-#: stage.php:513
-msgid "Transform"
-msgstr "Transzform"
-
-#: ../admin/views/templates/slide-stage.php:246 ../admin/views/templates/slide-
-#: stage.php:514 ../admin/views/templates/slide-stage.php:752 ..
-#: admin/views/templates/slide-stage.php:928 ../admin/views/templates/slider-
-#: main-options.php:3304
-msgid "Rotation"
-msgstr "Forgatas"
-
-#: ../admin/views/templates/slide-stage.php:247 ../admin/views/templates/slide-
-#: stage.php:757 ../admin/views/templates/slide-stage.php:933
-msgid "Perspective"
-msgstr "Perspektive"
-
-#: ../admin/views/templates/slide-stage.php:249
-msgid "Corners"
-msgstr "Sarkak"
-
-#: ../admin/views/templates/slide-stage.php:251 ../admin/views/templates/slide-
-#: stage.php:641
-msgid "Hover"
-msgstr "Hover"
-
-#: ../admin/views/templates/slide-stage.php:257 ../admin/views/templates/slide-
-#: stage.php:258
-msgid "Font Opacity"
-msgstr "Font Opacity"
-
-#: ../admin/views/templates/slide-stage.php:262
-msgid "Italic Font"
-msgstr "Dölt Betü"
-
-#: ../admin/views/templates/slide-stage.php:263
-msgid "Italic Font On/Off"
-msgstr "Dölt Betü on/off"
-
-#: ../admin/views/templates/slide-stage.php:267 ../admin/views/templates/slide-
-#: stage.php:268 ../admin/views/templates/slide-stage.php:531 ..
-#: admin/views/templates/slide-stage.php:532
-msgid "Font Decoration"
-msgstr "Font dekoraciok"
-
-#: ../admin/views/templates/slide-stage.php:278 ../admin/views/templates/slide-
-#: stage.php:279
-msgid "Text Align"
-msgstr "Szöveg igazítása"
-
-#: ../admin/views/templates/slide-stage.php:281 ../admin/views/templates/slider-
-#: main-options.php:2317 ../admin/views/templates/slider-main-options.php:2532 ..
-#: admin/views/templates/slider-main-options.php:2541 ..
-#: admin/views/templates/slider-main-options.php:2561 ..
-#: admin/views/templates/slider-main-options.php:2571 ..
-#: admin/views/templates/slider-main-options.php:2676 ..
-#: admin/views/templates/slider-main-options.php:2684 ..
-#: admin/views/templates/slider-main-options.php:2846 ..
-#: admin/views/templates/slider-main-options.php:2854 ..
-#: admin/views/templates/slider-main-options.php:3014 ..
-#: admin/views/templates/slider-main-options.php:3022 ..
-#: admin/views/templates/slider-main-options.php:3349 ..
-#: admin/views/templates/slider-main-options.php:3357
-msgid "Center"
-msgstr "Közep"
-
-#: ../admin/views/templates/slide-stage.php:290 ../admin/views/templates/slide-
-#: stage.php:291 ../admin/views/templates/slide-stage.php:542 ..
-#: admin/views/templates/slide-stage.php:543
-msgid "Background Color"
-msgstr "Hatter szine"
-
-#: ../admin/views/templates/slide-stage.php:295 ../admin/views/templates/slide-
-#: stage.php:296 ../admin/views/templates/slide-stage.php:547 ..
-#: admin/views/templates/slide-stage.php:548
-msgid "Background Opacity"
-msgstr "Hatter Atlathatosag"
-
-#: ../admin/views/templates/slide-stage.php:300 ../admin/views/templates/slide-
-#: stage.php:2190 ../admin/views/templates/slide-stage.php:2192
-msgid "Padding"
-msgstr "Padding"
-
-#: ../admin/views/templates/slide-stage.php:301 ../admin/views/templates/slide-
-#: stage.php:2193 ../admin/views/templates/slider-main-options.php:3259
-msgid "Padding Top"
-msgstr "Padding felül"
-
-#: ../admin/views/templates/slide-stage.php:302 ../admin/views/templates/slide-
-#: stage.php:2194
-msgid "Padding Right"
-msgstr "Padding jobbra"
-
-#: ../admin/views/templates/slide-stage.php:303 ../admin/views/templates/slide-
-#: stage.php:2195 ../admin/views/templates/slider-main-options.php:3262
-msgid "Padding Bottom"
-msgstr "Padding lenn"
-
-#: ../admin/views/templates/slide-stage.php:304 ../admin/views/templates/slide-
-#: stage.php:2196
-msgid "Padding Left"
-msgstr "Padding balra"
-
-#: ../admin/views/templates/slide-stage.php:310 ../admin/views/templates/slide-
-#: stage.php:311 ../admin/views/templates/slide-stage.php:553 ..
-#: admin/views/templates/slide-stage.php:554 ../admin/views/templates/slide-
-#: stage.php:2008 ../admin/views/templates/slide-stage.php:2073 ..
-#: admin/views/templates/slide-stage.php:2140
-msgid "Border Color"
-msgstr "Keret szine"
-
-#: ../admin/views/templates/slide-stage.php:315 ../admin/views/templates/slide-
-#: stage.php:316 ../admin/views/templates/slide-stage.php:557 ..
-#: admin/views/templates/slide-stage.php:558 ../admin/views/templates/slide-
-#: stage.php:2012 ../admin/views/templates/slide-stage.php:2013 ..
-#: admin/views/templates/slide-stage.php:2077 ../admin/views/templates/slide-
-#: stage.php:2078 ../admin/views/templates/slide-stage.php:2144 ..
-#: admin/views/templates/slide-stage.php:2145
-msgid "Border Opacity"
-msgstr "Keret Atlathatosag"
-
-#: ../admin/views/templates/slide-stage.php:320 ../admin/views/templates/slide-
-#: stage.php:321 ../admin/views/templates/slide-stage.php:564 ..
-#: admin/views/templates/slide-stage.php:565
-msgid "Border Style"
-msgstr "Keret Stilusa"
-
-#: ../admin/views/templates/slide-stage.php:331 ../admin/views/templates/slide-
-#: stage.php:332 ../admin/views/templates/slide-stage.php:575 ..
-#: admin/views/templates/slide-stage.php:576 ../admin/views/templates/slide-
-#: stage.php:2017 ../admin/views/templates/slide-stage.php:2018 ..
-#: admin/views/templates/slide-stage.php:2082 ../admin/views/templates/slide-
-#: stage.php:2083 ../admin/views/templates/slide-stage.php:2149 ..
-#: admin/views/templates/slide-stage.php:2150
-msgid "Border Width"
-msgstr "Border szelessege"
-
-#: ../admin/views/templates/slide-stage.php:336 ../admin/views/templates/slide-
-#: stage.php:580
-msgid "Border Radius (px)"
-msgstr "Border sugar (px)"
-
-#: ../admin/views/templates/slide-stage.php:337 ../admin/views/templates/slide-
-#: stage.php:581
-msgid "Border Radius Top Left"
-msgstr "Bal felső keret sugara"
-
-#: ../admin/views/templates/slide-stage.php:338 ../admin/views/templates/slide-
-#: stage.php:582
-msgid "Border Radius Top Right"
-msgstr "Jobb felső keret sugara"
-
-#: ../admin/views/templates/slide-stage.php:339 ../admin/views/templates/slide-
-#: stage.php:583
-msgid "Border Radius Bottom Right"
-msgstr "Jobb alsó keret sugara"
-
-#: ../admin/views/templates/slide-stage.php:340 ../admin/views/templates/slide-
-#: stage.php:584
-msgid "Border Radius Bottom Left"
-msgstr "Bal alsó keret sugara"
-
-#: ../admin/views/templates/slide-stage.php:346 ../admin/views/templates/slide-
-#: stage.php:347 ../admin/views/templates/slide-stage.php:614 ..
-#: admin/views/templates/slide-stage.php:615
-msgid "Rotation on X axis (+/-)"
-msgstr "Forgatás az X tengelyen ( +/- )"
-
-#: ../admin/views/templates/slide-stage.php:350 ../admin/views/templates/slide-
-#: stage.php:351 ../admin/views/templates/slide-stage.php:618 ..
-#: admin/views/templates/slide-stage.php:619
-msgid "Rotation on Y axis (+/-)"
-msgstr "Forgatás az Y tengelyen ( +/- )"
-
-#: ../admin/views/templates/slide-stage.php:355 ../admin/views/templates/slide-
-#: stage.php:356 ../admin/views/templates/slide-stage.php:623 ..
-#: admin/views/templates/slide-stage.php:624
-msgid "Rotation on Z axis (+/-)"
-msgstr "Forgatás a Z tengelyen ( +/- )"
-
-#: ../admin/views/templates/slide-stage.php:360 ../admin/views/templates/slide-
-#: stage.php:361
-msgid "Horizontal Origin"
-msgstr "Vízszintes Origin"
-
-#: ../admin/views/templates/slide-stage.php:364 ../admin/views/templates/slide-
-#: stage.php:365
-msgid "Vertical Origin"
-msgstr "Függőleges Origin\n"
 
 #: ../admin/views/templates/slide-stage.php:371 ../admin/views/templates/slide-
 #: stage.php:589
@@ -477,136 +46,6 @@ msgstr ""
 msgid "Y Scale  1 = 100%, 0.5=50%... (+/-)"
 msgstr ""
 
-#: ../admin/views/templates/slide-stage.php:386 ../admin/views/templates/slide-
-#: stage.php:387 ../admin/views/templates/slide-stage.php:603 ..
-#: admin/views/templates/slide-stage.php:604
-msgid "X Skew (+/-  px)"
-msgstr "X megdönteni ( +/- px )"
-
-#: ../admin/views/templates/slide-stage.php:391 ../admin/views/templates/slide-
-#: stage.php:392 ../admin/views/templates/slide-stage.php:607 ..
-#: admin/views/templates/slide-stage.php:608
-msgid "Y Skew (+/-  px)"
-msgstr "Y megdönteni ( +/- px )"
-
-#: ../admin/views/templates/slide-stage.php:398 ../admin/views/templates/slide-
-#: stage.php:630
-msgid "Template"
-msgstr "Sablon"
-
-#: ../admin/views/templates/slide-stage.php:399 ../admin/views/templates/slide-
-#: stage.php:631 ../admin/views/templates/slider-main-options.php:971 ..
-#: admin/views/templates/slider-main-options.php:1002 ..
-#: admin/views/templates/slider-main-options.php:1035 ..
-#: admin/views/templates/slider-main-options.php:1069
-msgid "Layer"
-msgstr "Layer"
-
-#: ../admin/views/templates/slide-stage.php:407
-msgid "Layer Hover"
-msgstr "Layer Hover"
-
-#: ../admin/views/templates/slide-stage.php:413 ../admin/views/templates/slide-
-#: stage.php:414
-msgid "Hover Animation Speed (in ms)"
-msgstr "Hover animacio sebessege (ms)"
-
-#: ../admin/views/templates/slide-stage.php:419 ../admin/views/templates/slide-
-#: stage.php:420
-msgid "Hover Animation Easing"
-msgstr "Hover Animacio Ease"
-
-#: ../admin/views/templates/slide-stage.php:430 ../admin/views/templates/slide-
-#: stage.php:431
-msgid "Mouse Cursor"
-msgstr "Eger Kurzor"
-
-#: ../admin/views/templates/slide-stage.php:447 ../admin/views/templates/slide-
-#: stage.php:448
-msgid "Animation Perspective (default 600)"
-msgstr "Animacio Perspektive (alap:600)"
-
-#: ../admin/views/templates/slide-stage.php:452 ../admin/views/templates/slide-
-#: stage.php:453
-msgid "Z Offset (+/-  px)"
-msgstr "Z Eltolas (+/- px)"
-
-#: ../admin/views/templates/slide-stage.php:459
-msgid "Parallax Depth Level."
-msgstr "Parallax Melyseg Szint."
-
-#: ../admin/views/templates/slide-stage.php:487
-msgid "Sharp Left"
-msgstr "Elesen balra"
-
-#: ../admin/views/templates/slide-stage.php:490 ../admin/views/templates/slide-
-#: stage.php:499
-msgid "No Corner"
-msgstr "Nincs sarok"
-
-#: ../admin/views/templates/slide-stage.php:491 ../admin/views/templates/slide-
-#: stage.php:500
-msgid "Sharp"
-msgstr "Elesseg"
-
-#: ../admin/views/templates/slide-stage.php:492 ../admin/views/templates/slide-
-#: stage.php:501
-msgid "Sharp Reversed"
-msgstr "Elesseg visszafele"
-
-#: ../admin/views/templates/slide-stage.php:496
-msgid "Sharp Right"
-msgstr "Elesen jobbra"
-
-#: ../admin/views/templates/slide-stage.php:527 ../admin/views/templates/slide-
-#: stage.php:528
-msgid "Font Hover Opacity"
-msgstr "Font Hover Opacity"
-
-#: ../admin/views/templates/slide-stage.php:640
-msgid "Idle"
-msgstr "Tetlen allapot"
-
-#: ../admin/views/templates/slide-stage.php:645
-msgid "COPY"
-msgstr "Másol"
-
-#: ../admin/views/templates/slide-stage.php:647
-msgid "Copy From Idle"
-msgstr "Másol tetlen allapotbol"
-
-#: ../admin/views/templates/slide-stage.php:648
-msgid "Copy From Hover"
-msgstr "Másol Hover allapotbol"
-
-#: ../admin/views/templates/slide-stage.php:649
-msgid "Copy From In Animation"
-msgstr "Másol a bejövö Animaciobol"
-
-#: ../admin/views/templates/slide-stage.php:650
-msgid "Copy From Out Animation"
-msgstr "Masol a kimeno Animaciobol"
-
-#: ../admin/views/templates/slide-stage.php:667
-msgid "Hover CSS"
-msgstr "Hover CSS"
-
-#: ../admin/views/templates/slide-stage.php:684 ../admin/views/templates/slide-
-#: stage.php:856 ../admin/views/templates/slider-main-options.php:1397
-msgid "Advanced Settings"
-msgstr "Speciális beállítások"
-
-#: ../admin/views/templates/slide-stage.php:688 ../admin/views/templates/slide-
-#: stage.php:689 ../admin/views/templates/slide-stage.php:863 ..
-#: admin/views/templates/slide-stage.php:864
-msgid "Animation Template"
-msgstr "Animacio Sablon"
-
-#: ../admin/views/templates/slide-stage.php:699 ../admin/views/templates/slide-
-#: stage.php:874
-msgid "Template Options"
-msgstr "Sablon Opciok"
-
 #: ../admin/views/templates/slide-stage.php:711 ../admin/views/templates/slide-
 #: stage.php:712 ../admin/views/templates/slide-stage.php:888 ..
 #: admin/views/templates/slide-stage.php:889
@@ -617,44 +56,44 @@ msgstr ""
 #: stage.php:723 ../admin/views/templates/slide-stage.php:899 ..
 #: admin/views/templates/slide-stage.php:900
 msgid "Animation Speed (in ms)"
-msgstr ""
+msgstr "Animacio Sebesseg"
 
 #: ../admin/views/templates/slide-stage.php:727 ../admin/views/templates/slide-
 #: stage.php:728 ../admin/views/templates/slide-stage.php:904 ..
 #: admin/views/templates/slide-stage.php:905
 msgid "Split Animaton Text (will not respect Html Markups !)"
-msgstr ""
+msgstr "Animacio Text Törese"
 
 #: ../admin/views/templates/slide-stage.php:729 ../admin/views/templates/slide-
 #: stage.php:906
 msgid "No Split"
-msgstr ""
+msgstr "Töres Nelkül"
 
 #: ../admin/views/templates/slide-stage.php:730 ../admin/views/templates/slide-
 #: stage.php:907
 msgid "Char Based"
-msgstr ""
+msgstr "Karakterenkent"
 
 #: ../admin/views/templates/slide-stage.php:731 ../admin/views/templates/slide-
 #: stage.php:908
 msgid "Word Based"
-msgstr ""
+msgstr "Szavankent"
 
 #: ../admin/views/templates/slide-stage.php:732 ../admin/views/templates/slide-
 #: stage.php:909
 msgid "Line Based"
-msgstr ""
+msgstr "Soronkent"
 
 #: ../admin/views/templates/slide-stage.php:736 ../admin/views/templates/slide-
 #: stage.php:737 ../admin/views/templates/slide-stage.php:913 ..
 #: admin/views/templates/slide-stage.php:914
 msgid "Animation Delay between Splitted Elements"
-msgstr ""
+msgstr "Animacio Varakozas Torott Elementek kozott"
 
 #: ../admin/views/templates/slide-stage.php:750 ../admin/views/templates/slide-
 #: stage.php:926
 msgid "Offset"
-msgstr ""
+msgstr "Különbseg"
 
 #: ../admin/views/templates/slide-stage.php:753 ../admin/views/templates/slide-
 #: stage.php:929 ../admin/views/templates/slider-main-options.php:3323
@@ -909,10 +348,6 @@ msgstr ""
 #: ../admin/views/templates/slide-stage.php:1372
 msgid "Responsive Offset"
 msgstr ""
-
-#: ../admin/views/templates/slide-stage.php:1396
-msgid "Static Layers will be shown on every slide in template sliders"
-msgstr "A Statikus Layerek lathatoak minden Slide-jan a Sablon Slidernek"
 
 #: ../admin/views/templates/slide-stage.php:1403
 msgid "Start on Slide"
@@ -4296,7 +3731,7 @@ msgstr ""
 #: includes/operations.class.php:2264 ../includes/operations.class.php:2390 ..
 #: includes/operations.class.php:2471
 msgid "Hide Details"
-msgstr ""
+msgstr "Reszletek elrejtese"
 
 #: ../includes/operations.class.php:2101 ../includes/operations.class.php:2101 ..
 #: includes/operations.class.php:2193 ../includes/operations.class.php:2193 ..
@@ -4304,15 +3739,15 @@ msgstr ""
 #: includes/operations.class.php:2390 ../includes/operations.class.php:2390 ..
 #: includes/operations.class.php:2471 ../includes/operations.class.php:2471
 msgid "Show Details"
-msgstr ""
+msgstr "Reszletek mutatasa"
 
 #: ../includes/operations.class.php:2128 ../includes/operations.class.php:2211
 msgid "extern"
-msgstr ""
+msgstr "külsö"
 
 #: ../includes/operations.class.php:2130 ../includes/operations.class.php:2213
 msgid "missing"
-msgstr ""
+msgstr "Hianyzik"
 
 #: ../includes/operations.class.php:2171
 msgid "Video Performance"
@@ -4324,7 +3759,7 @@ msgstr ""
 
 #: ../includes/operations.class.php:2189
 msgid "Unknown"
-msgstr ""
+msgstr "Ismeretlen"
 
 #: ../includes/operations.class.php:2248
 msgid "CSS Performance"
@@ -4340,7 +3775,7 @@ msgstr ""
 
 #: ../includes/operations.class.php:2349
 msgid "Dynamic Styles"
-msgstr ""
+msgstr "Dinamikus Stilus"
 
 #: ../includes/operations.class.php:2374
 msgid "jQuery Performance"
@@ -4348,7 +3783,7 @@ msgstr ""
 
 #: ../includes/operations.class.php:2386
 msgid "jQuery Loaded:"
-msgstr ""
+msgstr "jQuery betöltve:"
 
 #: ../includes/operations.class.php:2455
 msgid "Google Fonts Performance"
@@ -4356,86 +3791,90 @@ msgstr ""
 
 #: ../includes/operations.class.php:2467
 msgid "Fonts Loaded:"
-msgstr ""
+msgstr "Font betöltve:"
 
 #: ../includes/output.class.php:312
 msgid ""
 "No slides found, please add at least one Slide Template to the choosen "
 "language."
-msgstr ""
+msgstr "Nem talalhato Slide a sliderben. Legalabb egy Slide-ot ki kell valasztani."
 
 #: ../includes/output.class.php:314
 msgid "No slides found, please add some slides"
-msgstr ""
+msgstr "Nem talalhato Slide a sliderben."
 
 #: ../includes/output.class.php:3612
 msgid "Revolution Slider Error"
-msgstr ""
+msgstr "Revolution Slider Hiba"
 
 #: ../includes/slide.class.php:205
 msgid "Source must be from Stream"
-msgstr ""
+msgstr "A Source a Streambol kell hogy szarmazzon."
 
 #: ../includes/slider.class.php:893
 msgid "No file sent."
-msgstr ""
+msgstr "Nem talalhato a file."
 
 #: ../includes/slider.class.php:896
 msgid "Exceeded filesize limit."
-msgstr ""
+msgstr "Filemeret tullepve ! "
 
 #: ../includes/slider.class.php:927
 msgid "Please select the correct zip file"
-msgstr ""
+msgstr "Valasszon egy korrekt ZIP filet."
 
 #: ../includes/slider.class.php:944
 msgid "Please select the correct zip file, checksum failed!"
-msgstr ""
+msgstr "Kerem valasszon egy korrekt ZIP filet. "
 
 #: ../includes/slider.class.php:1020
 msgid "animations imported!"
-msgstr ""
+msgstr "Animacio importalva."
 
 #: ../includes/slider.class.php:1022
 msgid ""
 "no custom animations found, if slider uses custom animations, the provided "
 "export may be broken..."
 msgstr ""
+"Nem talalhato Custom Animaco. Ha a slider hasznal Custom animaciokat, akkor "
+"az elerheto export file esetleg korrupt."
 
 #: ../includes/slider.class.php:1082
 msgid "dynamic styles imported!"
-msgstr ""
+msgstr "Dinamikus Stilus Importalva."
 
 #: ../includes/slider.class.php:1084
 msgid ""
 "no dynamic styles found, if slider uses dynamic styles, the provided export "
 "may be broken..."
 msgstr ""
+"Nincsen Dinamikus Stilus. Ha a slider hasznal dinamikus stilust akkor az "
+"elerheto Export lehett korrupt ! "
 
 #: ../includes/slider.class.php:1372 ../includes/slider.class.php:1405 ..
 #: includes/framework/base.class.php:487
 msgid " not found!<br>"
-msgstr ""
+msgstr " nem talalhato!"
 
 #: ../includes/slider.class.php:1556
 msgid "could not find correct Slide to copy, please try again."
-msgstr ""
+msgstr "Az original Slide nem talalhato masolashoz. Probalja meg megy egyszer."
 
 #: ../includes/slider.class.php:1714 ../includes/slider.class.php:1723
 msgid "Slide could not be duplicated"
-msgstr ""
+msgstr "Slideot nem lehetett duplikalni"
 
 #: ../includes/slider.class.php:1731
 msgid "Slide could not be copied"
-msgstr ""
+msgstr "Slideot nem lehetett masolni"
 
 #: ../includes/slider.class.php:2039
 msgid "Failed to load Stream"
-msgstr ""
+msgstr "Stream Problema"
 
 #: ../includes/widget.class.php:15
 msgid "Displays a revolution slider on the page"
-msgstr ""
+msgstr "Mutat egy Revolution Slidert az oldalon"
 
 #: ../includes/widget.class.php:16
 msgid "Revolution Slider"
@@ -4443,19 +3882,19 @@ msgstr ""
 
 #: ../includes/widget.class.php:30
 msgid "No sliders found, Please create a slider"
-msgstr ""
+msgstr "Nem talalhato Slider, Keszitsen egy Slidert"
 
 #: ../includes/widget.class.php:69
 msgid "Home Page Only"
-msgstr ""
+msgstr "Csak Home Oldal"
 
 #: ../includes/widget.class.php:72
 msgid "Pages: (example: 2,10)"
-msgstr ""
+msgstr "Oldalak: (pl:2,10)"
 
 #: ../includes/framework/base-admin.class.php:265
 msgid "Wrong Request"
-msgstr ""
+msgstr "Rossze Keres"
 
 #: ../includes/framework/base.class.php:219
 msgid "Original"
@@ -4464,145 +3903,145 @@ msgstr ""
 #: ../includes/framework/base.class.php:220 ../includes/framework/base.class.php:
 #: 267 ../includes/framework/base.class.php:282
 msgid "Large"
-msgstr ""
+msgstr "Nagy"
 
 #: ../includes/framework/base.class.php:221
 msgid "Large Square"
-msgstr ""
+msgstr "Nagy negyzet"
 
 #: ../includes/framework/base.class.php:222 ../includes/framework/base.class.php:
 #: 257 ../includes/framework/base.class.php:266 ../includes/framework/base.class.
 #: php:281
 msgid "Medium"
-msgstr ""
+msgstr "Közepes"
 
 #: ../includes/framework/base.class.php:223
 msgid "Medium 800"
-msgstr ""
+msgstr "Közepes 800"
 
 #: ../includes/framework/base.class.php:224
 msgid "Medium 640"
-msgstr ""
+msgstr "Közepes 640"
 
 #: ../includes/framework/base.class.php:225 ../includes/framework/base.class.php:
 #: 265
 msgid "Small"
-msgstr ""
+msgstr "Kicsi"
 
 #: ../includes/framework/base.class.php:226
 msgid "Small 320"
-msgstr ""
+msgstr "Kicsi 320"
 
 #: ../includes/framework/base.class.php:227 ../includes/framework/base.class.php:
 #: 234 ../includes/framework/base.class.php:280
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #: ../includes/framework/base.class.php:228
 msgid "Square"
-msgstr ""
+msgstr "Negyzet"
 
 #: ../includes/framework/base.class.php:233 ../includes/framework/base.class.php:
 #: 240
 msgid "Standard Resolution"
-msgstr ""
+msgstr "Standard Felbontas"
 
 #: ../includes/framework/base.class.php:235
 msgid "Low Resolution"
-msgstr ""
+msgstr "Alacsony Felbontas"
 
 #: ../includes/framework/base.class.php:245
 msgid "Size 0"
-msgstr ""
+msgstr "Meret 0"
 
 #: ../includes/framework/base.class.php:246
 msgid "Size 1"
-msgstr ""
+msgstr "Meret 1"
 
 #: ../includes/framework/base.class.php:247
 msgid "Size 2"
-msgstr ""
+msgstr "Meret 2"
 
 #: ../includes/framework/base.class.php:248
 msgid "Size 3"
-msgstr ""
+msgstr "Meret 3"
 
 #: ../includes/framework/base.class.php:249
 msgid "Size 4"
-msgstr ""
+msgstr "Meret 4"
 
 #: ../includes/framework/base.class.php:250
 msgid "Size 5"
-msgstr ""
+msgstr "Meret 5"
 
 #: ../includes/framework/base.class.php:251
 msgid "Size 6"
-msgstr ""
+msgstr "Meret 6"
 
 #: ../includes/framework/base.class.php:256
 msgid "Default"
-msgstr ""
+msgstr "Alap"
 
 #: ../includes/framework/base.class.php:258
 msgid "High"
-msgstr ""
+msgstr "Magas"
 
 #: ../includes/framework/base.class.php:259
 msgid "Standard"
-msgstr ""
+msgstr "Standart"
 
 #: ../includes/framework/base.class.php:260
 msgid "Max. Res."
-msgstr ""
+msgstr "Max. Meret."
 
 #: ../includes/framework/base.class.php:279
 msgid "Original Size"
-msgstr ""
+msgstr "Eredeti Meret"
 
 #: ../includes/framework/em-integration.class.php:32
 msgid "All Events"
-msgstr ""
+msgstr "Összes esemeny"
 
 #: ../includes/framework/em-integration.class.php:33
 msgid "Today"
-msgstr ""
+msgstr "Ma"
 
 #: ../includes/framework/em-integration.class.php:34
 msgid "Tomorrow"
-msgstr ""
+msgstr "Holnap"
 
 #: ../includes/framework/em-integration.class.php:35
 msgid "Future"
-msgstr ""
+msgstr "Jövö"
 
 #: ../includes/framework/em-integration.class.php:36
 msgid "Past"
-msgstr ""
+msgstr "Mult"
 
 #: ../includes/framework/em-integration.class.php:37
 msgid "This Month"
-msgstr ""
+msgstr "Aktualis Honap"
 
 #: ../includes/framework/em-integration.class.php:38
 msgid "Next Month"
-msgstr ""
+msgstr "Következö Honap"
 
 #: ../includes/framework/em-integration.class.php:168
 msgid "Event Start Date"
-msgstr ""
+msgstr "Esemeny Kezdete"
 
 #: ../includes/framework/em-integration.class.php:169
 msgid "Event End Date"
-msgstr ""
+msgstr "Esemeny Vege"
 
 #: ../includes/framework/functions-wordpress.class.php:887
 #, php-format
 msgid "View all posts in %s"
-msgstr ""
+msgstr "Összes Posta mutatasa %s"
 
 #: ../includes/framework/wpml.class.php:46 ../includes/framework/wpml.class.php:162
 msgid "All Languages"
-msgstr ""
+msgstr "Összes nyelv"
 
 #: ../revslider.php:167
 msgid "Include RevSlider libraries globally (all pages/posts)"
@@ -4868,6 +4307,11 @@ msgstr "Adj meg egy Slide címet"
 #: ../admin/revslider-admin.class.php:235
 msgid "Please Wait a Moment"
 msgstr "Kérlek, várj"
+
+#: ../admin/revslider-admin.class.php:236 ../admin/views/templates/slide-selector.
+#: php:227 ../admin/views/templates/slides-list.php:146
+msgid "Copy / Move"
+msgstr "Copy / Move"
 
 #: ../admin/revslider-admin.class.php:237
 msgid "Preset Loaded"
@@ -5817,6 +5261,10 @@ msgstr "A rendezvény helyszíne régióban"
 msgid "Event location country"
 msgstr "A rendezvény helyszíne ország"
 
+#: ../admin/views/slide-editor.php:419
+msgid "Flickr Placeholders:"
+msgstr "Flickr Helyhalto:"
+
 #: ../admin/views/slide-editor.php:425 ../admin/views/slide-editor.php:446 ..
 #: admin/views/slide-editor.php:468 ../admin/views/slide-editor.php:491 ..
 #: admin/views/slide-editor.php:533
@@ -5840,6 +5288,10 @@ msgid "Image &lt;img /&gt;"
 msgstr ""
 "Kép \n"
 "&lt;img /&gt;"
+
+#: ../admin/views/slide-editor.php:440
+msgid "Instagram Placeholders:"
+msgstr "Instagram Helyhalto:"
 
 #: ../admin/views/slide-editor.php:442 ../admin/views/slide-editor.php:464 ..
 #: admin/views/slide-editor.php:486 ../admin/views/slide-editor.php:508 ..
@@ -5871,18 +5323,50 @@ msgstr ""
 msgid "Number of Comments"
 msgstr "Hozzászólások száma"
 
+#: ../admin/views/slide-editor.php:462
+msgid "Twitter Placeholders:"
+msgstr ""
+"Twitter\n"
+" Helyhalto:"
+
 #: ../admin/views/slide-editor.php:467 ../admin/views/slide-editor.php:489 ..
 #: admin/views/slide-editor.php:511 ../admin/views/slide-editor.php:532
 msgid "Pulbishing Date"
 msgstr "Pulbishing dátuma"
 
+#: ../admin/views/slide-editor.php:469
+msgid "Retweet Count"
+msgstr "Retweet Szama"
+
+#: ../admin/views/slide-editor.php:470
+msgid "Favorite Count"
+msgstr "Favori Szama"
+
+#: ../admin/views/slide-editor.php:484
+msgid "Facebook Placeholders:"
+msgstr ""
+"Facebook\n"
+" Helyhalto:"
+
 #: ../admin/views/slide-editor.php:490
 msgid "Last Modify Date"
 msgstr "Módosítás dátuma"
 
+#: ../admin/views/slide-editor.php:506
+msgid "YouTube Placeholders:"
+msgstr ""
+"YouTube\n"
+" Helyhalto:"
+
 #: ../admin/views/slide-editor.php:509 ../admin/views/slide-editor.php:529
 msgid "Excerpt"
 msgstr "Részlet"
+
+#: ../admin/views/slide-editor.php:526
+msgid "Vimeo Placeholders:"
+msgstr ""
+"Vimeo\n"
+" Helyhalto:"
 
 #: ../admin/views/slide-editor.php:535
 msgid "Number of Views"
@@ -5916,7 +5400,7 @@ msgstr "Classhoz hozzafüzve:"
 #: admin/views/templates/slide-stage.php:86 ../admin/views/templates/slide-stage.
 #: php:701 ../admin/views/templates/slide-stage.php:876
 msgid "Save As"
-msgstr "Mentés másként\n"
+msgstr "Mentés másként"
 
 #: ../admin/views/slide-editor.php:566 ../admin/views/slide-editor.php:585
 msgid "Save As:"
@@ -6073,6 +5557,10 @@ msgstr ""
 #: ../admin/views/slider-overview.php:69
 msgid "Global Settings"
 msgstr "Globális beállítások"
+
+#: ../admin/views/slider-overview.php:76
+msgid "Revolution Sliders"
+msgstr "Revolution Sliderek"
 
 #: ../admin/views/slider-overview.php:81
 msgid "Sort By:"
@@ -6411,6 +5899,12 @@ msgstr "hozzafüz"
 #: admin/views/templates/template-slider-selector.php:238
 msgid "Static Styles:"
 msgstr "Statik Stilusok:"
+
+#: ../admin/views/slider-overview.php:279 ../admin/views/templates/slider-main-
+#: options.php:3721 ../admin/views/templates/template-selector.php:256 ..
+#: admin/views/templates/template-slider-selector.php:241
+msgid "ignore"
+msgstr "mellőz"
 
 #: ../admin/views/slider-overview.php:288 ../admin/views/templates/slide-selector.
 #: php:231 ../admin/views/templates/sliders-list.php:168 ..
@@ -7623,3 +7117,513 @@ msgstr "Globalis Stilus Editor"
 #: ../admin/views/templates/slide-stage.php:58
 msgid "Dynamic Styles (Not Editable):"
 msgstr "Dinamikus Stilusok (nem szerkeszthetö):"
+
+#: ../admin/views/templates/slide-stage.php:68
+msgid "Save Static Styles"
+msgstr "Statikus Stilusok Mentese"
+
+#: ../admin/views/templates/slide-stage.php:69
+msgid "Overwrite current static styles?"
+msgstr "Felülirja az aktualis Statikus Stilusokat?"
+
+#: ../admin/views/templates/slide-stage.php:76
+msgid "Caption Style"
+msgstr "Layer Stilus"
+
+#: ../admin/views/templates/slide-stage.php:77
+msgid "Style Template"
+msgstr "Stilus Sablon"
+
+#: ../admin/views/templates/slide-stage.php:79
+msgid "More Style Settings"
+msgstr "További beállítások"
+
+#: ../admin/views/templates/slide-stage.php:80
+msgid "Reset Style Template"
+msgstr ""
+"Stilus \n"
+"Sablon\n"
+" Visszaállítása"
+
+#: ../admin/views/templates/slide-stage.php:84
+msgid "Style Options"
+msgstr "Stilus Opciok"
+
+#: ../admin/views/templates/slide-stage.php:85 ../admin/views/templates/slide-
+#: stage.php:700 ../admin/views/templates/slide-stage.php:875
+msgid "Save"
+msgstr "Mentés"
+
+#: ../admin/views/templates/slide-stage.php:87 ../admin/views/templates/slide-
+#: stage.php:702 ../admin/views/templates/slide-stage.php:877
+msgid "Rename"
+msgstr "Atnevezés"
+
+#: ../admin/views/templates/slide-stage.php:88 ../admin/views/templates/slide-
+#: stage.php:703 ../admin/views/templates/slide-stage.php:878
+msgid "Reset"
+msgstr "Visszaállítás"
+
+#: ../admin/views/templates/slide-stage.php:99
+msgid "Font Size (px)"
+msgstr "Font Meret (px)"
+
+#: ../admin/views/templates/slide-stage.php:100 ../admin/views/templates/slide-
+#: stage.php:2220
+msgid "Font Size"
+msgstr "Font Meret"
+
+#: ../admin/views/templates/slide-stage.php:105
+msgid "Line Height (px)"
+msgstr "Sormagasság (px)"
+
+#: ../admin/views/templates/slide-stage.php:106 ../admin/views/templates/slide-
+#: stage.php:2221
+msgid "Line Height"
+msgstr "sormagasság"
+
+#: ../admin/views/templates/slide-stage.php:112
+msgid "White Space"
+msgstr "White Space"
+
+#: ../admin/views/templates/slide-stage.php:126
+msgid "Layer Align Left"
+msgstr ""
+"Layer \n"
+"Balra igazítás"
+
+#: ../admin/views/templates/slide-stage.php:127
+msgid "Layer Align Center"
+msgstr "Layer Közepre igazítás"
+
+#: ../admin/views/templates/slide-stage.php:128
+msgid "Layer Align Right"
+msgstr "Layer Jobbra igazítás"
+
+#: ../admin/views/templates/slide-stage.php:135 ../admin/views/templates/slide-
+#: stage.php:136
+msgid "Horizontal Offset from Aligned Position (px)"
+msgstr "Vízszintes Eltolás a kiigazított helyzetben ( px )"
+
+#: ../admin/views/templates/slide-stage.php:140 ../admin/views/templates/slide-
+#: stage.php:141
+msgid "Vertical Offset from Aligned Position (px)"
+msgstr "Függöleges Eltolás a kiigazított helyzetben ( px )"
+
+#: ../admin/views/templates/slide-stage.php:164 ../admin/views/templates/slide-
+#: stage.php:165 ../admin/views/templates/slide-stage.php:2222
+msgid "Font Weight"
+msgstr "Font vastagsag"
+
+#: ../admin/views/templates/slide-stage.php:179 ../admin/views/templates/slide-
+#: stage.php:180 ../admin/views/templates/slide-stage.php:522 ..
+#: admin/views/templates/slide-stage.php:523 ../admin/views/templates/slider-
+#: main-options.php:2127 ../admin/views/templates/slider-main-options.php:2260 ..
+#: admin/views/templates/slider-main-options.php:2364
+msgid "Font Color"
+msgstr "Font Szin"
+
+#: ../admin/views/templates/slide-stage.php:186
+msgid "Layer Align Top"
+msgstr "Layer igazitas felülre"
+
+#: ../admin/views/templates/slide-stage.php:187
+msgid "Layer Align Middle"
+msgstr "Layer igazitas közepre"
+
+#: ../admin/views/templates/slide-stage.php:188
+msgid "Layer Align Bottom"
+msgstr "Layer igazitas alulra"
+
+#: ../admin/views/templates/slide-stage.php:194 ../admin/views/templates/slide-
+#: stage.php:195 ../admin/views/templates/slide-stage.php:196
+msgid "Layer Width (px). Use 'auto' to respect White Space"
+msgstr ""
+"Layer szélessége ( px ) . Használj \"auto-t\" , hogy \n"
+"tiszteletben  \n"
+"tartsa a White Space-t"
+
+#: ../admin/views/templates/slide-stage.php:197
+msgid "Video Width (px). Use 'auto' to respect White Space"
+msgstr ""
+"Video szélessége ( px ) . Használj \"auto-t\" , hogy \n"
+"tiszteletben  \n"
+"tartsa a White Space-t"
+
+#: ../admin/views/templates/slide-stage.php:200 ../admin/views/templates/slide-
+#: stage.php:201
+msgid "Layer Height (px). Use 'auto' to respect White Space"
+msgstr ""
+"Layer magassaga ( px ) . Használj \"auto-t\" , hogy \n"
+"tiszteletben  \n"
+"tartsa a White Space-t"
+
+#: ../admin/views/templates/slide-stage.php:202
+msgid "Layer Height (px) Use 'auto' to respect White Space"
+msgstr ""
+"Layer magassaga ( px ) . Használj \"auto-t\" , hogy \n"
+"tiszteletben  \n"
+"tartsa a White Space-t"
+
+#: ../admin/views/templates/slide-stage.php:203
+msgid "Video Height (px). Use 'auto' to respect White Space"
+msgstr ""
+"Video magassaga ( px ) . Használj \"auto-t\" , hogy \n"
+"tiszteletben  \n"
+"tartsa a White Space-t"
+
+#: ../admin/views/templates/slide-stage.php:206
+msgid "Cover Mode"
+msgstr "Fedö Mod"
+
+#: ../admin/views/templates/slide-stage.php:217
+msgid "Auto Linebreak (on/off - White Space:normal / nowrap).  "
+msgstr "Automatikus Sortöres (on/off - White Space: normal/nowrap)"
+
+#: ../admin/views/templates/slide-stage.php:222
+msgid "Keep Aspect Ratio (on/off)"
+msgstr ""
+"Oldalviszony\n"
+" megtartasa (on/off)"
+
+#: ../admin/views/templates/slide-stage.php:227
+msgid "Reset original size"
+msgstr ""
+"Original \n"
+"méret visszaállítása"
+
+#: ../admin/views/templates/slide-stage.php:242 ../admin/views/templates/slide-
+#: stage.php:510 ../admin/views/templates/slider-main-options.php:4509
+msgid "Font"
+msgstr "Font"
+
+#: ../admin/views/templates/slide-stage.php:243 ../admin/views/templates/slide-
+#: stage.php:511 ../admin/views/templates/slide-stage.php:1975 ..
+#: admin/views/templates/slide-stage.php:2041 ../admin/views/templates/slide-
+#: stage.php:2123
+msgid "Background"
+msgstr "Hatter"
+
+#: ../admin/views/templates/slide-stage.php:245 ../admin/views/templates/slide-
+#: stage.php:513
+msgid "Transform"
+msgstr "Transzform"
+
+#: ../admin/views/templates/slide-stage.php:246 ../admin/views/templates/slide-
+#: stage.php:514 ../admin/views/templates/slide-stage.php:752 ..
+#: admin/views/templates/slide-stage.php:928 ../admin/views/templates/slider-
+#: main-options.php:3304
+msgid "Rotation"
+msgstr "Forgatas"
+
+#: ../admin/views/templates/slide-stage.php:247 ../admin/views/templates/slide-
+#: stage.php:757 ../admin/views/templates/slide-stage.php:933
+msgid "Perspective"
+msgstr "Perspektive"
+
+#: ../admin/views/templates/slide-stage.php:249
+msgid "Corners"
+msgstr "Sarkak"
+
+#: ../admin/views/templates/slide-stage.php:251 ../admin/views/templates/slide-
+#: stage.php:641
+msgid "Hover"
+msgstr "Hover"
+
+#: ../admin/views/templates/slide-stage.php:257 ../admin/views/templates/slide-
+#: stage.php:258
+msgid "Font Opacity"
+msgstr "Font Opacity"
+
+#: ../admin/views/templates/slide-stage.php:262
+msgid "Italic Font"
+msgstr "Dölt Betü"
+
+#: ../admin/views/templates/slide-stage.php:263
+msgid "Italic Font On/Off"
+msgstr "Dölt Betü on/off"
+
+#: ../admin/views/templates/slide-stage.php:267 ../admin/views/templates/slide-
+#: stage.php:268 ../admin/views/templates/slide-stage.php:531 ..
+#: admin/views/templates/slide-stage.php:532
+msgid "Font Decoration"
+msgstr "Font dekoraciok"
+
+#: ../admin/views/templates/slide-stage.php:278 ../admin/views/templates/slide-
+#: stage.php:279
+msgid "Text Align"
+msgstr "Szöveg igazítása"
+
+#: ../admin/views/templates/slide-stage.php:281 ../admin/views/templates/slider-
+#: main-options.php:2317 ../admin/views/templates/slider-main-options.php:2532 ..
+#: admin/views/templates/slider-main-options.php:2541 ..
+#: admin/views/templates/slider-main-options.php:2561 ..
+#: admin/views/templates/slider-main-options.php:2571 ..
+#: admin/views/templates/slider-main-options.php:2676 ..
+#: admin/views/templates/slider-main-options.php:2684 ..
+#: admin/views/templates/slider-main-options.php:2846 ..
+#: admin/views/templates/slider-main-options.php:2854 ..
+#: admin/views/templates/slider-main-options.php:3014 ..
+#: admin/views/templates/slider-main-options.php:3022 ..
+#: admin/views/templates/slider-main-options.php:3349 ..
+#: admin/views/templates/slider-main-options.php:3357
+msgid "Center"
+msgstr "Közep"
+
+#: ../admin/views/templates/slide-stage.php:290 ../admin/views/templates/slide-
+#: stage.php:291 ../admin/views/templates/slide-stage.php:542 ..
+#: admin/views/templates/slide-stage.php:543
+msgid "Background Color"
+msgstr "Hatter szine"
+
+#: ../admin/views/templates/slide-stage.php:295 ../admin/views/templates/slide-
+#: stage.php:296 ../admin/views/templates/slide-stage.php:547 ..
+#: admin/views/templates/slide-stage.php:548
+msgid "Background Opacity"
+msgstr "Hatter Atlathatosag"
+
+#: ../admin/views/templates/slide-stage.php:300 ../admin/views/templates/slide-
+#: stage.php:2190 ../admin/views/templates/slide-stage.php:2192
+msgid "Padding"
+msgstr "Padding"
+
+#: ../admin/views/templates/slide-stage.php:301 ../admin/views/templates/slide-
+#: stage.php:2193 ../admin/views/templates/slider-main-options.php:3259
+msgid "Padding Top"
+msgstr "Padding felül"
+
+#: ../admin/views/templates/slide-stage.php:302 ../admin/views/templates/slide-
+#: stage.php:2194
+msgid "Padding Right"
+msgstr "Padding jobbra"
+
+#: ../admin/views/templates/slide-stage.php:303 ../admin/views/templates/slide-
+#: stage.php:2195 ../admin/views/templates/slider-main-options.php:3262
+msgid "Padding Bottom"
+msgstr "Padding lenn"
+
+#: ../admin/views/templates/slide-stage.php:304 ../admin/views/templates/slide-
+#: stage.php:2196
+msgid "Padding Left"
+msgstr "Padding balra"
+
+#: ../admin/views/templates/slide-stage.php:310 ../admin/views/templates/slide-
+#: stage.php:311 ../admin/views/templates/slide-stage.php:553 ..
+#: admin/views/templates/slide-stage.php:554 ../admin/views/templates/slide-
+#: stage.php:2008 ../admin/views/templates/slide-stage.php:2073 ..
+#: admin/views/templates/slide-stage.php:2140
+msgid "Border Color"
+msgstr "Keret szine"
+
+#: ../admin/views/templates/slide-stage.php:315 ../admin/views/templates/slide-
+#: stage.php:316 ../admin/views/templates/slide-stage.php:557 ..
+#: admin/views/templates/slide-stage.php:558 ../admin/views/templates/slide-
+#: stage.php:2012 ../admin/views/templates/slide-stage.php:2013 ..
+#: admin/views/templates/slide-stage.php:2077 ../admin/views/templates/slide-
+#: stage.php:2078 ../admin/views/templates/slide-stage.php:2144 ..
+#: admin/views/templates/slide-stage.php:2145
+msgid "Border Opacity"
+msgstr "Keret Atlathatosag"
+
+#: ../admin/views/templates/slide-stage.php:320 ../admin/views/templates/slide-
+#: stage.php:321 ../admin/views/templates/slide-stage.php:564 ..
+#: admin/views/templates/slide-stage.php:565
+msgid "Border Style"
+msgstr "Keret Stilusa"
+
+#: ../admin/views/templates/slide-stage.php:331 ../admin/views/templates/slide-
+#: stage.php:332 ../admin/views/templates/slide-stage.php:575 ..
+#: admin/views/templates/slide-stage.php:576 ../admin/views/templates/slide-
+#: stage.php:2017 ../admin/views/templates/slide-stage.php:2018 ..
+#: admin/views/templates/slide-stage.php:2082 ../admin/views/templates/slide-
+#: stage.php:2083 ../admin/views/templates/slide-stage.php:2149 ..
+#: admin/views/templates/slide-stage.php:2150
+msgid "Border Width"
+msgstr "Border szelessege"
+
+#: ../admin/views/templates/slide-stage.php:336 ../admin/views/templates/slide-
+#: stage.php:580
+msgid "Border Radius (px)"
+msgstr "Border sugar (px)"
+
+#: ../admin/views/templates/slide-stage.php:337 ../admin/views/templates/slide-
+#: stage.php:581
+msgid "Border Radius Top Left"
+msgstr "Bal felső keret sugara"
+
+#: ../admin/views/templates/slide-stage.php:338 ../admin/views/templates/slide-
+#: stage.php:582
+msgid "Border Radius Top Right"
+msgstr "Jobb felső keret sugara"
+
+#: ../admin/views/templates/slide-stage.php:339 ../admin/views/templates/slide-
+#: stage.php:583
+msgid "Border Radius Bottom Right"
+msgstr "Jobb alsó keret sugara"
+
+#: ../admin/views/templates/slide-stage.php:340 ../admin/views/templates/slide-
+#: stage.php:584
+msgid "Border Radius Bottom Left"
+msgstr "Bal alsó keret sugara"
+
+#: ../admin/views/templates/slide-stage.php:346 ../admin/views/templates/slide-
+#: stage.php:347 ../admin/views/templates/slide-stage.php:614 ..
+#: admin/views/templates/slide-stage.php:615
+msgid "Rotation on X axis (+/-)"
+msgstr "Forgatás az X tengelyen ( +/- )"
+
+#: ../admin/views/templates/slide-stage.php:350 ../admin/views/templates/slide-
+#: stage.php:351 ../admin/views/templates/slide-stage.php:618 ..
+#: admin/views/templates/slide-stage.php:619
+msgid "Rotation on Y axis (+/-)"
+msgstr "Forgatás az Y tengelyen ( +/- )"
+
+#: ../admin/views/templates/slide-stage.php:355 ../admin/views/templates/slide-
+#: stage.php:356 ../admin/views/templates/slide-stage.php:623 ..
+#: admin/views/templates/slide-stage.php:624
+msgid "Rotation on Z axis (+/-)"
+msgstr "Forgatás a Z tengelyen ( +/- )"
+
+#: ../admin/views/templates/slide-stage.php:360 ../admin/views/templates/slide-
+#: stage.php:361
+msgid "Horizontal Origin"
+msgstr "Vízszintes Origin"
+
+#: ../admin/views/templates/slide-stage.php:364 ../admin/views/templates/slide-
+#: stage.php:365
+msgid "Vertical Origin"
+msgstr "Függőleges Origin\n"
+
+#: ../admin/views/templates/slide-stage.php:386 ../admin/views/templates/slide-
+#: stage.php:387 ../admin/views/templates/slide-stage.php:603 ..
+#: admin/views/templates/slide-stage.php:604
+msgid "X Skew (+/-  px)"
+msgstr "X megdönteni ( +/- px )"
+
+#: ../admin/views/templates/slide-stage.php:391 ../admin/views/templates/slide-
+#: stage.php:392 ../admin/views/templates/slide-stage.php:607 ..
+#: admin/views/templates/slide-stage.php:608
+msgid "Y Skew (+/-  px)"
+msgstr "Y megdönteni ( +/- px )"
+
+#: ../admin/views/templates/slide-stage.php:398 ../admin/views/templates/slide-
+#: stage.php:630
+msgid "Template"
+msgstr "Sablon"
+
+#: ../admin/views/templates/slide-stage.php:399 ../admin/views/templates/slide-
+#: stage.php:631 ../admin/views/templates/slider-main-options.php:971 ..
+#: admin/views/templates/slider-main-options.php:1002 ..
+#: admin/views/templates/slider-main-options.php:1035 ..
+#: admin/views/templates/slider-main-options.php:1069
+msgid "Layer"
+msgstr "Layer"
+
+#: ../admin/views/templates/slide-stage.php:407
+msgid "Layer Hover"
+msgstr "Layer Hover"
+
+#: ../admin/views/templates/slide-stage.php:413 ../admin/views/templates/slide-
+#: stage.php:414
+msgid "Hover Animation Speed (in ms)"
+msgstr "Hover animacio sebessege (ms)"
+
+#: ../admin/views/templates/slide-stage.php:419 ../admin/views/templates/slide-
+#: stage.php:420
+msgid "Hover Animation Easing"
+msgstr "Hover Animacio Ease"
+
+#: ../admin/views/templates/slide-stage.php:430 ../admin/views/templates/slide-
+#: stage.php:431
+msgid "Mouse Cursor"
+msgstr "Eger Kurzor"
+
+#: ../admin/views/templates/slide-stage.php:447 ../admin/views/templates/slide-
+#: stage.php:448
+msgid "Animation Perspective (default 600)"
+msgstr "Animacio Perspektive (alap:600)"
+
+#: ../admin/views/templates/slide-stage.php:452 ../admin/views/templates/slide-
+#: stage.php:453
+msgid "Z Offset (+/-  px)"
+msgstr "Z Eltolas (+/- px)"
+
+#: ../admin/views/templates/slide-stage.php:459
+msgid "Parallax Depth Level."
+msgstr "Parallax Melyseg Szint."
+
+#: ../admin/views/templates/slide-stage.php:487
+msgid "Sharp Left"
+msgstr "Elesen balra"
+
+#: ../admin/views/templates/slide-stage.php:490 ../admin/views/templates/slide-
+#: stage.php:499
+msgid "No Corner"
+msgstr "Nincs sarok"
+
+#: ../admin/views/templates/slide-stage.php:491 ../admin/views/templates/slide-
+#: stage.php:500
+msgid "Sharp"
+msgstr "Elesseg"
+
+#: ../admin/views/templates/slide-stage.php:492 ../admin/views/templates/slide-
+#: stage.php:501
+msgid "Sharp Reversed"
+msgstr "Elesseg visszafele"
+
+#: ../admin/views/templates/slide-stage.php:496
+msgid "Sharp Right"
+msgstr "Elesen jobbra"
+
+#: ../admin/views/templates/slide-stage.php:527 ../admin/views/templates/slide-
+#: stage.php:528
+msgid "Font Hover Opacity"
+msgstr "Font Hover Opacity"
+
+#: ../admin/views/templates/slide-stage.php:640
+msgid "Idle"
+msgstr "Tetlen allapot"
+
+#: ../admin/views/templates/slide-stage.php:645
+msgid "COPY"
+msgstr "Másol"
+
+#: ../admin/views/templates/slide-stage.php:647
+msgid "Copy From Idle"
+msgstr "Másol tetlen allapotbol"
+
+#: ../admin/views/templates/slide-stage.php:648
+msgid "Copy From Hover"
+msgstr "Másol Hover allapotbol"
+
+#: ../admin/views/templates/slide-stage.php:649
+msgid "Copy From In Animation"
+msgstr "Másol a bejövö Animaciobol"
+
+#: ../admin/views/templates/slide-stage.php:650
+msgid "Copy From Out Animation"
+msgstr "Masol a kimeno Animaciobol"
+
+#: ../admin/views/templates/slide-stage.php:667
+msgid "Hover CSS"
+msgstr "Hover CSS"
+
+#: ../admin/views/templates/slide-stage.php:684 ../admin/views/templates/slide-
+#: stage.php:856 ../admin/views/templates/slider-main-options.php:1397
+msgid "Advanced Settings"
+msgstr "Speciális beállítások"
+
+#: ../admin/views/templates/slide-stage.php:688 ../admin/views/templates/slide-
+#: stage.php:689 ../admin/views/templates/slide-stage.php:863 ..
+#: admin/views/templates/slide-stage.php:864
+msgid "Animation Template"
+msgstr "Animacio Sablon"
+
+#: ../admin/views/templates/slide-stage.php:699 ../admin/views/templates/slide-
+#: stage.php:874
+msgid "Template Options"
+msgstr "Sablon Opciok"
+
+#: ../admin/views/templates/slide-stage.php:1396
+msgid "Static Layers will be shown on every slide in template sliders"
+msgstr "A Statikus Layerek lathatoak minden Slide-jan a Sablon Slidernek"

@@ -201,7 +201,7 @@ class MC4WP_Graph {
 		foreach( $forms as $form ) {
 			$day_counts = $this->get_day_counts_for_form( $form->ID );
 			$dataset = array(
-				'label' => $form->ID . ' | ' . $form->name,
+				'label' => sprintf( '%d | %s', $form->ID, esc_html( $form->name ) ),
 				'data' => array_map( array( $this, 'format_graph_data' ), $day_counts, array_keys( $day_counts ) ),
 				'total_count' => array_sum( $day_counts )
 			);

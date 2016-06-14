@@ -207,7 +207,9 @@ class RevSliderFunctions{
 			$json = json_encode($arr);
 			$json = addslashes($json);
 		}
-		
+
+		if(empty($json)) $json = '{}';
+
 		$json = "'".$json."'";
 		
 		return($json);

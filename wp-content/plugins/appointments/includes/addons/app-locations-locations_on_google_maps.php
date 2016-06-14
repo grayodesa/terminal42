@@ -5,7 +5,7 @@ Description: Allows you to bind locations to your services.
 Plugin URI: http://premium.wpmudev.org/project/appointments-plus/
 Version: 1.0
 AddonType: Locations
-Requires: Google Maps plugin, Locations add-on
+Requires: Locations,<a href="https://premium.wpmudev.org/project/wordpress-google-maps-plugin/">Google Maps Plugin</a>
 Author: WPMU DEV
 */
 
@@ -110,7 +110,7 @@ class App_Locations_GoogleMaps {
 		add_filter('app-locations-location-model_instance_class', array($this, 'get_model_class_name'));
 
 		// Add settings
-		add_action('app-locations-settings-after_locations_list', array($this, 'show_settings'));
+		add_action('appointments_locations_settings_section_settings', array($this, 'show_settings'));
 		add_filter('app-locations-before_save', array($this, 'save_settings'));
 
 		add_action('admin_notices', array($this, 'show_nags'));
@@ -151,95 +151,91 @@ class App_Locations_GoogleMaps {
 
 		public function show_settings () {
 			$map_types = array(
-				'ROADMAP' => __('ROADMAP', 'agm_google_maps'),
-				'SATELLITE' => __('SATELLITE', 'agm_google_maps'),
-				'HYBRID' => __('HYBRID', 'agm_google_maps'),
-				'TERRAIN' => __('TERRAIN', 'agm_google_maps'),
+				'ROADMAP' => __('ROADMAP', 'appointments'),
+				'SATELLITE' => __('SATELLITE', 'appointments'),
+				'HYBRID' => __('HYBRID', 'appointments'),
+				'TERRAIN' => __('TERRAIN', 'appointments'),
 			);
 			$map_units = array(
-				'METRIC' => __('Metric', 'agm_google_maps'),
-				'IMPERIAL' => __('Imperial', 'agm_google_maps'),
+				'METRIC' => __('Metric', 'appointments'),
+				'IMPERIAL' => __('Imperial', 'appointments'),
 			);
 		?>
-<div class="postbox">
-	<h3 class='hndle'><span><?php _e('Google Maps Settings', 'appointments') ?></span></h3>
-	<div class="inside">
-		<p><em><?php _e('Any setting you leave empty here will be inherited from the default Google Maps plugin settings.', 'appointments'); ?></em></p>
-		<table class="form-table">
-			<tr valign="top">
-				<th scope="row"><?php _e('Map size', 'appointments')?></th>
-				<td>
-					<label for="app-google_maps-width">
-						<?php _e('Width:', 'appointments'); ?>
-						<input type="text" size="4" id="app-google_maps-width" name="google_maps[overrides][width]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['width']); ?>" /><em class="app-inline_help">px</em>
-					</label>
-					<span class="app-hspacer">&times;</span>
-					<label for="app-google_maps-height">
-						<?php _e('Height:', 'appointments'); ?>
-						<input type="text" size="4" id="app-google_maps-height" name="google_maps[overrides][height]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['height']); ?>" /><em class="app-inline_help">px</em>
-					</label>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row"><?php _e('Map appearance', 'appointments')?></th>
-				<td>
-					<label for="app-google_maps-zoom">
-						<?php _e('Zoom:', 'appointments'); ?>
-						<input type="text" size="4" id="app-google_maps-zoom" name="google_maps[overrides][zoom]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['zoom']); ?>" />
-						<em class="app-inline_help"><?php _e('Numeric value', 'appointments'); ?></em>
-					</label>
-					<br />
-					<label for="app-google_maps-type">
-						<?php _e('Type:', 'appointments'); ?>
-						<select name="google_maps[overrides][map_type]">
-							<option value=""></option>
-						<?php foreach ($map_types as $type => $label) { ?>
-							<option value="<?php esc_attr_e($type); ?>"
-								<?php selected(@$this->_data['google_maps']['overrides']['map_type'], $type); ?>
-							><?php echo $label; ?></option>
-						<?php } ?>
-						</select>
-					</label>
-					<br />
-					<label for="app-google_maps-units">
-						<?php _e('Units:', 'appointments'); ?>
-						<select name="google_maps[overrides][units]">
-							<option value=""></option>
-						<?php foreach ($map_units as $units => $label) { ?>
-							<option value="<?php esc_attr_e($units); ?>"
-								<?php selected(@$this->_data['google_maps']['overrides']['units'], $units); ?>
-							><?php echo $label; ?></option>
-						<?php } ?>
-						</select>
-					</label>
-					<br />
-					<label for="app-google_maps-show_images">
-						<input type="hidden" name="google_maps[overrides][show_images]" value="" />
-						<input type="checkbox" id="app-google_maps-show_images" name="google_maps[overrides][show_images]" value="1" <?php checked(1, @$this->_data['google_maps']['overrides']['show_images']); ?> />
-						<?php _e('Show images', 'appointments'); ?>
-					</label>
-				</td>
-			</tr>
-			<tr valign="top">
-				<th scope="row"><?php _e('Automatic map overlays', 'appointments')?></th>
-				<td>
-					<p><?php _e('Automatically insert maps...', 'appointments'); ?></p>
-					<label for="app-google_maps-my_appointments">
-						<input type="hidden" name="google_maps[my_appointments]" value="" />
-						<input type="checkbox" id="app-google_maps-my_appointments" name="google_maps[my_appointments]" value="1" <?php checked(1, $this->_data['google_maps']['my_appointments']); ?> />
-						<?php _e('After My Appointments shortcode output', 'appointments'); ?>
-					</label>
-					<br />
-					<label for="app-google_maps-all_appointments">
-						<input type="hidden" name="google_maps[all_appointments]" value="" />
-						<input type="checkbox" id="app-google_maps-all_appointments" name="google_maps[all_appointments]" value="1" <?php checked(1, $this->_data['google_maps']['all_appointments']); ?> />
-						<?php _e('After All Appointments shortcode output', 'appointments'); ?>
-					</label>
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
+			<h3><?php _e('Google Maps Settings', 'appointments') ?></h3>
+			<p class="description"><?php _e('Any setting you leave empty here will be inherited from the default Google Maps plugin settings.', 'appointments'); ?></p>
+			<table class="form-table">
+				<tr>
+					<th scope="row"><?php _e('Map size', 'appointments')?></th>
+					<td>
+						<label for="app-google_maps-width">
+							<?php _e('Width:', 'appointments'); ?>
+							<input type="text" size="4" id="app-google_maps-width" name="google_maps[overrides][width]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['width']); ?>" /><em class="app-inline_help">px</em>
+						</label>
+						<span class="app-hspacer">&times;</span>
+						<label for="app-google_maps-height">
+							<?php _e('Height:', 'appointments'); ?>
+							<input type="text" size="4" id="app-google_maps-height" name="google_maps[overrides][height]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['height']); ?>" /><em class="app-inline_help">px</em>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php _e('Map appearance', 'appointments')?></th>
+					<td>
+						<label for="app-google_maps-zoom">
+							<?php _e('Zoom:', 'appointments'); ?>
+							<input type="text" size="4" id="app-google_maps-zoom" name="google_maps[overrides][zoom]" value="<?php esc_attr_e(@$this->_data['google_maps']['overrides']['zoom']); ?>" />
+							<em class="app-inline_help"><?php _e('Numeric value', 'appointments'); ?></em>
+						</label>
+						<br />
+						<label for="app-google_maps-type">
+							<?php _e('Type:', 'appointments'); ?>
+							<select name="google_maps[overrides][map_type]">
+								<option value=""></option>
+							<?php foreach ($map_types as $type => $label) { ?>
+								<option value="<?php esc_attr_e($type); ?>"
+									<?php selected(@$this->_data['google_maps']['overrides']['map_type'], $type); ?>
+								><?php echo $label; ?></option>
+							<?php } ?>
+							</select>
+						</label>
+						<br />
+						<label for="app-google_maps-units">
+							<?php _e('Units:', 'appointments'); ?>
+							<select name="google_maps[overrides][units]">
+								<option value=""></option>
+							<?php foreach ($map_units as $units => $label) { ?>
+								<option value="<?php esc_attr_e($units); ?>"
+									<?php selected(@$this->_data['google_maps']['overrides']['units'], $units); ?>
+								><?php echo $label; ?></option>
+							<?php } ?>
+							</select>
+						</label>
+						<br />
+						<label for="app-google_maps-show_images">
+							<input type="hidden" name="google_maps[overrides][show_images]" value="" />
+							<input type="checkbox" id="app-google_maps-show_images" name="google_maps[overrides][show_images]" value="1" <?php checked(1, @$this->_data['google_maps']['overrides']['show_images']); ?> />
+							<?php _e('Show images', 'appointments'); ?>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php _e('Automatic map overlays', 'appointments')?></th>
+					<td>
+						<p><?php _e('Automatically insert maps...', 'appointments'); ?></p>
+						<label for="app-google_maps-my_appointments">
+							<input type="hidden" name="google_maps[my_appointments]" value="" />
+							<input type="checkbox" id="app-google_maps-my_appointments" name="google_maps[my_appointments]" value="1" <?php checked(1, $this->_data['google_maps']['my_appointments']); ?> />
+							<?php _e('After My Appointments shortcode output', 'appointments'); ?>
+						</label>
+						<br />
+						<label for="app-google_maps-all_appointments">
+							<input type="hidden" name="google_maps[all_appointments]" value="" />
+							<input type="checkbox" id="app-google_maps-all_appointments" name="google_maps[all_appointments]" value="1" <?php checked(1, $this->_data['google_maps']['all_appointments']); ?> />
+							<?php _e('After All Appointments shortcode output', 'appointments'); ?>
+						</label>
+					</td>
+				</tr>
+			</table>
 		<?php
 	}
 

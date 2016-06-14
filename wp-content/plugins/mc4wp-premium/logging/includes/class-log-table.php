@@ -186,16 +186,8 @@ class MC4WP_Log_Table extends WP_List_Table {
 		$content = '';
 		foreach ( $data as $name => $value ) {
 
-			/*
-			 * var_dump( $value );
-			if ( $name === 'GROUPINGS' && is_array( $value ) ) {
+			if( $name === 'GROUPINGS' ) {
 				$content .= $this->list_groupings( $item->list_ids, $value );
-			} else
-			 */
-
-			// skip non-scalar values for now
-			if ( ! is_scalar( $value ) ) {
-				continue;
 			} else {
 				$content .= $this->list_field( $item->list_ids, $name, $value );
 			}
@@ -216,11 +208,33 @@ class MC4WP_Log_Table extends WP_List_Table {
 
 		$list = $this->mailchimp->get_list( $list_id );
 
-		foreach ( $groupings as $grouping ) {
-			$grouping_name = $list->get_grouping_name( $grouping['id'] );
-			$grouping_name = $grouping_name ? $grouping_name : $grouping['id'];
-			$groups        = implode( ', ', $grouping['groups'] );
-			$content .= sprintf( '<strong>%s</strong>: %s<br />', esc_html( $grouping_name ), esc_html( $groups ) );
+		foreach ( $groupings as $grouping_id => $group_ids ) {
+
+			// For BC with pre 3.0 data, check for old style of array subkeys.
+			if( isset( $group_ids['id'] ) ) {
+				$grouping_id = $group_ids['id'];
+			}
+
+			if( isset( $group_ids['groups'] ) ) {
+				$group_ids = $group_ids['groups'];
+			}
+
+			$grouping = $list->get_grouping( $grouping_id );
+
+			// for some weird reason, sometimes this is a single string instead of an array.
+			$group_ids = (array) $group_ids;
+
+			// for BC with MailChimp for WordPress < 3.1.6
+			if( ! $grouping instanceof MC4WP_MailChimp_Grouping || ! method_exists( $grouping, 'get_group_name_by_id' ) ) {
+				$group_ids_string = implode( ', ', $group_ids );
+				$content .= sprintf( '<strong>%s</strong>: %s<br />', esc_html( $grouping_id), esc_html( $group_ids_string ) );
+				continue;
+			}
+
+			// get pretty group names
+			$group_names = array_map( array( $grouping, 'get_group_name_by_id' ), $group_ids );
+			$group_names_string = implode( ', ', $group_names );
+			$content .= sprintf( '<strong>%s</strong>: %s<br />', esc_html( $grouping->name ), esc_html( $group_names_string ) );
 		}
 
 		return $content;
@@ -237,6 +251,9 @@ class MC4WP_Log_Table extends WP_List_Table {
 		$list       = $this->mailchimp->get_list( $list_id );
 		$field_name = $list->get_field_name_by_tag( $field_tag );
 		$field_name = $field_name ? $field_name : $field_tag;
+
+		// make sure value is scalar
+		$value = is_array( $value ) ? join( ', ', $value ) : $value;
 		$content    = sprintf( '<strong>%s</strong>: %s<br />', esc_html( $field_name ), esc_html( $value ) );
 
 		return $content;
@@ -328,7 +345,7 @@ class MC4WP_Log_Table extends WP_List_Table {
 			try {
 				$form = mc4wp_get_form( $form_id );
 
-				return '<a href="' . mc4wp_get_edit_form_url( $form->ID ) . '">' . $form->name . '</a>';
+				return '<a href="' . mc4wp_get_edit_form_url( $form->ID ) . '">' . esc_html( $form->name ) . '</a>';
 			} catch ( Exception $e ) {
 				return __( 'Form', 'mailchimp-for-wp' ) . ' ' . $form_id . ' <em>(' . __( 'deleted', 'mailchimp-for-wp' ) . ')</em>';
 			}

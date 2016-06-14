@@ -56,6 +56,7 @@ abstract class App_Template {
 			'THB' => __('THB - Thai Baht', 'appointments'),
 			'TRY' => __('TRY - Turkish lira', 'appointments'),
 			'USD' => __('USD - U.S. Dollar', 'appointments'),
+			'RUB' => __('RUB - Russian Ruble', 'appointments')
 		));
 		return self::$_currencies;
 	}
@@ -87,6 +88,7 @@ abstract class App_Template {
 			'THB' => __('THB', 'appointments'),
 			'TRY' => __('TRY', 'appointments'),
 			'USD' => __('USD', 'appointments'),
+			'RUB' => __('RUB', 'appointments')
 		));
 		return !empty(self::$_currency_symbols[$currency])
 			? self::$_currency_symbols[$currency]
@@ -113,7 +115,7 @@ SITE_NAME
 	public static function get_default_reminder_message () {
 		return "Dear CLIENT,
 
-We would like to remind your appointment with SITE_NAME.
+We would like to remind you of your appointment with SITE_NAME.
 
 Here are your appointment details:
 Requested service: SERVICE

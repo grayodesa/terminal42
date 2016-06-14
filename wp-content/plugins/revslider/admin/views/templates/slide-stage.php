@@ -318,8 +318,8 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 
 								<!-- LAYER SELECTABLE -->
 								<i class="rs-mini-layer-icon eg-icon-lightbulb rs-toolbar-icon tipsy_enabled_top" title="<?php _e("Layer is Selectable",'revslider'); ?>" style="margin-right:10px"></i>
-								<!--input type="checkbox" id="css_layer_selectable" name="css_layer_selectable-style" class="rs-staticcustomstylechange tipsy_enabled_top tp-moderncheckbox" title="<?php _e("Layer is Seletable / Markable on Frontend",'revslider'); ?>"-->
-								<select class="rs-staticcustomstylechange rs-layer-input-field  tipsy_enabled_top" title="<?php _e("Layer is Seletable / Markable on Frontend",'revslider'); ?>" style="width:100px;cursor:pointer" id="css_layer_selectable" name="css_layer_selectable-style">
+								<!--input type="checkbox" id="css_layer_selectable" name="css_layer_selectable-style" class="rs-staticcustomstylechange tipsy_enabled_top tp-moderncheckbox" title="<?php _e("Layer is Selectable / Markable on Frontend",'revslider'); ?>"-->
+								<select class="rs-staticcustomstylechange rs-layer-input-field  tipsy_enabled_top" title="<?php _e("Layer is Selectable / Markable on Frontend",'revslider'); ?>" style="width:100px;cursor:pointer" id="css_layer_selectable" name="css_layer_selectable-style">
 									<option value="default"><?php _e('Default', 'revslider'); ?></option>
 									<option value="off"><?php _e('Off', 'revslider'); ?></option>
 									<option value="on"><?php _e('On', 'revslider'); ?></option>
@@ -1750,6 +1750,7 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 						<a href="javascript:void(0)" id="button_add_layer_video" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="rs-icon-layervideo_n"></i><span class="add-layer-txt"><?php _e("Video",'revslider')?></span></a>
 						<a href="javascript:void(0)" id="button_add_layer_button" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="rs-icon-layerbutton_n"></i><span class="add-layer-txt"><?php _e("Button",'revslider')?></span></a>
 						<a href="javascript:void(0)" id="button_add_layer_shape" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="rs-icon-layershape_n"></i><span class="add-layer-txt"><?php _e("Shape",'revslider')?></span></a>
+						<!--<a href="javascript:void(0)" id="button_add_layer_group" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="rs-icon-layergroup_n"></i><span class="add-layer-txt"><?php _e("Group",'revslider')?></span></a>-->
 						<a href="javascript:void(0)" id="button_add_layer_svg" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="rs-icon-layersvg_n"></i><span class="add-layer-txt"><?php _e("Object",'revslider')?></span></a>
 						<a href="javascript:void(0)" id="button_add_layer_import" data-isstatic="<?php echo $add_static; ?>" class="add-layer-button" ><i class="eg-icon-download"></i><span class="add-layer-txt"><?php _e("Import",'revslider')?></span></a>
 					</div>
@@ -1780,21 +1781,21 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 				<div id="rs-set-style-on-devices">
 					<span id="rs-set-style-on-devices-button"></span>
 					<div id="rs-set-style-on-devices-dialog">
-						<label style="font-size:14px; color:#fff; margin-bottom:10px"><?php _e("Force Inherit Styles",'revslider')?></label>
+						<label style="font-size:14px; color:#fff; margin-bottom:10px"><?php _e("Force Inherit Styles",'revslider'); ?></label>
 						<div class="rs-set-style-on-device-row">
-							<label style="width: 100px">Color</label>
+							<label style="width: 100px"><?php _e("Color",'revslider'); ?></label>
 							<input type="checkbox" id="on_all_devices_color" name="on_all_devices_color" class="rs-set-device-chk tp-moderncheckbox"  />
 						</div>
 						<div class="rs-set-style-on-device-row">
-							<label style="width: 100px">Font Size</label>
+							<label style="width: 100px"><?php _e("Font Size",'revslider'); ?></label>
 							<input type="checkbox" id="on_all_devices_fontsize" name="on_all_devices_fontsize" class="rs-set-device-chk tp-moderncheckbox"  />
 						</div>
 						<div class="rs-set-style-on-device-row">
-							<label style="width: 100px">Line Height</label>
+							<label style="width: 100px"><?php _e("Line Height",'revslider'); ?></label>
 							<input type="checkbox" id="on_all_devices_lineheight" name="on_all_devices_lineheight" class="rs-set-device-chk tp-moderncheckbox"  />
 						</div>
 						<div class="rs-set-style-on-device-row">
-							<label style="width: 100px">Font Weight</label>
+							<label style="width: 100px"><?php _e("Font Weight",'revslider'); ?></label>
 							<input type="checkbox" id="on_all_devices_fontweight" name="on_all_devices_fontweight" class="rs-set-device-chk tp-moderncheckbox"  />
 						</div>
 					</div>
@@ -2961,8 +2962,8 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 			<option <# if( data['action'] == 'togglefullscreen' ){ #>selected="selected" <# } #>value="togglefullscreen"><?php _e("Toggle FullScreen",'revslider'); ?></option>
 			<option <# if( data['action'] == 'gofullscreen' ){ #>selected="selected" <# } #>value="gofullscreen"><?php _e("Go FullScreen",'revslider'); ?></option>
 			<option <# if( data['action'] == 'exitfullscreen' ){ #>selected="selected" <# } #>value="exitfullscreen"><?php _e("Exit FullScreen",'revslider'); ?></option>
+			<?php do_action( 'rs_action_add_layer_action' ); ?>
 		</select>
-
 		<!-- SIMPLE LINK PARAMETERS -->
 		<span class="action-link-wrapper" style="display:none;">
 			<span><?php _e("Link Url",'revslider'); ?></span>
@@ -2990,8 +2991,7 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 			<span><?php _e("Jump To",'revslider'); ?></span>
 			<span class="rs-layer-toolbar-space"></span>
 			<select name="<# if(data['edit'] == false){ #>no_<# } #>jump_to_slide[]" class="<# if(data['edit'] == false){ #>rs_disabled_field <# } #>rs-layer-input-field" style="width:150px" data-selectoption="{{ data['jump_to_slide'] }}">
-			</select>
-
+			</select>		
 		</span>
 
 		<!-- SCROLL OFFSET -->
@@ -3013,10 +3013,9 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 			<span class="rs-layer-toolbar-space"></span>
 			<select name="<# if(data['edit'] == false){ #>no_<# } #>layer_target[]" class="<# if(data['edit'] == false){ #>rs_disabled_field <# } #>rs-layer-input-field" style="width:100px;margin-right:30px;" data-selectoption="{{ data['layer_target'] }}">
 			</select>
-			<span><?php _e("Delay",'revslider'); ?></span>
-			<span class="rs-layer-toolbar-space"></span>
-			<input type="text" style="width:60px;" class="<# if(data['edit'] == false){ #>rs_disabled_field <# } #>textbox-caption rs-layer-input-field" name="<# if(data['edit'] == false){ #>no_<# } #>layer_action_delay[]" value="{{ data['action_delay'] }}"> <?php _e('ms', 'revslider'); ?>
+			
 		</span>		
+
 
 		<span class="action-toggle_layer" style="display:none;">
 			<span class="rs-layer-toolbar-space"></span>
@@ -3027,7 +3026,7 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 			</select>
 		</span>	
 
-		<!-- CALLBACK FUNCTION-->
+		<!-- TOGGLE CLAS FUNCTION-->
 		<span class="action-toggleclass" style="display:none;">	
 			<span class="rs-layer-toolbar-space"></span>
 			<span><?php _e("Class",'revslider'); ?></span>
@@ -3035,7 +3034,7 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 			<input type="text" style="width:100px;" class="<# if(data['edit'] == false){ #>rs_disabled_field <# } #>textbox-caption rs-layer-input-field"  name="<# if(data['edit'] == false){ #>no_<# } #>layer_toggleclass[]" value="{{ data['toggle_class'] }}">
 		</span>
 		
-		
+		<!-- Trigger States -->
 		<span class="action-triggerstates" style="display: none; white-space:nowrap">
 			<span class="rs-layer-toolbar-space"></span>
 			<span><?php _e("Animation Timing",'revslider'); ?></span>
@@ -3052,6 +3051,12 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 				<option value="reset"><?php _e("Reset Animation and Trigger States every loop",'revslider'); ?></option>
 				<option value="keep"><?php _e("Keep last selected State",'revslider'); ?></option>
 			</select>
+		</span>
+		<span class="action-delay-wrapper" style="display: none; white-space:nowrap">
+			<span class="rs-layer-toolbar-space"  style="width:30px"></span>
+			<span><?php _e("Delay",'revslider'); ?></span>
+			<span class="rs-layer-toolbar-space"></span>
+			<input type="text" style="width:60px;margin-top:-2px" class="<# if(data['edit'] == false){ #>rs_disabled_field <# } #>textbox-caption rs-layer-input-field" name="<# if(data['edit'] == false){ #>no_<# } #>layer_action_delay[]" value="{{ data['action_delay'] }}"> <?php _e('ms', 'revslider'); ?>
 		</span>
 	</li>
 </script>

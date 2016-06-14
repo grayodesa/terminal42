@@ -73,7 +73,7 @@
 				<span class="imgsrcchanger-div" style="margin-left:20px;">
 					<a href="javascript:void(0)" class="button-image-select-html5-video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
-				<span class="video_example"><?php _e('example', 'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.png</span>
+				<span class="video_example">&nbsp;</span>
 				
 		
 				<label><?php _e('Video MP4 Url', 'revslider'); ?></label>
@@ -81,21 +81,21 @@
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
 					<a href="javascript:void(0)" data-inptarget="html5_url_mp4" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
-				<span class="video_example"><?php _e("example",'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.mp4</span>
+				<span class="video_example"><?php _e("example",'revslider'); ?>: http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</span>
 		
 				<label><?php _e('Video WEBM Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_webm" name="html5_url_webm" value="">
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
 					<a href="javascript:void(0)" data-inptarget="html5_url_webm" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
-				<span class="video_example"><?php _e('example','revslider'); ?>: http://video-js.zencoder.com/oceans-clip.webm</span>
+				<span class="video_example"><?php _e('example','revslider'); ?>: http://clips.vorwaerts-gmbh.de/big_buck_bunny.webm</span>
 		
 				<label><?php _e('Video OGV Url', 'revslider'); ?></label>
 				<input style="width:330px" type="text" id="html5_url_ogv" name="html5_url_ogv" value="">
 				<span class="vidsrcchanger-div" style="margin-left:20px;">
 					<a href="javascript:void(0)" data-inptarget="html5_url_ogv" class="button_change_video button-primary revblue" ><?php _e('Choose from Library', 'revslider'); ?></a>
 				</span>
-				<span class="video_example"><?php _e('example', 'revslider'); ?>: http://video-js.zencoder.com/oceans-clip.ogv</span>
+				<span class="video_example"><?php _e('example', 'revslider'); ?>: http://clips.vorwaerts-gmbh.de/big_buck_bunny.ogv</span>
 				
 			</div>
 			
@@ -193,7 +193,17 @@
 			<div class="mb10">
 				<label for="input_video_control"><?php _e('Hide Controls:', 'revslider'); ?></label>
 				<input type="checkbox" class="checkbox_video_dialog tp-moderncheckbox" id="input_video_control" >
+				<span style="vertical-align:middle; margin-left:15px; display:none" class="description hidecontroldepend"><?php _e('Layer Action may needed to start/stop Video', 'revslider'); ?></span>
 			</div>
+
+			<script>
+				jQuery('#input_video_control').on('change',function() {
+					if (jQuery(this).attr('checked')==="checked") 
+						jQuery('.hidecontroldepend').show();
+					else
+						jQuery('.hidecontroldepend').hide();
+				})
+			</script>
 
 			<div class="mb10 rs-hide-on-audio">
 				<label for="input_video_mute"><?php _e('Mute:', 'revslider'); ?></label>

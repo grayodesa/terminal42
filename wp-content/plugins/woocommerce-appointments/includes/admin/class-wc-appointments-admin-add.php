@@ -109,7 +109,7 @@ class WC_Appointments_Admin_Add {
 				 	}
 
 				 	// Add line item meta
-				 	wc_add_order_item_meta( $item_id, '_qty', 1 );
+				 	wc_add_order_item_meta( $item_id, '_qty', $appointment_data['_qty'] ? $appointment_data['_qty'] : 1 );
 				 	wc_add_order_item_meta( $item_id, '_tax_class', $product->get_tax_class() );
 				 	wc_add_order_item_meta( $item_id, '_product_id', $product->id );
 				 	wc_add_order_item_meta( $item_id, '_variation_id', '' );

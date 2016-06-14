@@ -179,7 +179,6 @@ class App_MP_Bridge_Legacy {
 						$app_id = (int)trim( $app_id );
 						if ( $this->_core->change_status( 'paid', $app_id ) ) {
 							do_action( 'app_mp_order_paid', $app_id, $order ); // FIRST do the action
-							if (!empty($this->_core->options["send_confirmation"]) && 'yes' == $this->_core->options["send_confirmation"]) $this->_core->send_confirmation($app_id);
 						}
 					}
 				}
@@ -217,7 +216,7 @@ class App_MP_Bridge_Legacy {
 	function mp_product_list_meta( $meta, $post_id) {
 
 		if ( in_array( $post_id, $this->mp_posts ) )
-			return '<a class="mp_link_buynow" href="' . get_permalink($post_id) . '">' . __('Choose Option &raquo;', 'mp') . '</a>';
+			return '<a class="mp_link_buynow" href="' . get_permalink($post_id) . '">' . __('Choose Option &raquo;', 'appointments') . '</a>';
 		else
 			return	$meta;
 	}

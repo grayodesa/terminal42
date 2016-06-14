@@ -144,7 +144,7 @@
 		</div>
 	</td>
 	<td class="range_capacity">
-		<input type="number" name="wc_appointment_availability_qty[]" id="wc_appointment_availability_qty" value="<?php if ( isset( $availability['qty'] ) && ! empty( $availability['qty'] ) ) echo $availability['qty']; ?>" step="1" min="1" placeholder="<?php echo max( absint( get_post_meta( $post_id, '_wc_appointment_qty', true ) ), 1 );?>" style="width: 6em;">
+		<input type="number" name="wc_appointment_availability_qty[]" id="wc_appointment_availability_qty" value="<?php if ( isset( $availability['qty'] ) && ! empty( $availability['qty'] ) ) echo $availability['qty']; ?>" step="1" min="1" placeholder="1" style="width: 6em;">
 	</td>
 	<td class="range_appointable">
 		<div class="select">

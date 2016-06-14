@@ -39,20 +39,21 @@ class MC4WP_Logger {
 		// add listeners for core logging
 		add_action( 'mctb_subscribed', array( $this, 'log_top_bar_request' ), 10, 3 );
 		add_action( 'mc4wp_integration_subscribed', array( $this, 'log_integration_request' ), 10, 4 );
-		add_action( 'mc4wp_form_subscribed', array( $this, 'log_form_request' ) );
+		add_action( 'mc4wp_form_subscribed', array( $this, 'log_form_request' ), 10, 3 );
 	}
 
 	/**
 	 * @param string $list
 	 * @param string $email
-	 * @param string $fields
+	 * @param string $merge_vars
+	 *
 	 * @return int
 	 */
-	public function log_top_bar_request( $list, $email, $fields ) {
+	public function log_top_bar_request( $list, $email, $merge_vars ) {
 		return $this->add(
 			$email,
 			$list,
-			$fields,
+			$merge_vars,
 			'mc4wp-top-bar',
 			null,
 			MC4WP_Request::create_from_globals()->get_referer()
@@ -62,16 +63,16 @@ class MC4WP_Logger {
 	/**
 	 * @param MC4WP_Integration $integration
 	 * @param string $email
-	 * @param array $data
+	 * @param array $merge_vars
 	 * @param int $related_object_id
 	 *
 	 * @return false|int
 	 */
-	public function log_integration_request( MC4WP_Integration $integration, $email, $data, $related_object_id = 0 ) {
+	public function log_integration_request( MC4WP_Integration $integration, $email, $merge_vars, $related_object_id = 0 ) {
 		return $this->add(
 			$email,
 			$integration->get_lists(),
-			$data,
+			$merge_vars,
 			$integration->slug,
 			$related_object_id,
 			MC4WP_Request::create_from_globals()->get_referer()
@@ -80,16 +81,25 @@ class MC4WP_Logger {
 
 	/**
 	 * @param MC4WP_Form $form
+	 * @param string $email
+	 * @param array $merge_vars
 	 *
 	 * @return false|int
 	 */
-	public function log_form_request( MC4WP_Form $form ) {
-		$data = $form->data;
-		unset( $data['EMAIL'] );
+	public function log_form_request( MC4WP_Form $form, $email, $merge_vars ) {
+
+		// for BC with MailChimp for WordPress < 3.1.6
+		if( is_array( $email ) ) {
+			$merge_vars = $email;
+			$email = $form->data['EMAIL'];
+		}
+		unset( $merge_vars['EMAIL'] );
+		unset( $merge_vars['_MC4WP_LISTS'] );
+
 		return $this->add(
-			$form->data['EMAIL'],
+			$email,
 			$form->get_lists(),
-			$data,
+			$merge_vars,
 			'mc4wp-form',
 			$form->ID,
 			MC4WP_Request::create_from_globals()->get_referer()
@@ -163,7 +173,7 @@ class MC4WP_Logger {
 		$params = array();
 
 		// build general select from query
-		$query = sprintf( "SELECT %s FROM `%s`", $args['select'], $this->table_name );
+		$query = sprintf( "SELECT %s FROM %s", $args['select'], $this->table_name );
 
 		// add email to WHERE clause
 		if ( '' !== $args['email'] ) {
@@ -179,13 +189,15 @@ class MC4WP_Logger {
 
 		// add datetime to WHERE clause
 		if( '' !== $args['datetime_after'] ) {
-			$where[] = 'datetime >= %s';
-			$params[] = $args['datetime_after'];
+			$where[] = 'UNIX_TIMESTAMP(datetime) >= %d';
+			$datetime_after = is_numeric( $args['datetime_after'] ) ? $args['datetime_after'] : strtotime( $args['datetime_after'] );
+			$params[] = $datetime_after;
 		}
 
 		if( '' !== $args['datetime_before'] ) {
-			$where[] = 'datetime <= %s';
-			$params[] = $args['datetime_before'];
+			$where[] = 'UNIX_TIMESTAMP(datetime) <= %d';
+			$datetime_before = is_numeric( $args['datetime_before'] ) ? $args['datetime_before'] : strtotime( $args['datetime_before'] );
+			$params[] = $datetime_before;
 		}
 
 		// add where parameters
@@ -216,7 +228,7 @@ class MC4WP_Logger {
 		$args['order'] = preg_replace( "/[^a-zA-Z]/", "", $args['order'] );
 
 		// add ORDER BY, OFFSET and LIMIT to SQL
-		$query .= sprintf( ' ORDER BY `%s` %s LIMIT %d, %d', $args['orderby'], $args['order'], $args['offset'], $args['limit'] );
+		$query .= sprintf( ' ORDER BY %s %s LIMIT %d, %d', $args['orderby'], $args['order'], $args['offset'], $args['limit'] );
 
 		return $this->db->get_results( $query, $output_type );
 	}
@@ -264,6 +276,7 @@ class MC4WP_Logger {
 		$sql = sprintf( "DELETE FROM `%s` WHERE ID IN (%s)", $this->table_name, $ids );
 		return $this->db->query( $sql );
 	}
+
 
 
 }

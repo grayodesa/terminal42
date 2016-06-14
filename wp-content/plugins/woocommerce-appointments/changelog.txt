@@ -1,5 +1,60 @@
 *** WooCommerce Appointments Changelog ***
 
+2016.04.22 - version 1.8.4
+* Improved - Cache appointment objects in appointment's controller.
+* Improved - Google calendar sync now works better for all statuses. Sync appointment when appointment is edited from edit appointment screen.
+* Improved - Use WC logging mechanism, especially when appointment is added to or removed from cart.
+* Fix - Make sure appointment costs that span beyond end of the year are supported.
+* Fix - Staff availability is now displayed correctly.
+* Fix - Add a false value if order_ids return empty during search. This fixes issue of SQL syntax error when searching in Appointments.
+* Fix - Limit status changes to only affect qualifying appointments. This should prevents status updated to 'was-in-cart' issue.
+* Fix - Set default staff availability quantity to 1 which fixes issue of a product with staff is not appointable.
+* Fix - Construct Date-object from UTC to ignore browser's TZ and incorrect calculated duration on particular timezones.
+* Fix - Check automatic staff assignments on each date to make sure a fully scheduled date is not available instead of partially scheduled.
+* Fix - Use admin_url instead of WC()->ajax_url() for ajax_url in class-wc-appointment-form.php WC()->ajax_url() uses relative scheme that might cause if fronted site is SSL'ed.
+* Fix - Reset tags on email body before each trigger which fixes tag placeholders. were not substituted properly.
+* Fix - Removed deprecated args causing notices displayed in confirmation email.
+
+2016.04.19 - version 1.8.3
+* Fix - https://bitbucket.org/bizzthemes/woocommerce-appointments/issues/11/admin-calendar-bug
+
+2016.04.18 - version 1.8.2
+* Feature - Added Hebrew language support
+* Improved - Added 'woocommerce_appointments_calendar_view' filter that allows setting default calendar view to 'day'
+* Improved - Updated Product add-ons to 2.7.17
+* Fix - Addon total now displays again
+* Fix - https://bizzthemes.com/forums/topic/time-slot-gone-after-1-booking-but-capacity-is-80/
+* Fix - Qty display for appointments in admin
+
+2016.03.30 - version 1.8.1
+* Improved - Product Add-ons intergration updated to 2.7.16
+* Fix - Capacity checking for daily appointments
+* Fix - https://bitbucket.org/bizzthemes/woocommerce-appointments/issues/1/wrong-z-index-lightbox-and-select-input
+* Improved - Select2 library updated from RC1 to 4.0.2
+* Improved - Linted all JS files
+
+2016.03.25 - version 1.8.0
+* Improved - Added option for quantity inside Add appointment in admin screen
+* Improved - Localized admin calendar inside appointment edit screen
+* Improved - Appointments statuses now available for translation
+* Improved - Color palette resembles that from latest WooCommerce version
+* Feature - Pricing rule for quantity scheduled
+* Feature - Added support for padding days, not just padding hours
+* Experimental - Show discounts for each day in calendar with 'add_theme_support( 'woocomerce-appointments-show-discounted-slots' );' added to your theme
+* Fix - Appointment with guest checkouts now list 'Guest' on the list of appointments
+
+2016.03.22 - version 1.7.9
+* Fix - Undefined notice for global availability settings
+* Fix - Availability rule order now correct global > product > staff
+* Fix - Previous day was highlighted
+* Fix - Dates that are not available are now disabled
+* Improved - Appointable product page load speed increased
+* Improved - Add-on price symbol now wrapped in span with class name "amount-symbol"
+* Feature - Allow multiple appointments per staff at one time
+
+2016.02.29 - version 1.7.8
+* Fix - https://bizzthemes.com/forums/topic/admin-calendar-tooltips-are-gone-with-last-update/
+
 2016.02.27 - version 1.7.7
 * Feature - Staff notification emails
 * Improved - Added margin below email notification table for better styling
@@ -7,7 +62,7 @@
 2016.02.27 - version 1.7.6
 * Improved - Calendar font now inherits body font
 * Improved - Calendar day columns now have the same width
-* Improved - Select2 library updated to 4.0.2
+* Improved - Select2 library updated to 4.0.2-RC1
 
 2016.02.24 - version 1.7.5
 * Fix - PHP Notice:  Trying to get property of non-object in \\includes\\class-wc-appointment.php on line 566

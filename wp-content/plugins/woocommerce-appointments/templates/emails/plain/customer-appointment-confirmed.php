@@ -42,13 +42,13 @@ if ( $order = $appointment->get_order() ) {
 
 	switch ( $order->status ) {
 		case "completed" :
-			echo $order->email_order_items_table( $order->is_download_permitted(), false, true, '', '', true );
+			echo $order->email_order_items_table( array( 'show_sku' => false, 'plain_text' => true ) );
 		break;
 		case "processing" :
-			echo $order->email_order_items_table( $order->is_download_permitted(), true, true, '', '', true );
+			echo $order->email_order_items_table( array( 'show_sku' => true, 'plain_text' => true ) );
 		break;
 		default :
-			echo $order->email_order_items_table( $order->is_download_permitted(), true, false, '', '', true );
+			echo $order->email_order_items_table( array( 'show_sku' => true, 'plain_text' => true ) );
 		break;
 	}
 

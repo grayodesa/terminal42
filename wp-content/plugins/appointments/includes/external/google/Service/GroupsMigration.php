@@ -94,7 +94,7 @@ class Google_Service_GroupsMigration_Archive_Resource extends Google_Service_Res
   {
     $params = array('groupId' => $groupId);
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_GroupsMigration_Groups");	       	 	   							
+    return $this->call('insert', array($params), "Google_Service_GroupsMigration_Groups");
   }
 }
 

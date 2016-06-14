@@ -88,6 +88,13 @@ var RevSliderAdmin = new function(){
 			jQuery('.rs-hide-on-fixed').show();
 		}
 		
+		if(textMode == 'full'){
+			jQuery('.rs-show-on-auto').toggle(100);
+			jQuery('.rs-show-on-auto').show(100);
+		}else{
+			jQuery('.rs-show-on-auto').toggle(100);
+			jQuery('.rs-show-on-auto').hide(100);
+		}
 		if(enableFullScreen){
 			jQuery('.rs-show-on-fullscreen').show();
 			jQuery('.rs-hide-on-fullscreen').hide();
@@ -1054,11 +1061,41 @@ var RevSliderAdmin = new function(){
 							
 							jQuery(this).dialog("close");
 						}else{
-							alert(rev_lang.this_feature_only_if_activated);
+							jQuery('#regsiter-to-access-store-none').click();
 						}
 					}
 				}
 			});
+			
+			jQuery('#close-template').click();
+			return false;
+		});
+		
+		
+		
+		jQuery('body').on('click', '.template_slider_item_reimport_package, .install_template_slider_package', function(){
+			
+			if(jQuery(this).hasClass('deny_download')){
+				alert(rev_lang.this_template_requires_version+' '+jQuery(this).data('versionneed')+' '+rev_lang.of_slider_revolution);
+				return false;
+			}
+			
+			//modify the dialog with some informations 
+			jQuery('.rs-zip-name').text(jQuery(this).data('zipname'));
+			jQuery('.rs-uid').val(jQuery(this).data('uid'));
+			jQuery('.rs-package').val('true'); //set that the package needs to be installed
+			
+			if(rs_plugin_validated){
+				//show please wait
+				showWaitAMinute({fadeIn:300,text:rev_lang.please_wait_a_moment});
+				
+				//get from server
+				jQuery('#rs-import-template-from-server').submit();
+			}else{
+				alert(rev_lang.this_feature_only_if_activated);
+			}
+			
+			jQuery('.rs-package').val('false');
 			
 			jQuery('#close-template').click();
 			return false;
@@ -1091,6 +1128,39 @@ var RevSliderAdmin = new function(){
 						if(jQuery('#rs-duplicate-animation').val() == '') return false;
 						
 						UniteAdminRev.ajaxRequest('duplicate_slider', {sliderid:slider_id,title:jQuery('#rs-duplicate-animation').val()}, function(response){
+							jQuery('#close-template').click();
+						});
+					}
+				}
+			});
+		});
+		
+		
+		/**
+		 * add Template Slider Pack
+		 **/
+		jQuery('body').on('click', '.add_template_slider_item_package', function(){
+			var uid = jQuery(this).data('uid');
+			
+			jQuery('#dialog_duplicate_slider_package').dialog({
+				modal:true,
+				resizable:false,
+				title:'Import Package',
+				width:250,
+				height:200,
+				closeOnEscape:true,
+				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
+				buttons:{
+					'Close':function(){
+						jQuery(this).dialog("close");
+					},
+					'Import Package':function(){
+						if(jQuery('#rs-duplicate-prefix').val() == '') return false;
+						
+						UniteAdminRev.ajaxRequest('duplicate_slider_package', {slideruid:uid,title:jQuery('#rs-duplicate-prefix').val()}, function(response){
 							jQuery('#close-template').click();
 						});
 					}

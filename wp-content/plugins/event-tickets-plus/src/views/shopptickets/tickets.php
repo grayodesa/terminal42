@@ -1,4 +1,10 @@
 <?php
+/**
+ * Renders the Shopp tickets table/form
+ *
+ * @version 4.1
+ *
+ */
 $is_there_any_product         = false;
 $is_there_any_product_to_sell = false;
 
@@ -18,7 +24,7 @@ ob_start();
 				echo sprintf( '<input type="hidden" name="product_id[]" value="%d">', esc_attr( $ticket->ID ) );
 
 				echo '<tr>';
-				echo '<td width="75" class="shopp">';
+				echo '<td width="75" class="shopp quantity" data-product-id="' . esc_attr( $ticket->ID ) . '">';
 
 				if ( $in_stock ) {
 
@@ -54,6 +60,18 @@ ob_start();
 				echo '</td>';
 
 				echo '</tr>';
+
+				echo
+					'<tr class="tribe-tickets-attendees-list-optout">' .
+						'<td colspan="4">' .
+							'<input type="checkbox" name="tribe_shopp_optout" id="tribe-tickets-attendees-list-optout-shopp">' .
+							'<label for="tribe-tickets-attendees-list-optout-shopp">' .
+								esc_html__( 'Don\'t list me on the public attendee list', 'event-tickets' ) .
+							'</label>' .
+						'</td>' .
+					'</tr>';
+
+				include dirname( __FILE__ ) . '/../meta.php';
 			}
 		}
 

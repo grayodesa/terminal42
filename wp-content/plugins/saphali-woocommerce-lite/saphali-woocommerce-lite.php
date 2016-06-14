@@ -3,7 +3,7 @@
 Plugin Name: Saphali Woocommerce Russian
 Plugin URI: http://saphali.com/saphali-woocommerce-plugin-wordpress
 Description: Saphali Woocommerce Russian - это бесплатный вордпресс плагин, который добавляет набор дополнений к интернет-магазину на Woocommerce.
-Version: 1.6.0
+Version: 1.6.4
 Author: Saphali
 Author URI: http://saphali.com/
 Text Domain: saphali-woocommerce-lite
@@ -28,20 +28,19 @@ Domain Path: /languages
 
  */
 
-
 /* Add a custom payment class to woocommerce
   ------------------------------------------------------------ */
   define('SAPHALI_LITE_SYMBOL', 1 );
   
   // Подключение валюты и локализации
  define('SAPHALI_PLUGIN_DIR_URL',plugin_dir_url(__FILE__));
- define('SAPHALI_LITE_VERSION', '1.6.0' );
+ define('SAPHALI_LITE_VERSION', '1.6.4' );
  define('SAPHALI_PLUGIN_DIR_PATH',plugin_dir_path(__FILE__));
  class saphali_lite {
  var $email_order_id;
  var $column_count_saphali;
 	function __construct() {
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.2.0', '<' ) )
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.2.0', '<' ) || version_compare( WOOCOMMERCE_VERSION, '2.5.0', '>' ) )
 		add_action('before_woocommerce_init', array($this,'load_plugin_textdomain'), 9);
 	else
 		add_action('before_woocommerce_init', array($this,'load_plugin_textdomain_th'), 9);
@@ -77,14 +76,14 @@ Domain Path: /languages
 			add_action('admin_init', array($this,'woocommerce_customer_meta_fields_action'), 20);
 			add_action( 'personal_options_update', array($this,'woocommerce_save_customer_meta_fields_saphali') );
 			add_action( 'edit_user_profile_update', array($this,'woocommerce_save_customer_meta_fields_saphali') );
-			add_action( 'woocommerce_admin_order_data_after_billing_address', array($this,'woocommerce_admin_order_data_after_billing_address_s') );
-			add_action( 'woocommerce_admin_order_data_after_shipping_address', array($this,'woocommerce_admin_order_data_after_shipping_address_s') );
+			/* add_action( 'woocommerce_admin_order_data_after_billing_address', array($this,'woocommerce_admin_order_data_after_billing_address_s') );
+			add_action( 'woocommerce_admin_order_data_after_shipping_address', array($this,'woocommerce_admin_order_data_after_shipping_address_s') ); */
 			add_action( 'woocommerce_admin_order_data_after_order_details', array($this,'woocommerce_admin_order_data_after_order_details_s') );
 		
 		}
 		add_filter( 'woocommerce_currencies',  array($this,'add_inr_currency') , 11);
 		add_filter( 'woocommerce_currency_symbol',  array($this,'add_inr_currency_symbol') , 1, 2 ); 
-		add_action( 'woocommerce_checkout_update_order_meta',   array( $this, 'checkout_update_order_meta' ), 10, 2 );
+		add_action( 'woocommerce_checkout_update_order_meta',   array( $this, 'checkout_update_order_meta' ), 99, 2 );
 		$this->column_count_saphali = get_option('column_count_saphali');
 		if(!empty($this->column_count_saphali)) {
 			global $woocommerce_loop;
@@ -93,7 +92,101 @@ Domain Path: /languages
 			add_filter("loop_shop_columns", array($this, 'print_columns'), 10, 1);
 			add_filter("woocommerce_output_related_products_args", array($this, 'related_print_columns'), 10, 1);
 		}
+		if(is_admin()) {
+			add_filter( 'woocommerce_admin_billing_fields', array($this,'woocommerce_admin_billing_fields'), 10, 1 );
+			add_filter( 'woocommerce_admin_shipping_fields', array($this,'woocommerce_admin_shipping_fields'), 10, 1 );
+		}
 	}
+	function formatted_billing_address($address, $order) {
+		$billing_data = $this->woocommerce_get_customer_meta_fields_saphali();
+		foreach ( array("billing") as $type )
+		{
+			if ( isset($billing_data[$type]) && is_array($billing_data[$type]))
+			{
+				foreach ( $billing_data[$type] as $key => $field ) {
+					
+					if (isset($field['public']) && $field['public'] ) {
+						$address[str_replace($type . '_', '', $key)] = get_post_meta( $order->id, '_' . $key, true );
+						if( !empty($address[str_replace($type . '_', '', $key)]) && ( strpos($key, 'new_fild') !== false) )
+						echo  '<label><strong>'. $field['label']. ':</strong></label> ' . $address[str_replace($type . '_', '', $key)].'<br />';
+					}
+				}
+			}
+		}
+		return($address);
+	}
+	function formatted_shipping_address($address, $order) {
+		$billing_data = $this->woocommerce_get_customer_meta_fields_saphali();
+		if(is_array($billing_data["order"])) {
+			foreach ( $billing_data["order"] as $key => $field ) {
+				if (isset($field['show']) && !$field['show'] || $key == 'order_comments') continue;
+				$address[ str_replace('order_', '', $key) ] = get_post_meta( $order->id, '_' . $key, true );
+				if( !empty($address[ str_replace('order_', '', $key) ]) && ( strpos($key, 'new_fild') === false) )
+						echo  '<label><strong>'. $field['label']. ':</strong></label> ' . $address[ str_replace('order_', '', $key) ] . '<br />';
+			}
+		}
+		foreach ( array( "shipping") as $type )
+		{
+			if ( isset($billing_data[$type]) && is_array($billing_data[$type]))
+			{
+				foreach ( $billing_data[$type] as $key => $field ) {
+					
+					if (isset($field['public']) && $field['public'] ) {
+						$address[str_replace($type . '_', '', $key)] = get_post_meta( $order->id, '_' . $key, true );
+						if( !empty($address[str_replace($type . '_', '', $key)]) && ( strpos($key, 'new_fild') === false) ) {
+							echo  '<label><strong>'. $field['label']. ':</strong></label> ' . $address[str_replace($type . '_', '', $key)].'<br />';						}
+						
+					}
+				}
+			}
+		}
+		return($address);
+	}
+	function woocommerce_admin_billing_fields($billing_fields) {
+		if ( !version_compare( WOOCOMMERCE_VERSION, '2.1.0', '<' ) ) {
+			$billing_data = $this->woocommerce_get_customer_meta_fields_saphali();
+			if(is_array($billing_data["billing"])) {
+				foreach ( $billing_data["billing"] as $key => $field ) {
+					$key = str_replace('billing_', '', $key);
+					if (isset($field['show']) && !$field['show'] || $key == 'order_comments') continue;
+					if( strpos($key, 'new_fild') === false)
+					$billing_fields[$key] = array(
+						'label' =>  $field['label'],
+						'show'	=> false
+					);
+					else
+					$billing_fields[$key] = array(
+						'label' =>  $field['label'],
+						'show'	=> true
+					);
+				}
+			}
+		}
+		return $billing_fields;
+	}
+	function woocommerce_admin_shipping_fields($shipping_fields) {
+		if ( !version_compare( WOOCOMMERCE_VERSION, '2.1.0', '<' ) ) {
+			$shipping_data = $this->woocommerce_get_customer_meta_fields_saphali();
+			if(is_array($shipping_data["shipping"])) {
+				foreach ( $shipping_data["shipping"] as $key => $field ) {
+					$key = str_replace('shipping_', '', $key);
+					if (isset($field['show']) && !$field['show'] || $key == 'order_comments') continue;
+					if( strpos($key, 'new_fild') === false)
+					 $shipping_fields[$key] = array(
+						'label' =>  $field['label'],
+						'show'	=> false
+					);
+					else
+					 $shipping_fields[$key] = array(
+						'label' =>  $field['label'],
+						'show'	=> true
+					);
+				}
+			}
+		}
+		return $shipping_fields;
+	}
+	
 	public function wp( ) {
 		if(function_exists('wc_edit_address_i18n')){
 			global $wp;
@@ -107,21 +200,18 @@ Domain Path: /languages
 			if(is_array($billing_data["order"])) {
 				foreach ( $billing_data["order"] as $key => $field ) {
 					if (isset($field['show']) && !$field['show'] || $key == 'order_comments') continue;
-					if(!empty($posted[$key]))
-						if(!update_post_meta( $order_id, '_' . $key, $posted[$key] )) add_post_meta( $order_id, '_' . $key, $posted[$key] );
+					if(!empty($_POST[$key]))
+						update_post_meta( $order_id, '_' . $key, $_POST[$key] );
 				}
 			}
-		}
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.2.0', '>=' ) && version_compare( WOOCOMMERCE_VERSION, '2.2.2', '<=' ) )
-		{
-			$billing_data = $this->woocommerce_get_customer_meta_fields_saphali();
 			foreach ( array("billing", "shipping") as $type )
 			{
-				if (isset($billing_data[$type]) && is_array($billing_data[$type]))
+				if ( isset($billing_data[$type]) && is_array($billing_data[$type]))
 				{
 					foreach ( $billing_data[$type] as $key => $field ) {
-						if (isset($field['public']) && $field['public'] && !empty($posted[$key])) {
-							if(!update_post_meta( $order_id, '_' . $key, $posted[$key] )) add_post_meta( $order_id, '_' . $key, $posted[$key] );
+						
+						if (isset($field['public']) && $field['public'] && !empty($_POST[$key])) {
+							update_post_meta( $order_id, '_' . $key, $_POST[$key] );
 						}
 					}
 				}
@@ -232,7 +322,8 @@ Domain Path: /languages
 		$currencies['RUR'] = __( 'Russian ruble', 'saphali-woocommerce-lite' );
 		if( version_compare( WOOCOMMERCE_VERSION, '2.5.2', '<' ) || SAPHALI_LITE_SYMBOL )
 		$currencies['RUB'] = __( 'Russian ruble', 'saphali-woocommerce-lite' );
-		$currencies['BYR'] = __( 'Belarusian ruble', 'saphali-woocommerce-lite' );
+		$currencies['BYN'] = sprintf(__( 'Belarusian ruble%s', 'saphali-woocommerce-lite' ), __(' (new)', 'saphali-woocommerce-lite'));
+		$currencies['BYR'] = sprintf(__( 'Belarusian ruble%s', 'saphali-woocommerce-lite' ), '');
 		$currencies['AMD'] = __( 'Armenian dram  (Դրամ)', 'saphali-woocommerce-lite' );
 		$currencies['KGS'] = __( 'Киргизский сом', 'saphali-woocommerce-lite' );
 		$currencies['KZT'] = __( 'Казахстанский тенге ', 'saphali-woocommerce-lite' );
@@ -249,6 +340,7 @@ Domain Path: /languages
 				case 'UAH': $symbol = '&#x433;&#x440;&#x43D;.'; break;
 				case 'RUB': $symbol = '<span class=rur >&#x440;<span>&#x443;&#x431;.</span></span>'; break;
 				case 'RUR': $symbol = '&#x440;&#x443;&#x431;.'; break;
+				case 'BYN': $symbol = '&#x440;&#x443;&#x431;.'; break;
 				case 'BYR': $symbol = '&#x440;&#x443;&#x431;.'; break;
 				case 'AMD': $symbol = '&#x534;'; break;
 				case 'KGS': $symbol = 'сом'; break;
@@ -260,6 +352,7 @@ Domain Path: /languages
 			switch( $currency ) {
 				case 'UAH': $symbol = '&#x433;&#x440;&#x43D;.'; break;
 				case 'RUR': $symbol = '&#x440;&#x443;&#x431;.'; break;
+				case 'BYN': $symbol = '&#x440;&#x443;&#x431;.'; break;
 				case 'BYR': $symbol = '&#x440;&#x443;&#x431;.'; break;
 				case 'AMD': $symbol = '&#x534;'; break;
 				case 'KGS': $symbol = 'сом'; break;
@@ -1116,7 +1209,13 @@ Domain Path: /languages
 			$fields["shipping"] = $fieldss["shipping"];
 			$fields["order"] = $fieldss["order"];
 		}
-
+		foreach(array("billing", "shipping", "order") as $v)
+		foreach($fields[$v] as $key => $value) {
+			if(isset($fields[$v][$key]["label"]))
+			$fields[$v][$key]["label"] = __($value["label"], 'woocommerce');
+			if(isset($fields[$v][$key]["placeholder"]))
+			$fields[$v][$key]["placeholder"] = __($value["placeholder"], 'saphali-woocommerce-lite');
+		}
 		 return $fields;
 	}
 	function saphali_custom_edit_address_fields( $fields ) {
@@ -1131,7 +1230,12 @@ Domain Path: /languages
 			$_a_ = array_diff_assoc ($__fields, $fields);
 			if(is_array($_a_) && is_array($fields) ) $fields = (array)$fields + (array)$_a_;
 		}
-	
+		foreach($fields as $key => $value) {
+			if(isset($fields[$key]["label"]))
+			$fields[$key]["label"] = __($value["label"], 'woocommerce');
+			if(isset($fields[$key]["placeholder"]))
+			$fields[$key]["placeholder"] = __($value["placeholder"], 'woocommerce');
+		}
 		return $fields;
 	}
 	function saphali_custom_billing_fields( $fields ) {
@@ -1139,14 +1243,26 @@ Domain Path: /languages
 		$fieldss = get_option('woocommerce_saphali_filds_filters');
 		if(is_array($fieldss))
  		$fields = $fieldss["billing"];
-
-		 return $fields;
+		foreach($fields as $key => $value) {
+			if(isset($fields[$key]["label"]))
+			$fields[$key]["label"] = __($value["label"], 'woocommerce');
+			if(isset($fields[$key]["placeholder"]))
+			$fields[$key]["placeholder"] = __($value["placeholder"], 'woocommerce');
+			
+		}
+		return $fields;
 	}
 	function saphali_custom_shipping_fields( $fields ) {
 		$fieldss = get_option('woocommerce_saphali_filds_filters');
 		if(is_array($fieldss))
 		$fields = $fieldss["shipping"];
-		 return $fields;
+		foreach($fields as $key => $value) {
+			if(isset($fields[$key]["label"]))
+			$fields[$key]["label"] = __($value["label"], 'woocommerce');
+			if(isset($fields[$key]["placeholder"]))
+			$fields[$key]["placeholder"] = __($value["placeholder"], 'woocommerce');
+		}
+		return $fields;
 	}
 	public function store_order_id( $arg ) {
 		if ( is_int( $arg ) ) $this->email_order_id = $arg;
@@ -1200,7 +1316,7 @@ Domain Path: /languages
 			echo '</div>';
 		}
 	}
-	function formatted_billing_address($address, $order) {
+	/* function formatted_billing_address($address, $order) {
 		global $billing_data, $_billing_data;
 		if( empty($billing_data) )
 			$billing_data = $this->woocommerce_get_customer_meta_fields_saphali();
@@ -1221,7 +1337,7 @@ Domain Path: /languages
 			endforeach;
 		}
 		return $address;
-	}
+	} 
 	function formatted_shipping_address($address, $order) {
 	global $billing_data, $_shipping_data;
 	if( empty($billing_data) )
@@ -1241,7 +1357,7 @@ Domain Path: /languages
 			endforeach;
 		}
 		return $address;
-	}
+	}*/
 	function order_pickup_location($order_id) {
 		global $_billing_data, $_shipping_data;
 		$order = new WC_Order( $order_id );
@@ -1322,16 +1438,24 @@ if ( ! function_exists( 'woocommerce_lang_s_l' ) ) {
 	}
 }
 //END
-
-add_action("wp_head", '_print_script_columns', 10, 1);
+add_action("wp_head", '_print_script_columns', 10 );
+add_action("admin_head", '_print_script_columns', 10);
 function _print_script_columns() {
 		if(apply_filters( 'woocommerce_currency', get_option('woocommerce_currency') ) != 'RUB' || !(version_compare( WOOCOMMERCE_VERSION, '2.5.2', '<' ) || SAPHALI_LITE_SYMBOL ) ) return;
 		?>
 	<style type="text/css">
-		@font-face { font-family: "Rubl Sign"; src: url(<?php echo SAPHALI_PLUGIN_DIR_URL; ?>ruble.eot); }
-		span.rur { font-family: "Rubl Sign"; text-transform: uppercase;}    
-		span.rur span { position: absolute; overflow: hidden; width: .45em; height: 1em; margin: .2ex 0 0 -.55em; }
-		span.rur span:before { content: '\2013'; }
+		/* @font-face { font-family: "Rubl Sign"; src: url(<?php echo SAPHALI_PLUGIN_DIR_URL; ?>ruble.eot); } */
+		
+		@font-face { font-family: "rub-arial-regular"; src: url("<?php echo SAPHALI_PLUGIN_DIR_URL; ?>ruble-simb.woff"), url("<?php echo SAPHALI_PLUGIN_DIR_URL; ?>ruble-simb.ttf");
+		}
+		span.rur {
+			font-family: rub-arial-regular;
+			text-transform: uppercase;
+		}
+		span.rur span { display: none; }
+
+		/* span.rur { font-family: "Rubl Sign"; text-transform: uppercase;}
+		span.rur:before {top: 0.06em;left: 0.55em;content: '\2013'; position: relative;} */
 	</style>
 		<?php
 }

@@ -95,6 +95,30 @@ class WC_Email_Appointment_Notification extends WC_Email {
 
 		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $attachments );
 	}
+	
+	/**
+	 * Reset tags for find/replace in notification message.
+	 *
+	 * @return void
+	 */
+	public function reset_tags() {
+		$tags = array(
+			'product_title',
+			'order_data',
+			'order_number',
+			'customer_name',
+			'customer_first_name',
+			'customer_last_name',
+		);
+
+		foreach ( $tags as $tag ) {
+			$key = array_search( '{' . $tag . '}', $this->find );
+			if ( false !== $key ) {
+				unset( $this->find[ $key ] );
+				unset( $this->replace[ $key ] );
+			}
+		}
+	}
 
 	/**
 	 * get_content_html function.

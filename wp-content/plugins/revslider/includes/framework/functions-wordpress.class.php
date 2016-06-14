@@ -7,7 +7,7 @@
 
 if( !defined( 'ABSPATH') ) exit();
 
-class RevSliderFunctionsWP{
+class RevSliderFunctionsWP {
 
 	public static $urlSite;
 	public static $urlAdmin;
@@ -1208,6 +1208,15 @@ class RevSliderFunctionsWP{
 		return $attachment_id;
 	}
 	
+	
+	public static function update_option($handle, $value, $autoload = 'on'){ //on is on, false is 'off'
+		
+		if(!add_option($handle, $value, '', $autoload)){ //returns false if option is not existing
+			delete_option($handle);
+		}
+		
+		add_option($handle, $value, '', $autoload);
+	}
 	
 }	//end of the class
 

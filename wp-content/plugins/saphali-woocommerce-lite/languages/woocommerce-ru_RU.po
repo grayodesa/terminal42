@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Lite|Standard v2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-04-27 08:46+0700\n"
+"PO-Revision-Date: 2016-04-22 05:51+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -14,10 +14,10 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
 "X-Poedit-KeywordsList: __;_e;_x;_n;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
-"X-Poedit-Basepath: ../\n"
+"X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
 "Language: ru\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # @ woocommerce
@@ -85,6 +85,10 @@ msgstr "ДлинаxШиринаxВысота в десятичном форма�
 #: functions.php:40
 msgid "Taxes"
 msgstr "Налоги"
+
+#: templates/single-product/add-to-cart/variable.php:42
+msgid "Clear"
+msgstr "Сбросить"
 
 # @ woocommerce
 #: functions.php:40
@@ -408,8 +412,7 @@ msgid "Taxes by month"
 msgstr "Налоги за месяц"
 
 # @ woocommerce
-#: admin/woocommerce-admin-reports.php:353
-#: admin/woocommerce-admin-reports.php:620
+#: admin/woocommerce-admin-reports.php:353 admin/woocommerce-admin-reports.php:620
 #: admin/woocommerce-admin-reports.php:800
 msgid "items"
 msgstr "позиций"
@@ -422,19 +425,15 @@ msgstr "Продажи %s:"
 
 # @ woocommerce
 #: admin/woocommerce-admin-dashboard.php:394
-#: admin/woocommerce-admin-reports.php:193
-#: admin/woocommerce-admin-reports.php:482
-#: admin/woocommerce-admin-reports.php:673
-#: admin/woocommerce-admin-reports.php:850
+#: admin/woocommerce-admin-reports.php:193 admin/woocommerce-admin-reports.php:482
+#: admin/woocommerce-admin-reports.php:673 admin/woocommerce-admin-reports.php:850
 msgid "Number of sales"
 msgstr "Число продаж"
 
 # @ woocommerce
 #: admin/woocommerce-admin-dashboard.php:395
-#: admin/woocommerce-admin-reports.php:188
-#: admin/woocommerce-admin-reports.php:482
-#: admin/woocommerce-admin-reports.php:673
-#: admin/woocommerce-admin-reports.php:850
+#: admin/woocommerce-admin-reports.php:188 admin/woocommerce-admin-reports.php:482
+#: admin/woocommerce-admin-reports.php:673 admin/woocommerce-admin-reports.php:850
 msgid "Sales amount"
 msgstr "Сумма продажи"
 
@@ -735,8 +734,7 @@ msgid "verified owner"
 msgstr "владелец товара"
 
 # @ woocommerce
-#: admin/woocommerce-admin-reports.php:606
-#: admin/woocommerce-admin-reports.php:941
+#: admin/woocommerce-admin-reports.php:606 admin/woocommerce-admin-reports.php:941
 #: admin/woocommerce-admin-reports.php:1038
 msgid "To:"
 msgstr "До:"
@@ -1924,8 +1922,7 @@ msgstr[2] "Свойств"
 
 # @ woocommerce
 #: admin/post-types/writepanels/writepanel-product_data.php:77
-#: admin/woocommerce-admin-content.php:44
-#: admin/woocommerce-admin-settings.php:180
+#: admin/woocommerce-admin-content.php:44 admin/woocommerce-admin-settings.php:180
 msgid "General"
 msgstr "Общие"
 
@@ -3352,8 +3349,7 @@ msgstr "Каталог &amp; поиск"
 # @ woocommerce
 #: admin/post-types/product.php:619 admin/post-types/product.php:892
 #: admin/post-types/writepanels/writepanel-product_data.php:1029
-#: admin/woocommerce-admin-content.php:46
-#: admin/woocommerce-admin-settings.php:181
+#: admin/woocommerce-admin-content.php:46 admin/woocommerce-admin-settings.php:181
 msgid "Catalog"
 msgstr "Каталог"
 
@@ -4072,8 +4068,8 @@ msgstr "Адрес 2"
 #: admin/post-types/writepanels/writepanel-order_data.php:164
 #: admin/post-types/writepanels/writepanel-order_data.php:254
 #: admin/settings/settings-tax-rates.php:42
-#: admin/settings/settings-tax-rates.php:217
-#: admin/woocommerce-admin-users.php:167 admin/woocommerce-admin-users.php:216
+#: admin/settings/settings-tax-rates.php:217 admin/woocommerce-admin-users.php:167
+#: admin/woocommerce-admin-users.php:216
 msgid "City"
 msgstr "Город"
 
@@ -4526,8 +4522,7 @@ msgstr "Загружаемые товары предоставляют дост�
 
 # @ woocommerce
 #: admin/post-types/writepanels/writepanel-product_data.php:79
-#: admin/woocommerce-admin-content.php:47
-#: admin/woocommerce-admin-settings.php:183
+#: admin/woocommerce-admin-content.php:47 admin/woocommerce-admin-settings.php:183
 msgid "Inventory"
 msgstr "Инвентаризация"
 
@@ -6506,8 +6501,7 @@ msgid "Here you can customise the way WooCommerce emails appear."
 msgstr "Здесь настраивается оформление рассылки WooCommerce."
 
 # @ woocommerce
-#: admin/woocommerce-admin-content.php:52
-#: admin/woocommerce-admin-settings.php:188
+#: admin/woocommerce-admin-content.php:52 admin/woocommerce-admin-settings.php:188
 msgid "Integration"
 msgstr "Интеграция"
 
@@ -7053,20 +7047,13 @@ msgid "Total sales"
 msgstr "Сумма продаж"
 
 # @ woocommerce
-#: admin/woocommerce-admin-reports.php:371
-#: admin/woocommerce-admin-reports.php:377
-#: admin/woocommerce-admin-reports.php:383
-#: admin/woocommerce-admin-reports.php:389
-#: admin/woocommerce-admin-reports.php:395
-#: admin/woocommerce-admin-reports.php:401
-#: admin/woocommerce-admin-reports.php:644
-#: admin/woocommerce-admin-reports.php:650
-#: admin/woocommerce-admin-reports.php:656
-#: admin/woocommerce-admin-reports.php:662
-#: admin/woocommerce-admin-reports.php:828
-#: admin/woocommerce-admin-reports.php:834
-#: admin/woocommerce-admin-reports.php:840
-#: admin/woocommerce-admin-reports.php:846
+#: admin/woocommerce-admin-reports.php:371 admin/woocommerce-admin-reports.php:377
+#: admin/woocommerce-admin-reports.php:383 admin/woocommerce-admin-reports.php:389
+#: admin/woocommerce-admin-reports.php:395 admin/woocommerce-admin-reports.php:401
+#: admin/woocommerce-admin-reports.php:644 admin/woocommerce-admin-reports.php:650
+#: admin/woocommerce-admin-reports.php:656 admin/woocommerce-admin-reports.php:662
+#: admin/woocommerce-admin-reports.php:828 admin/woocommerce-admin-reports.php:834
+#: admin/woocommerce-admin-reports.php:840 admin/woocommerce-admin-reports.php:846
 #: admin/woocommerce-admin-reports.php:1364
 #: admin/woocommerce-admin-reports.php:1370
 #: admin/woocommerce-admin-reports.php:1376
@@ -7103,16 +7090,14 @@ msgid "This month's sales"
 msgstr "Продажи в этом месяце"
 
 # @ woocommerce
-#: admin/woocommerce-admin-reports.php:636
-#: admin/woocommerce-admin-reports.php:980
+#: admin/woocommerce-admin-reports.php:636 admin/woocommerce-admin-reports.php:980
 #: admin/woocommerce-admin-reports.php:1076
 #: admin/woocommerce-admin-reports.php:1356
 msgid "From:"
 msgstr "От:"
 
 # @ woocommerce
-#: admin/woocommerce-admin-reports.php:636
-#: admin/woocommerce-admin-reports.php:821
+#: admin/woocommerce-admin-reports.php:636 admin/woocommerce-admin-reports.php:821
 #: admin/woocommerce-admin-reports.php:980
 #: admin/woocommerce-admin-reports.php:1076
 #: admin/woocommerce-admin-reports.php:1229

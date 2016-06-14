@@ -95,11 +95,11 @@ jQuery(document).ready(function($) {
 
 	$( '.single_add_to_cart_button' ).on( 'click', function( event ) {
 		if ( $(this).hasClass( 'disabled' ) ) {
-			alert( wc_appointment_form_params.i18n_choose_options );
+			window.alert( wc_appointment_form_params.i18n_choose_options );
 			event.preventDefault();
 			return false;
 		}
-	})
+	});
 
 	$('.wc-appointments-appointment-form, .wc-appointments-appointment-form-button').show().removeAttr( 'disabled' );
 

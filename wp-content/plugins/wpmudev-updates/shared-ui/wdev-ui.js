@@ -138,8 +138,7 @@ jQuery(function() {
 			.always(function() {
 				el.removeClass("loading disabled").prop("disabled", false);
 			}).fail(function() {
-				WDP.showError("message");
-				WDP.showError();
+				WDP.showError({"message": false});
 			});
 
 		return false;

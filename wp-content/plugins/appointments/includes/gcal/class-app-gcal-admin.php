@@ -10,14 +10,44 @@ class Appointments_Google_Calendar_Admin {
 	public function __construct( $gcal_api ) {
 		$this->gcal_api = $gcal_api;
 
+		// Profile screen
+		add_action( 'show_user_profile', array( $this, 'show_profile') );
+		add_action( 'edit_user_profile', array( $this, 'show_profile') );
+		add_action( 'personal_options_update', array( $this, 'save_profile') );
+		add_action( 'edit_user_profile_update', array( $this, 'save_profile') );
+
+		// Settings screen
+		add_filter( 'appointments_tabs', array( $this, 'add_setting_tab' ) );
+		add_filter( 'appointments_get_settings_tab_view-gcal', array( $this, 'setting_tab_view' ) );
 		add_action( 'admin_init', array( $this, 'save_settings' ), 12 );
 		add_action( 'admin_init', array( $this, 'reset_settings' ), 12 );
 
-		add_action( 'show_user_profile', array( $this, 'show_profile') );
-		add_action( 'edit_user_profile', array( $this, 'show_profile') );
+	}
 
-		add_action( 'personal_options_update', array( $this, 'save_profile') );
-		add_action( 'edit_user_profile_update', array( $this, 'save_profile') );
+	/**
+	 * Add the tab to the settings screen
+	 *
+	 * @param array $tabs
+	 *
+	 * @return array
+	 */
+	public function add_setting_tab( $tabs ) {
+		// Set the tab in second place
+		$_tabs_1 = array_slice( $tabs, 0, 1 );
+		$_tabs_2 = array_slice( $tabs, 1 );
+		$_tabs_1['gcal'] = __( 'Google Calendar', 'appointments' );
+		return array_merge( $_tabs_1, $_tabs_2 );
+	}
+
+	/**
+	 * Set the view for Calendar Settings
+	 *
+	 * @param string|bool $file
+	 *
+	 * @return string
+	 */
+	public function setting_tab_view( $file ) {
+		return appointments_plugin_dir() . 'includes/gcal/views/page-settings-tab-gcal.php';
 	}
 
 	public function save_settings() {
@@ -67,7 +97,7 @@ class Appointments_Google_Calendar_Admin {
 			$options['gcal_selected_calendar'] = $calendar_id;
 			$this->gcal_api->api_manager->set_calendar( $calendar_id );
 			$options['gcal_api_mode'] = $_POST['gcal_api_mode'];
-			$this->api_mode = $options['gcal_api_mode'];
+			$this->gcal_api->api_mode = $options['gcal_api_mode'];
 			$options['gcal_api_allow_worker'] = $_POST['gcal_api_allow_worker'];
 			$options['gcal_api_scope'] = $_POST['gcal_api_scope'];
 			$options['gcal_description'] = $_POST['gcal_description'];
@@ -76,6 +106,9 @@ class Appointments_Google_Calendar_Admin {
 			$this->gcal_api->set_summary( $options['gcal_summary'] );
 			appointments_update_options( $options );
 		}
+
+		wp_redirect( add_query_arg( 'updated', 'true' ) );
+		exit;
 	}
 
 	/**
@@ -117,6 +150,7 @@ class Appointments_Google_Calendar_Admin {
 			<?php
 		}
 	}
+
 
 	public function render_tab() {
 		$options = appointments_get_options();
@@ -172,17 +206,20 @@ class Appointments_Google_Calendar_Admin {
 
 		$gcal_action = isset( $_POST['gcal_action'] ) ? $_POST['gcal_action'] : false;
 		if ( 'access-code' === $gcal_action ) {
-			$result = $this->gcal_api->api_manager->authenticate( $_POST['access_code'] );
-			if ( is_wp_error( $result ) ) {
-				$this->gcal_api->restore_to_default();
-				wp_die( sprintf( __( 'Authentication failed: %s', 'appointments' ), $result->get_error_message() ) );
-				return;
+			if ( ! empty( $_POST['access_code'] ) ) {
+				$result = $this->gcal_api->api_manager->authenticate( $_POST['access_code'] );
+				if ( is_wp_error( $result ) ) {
+					$this->gcal_api->restore_to_default();
+					wp_die( sprintf( __( 'Authentication failed: %s', 'appointments' ), $result->get_error_message() ) );
+					return;
+				}
+				else {
+					$token = $this->gcal_api->api_manager->get_access_token();
+					update_user_meta( $user_id, 'app_gcal_access_code', $_POST['access_code'] );
+					update_user_meta( $user_id, 'app_gcal_token', $token );
+				}
 			}
-			else {
-				$token = $this->gcal_api->api_manager->get_access_token();
-				update_user_meta( $user_id, 'app_gcal_access_code', $_POST['access_code'] );
-				update_user_meta( $user_id, 'app_gcal_token', $token );
-			}
+
 		}
 		elseif ( 'gcal-settings' === $gcal_action ) {
 			update_user_meta( $user_id, 'app_api_mode', $_POST['gcal_api_mode'] );
@@ -218,7 +255,7 @@ class Appointments_Google_Calendar_Admin {
 		$worker_is_connected = $this->gcal_api->is_connected();
 
 		?>
-		<h3><?php _e( 'Appointments+ Google Calendar API', 'appointments' ); ?></h3>
+		<h3><?php _e( 'Appointments +: Google Calendar API', 'appointments' ); ?></h3>
 		<?php
 
 		if ( ! $general_is_connected || ! $worker_is_connected ) {

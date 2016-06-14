@@ -1,0 +1,6 @@
+<?php
+
+abstract class DigitalPointBetterAnalytics_Helper_Reporting_Ecommerce extends DigitalPointBetterAnalytics_Helper_Reporting_Abstract
+{
+
+}

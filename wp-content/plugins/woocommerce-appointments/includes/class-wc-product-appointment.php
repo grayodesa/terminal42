@@ -84,8 +84,9 @@ class WC_Product_Appointment extends WC_Product {
 	 * See if this appointment product has reasources enabled.
 	 * @return boolean
 	 */
-	public function has_staff() {			
-		return $this->get_staff() ? count( $this->get_staff() ) : false;
+	public function has_staff() {
+		$count_staff = count( $this->get_staff() );
+		return $count_staff ? $count_staff : false;
 	}
 
 	/**
@@ -328,7 +329,7 @@ class WC_Product_Appointment extends WC_Product {
 
 		$id = absint( $id );
 
-		if ( $id ) {			
+		if ( $id ) {		
 			$staff = get_user_by( 'id', $id );
 			$relationship_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}wc_appointment_relationships WHERE product_id = %d AND staff_id = %d", $this->id, $id ) );
 
@@ -521,14 +522,20 @@ class WC_Product_Appointment extends WC_Product {
 		// Check all slots availability
 		foreach ( $slots as $slot ) {
 			$qty_scheduled_in_slot = 0;
+			
+			// Check capacity based on duration unit
+			if ( in_array( $this->get_duration_unit(), array( 'hour', 'minute' ) ) ) {
+				$slot_qty = $this->check_availability_rules_against_time( $slot, $slot, $staff_id, true );
+			} else {
+				$slot_qty = $this->check_availability_rules_against_date( $slot, $staff_id, true );
+			}
 
 			foreach ( $existing_appointments as $existing_appointment ) {
 				if ( $existing_appointment->is_scheduled_on_day( $slot, strtotime( "+{$interval} minutes", $slot ) ) ) {
 					$qty_to_add = isset( $existing_appointment->qty ) ? $existing_appointment->qty : 1;
-					if ( $this->has_staff() && $staff_id ) {
-						if ( $existing_appointment->get_staff_id() === absint( $staff_id ) ) {
-							$qty_scheduled_in_slot += $qty_to_add;
-						}
+					if ( $this->has_staff() && $existing_appointment->get_staff_id() ) {
+						//$qty_scheduled_in_slot += $slot_qty;
+						$qty_scheduled_in_slot += $qty_to_add; #revert back if it doesn't work for customers
 					} else {
 						$qty_scheduled_in_slot += $qty_to_add;
 					}
@@ -536,6 +543,7 @@ class WC_Product_Appointment extends WC_Product {
 			}
 			
 			//* Only available capacity is used
+			/*
 			if ( $this->has_staff() && ( $this->has_staff() < $this->get_qty() ) && ! $staff_id ) {
 				$slot_qty = $this->has_staff();
 			} elseif ( $this->has_staff() && ( $this->has_staff() < $this->get_qty() ) && $staff_id ) {
@@ -543,10 +551,18 @@ class WC_Product_Appointment extends WC_Product {
 			} else {
 				$slot_qty = $this->check_availability_rules_against_time( $slot, $slot, $staff_id, true );
 			}
+			*/
+			
+			//* Multiple available staff by number of staff, when staff isn't selected
+			if ( $this->has_staff() && ! $staff_id ) {
+				$slot_qty = $slot_qty * $this->has_staff();
+			}
+			
+			// var_dump( $available_qty .' = '. $slot_qty .' - '. $qty_scheduled_in_slot );
 			
 			//* Calculate availably capacity
-			$available_qty = $slot_qty - $qty_scheduled_in_slot;
-			
+			$available_qty = max( $slot_qty - $qty_scheduled_in_slot, 0 );
+												
 			// Remaining places are less than requested qty, return an error.
 			if ( $available_qty < $qty ) {
 				if ( in_array( $this->get_duration_unit(), array( 'hour', 'minute' ) ) ) {
@@ -608,12 +624,12 @@ class WC_Product_Appointment extends WC_Product {
 
 			// Get availability of each staff - no staff has been chosen yet
 			if ( $this->has_staff() && ! $for_staff ) {
-				$staff      = $this->get_staff();
 				$staff_rules = array();
 				
 				if ( $this->get_default_availability() ) {
 					// If all slotss are available by default, we should not hide days if we don't know which staff is going to be used.
 				} else {
+					$staff = $this->get_staff();
 					foreach ( $staff as $staff_member ) {
 						$staff_rule = (array) get_user_meta( $staff_member->ID, '_wc_appointment_availability', true );
 						$staff_rules = array_merge( $staff_rules, $staff_rule );
@@ -627,7 +643,7 @@ class WC_Product_Appointment extends WC_Product {
 
 			// Merge and reverse order so lower rules are evaluated first			
 			$availability_rules = array_filter( array_reverse( array_merge( WC_Product_Appointment_Rule_Manager::process_availability_rules( $global_rules, 'global' ), WC_Product_Appointment_Rule_Manager::process_availability_rules( $product_rules, 'product' ), WC_Product_Appointment_Rule_Manager::process_availability_rules( $staff_rules, 'staff' ) ) ) );
-			usort( $availability_rules, array( $this, 'priority_sort' ) );
+			//usort( $availability_rules, array( $this, 'priority_sort' ) );
 
 			$this->availability_rules[ $for_staff ] = $availability_rules;
 			
@@ -639,22 +655,15 @@ class WC_Product_Appointment extends WC_Product {
 	/**
 	 * Sort rules based on their priority
 	 * which is array index '2' of each rule. Lower number should be more important/parsed first
-	 * If priority is the same, it goes global < product < staff. Global take priority
+	 * If priority is the same, it goes global < product < staff. Staff take priority
 	 */
 	 
 	/* staff < product < global */
 	public function priority_sort( $rule_1, $rule_2 ) {
 		if ( $rule_1[2] === $rule_2[2] ) {
+			
 			if ( $rule_1[3] === $rule_2[3] ) {
 				return 0;
-			}
-
-			if ( 'staff' === $rule_2[3] && 'product' === $rule_1[3] ) {
-				return 1;
-			}
-
-			if ( 'staff' === $rule_2[3] &&  'global' === $rule_1[3] ) {
-				return 1;
 			}
 
 			if ( 'global' === $rule_2[3] && 'product' === $rule_1[3] ) {
@@ -672,6 +681,15 @@ class WC_Product_Appointment extends WC_Product {
 			if ( 'product' === $rule_2[3] && 'staff' === $rule_1[3] ) {
 				return -1;
 			}
+			
+			if ( 'staff' === $rule_2[3] && 'product' === $rule_1[3] ) {
+				return 1;
+			}
+
+			if ( 'staff' === $rule_2[3] &&  'global' === $rule_1[3] ) {
+				return 1;
+			}
+
 		}
 		return ( $rule_1[2] < $rule_2[2] ) ? -1 : 1;
 	}
@@ -728,7 +746,7 @@ class WC_Product_Appointment extends WC_Product {
 						break 2;
 					}
 				break;
-				/* DEPRECATED */
+				/* DEPRECATED
 				case 'time_date' :
 					if ( $rules['date'] === $day_format && $rules['from'] <= $hour_format && $rules['to'] >= $hour_format ) {
 						$appointable = true;
@@ -736,6 +754,7 @@ class WC_Product_Appointment extends WC_Product {
 						break 2;
 					}
 				break;
+				*/
 				/*
 				case 'time':
 				case 'time:1':
@@ -785,9 +804,9 @@ class WC_Product_Appointment extends WC_Product {
 		foreach ( $this->get_availability_rules( $staff_id ) as $rule ) {
 			$type  = $rule[0];
 			$rules = $rule[1];
-			$qty   = $rule[4] ? $rule[4] : $capacity;
+			$qty   = $rule[4] && $rule[4] >= 1  ? $rule[4] : $capacity;
 
-			if ( strrpos( $type, 'time' ) === 0 || 'time_date' === $type ) {				
+			if ( strrpos( $type, 'time' ) === 0 || 'time_date' === $type ) {			
 				if ( 'time:range' === $type ) {
 					$year = date( 'Y', $start_time );
 					$month = date( 'n', $start_time );
@@ -867,7 +886,7 @@ class WC_Product_Appointment extends WC_Product {
 			$default_interval = 'hour' === $this->get_duration_unit() ? $this->wc_appointment_duration * 60 : $this->wc_appointment_duration;
 			$intervals        = array( $default_interval, $default_interval );
 		}
-
+		
 		list( $interval, $base_interval ) = $intervals;
 		
 		//* get padding duration
@@ -877,6 +896,9 @@ class WC_Product_Appointment extends WC_Product {
 		//* adjust intervals according to padding
 		$interval			= $interval + $padding_interval;
 		$base_interval 		= $base_interval + $padding_interval;
+		
+		//* staff object
+		//$appointment_staff = $staff_id ? $this->get_staff_member( $staff_id ) : null;
 
 		$slots = array();
 
@@ -889,8 +911,6 @@ class WC_Product_Appointment extends WC_Product {
 					$check_date = strtotime( "+1 day", $check_date );
 					continue;
 				}
-
-				$appointment_staff = $staff_id ? $this->get_staff_member( $staff_id ) : null;
 				
 				// For mins and hours find valid slots within THIS DAY ($check_date)
 				if ( in_array( $this->get_duration_unit(), array( 'minute', 'hour' ) ) ) {
@@ -905,7 +925,7 @@ class WC_Product_Appointment extends WC_Product {
 
 					foreach ( $rules as $rule ) {
 						$type  = $rule[0];
-						$rules = $rule[1];
+						$_rules = $rule[1];
 						
 						if ( strrpos( $type, 'time' ) === 0 || 'time_date' === $type ) {
 							if ( 'time:range' === $type ) {
@@ -913,32 +933,32 @@ class WC_Product_Appointment extends WC_Product {
 								$month = date( 'n', $check_date );
 								$day = date( 'j', $check_date );
 								
-								if ( ! isset( $rules[ $year ][ $month ][ $day ] ) ) {
+								if ( ! isset( $_rules[ $year ][ $month ][ $day ] ) ) {
 									continue;
 								}
 
 								$day_mod = 0;
-								$from = $rules[ $year ][ $month ][ $day ]['from'];
-								$to   = $rules[ $year ][ $month ][ $day ]['to'];
-								$rule_val = $rules[ $year ][ $month ][ $day ]['rule'];
+								$from = $_rules[ $year ][ $month ][ $day ]['from'];
+								$to   = $_rules[ $year ][ $month ][ $day ]['to'];
+								$rule_val = $_rules[ $year ][ $month ][ $day ]['rule'];
 							} else {
 								$day_mod = 0;
-								if ( ! empty( $rules['day'] ) ) {
-									if ( $rules['day'] != date( 'N', $check_date ) ) {
-										$day_mod = 1440 * ( $rules['day'] - date( 'N', $check_date ) );
+								if ( ! empty( $_rules['day'] ) ) {
+									if ( $_rules['day'] != date( 'N', $check_date ) ) {
+										$day_mod = 1440 * ( $_rules['day'] - date( 'N', $check_date ) );
 									}
 								}
 								// skip this rule for all dates, except selected one
-								else if ( ! empty( $rules['date'] ) ) {
-									if ( $rules['date'] != date( 'Y-m-d', $check_date ) ) {
-										//$day_mod = 1440 * ( date( 'N', strtotime( $rules['date'] ) ) - date( 'N', $check_date ) );
+								else if ( ! empty( $_rules['date'] ) ) {
+									if ( $_rules['date'] != date( 'Y-m-d', $check_date ) ) {
+										//$day_mod = 1440 * ( date( 'N', strtotime( $_rules['date'] ) ) - date( 'N', $check_date ) );
 										continue;
 									}
 								}
 
-								$from = $rules['from'];
-								$to   = $rules['to'];
-								$rule_val = $rules['rule'];
+								$from = $_rules['from'];
+								$to   = $_rules['to'];
+								$rule_val = $_rules['rule'];
 							}
 
 							$from_hour    = absint( date( 'H', strtotime( $from ) ) );
@@ -950,7 +970,7 @@ class WC_Product_Appointment extends WC_Product {
 							 * (note) only works for specific day of week, not working for specific date yet
 							 *
 							 */
-							if ( 0 === $to_hour && empty( $rules['date'] ) ) {
+							if ( 0 === $to_hour && empty( $_rules['date'] ) ) {
 								$to_hour = 24;
 							}
 
@@ -1059,7 +1079,7 @@ class WC_Product_Appointment extends WC_Product {
 							$loop_time           = $start_time;
 							
 							//* change quantity if different for time slot
-							$available_qty		= $this->check_availability_rules_against_time( $loop_time, $end_time, $staff_id, true );
+							$available_qty		 = $this->check_availability_rules_against_time( $loop_time, $end_time, $staff_id, true );
 							// $available_qty		= $this->get_qty();
 
 							// Break if start time is after the end date being calced
@@ -1160,18 +1180,26 @@ class WC_Product_Appointment extends WC_Product {
 			 */		
 			$existing_appointments = $this->get_appointments_in_date_range( $start_date, $end_date + ( $base_interval * 60 ), $staff_id );
 
-			// Staff scheduled array. Staff can be a "staff" but also just a appointment if it has no staff
+			// Staff scheduled array. Staff can be a "staff" but also just an appointment if it has no staff
 			$staff_scheduled = array( 0 => array() );
 
+			//* Get slot qty
+			$available_qty = $this->check_availability_rules_against_time( $start_date, $end_date + ( $base_interval * 60 ), $staff_id, true );
+			
 			// Loop all existing appointments
 			foreach ( $existing_appointments as $appointment ) {
 				$appointment_staff_id = $staff_id ? $appointment->get_staff_id() : 0;
 				
 				// prepare staff array for staff id
 				$staff_scheduled[ $appointment_staff_id ] = isset( $staff_scheduled[ $appointment_staff_id ] ) ? $staff_scheduled[ $appointment_staff_id ] : array();
-				
-				for ( $i = 0; $i < 1; $i++ ) {
-					array_push( $staff_scheduled[ $appointment_staff_id ], array( $appointment->start, $appointment->end, intval($appointment->qty ) ) );
+
+				// we should disable stuff where nothing is available
+				$repeat = max( 1, $appointment->qty );
+				// $repeat = max( 1, $available_qty );
+				// $repeat = max( 1, $this->has_staff() ? $available_qty : 1 );
+
+				for ( $i = 0; $i < $repeat; $i++ ) {
+					array_push( $staff_scheduled[ $appointment_staff_id ], array( $appointment->start, $appointment->end, intval( $available_qty ) ) );
 				}
 			}
 
@@ -1310,24 +1338,23 @@ class WC_Product_Appointment extends WC_Product {
 				
 				foreach ( $slots as $slot ) {
 					$qty_scheduled_in_slot 	= 0;
+					$slot_qty = $this->check_availability_rules_against_time( $slot, $slot, $staff_id, true );
 					if ( $v['from'] <= strtotime( date( 'G:i', $slot ) ) && $v['to'] > strtotime( date( 'G:i', $slot ) ) ) {
 						$selected = date( 'G:i', $slot ) == date( 'G:i', $time_to_check ) ? ' selected' : '';
 						
 						foreach ( $existing_appointments as $existing_appointment ) {
 							if ( $existing_appointment->is_within_slot( $slot, strtotime( "+{$interval} minutes", $slot ) ) ) {
-								$qty_to_add = isset( $existing_appointment->qty ) ? $existing_appointment->qty : 1;
-
-								if ( $this->has_staff() && $staff_id ) {
-									if ( $existing_appointment->get_staff_id() === absint( $staff_id ) || $existing_appointment->get_staff_member() || is_null( $appointment_staff ) ) {
-										$qty_scheduled_in_slot += $qty_to_add;
-									}
+								if ( $this->has_staff() && $existing_appointment->get_staff_id() ) {
+									$qty_scheduled_in_slot += $slot_qty;
 								} else {
+									$qty_to_add = isset( $existing_appointment->qty ) ? $existing_appointment->qty : 1;
 									$qty_scheduled_in_slot += $qty_to_add;
 								}
 							}
 						}
 
 						//* Only available capacity is used
+						/*
 						if ( $this->has_staff() && ( $this->has_staff() < $this->get_qty() ) && ! $staff_id ) {
 							$slot_qty = $this->has_staff();
 						} elseif ( $this->has_staff() && ( $this->has_staff() < $this->get_qty() ) && $staff_id ) {
@@ -1335,9 +1362,17 @@ class WC_Product_Appointment extends WC_Product {
 						} else {
 							$slot_qty = $this->check_availability_rules_against_time( $slot, $slot, $staff_id, true );
 						}
+						*/
+						
+						//* Multiple available staff by number of staff, when staff isn't selected
+						if ( $this->has_staff() && ! $staff_id ) {
+							$slot_qty = $slot_qty * $this->has_staff();
+						}
 						
 						//* Calculate availably capacity
-						$available_qty = $slot_qty - $qty_scheduled_in_slot;
+						$available_qty = max( $slot_qty - $qty_scheduled_in_slot, 0 );
+
+						//echo $available_qty . ' = ' . $slot_qty . ' - ' . $qty_scheduled_in_slot;
 						
 						if ( $available_qty > 0 ) {
 							if ( $qty_scheduled_in_slot ) {
@@ -1345,10 +1380,11 @@ class WC_Product_Appointment extends WC_Product {
 							} else {
 								$slot_html .= "<li class=\"slot$selected\" data-slot=\"" . esc_attr( date( 'Hi', $slot ) ) . "\"><a href=\"#\" data-value=\"" . date( 'G:i', $slot ) . "\">" . date_i18n( get_option( 'time_format' ), $slot ) . "</a></li>";
 							}
+						} else {
+							continue;
 						}
-					}
-					
-					else {
+
+					} else {
 						continue;
 					}
 					
@@ -1356,7 +1392,7 @@ class WC_Product_Appointment extends WC_Product {
 				}
 				
 				if ( ! $count ) {
-					$slot_html .= '<li class="slot slot_empty">' . __( 'All scheduled', 'woocommerce-appointments' ) . '</li>';
+					$slot_html .= '<li class="slot slot_empty">' . __( '&#45;', 'woocommerce-appointments' ) . '</li>';
 				}
 				$slot_html .= "</ul>";
 			}

@@ -7,7 +7,7 @@
 		<span class="prefix"><?php echo __( 'You are here: ', 'mailchimp-for-wp' ); ?></span>
 		<a href="<?php echo admin_url( 'admin.php?page=mailchimp-for-wp' ); ?>">MailChimp for WordPress</a> &rsaquo;
 		<a href="<?php echo admin_url( 'admin.php?page=mailchimp-for-wp-forms' ); ?>"><?php _e( 'Forms', 'mailchimp-for-wp' ); ?></a> &rsaquo;
-		<a href="<?php echo admin_url( 'admin.php?page=mailchimp-for-wp-forms&form_id=' . $form_id . '&view=edit-form' ); ?>">Form <?php echo $form_id; ?> | <?php echo $form->name; ?></a> &rsaquo;
+		<a href="<?php echo admin_url( 'admin.php?page=mailchimp-for-wp-forms&form_id=' . $form_id . '&view=edit-form' ); ?>">Form <?php echo $form_id; ?> | <?php echo esc_html( $form->name ); ?></a> &rsaquo;
 		<span class="current-crumb"><strong><?php _e( 'Styles Builder', 'mailchimp-for-wp' ); ?></strong></span>
 	</p>
 
@@ -39,7 +39,7 @@
 						<td>
 							<select name="form_id" class="widefat mc4wp-form-select">
 								<?php foreach( $forms as $form ) { ?>
-									<option value="<?php echo $form->ID; ?>" <?php selected( $form->ID, $form_id ); ?>><?php echo "$form->ID | {$form->name}"; ?></option>
+									<option value="<?php echo $form->ID; ?>" <?php selected( $form->ID, $form_id ); ?>><?php printf( '%d | %s', $form->ID, esc_html( $form->name ) ); ?></option>
 								<?php } ?>
 							</select>
 						</td>
@@ -326,7 +326,7 @@
 									// skip current form
 									if( $form->ID === $form_id ) { continue; }
 									?>
-									<option value="<?php echo $form->ID; ?>"><?php echo "$form->ID | {$form->name}"; ?></option>
+									<option value="<?php echo $form->ID; ?>"><?php printf( '%d | %s', $form->ID, esc_html( $form->name ) ); ?></option>
 								<?php } ?>
 							</select>
 							<input type="submit" name="_mc4wp_copy_form_styles" value="<?php _e( 'Copy Styles', 'mailchimp-for-wp' ); ?>" class="button-secondary" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to copy form styles from another form? This will overwrite current styles for this form.', 'mailchimp-for-wp' ); ?>');"/>

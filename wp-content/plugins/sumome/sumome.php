@@ -3,7 +3,7 @@
 Plugin Name: SumoMe
 Plugin URI: http://sumome.com
 Description: Free Tools to grow your email list from SumoMe.com
-Version: 1.10
+Version: 1.13
 Author: SumoMe
 Author URI: http://www.SumoMe.com
 */
@@ -43,7 +43,7 @@ class WP_Plugin_SumoMe {
 
     add_settings_field(
       'sumome-site_id',
-      'Site ID',
+      '',
       array(&$this, 'settings_field_site_id'),
       'sumome',
       'sumome-settings',
@@ -80,7 +80,7 @@ function sumome_generate_site_id() {
 }
 </script>
 EOF;
-    echo sprintf('<input type="text" name="%s" id="%s" value="%s" style="width: 540px" /> <button onclick="sumome_generate_site_id(); return false;" class="button">Get new site ID</button>', $field, $field, esc_attr($value));
+    echo sprintf('<input type="text" name="%s" id="%s" value="%s" style="width: 540px" /> <button onclick="sumome_generate_site_id(); return false;" class="button">GET NEW SITE ID</button>', $field, $field, esc_attr($value));
   }
 
   public function admin_menu()

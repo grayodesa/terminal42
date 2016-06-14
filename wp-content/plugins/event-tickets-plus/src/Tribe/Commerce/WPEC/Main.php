@@ -106,6 +106,18 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 	 */
 	public $deleted_product = '_tribe_deleted_product_name';
 
+	/**
+	 * Meta key that if this attendee wants to show on the attendee list
+	 *
+	 * @var string
+	 */
+	const ATTENDEE_OPTOUT_KEY = '_tribe_wpecticket_attendee_optout';
+
+	/**
+	 * Instance of Tribe__Tickets_Plus__Commerce__WPEC__Meta
+	 */
+	private static $meta;
+
 
 	/**
 	 * Class constructor
@@ -122,7 +134,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		parent::__construct();
 
 		$this->hooks();
-
+		$this->meta();
 	}
 
 	/**
@@ -140,8 +152,41 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 
 		add_filter( 'wpsc_cart_item_url', array( $this, 'hijack_ticket_link' ), 10, 4 );
 		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
+
+		add_action( 'wpsc_set_cart_item', array( $this, 'set_attendee_optout_choice' ), 15, 4 );
 	}
 
+	/**
+	 * Save the Attendee choice, the only important param is $new_cart_item
+	 *
+	 * We set the a Meta on the Cart Item
+	 */
+	public function set_attendee_optout_choice( $product_id, $parameters, $cart, $new_cart_item ) {
+
+		// If this option is not here just drop
+		if ( ! isset( $_POST['wpec_tickets_attendees_optout'] ) ) {
+			return;
+		}
+		$optout = (bool) reset( $_POST['wpec_tickets_attendees_optout'] );
+
+		// Set the Cart Item meta
+		$new_cart_item->update_meta( self::ATTENDEE_OPTOUT_KEY, $optout );
+	}
+
+	/**
+	 * Custom meta integration object accessor method
+	 *
+	 * @since 4.1
+	 *
+	 * @return Tribe__Tickets_Plus__Commerce__WPEC__Meta
+	 */
+	public function meta() {
+		if ( ! self::$meta ) {
+			self::$meta = new Tribe__Tickets_Plus__Commerce__WPEC__Meta;
+		}
+
+		return self::$meta;
+	}
 
 	/**
 	 * When a user deletes a ticket (product) we want to store
@@ -173,7 +218,6 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 
 	}
 
-
 	/**
 	 * Register our custom post type
 	 */
@@ -196,39 +240,49 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 
 	/**
 	 * Generate and store all the attendees information for a new order.
-	 * @param $purchase_log_object
+	 *
+	 * @param int $id
+	 * @param string $status (unused)
+	 * @param string $old_status (unused)
+	 * @param $purchase_log
 	 */
 	public function generate_tickets( $id, $status, $old_status, $purchase_log ) {
-
-		if ( empty( $purchase_log ) )
+		if ( empty( $purchase_log ) ) {
 			return;
+		}
 
 		// Do not generate tickets until payment has been accepted/job dispatched
 		$complete = $purchase_log->is_accepted_payment() || $purchase_log->is_job_dispatched();
 		apply_filters( 'wpectickets_order_is_complete', $complete, $purchase_log );
-		if ( ! $complete ) return;
+		if ( ! $complete ) {
+			return;
+		}
 
 		// Bail if we already generated the info for this order
 		$done = wpsc_get_meta( $id, $this->order_done, 'tribe_tickets' );
-		if ( ! empty( $done ) )
+		if ( ! empty( $done ) ) {
 			return;
+		}
 
 		$has_tickets = false;
-		// Get the items purchased in this order
 
+		// Get the items purchased in this order
 		$order_items = $purchase_log->get_cart_contents();
 
 		// Bail if the order is empty
-		if ( empty( $order_items ) )
+		if ( empty( $order_items ) ) {
 			return;
+		}
 
 		// Iterate over each product
 		foreach ( (array) $order_items as $item ) {
+			$order_attendee_id = 0;
 
 			$product_id = $item->prodid;
 
 			// Get the event this tickets is for
 			$event_id = get_post_meta( $product_id, $this->event_key, true );
+			$optout = (bool) wpsc_get_cart_item_meta( $item->purchaseid, self::ATTENDEE_OPTOUT_KEY, true );
 
 			if ( ! empty( $event_id ) ) {
 
@@ -252,9 +306,24 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 					update_post_meta( $attendee_id, self::ATTENDEE_ORDER_KEY, $id );
 					update_post_meta( $attendee_id, self::ATTENDEE_EVENT_KEY, $event_id );
 					update_post_meta( $attendee_id, $this->security_code, $this->generate_security_code( $id, $attendee_id ) );
+					update_post_meta( $attendee_id, self::ATTENDEE_OPTOUT_KEY, $optout );
+
+					/**
+					 * Action fired when an attendee ticket is generated
+					 *
+					 * @var $attendee_id ID of attendee ticket
+					 * @var $purchase_log WPEC purchase log object
+					 * @var $product_id Product ID attendee is "purchasing"
+					 * @var $order_attendee_id Attendee # for order
+					 * @var $event_id The Event which this ticket belongs
+					 */
+					do_action( 'event_tickets_wpec_ticket_created', $attendee_id, $purchase_log, $product_id, $order_attendee_id, $event_id );
+
+					$order_attendee_id++;
 				}
 			}
 		}
+
 		if ( $has_tickets ) {
 			wpsc_update_meta( $id, $this->order_done, '1', 'tribe_tickets' );
 
@@ -295,8 +364,11 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 	 * @return bool
 	 */
 	public function save_ticket( $event_id, $ticket, $raw_data = array() ) {
+		$save_type = 'update';
 
 		if ( empty( $ticket->ID ) ) {
+			$save_type = 'create';
+
 			/* Create main product post */
 			$args = array(
 				'post_status'  => 'publish',
@@ -333,7 +405,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		if ( trim( $raw_data['ticket_wpec_stock'] ) !== '' ) {
 			update_post_meta( $ticket->ID, '_wpsc_stock', $raw_data['ticket_wpec_stock'] );
 		} else {
-			//update_post_meta( $ticket->ID, '_manage_stock', 'no' );
+			update_post_meta( $ticket->ID, '_manage_stock', 'no' );
 		}
 
 		if ( isset( $raw_data['ticket_wpec_sku'] ) )
@@ -351,11 +423,35 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 			delete_post_meta( $ticket->ID, '_ticket_end_date' );
 		}
 
+		/**
+		 * Generic action fired after saving a ticket (by type)
+		 *
+		 * @var int Post ID of post the ticket is tied to
+		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @var array Ticket data
+		 * @var string Commerce engine class
+		 */
+		do_action( 'event_tickets_after_' . $save_type . '_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
+
+		/**
+		 * Generic action fired after saving a ticket
+		 *
+		 * @var int Post ID of post the ticket is tied to
+		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @var array Ticket data
+		 * @var string Commerce engine class
+		 */
+		do_action( 'event_tickets_after_save_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
+
 		return true;
 	}
 
 	/**
-	 * Deletes a ticket
+	 * Deletes a ticket.
+	 *
+	 * Note that the total sales/purchases figure maintained by WPEC is not adjusted on the
+	 * basis that deleting an attendee does not mean the sale didn't go through; this is
+	 * a change in behaviour from the 4.0.x releases.
 	 *
 	 * @param $event_id
 	 * @param $ticket_id
@@ -371,11 +467,6 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		// Try to kill the actual ticket/attendee post
 		$delete = wp_delete_post( $ticket_id, true );
 		if ( is_wp_error( $delete ) ) return false;
-
-		// Decrement the sales figure, boost stock
-		$this->reduce_sales_qty( $order_id, $product_id );
-		$stock = (int) get_post_meta( $product_id, '_wpsc_stock', true );
-		update_post_meta( $product_id, '_wpsc_stock', ++$stock );
 
 		do_action( 'eddtickets_ticket_deleted', $ticket_id, $event_id, $product_id, $order_id );
 		return true;
@@ -436,7 +527,6 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		return $url;
 	}
 
-
 	/**
 	 * Shows the tickets form in the front end
 	 *
@@ -486,6 +576,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 			$parameters['quantity']         = absint( $quantities[ $product_key ] );
 			$parameters['variation_values'] = '';
 			$parameters['is_customisable']  = false;
+			$parameters['custom_message']   = ''; // We *must* set this to avoid a db error @see wpsc_cart_item::save_to_db()
 
 			// Check stock levels
 			$stock_remaining = wpsc_get_remaining_quantity( $product_id );
@@ -548,8 +639,13 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		$qty              = max( (int) $wpdb->get_var( $qty_sql ), 0 );
 		$pending = $qty ? $this->count_incomplete_order_items( $ticket_id ) : 0;
 
+		$manage_stock = get_post_meta( $ticket_id, '_manage_stock', true );
+		if ( 'no' === $manage_stock ) {
+			$return->stock = null;
+		}
+
 		$return->manage_stock( ! is_null( $product->stock ) );
-		$return->stock( is_null( $product->stock ) ? Tribe__Tickets__Ticket_Object::UNLIMITED_STOCK : ( $product->stock - $qty - $pending ) );
+		$return->stock( is_null( $product->stock ) ? Tribe__Tickets__Ticket_Object::UNLIMITED_STOCK : $product->stock );
 		$return->qty_sold( $qty );
 		$return->qty_pending( $pending );
 
@@ -617,62 +713,123 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 
 		$attendees = array();
 		$attendees_query = new WP_Query( $args );
-		if ( ! $attendees_query->have_posts() ) return array();
+
+		if ( ! $attendees_query->have_posts() ) {
+			return array();
+		}
 
 		foreach ( $attendees_query->posts as $attendee ) {
 			$order_id      = get_post_meta( $attendee->ID, self::ATTENDEE_ORDER_KEY, true );
 			$checkin       = get_post_meta( $attendee->ID, $this->checkin_key, true );
 			$security      = get_post_meta( $attendee->ID, $this->security_code, true );
+			$optout        = (bool) get_post_meta( $attendee->ID, self::ATTENDEE_OPTOUT_KEY, true );
 			$product_id    = get_post_meta( $attendee->ID, self::ATTENDEE_PRODUCT_KEY, true );
-			$order_warning = false;
 
-			if ( empty( $product_id ) ) continue;
-
-			// Obtain order information
-			list( $email, $name ) = $this->customer_details( $order_id );
-			list( $order_status, $order_status_label ) = $this->order_status( $order_id );
-
-			// Warn where the transaction failed
-			if ( 'incomplete_sale' === $order_status || 'declined_payment' === $order_status )
-				$order_warning = true;
-
-			// Warn if the order has been trashed
-			if ( ! empty( $order_status ) && get_post_status( $order_id ) == 'trash' ) {
-				$order_status = sprintf( __( 'In trash (was %s)', 'event-tickets-plus' ), $order_status );
-				$order_warning = true;
-			}
-
-			// Warn if the order was outright deleted
-			if ( empty( $order_status ) && ! get_post( $order_id ) ) {
-				$order_status = __( 'Deleted', 'event-tickets-plus' );
-				$order_warning = true;
+			if ( empty( $product_id ) ) {
+				continue;
 			}
 
 			$product = get_post( $product_id );
 			$product_title = ( ! empty( $product ) ) ? $product->post_title : get_post_meta( $attendee->ID, $this->deleted_product, true ) . ' ' . __( '(deleted)', 'event-tickets-plus' );
 
-			$admin_url  = admin_url( sprintf( 'index.php?page=wpsc-purchase-logs&c=item_details&id=%d', $order_id ) );
-			$admin_link = sprintf( '<a href="%s">%d</a>', esc_url( $admin_url ), $order_id );
-
-			$attendees[] = array(
-				'order_id'           => $order_id,
-				'order_id_link'      => $admin_link,
-				'order_status'       => $order_status,
-				'order_status_label' => $order_status_label,
-				'order_warning'      => $order_warning,
-				'purchaser_name'     => $name,
-				'purchaser_email'    => $email,
-				'ticket'             => $product_title,
-				'attendee_id'        => $attendee->ID,
-				'security'           => $security,
-				'product_id'         => $product_id,
-				'check_in'           => $checkin,
-				'provider'           => __CLASS__,
+			// Add the Attendee Data to the Order data
+			$attendee_data = array_merge(
+				$this->get_order_data( $order_id ),
+				array(
+					'ticket'             => $product_title,
+					'attendee_id'        => $attendee->ID,
+					'security'           => $security,
+					'optout'             => $optout,
+					'product_id'         => $product_id,
+					'check_in'           => $checkin,
+				)
 			);
+
+			/**
+			 * Allow users to filter the Attendee Data
+			 *
+			 * @var array An associative array with the Information of the Attendee
+			 * @var string What Provider is been used
+			 * @var WP_Post Attendee Object
+			 * @var int Event ID
+			 *
+			 */
+			$attendee_data = apply_filters( 'tribe_tickets_attendee_data', $attendee_data, 'wpec', $attendee, $event_id );
+
+			$attendees[] = $attendee_data;
 		}
 
 		return $attendees;
 
+	}
+
+	/**
+	 * Retreive only order related information
+	 *
+	 *     order_id
+	 *     order_id_link
+	 *     order_id_link_src
+	 *     order_status
+	 *     order_status_label
+	 *     order_warning
+	 *     purchaser_name
+	 *     purchaser_email
+	 *     provider
+	 *     provider_slug
+	 *
+	 * @param int $order_id
+	 * @return array
+	 */
+	public function get_order_data( $order_id ) {
+		$order_warning = false;
+
+		// Obtain order information
+		list( $email, $name ) = $this->customer_details( $order_id );
+		list( $order_status, $order_status_label ) = $this->order_status( $order_id );
+
+		// Warn where the transaction failed
+		if ( 'incomplete_sale' === $order_status || 'declined_payment' === $order_status )
+			$order_warning = true;
+
+		// Warn if the order has been trashed
+		if ( ! empty( $order_status ) && get_post_status( $order_id ) == 'trash' ) {
+			$order_status = sprintf( __( 'In trash (was %s)', 'event-tickets-plus' ), $order_status );
+			$order_warning = true;
+		}
+
+		// Warn if the order was outright deleted
+		if ( empty( $order_status ) && ! get_post( $order_id ) ) {
+			$order_status = __( 'Deleted', 'event-tickets-plus' );
+			$order_warning = true;
+		}
+
+		$admin_url  = admin_url( sprintf( 'index.php?page=wpsc-purchase-logs&c=item_details&id=%d', $order_id ) );
+		$admin_link = sprintf( '<a href="%s">%d</a>', esc_url( $admin_url ), $order_id );
+
+		$data = array(
+			'order_id'           => $order_id,
+			'order_id_link'      => $admin_link,
+			'order_id_link_src'  => $admin_url,
+			'order_status'       => $order_status,
+			'order_status_label' => $order_status_label,
+			'order_warning'      => $order_warning,
+			'purchaser_name'     => $name,
+			'purchaser_email'    => $email,
+			'provider'           => __CLASS__,
+			'provider_slug'      => 'wpec',
+		);
+
+		/**
+		 * Allow users to filter the Order Data
+		 *
+		 * @var array An associative array with the Information of the Order
+		 * @var string What Provider is been used
+		 * @var int Order ID
+		 *
+		 */
+		$data = apply_filters( 'tribe_tickets_order_data', $data, 'wpec', $order_id );
+
+		return $data;
 	}
 
 	/**
@@ -729,13 +886,34 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 	/**
 	 * Marks an attendee as checked in for an event
 	 *
+	 * Because we must still support our legacy ticket plugins, we cannot change the abstract
+	 * checkin() method's signature. However, the QR checkin process needs to move forward
+	 * so we get around that problem by leveraging func_get_arg() to pass a second argument.
+	 *
+	 * It is hacky, but we'll aim to resolve this issue when we end-of-life our legacy ticket plugins
+	 * OR write around it in a future major release
+	 *
 	 * @param $attendee_id
+	 * @param $qr true if from QR checkin process (NOTE: this is a param-less parameter for backward compatibility)
 	 *
 	 * @return bool
 	 */
 	public function checkin( $attendee_id ) {
+		$qr = null;
+
 		update_post_meta( $attendee_id, $this->checkin_key, 1 );
-		do_action( 'wpectickets_checkin', $attendee_id );
+
+		if ( func_num_args() > 1 && $qr = func_get_arg( 1 ) ) {
+			update_post_meta( $attendee_id, '_tribe_qr_status', 1 );
+		}
+
+		/**
+		 * Fires a checkin action
+		 *
+		 * @var int $attendee_id
+		 * @var bool|null $qr
+		 */
+		do_action( 'wpectickets_checkin', $attendee_id, $qr );
 
 		return true;
 	}
@@ -749,6 +927,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 	 */
 	public function uncheckin( $attendee_id ) {
 		delete_post_meta( $attendee_id, $this->checkin_key );
+		delete_post_meta( $attendee_id, '_tribe_qr_status' );
 		do_action( 'wpectickets_uncheckin', $attendee_id );
 
 		return true;

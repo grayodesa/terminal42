@@ -1,6 +1,6 @@
 /************************************************
  * REVOLUTION 5.2 EXTENSION - LAYER ANIMATION
- * @version: 2.2.0 (10.03.2016)
+ * @version: 2.5 (28.04.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 ************************************************/
@@ -145,6 +145,13 @@ jQuery.extend(true,_R, {
 			_nc.data('_pw',_pw);
 			_nc.data('_lw',_lw);
 			_nc.data('_mw',_mw);
+		}
+
+		if (!_nc.data('togglelisteners') && _nc.find('.rs-toggled-content')) {
+			_nc.on('click',function() {
+				_nc.toggleClass('rs-toggle-content-active');
+			});
+			_nc.data('togglelisteners',true);
 		}
 
 		if (opt.sliderLayout=="fullscreen") 
@@ -364,6 +371,7 @@ jQuery.extend(true,_R, {
 		}	// END OF POSITION AND STYLE READ OUTS OF VIDEO
 
 		
+
 		var slidelink = _nc.data('slidelink') || false;
 		
 		// ALL WRAPPED REKURSIVE ELEMENTS SHOULD BE RESPONSIVE HANDLED
@@ -379,6 +387,8 @@ jQuery.extend(true,_R, {
 
 		// RESPONIVE HANDLING OF CURRENT LAYER
 		calcCaptionResponsive(_nc,opt,0,_responsive);
+
+		
 		
 		// _nc FRONTCORNER CHANGES
 		var ncch = _nc.outerHeight(),
@@ -453,6 +463,7 @@ jQuery.extend(true,_R, {
 		// MDELAY AND MSPEED
 												
 		
+
 		var $lts = _nc.data('lasttriggerstate'),
 			$cts = _nc.data('triggerstate'),
 			$start = _nc.data('start') != undefined ? _nc.data('start') : 100,		
@@ -524,7 +535,7 @@ jQuery.extend(true,_R, {
 		// CHECK FOR SVG
 		var $svg = {};
 		$svg.svg = _nc.data('svg_src')!=undefined ? _nc.find('svg') : false;
-
+		
 		
 		// GO FOR ANIMATION
 		if ($progress<1 && _nc.data('outstarted') != 1 || staticdirection==2 || triggerforce) {			
@@ -1050,6 +1061,7 @@ var getAnimDatas = function(frm,data,reversed) {
 				if (w=="scaleX" || w=="sX") o.anim.scaleX = animDataTranslator(v,o.anim.scaleX);
 				if (w=="scaleY" || w=="sY") o.anim.scaleY = animDataTranslator(v,o.anim.scaleY);
 				if (w=="opacity" || w=="o") o.anim.opacity = animDataTranslator(v,o.anim.opacity);
+				o.anim.opacity = o.anim.opacity == 0 ? 0.0001 : o.anim.opacity;
 				if (w=="skewX" || w=="skX") o.anim.skewX = animDataTranslator(v,o.anim.skewX);
 				if (w=="skewY" || w=="skY") o.anim.skewY = animDataTranslator(v,o.anim.skewY);
 				if (w=="x") o.anim.x = animDataTranslator(v,o.anim.x);
@@ -1295,7 +1307,7 @@ var getcssParams = function(nc,level) {
 	}
 	
 	
-
+		
 	obj.styleProps = nc.css(["background-color",							 
 							 "border-top-color",
 							 "border-bottom-color",
@@ -1317,6 +1329,7 @@ var getcssParams = function(nc,level) {
 							 "borderBottomLeftRadius",
 							 "borderBottomRightRadius"							 
 							 ]);		 
+	
 	return obj;
 }
 
@@ -1425,10 +1438,9 @@ var calcCaptionResponsive = function(nc,opt,level,responsive) {
 				punchgs.TweenLite.set(nc,{color:obj.color,overwrite:"auto"});
 			
 			if (nc.data('svg_src')!=undefined) {
-				if (obj.color!="nopredefinedcolor") 
-					punchgs.TweenLite.set(nc.find('svg'),{fill:obj.color,overwrite:"auto"});
-				else
-					punchgs.TweenLite.set(nc.find('svg'),{fill:obj.styleProps.color,overwrite:"auto"});
+				var scolto = obj.color!="nopredefinedcolor" && obj.color!=undefined ? obj.color : obj.css!=undefined && obj.css.color!="nopredefinedcolor" && obj.css.color!=undefined ? obj.css.color : obj.styleProps.color!=undefined ? obj.styleProps.color : obj.styleProps.css!=undefined && obj.styleProps.css.color!=undefined ? obj.styleProps.css.color : false; 
+				if (scolto!=false)	
+					punchgs.TweenLite.set(nc.find('svg'),{fill:scolto,overwrite:"auto"});				
 			}
 			
 		}
@@ -1549,6 +1561,7 @@ var callCaptionLoops = function(el,factor) {
 					oo.y = "50%";
 				}
 
+				
 				angle = angle*factor;
 				radius = radius * factor;
 
@@ -1564,8 +1577,8 @@ var callCaptionLoops = function(el,factor) {
 												ease:punchgs.Linear.easeNone,
 												onUpdate:function() {
 
-													var rad = angobj.a * (Math.PI / 180);
-										            punchgs.TweenLite.to(angobj.element,0.1,{force3D:"auto",x:angobj.xoffset+Math.cos(rad) * angobj.unit, y:angobj.yoffset+angobj.unit * (1 - Math.sin(rad))});
+													var rad = (angobj.a+angobj.ang) * (Math.PI / 180);
+										            punchgs.TweenLite.to(angobj.element,0.1,{force3D:"auto",x:angobj.xoffset+Math.cos(rad) * angobj.unit, y:(angobj.unit * (1 - Math.sin(rad)))+angobj.yoffset/0.5});
 
 												},
 												onComplete:function() {

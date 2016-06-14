@@ -41,7 +41,13 @@ class WC_Appointment_Form_Date_Picker extends WC_Appointment_Form_Picker {
 			}
 		}
 
+		$this->find_padding_slots();
 		$this->find_fully_scheduled_slots();
+		
+		//* Experimental
+		if ( current_theme_supports( 'woocomerce-appointments-show-discounted-slots' ) ) {
+			$this->find_discounted_slots();
+		}
 	}
 	
 	/**
@@ -61,12 +67,20 @@ class WC_Appointment_Form_Date_Picker extends WC_Appointment_Form_Picker {
 
 		$slots_in_range  = $this->appointment_form->product->get_slots_in_range( $min_date, $max_date );
 		$available_slots = $this->appointment_form->product->get_available_slots( $slots_in_range );
-
+		
 		if ( empty( $available_slots[0] ) ) {
 			return strtotime( 'midnight' );
 		} else {
 			return $available_slots[0];
 		}
+	}
+	
+	/**
+	 * Find days which are padding days so they can be grayed out on the date picker
+	 */
+	protected function find_padding_slots() {
+		$padding_days = WC_Appointments_Controller::find_padding_day_slots( $this->appointment_form->product->id );
+		$this->args['padding_days'] = $padding_days;
 	}
 
 	/**
@@ -79,5 +93,13 @@ class WC_Appointment_Form_Date_Picker extends WC_Appointment_Form_Picker {
 		$this->args['partially_scheduled_days'] = $scheduled['partially_scheduled_days'];
 		$this->args['remaining_scheduled_days'] = $scheduled['remaining_scheduled_days'];
 		$this->args['fully_scheduled_days']     = $scheduled['fully_scheduled_days'];
+	}
+	
+	/**
+	 * Find days which are padding days so they can be grayed out on the date picker
+	 */
+	protected function find_discounted_slots() {
+		$discounted_days = WC_Appointments_Controller::find_discounted_day_slots( $this->appointment_form->product->id );
+		$this->args['discounted_days'] = $discounted_days;
 	}
 }

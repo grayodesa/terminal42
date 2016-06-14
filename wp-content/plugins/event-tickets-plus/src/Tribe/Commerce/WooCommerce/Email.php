@@ -13,7 +13,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Email extends WC_Email {
 
 		$this->id          = 'wootickets';
 		$this->title       = __( 'Tickets', 'event-tickets-plus' );
-		$this->description = __( 'Email the user will receive after a completed order with the tickets he purchased.', 'event-tickets-plus' );
+		$this->description = __( 'Email the user will receive after a completed order with the tickets they purchased.', 'event-tickets-plus' );
 
 		$this->subject = __( 'Your tickets from {site_title}', 'event-tickets-plus' );
 
@@ -72,10 +72,12 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Email extends WC_Email {
 		$attendees = array();
 
 		foreach ( $query->posts as $post ) {
+			$product = get_post( get_post_meta( $post->ID, $wootickets->atendee_product_key, true ) );
 
 			$attendees[] = array(
 				'event_id'      => get_post_meta( $post->ID, $wootickets->atendee_event_key, true ),
-				'ticket_name'   => get_post( get_post_meta( $post->ID, $wootickets->atendee_product_key, true ) )->post_title,
+				'product_id'    => $product->ID,
+				'ticket_name'   => $product->post_title,
 				'holder_name'   => get_post_meta( $this->object->id, '_billing_first_name', true ) . ' ' . get_post_meta( $this->object->id, '_billing_last_name', true ),
 				'order_id'      => $this->object->id,
 				'ticket_id'     => $post->ID,

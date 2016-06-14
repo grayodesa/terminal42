@@ -24,7 +24,7 @@ class MC4WP_Logging_Admin {
 		add_action( 'mc4wp_dashboard_setup', array( $this, 'register_dashboard_widget' ) );
 		add_action( 'mc4wp_admin_log_export', array( $this, 'run_log_exporter' ) );
 		add_action( 'mc4wp_admin_enqueue_assets', array( $this, 'enqueue_assets' ) );
-		add_action( 'mc4wp_admin_after_integration_settings', array( $this, 'show_link_to_integration_log' ) );
+		add_action( 'mc4wp_admin_after_integration_settings', array( $this, 'show_link_to_integration_log' ), 60 );
 		add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
 	}
 
@@ -77,7 +77,7 @@ class MC4WP_Logging_Admin {
 		if ( $page === 'mailchimp-for-wp-reports' && $tab === 'statistics' ) {
 
 			// load flot
-			wp_register_script( 'mc4wp-flot', $this->plugin->url( '/assets/js/jquery.flot.min.js '), array( 'jquery' ), $this->plugin->version(), true );
+			wp_register_script( 'mc4wp-flot', $this->plugin->url( '/assets/js/jquery.flot.min.js'), array( 'jquery' ), $this->plugin->version(), true );
 			wp_register_script( 'mc4wp-flot-time', $this->plugin->url( 'assets/js/jquery.flot.time.min.js' ), array( 'jquery' ), $this->plugin->version(), true );
 			wp_register_script( 'mc4wp-statistics', $this->plugin->url( 'assets/js/admin-statistics' ) . $suffix .'.js', array( 'jquery', 'mc4wp-flot', 'mc4wp-flot-time' ), $this->plugin->version(), true );
 			wp_enqueue_script( 'mc4wp-statistics' );
@@ -133,22 +133,18 @@ class MC4WP_Logging_Admin {
 		$args = array();
 		$request = array_merge( $_POST, $_GET );
 
-		if( isset( $request['start_year'] ) ) {
+		if( ! empty( $request['start_year'] ) ) {
 			$start_year = absint( $request['start_year'] );
 			$start_month = ( isset( $request['start_month'] ) ) ? absint( $request['start_month'] ) : 1;
-			$timestring = sprintf( 'first day of %s-%s', $start_year, $start_month );
+			$timestring = sprintf( '%s-%s', $start_year, $start_month );
 			$args['datetime_after'] = date( 'Y-m-d 00:00:00', strtotime( $timestring ) );
 		}
 
-		if( isset( $request['end_year'] ) ) {
+		if( ! empty( $request['end_year'] ) ) {
 			$end_year = absint( $request['end_year'] );
 			$end_month = ( isset( $request['end_month'] ) ) ? absint( $request['end_month'] ) : 12;
-			$timestring = sprintf( 'last day of %s-%s', $end_year, $end_month );
-			$args['datetime_before'] = date( 'Y-m-d 23:59:59', strtotime( $timestring ) );
-		}
-
-		if( isset( $request['include_errors'] ) ) {
-			$args['include_errors'] = 1;
+			$timestring = sprintf( '%s-%s', $end_year, $end_month );
+			$args['datetime_before'] = date( 'Y-m-t 23:59:59', strtotime( $timestring ) );
 		}
 
 		$exporter = new MC4WP_Log_Exporter();

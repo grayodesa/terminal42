@@ -2,7 +2,7 @@
 /*
 Plugin Name: Event Tickets Plus
 Description: Event Tickets Plus allows you to sell tickets to events
-Version: 4.0.5
+Version: 4.1.2
 Author: Modern Tribe, Inc.
 Author URI: http://m.tri.be/28
 License: GPLv2 or later
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) die( '-1' );
 define( 'EVENT_TICKETS_PLUS_DIR', dirname( __FILE__ ) );
 define( 'EVENT_TICKETS_PLUS_FILE', __FILE__ );
 
-add_action( 'plugins_loaded', 'event_tickets_plus_init' );
+add_action( 'plugins_loaded', 'event_tickets_plus_init', 9 );
 
 function event_tickets_plus_init() {
 	tribe_init_tickets_plus_autoloading();

@@ -1,12 +1,20 @@
 <?php
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 /**
  * WC_Appointment_Cart_Manager class.
  */
 class WC_Appointment_Cart_Manager {
 
+	/**
+	 * The class id used for identification in logging.
+	 *
+	 * @var $id
+	 */
+	public $id;
+	
 	/**
 	 * Constructor
 	 */
@@ -31,6 +39,13 @@ class WC_Appointment_Cart_Manager {
 			} else {
 				add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'add_to_cart_redirect' ) );
 			}
+		}
+		
+		$this->id = 'wc_appointment_cart_manager';
+
+		// Active logs.
+		if ( class_exists( 'WC_Logger' ) ) {
+			$this->log = new WC_Logger();
 		}
 
 	}
@@ -137,6 +152,8 @@ class WC_Appointment_Cart_Manager {
 
 	/**
 	 * Before delete
+	 *
+	 * @param string $cart_item_key identifying which item in cart.
 	 */
 	public function cart_item_removed( $cart_item_key ) {
 		$cart_item = WC()->cart->removed_cart_contents[ $cart_item_key ];
@@ -144,14 +161,23 @@ class WC_Appointment_Cart_Manager {
 		if ( isset( $cart_item['appointment'] ) ) {
 			$appointment_id = $cart_item['appointment']['_appointment_id'];
 			$appointment    = get_wc_appointment( $appointment_id );
-			$appointment->update_status( 'was-in-cart' );
-			WC_Cache_Helper::get_transient_version( 'appointments', true );
-			wp_clear_scheduled_hook( 'wc-appointment-remove-inactive-cart', array( $appointment_id ) );
+			if ( $appointment->has_status( 'in-cart' ) ) {
+				$appointment->update_status( 'was-in-cart' );
+				WC_Cache_Helper::get_transient_version( 'appointments', true );
+				wp_clear_scheduled_hook( 'wc-appointment-remove-inactive-cart', array( $appointment_id ) );
+
+				if ( isset( $this->log ) ) {
+					$message = sprintf( 'Appointment ID: %s removed from cart by user ID: %s ', $appointment->id, get_current_user_id() );
+					$this->log->add( $this->id, $message );
+				}
+			}
 		}
 	}
 
 	/**
 	 * Restore item
+	 *
+	 * @param string $cart_item_key identifying which item in cart.
 	 */
 	public function cart_item_restored( $cart_item_key ) {
 		$cart      = WC()->cart->get_cart();
@@ -160,9 +186,16 @@ class WC_Appointment_Cart_Manager {
 		if ( isset( $cart_item['appointment'] ) ) {
 			$appointment_id = $cart_item['appointment']['_appointment_id'];
 			$appointment    = get_wc_appointment( $appointment_id );
-			$appointment->update_status( 'in-cart' );
-			WC_Cache_Helper::get_transient_version( 'appointments', true );
-			$this->schedule_cart_removal( $appointment_id );
+			if ( $appointment->has_status( 'was-in-cart' ) ) {
+				$appointment->update_status( 'in-cart' );
+				WC_Cache_Helper::get_transient_version( 'appointments', true );
+				$this->schedule_cart_removal( $appointment_id );
+
+				if ( isset( $this->log ) ) {
+					$message = sprintf( 'Appointment ID: %s was restored to cart by user ID: %s ', $appointment->id, get_current_user_id() );
+					$this->log->add( $this->id, $message );
+				}
+			}
 		}
 	}
 

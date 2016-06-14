@@ -489,6 +489,12 @@ th.column-appointment_status {
 			display: table-cell;
 		}
 	}
+	.wc-appointments-appointment-form-wrap {
+		div.quantity {
+			float: left;
+			margin: 0 4px 0 0;
+		}
+	}
 }
 
 // Appointments data

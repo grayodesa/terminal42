@@ -2911,6 +2911,14 @@ class RevSliderSlide extends RevSliderElementsBase{
 				}
 				
 				$this->arrLayers[$key]['video_data'] = $video_data;
+			}elseif(isset($type) && $type == 'svg'){
+				$svg_val = RevSliderFunctions::getVal($layer, 'svg', false);
+				if (!empty($svg_val) && sizeof($svg_val)>0) {
+					$svg_val->{'src'} = str_replace($urlFrom, $urlTo, $svg_val->{'src'});
+					
+					$this->arrLayers[$key]['svg'] = $svg_val;
+					$isUpdated = true;
+				}
 			}
 			
 			if(isset($layer['layer_action'])){

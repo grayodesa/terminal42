@@ -24,7 +24,7 @@ class MC4WP_Styles_Builder_Public {
 	 */
 	public function add_hooks() {
 		// capture form preview requests
-		add_action( 'wp', array( $this, 'maybe_load_preview' ) );
+		add_action( 'wp', array( $this, 'maybe_load_preview' ), 99 );
 		add_action( 'mc4wp_load_form_stylesheets', array( $this, 'load_stylesheets' ) );
 	}
 

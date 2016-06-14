@@ -164,12 +164,19 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Report {
 			}
 			$stock = $ticket->stock();
 			$sold = $ticket->qty_sold();
+			$cancelled = $ticket->qty_cancelled();
 
-			$tickets_sold[ $ticket->name ]['sold'] += $sold;
+			$net_sold = $sold - $cancelled;
+			if ( $net_sold < 0 ) {
+				$net_sold = 0;
+			}
+
+			$tickets_sold[ $ticket->name ]['sold'] += $net_sold;
 			$tickets_sold[ $ticket->name ]['pending'] += absint( $ticket->qty_pending() );
 			$tickets_sold[ $ticket->name ]['completed'] += absint( $tickets_sold[ $ticket->name ]['sold'] ) - absint( $tickets_sold[ $ticket->name ]['pending'] );
 
-			$total_sold += $sold;
+
+			$total_sold += $net_sold;
 			$total_pending += absint( $ticket->qty_pending() );
 		}
 

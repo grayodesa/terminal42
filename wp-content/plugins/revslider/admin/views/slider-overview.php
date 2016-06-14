@@ -150,10 +150,13 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 	<div class="rs-dashboard">
 		<?php
 		$validated = get_option('revslider-valid', 'false');
+		$temp_active = get_option('revslider-temp-active', 'false');
 		$code = get_option('revslider-code', '');
+		//$email = get_option('revslider-email', '');
 		$latest_version = get_option('revslider-latest-version', RevSliderGlobals::SLIDER_REVISION);
 
 		$activewidgetclass = $validated === 'true'? "rs-status-green-wrap" : "rs-status-red-wrap";
+		$activewidgetclass = $temp_active === 'true' ? "rs-status-orange-wrap" : $activewidgetclass;
 		
 		$dashboard_array = array();
 		$dashboard_required_array = array();
@@ -165,6 +168,7 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 			<div class="rs-dash-title-wrap <?php echo $activewidgetclass; ?>">
 				<div class="rs-dash-title"><?php _e("Plugin Activation",'revslider'); ?></div>
 				<div class="rs-dash-title-button rs-status-red"><i class="icon-not-registered"></i><?php _e("Not Activated",'revslider'); ?></div>
+				<div class="rs-dash-title-button rs-status-orange"><i class="icon-no-problem-found"></i><?php _e("Temporarily Activated",'revslider'); ?></div>
 				<div class="rs-dash-title-button rs-status-green"><i class="icon-no-problem-found"></i><?php _e("Plugin Activated",'revslider'); ?></div>
 			</div>
 			
@@ -188,7 +192,8 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 				</div>
 
 				<div class="rs-dash-bottom-wrapper">
-					<span id="rs-validation-activate-step-a" class="rs-dash-button"><?php _e('Register Slider Revolution','revslider'); ?></a>
+					<span id="rs-validation-activate-step-a" class="rs-dash-button"><?php _e('Register Slider Revolution','revslider'); ?></span>
+					<a class="rs-dash-button" href="https://themepunch.com/purchase-code-deactivation/" target="_blank"><?php _e('Deregister Domain','revslider'); ?></a>
 				</div>
 			</div>
 
@@ -200,10 +205,18 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 					<div><?php _e("You can learn how to find your purchase key <a target='_blank' href='http://www.themepunch.com/faq/where-to-find-the-purchase-code/'>here</a>",'revslider'); ?></div>
 				</div>
 				<div class="rs-dash-content-space"></div>
-				<?php if(!RS_DEMO){ ?>				
+				<?php if(!RS_DEMO){ ?>
 					<input type="text" name="rs-validation-token" class="rs-dashboard-input" style="width:100%" value="<?php echo $code; ?>" <?php echo ($validated === 'true') ? ' readonly="readonly"' : ''; ?> style="width: 350px;" />
 					<div class="rs-dash-content-space"></div>
+					<?php
+					/*
+					<div class="rs-dash-strong-content"><?php _e("Email Address",'revslider'); ?></div>
+					<input type="text" name="rs-validation-email" class="rs-dashboard-input" style="width:100%" value="<?php echo $email; ?>" <?php echo ($validated === 'true') ? ' readonly="readonly"' : ''; ?> style="width: 350px;" />
+					?>
 					
+					<div class="rs-dash-content-space"></div>
+					*/
+					?>
 					<?php if ($validated == 'true') {
 					?>
 						<div><?php _e("In order to register your purchase code on another domain, deregister <br>it first by clicking the button below.",'revslider'); ?></div>				
@@ -218,6 +231,16 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 						<span style="display:none" id="rs_purchase_validation" class="loader_round"><?php _e('Please Wait...', 'revslider'); ?></span>					
 						<a href="javascript:void(0);" <?php echo ($validated !== 'true') ? '' : 'style="display: none;"'; ?> id="rs-validation-activate" class="rs-dash-button"><?php _e('Register the code','revslider'); ?></a>				
 						<a href="javascript:void(0);" <?php echo ($validated === 'true') ? '' : 'style="display: none;"'; ?> id="rs-validation-deactivate" class="rs-dash-button"><?php _e('Deregister the code','revslider'); ?></a>
+						
+						<?php
+						$temp_active = get_option('revslider-temp-active', 'false');
+						if($temp_active == 'true'){
+							?>
+							<a href="?page=revslider&checktempactivate=true" id="rs-validation-full-activate" class="rs-dash-button"><?php _e('Complete Activation','revslider'); ?></a>
+							<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('What does \'Temporary Activated\' mean?', 'revslider');?>" data-content="<?php echo __('The Envato API was unavailable at the activation process:', 'revslider').'<div class=\'rs-dash-content-space\'></div>'.__('The Slider is temporary activated until the Envato API can be reached again by the ThemePunch servers.','revslider').'<div class=\'rs-dash-content-space\'></div>'.__('The plugin will be fully activated as soon as the Envato API is available again.','revslider').''; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel"><?php _e('Why?', 'revslider'); ?></span></span>
+							<?php
+						}
+						?>
 					</div>					
 				<?php } ?>
 			</div>		
@@ -283,7 +306,7 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 							}					
 						} else {
 						?>
-							<span class="rs-dash-button-gray"><?php _e('Register to Access Update', 'revslider'); ?></a>
+							<span class="rs-dash-button" id="regsiter-to-access-update-none"><?php _e('Update', 'revslider'); ?></a>
 						<?php
 						}	
 						
@@ -463,20 +486,20 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 						<div class="rs-dash-strong-content rs-dash-deactivated"><?php _e("Online Slider Library",'revslider'); ?></div>
 						<div class="rs-dash-deactivated"><?php _e("Full examples for instant usage",'revslider'); ?></div>						
 					</div>
-					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel">Unlock Now</span></span>
+					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel"><?php _e('Unlock Now', 'revslider'); ?></span></span>
 					<div class="rs-dash-content-space"></div>				
 					<div class="rs-dash-icon rs-dash-notregistered"></div>
 					<div class="rs-dash-content-with-icon" style="width:190px;margin-right:20px">
 						<div class="rs-dash-strong-content rs-dash-deactivated"><?php _e("Get Free Premium Sliders",'revslider'); ?></div>
 						<div class="rs-dash-deactivated"><?php _e("Activate your plugin and profit",'revslider'); ?></div>						
 					</div>
-					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel">Unlock Now</span></span>
+					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel"><?php _e('Unlock Now', 'revslider'); ?></span></span>
 				<?php } ?>				
 				<div class="rs-dash-bottom-wrapper">
 					<?php if ($validated === 'true') { ?>
 						<a href="javascript:void(0)" class="rs-dash-button" id="button_import_template_slider_b"><?php _e('Open Template Store', 'revslider'); ?></a>				
 					<?php }else{ ?>
-				 		<span class="rs-dash-button-gray" ><?php _e('Register to Access Store', 'revslider'); ?></span>				 
+				 		<span class="rs-dash-button" id="regsiter-to-access-store-none" ><?php _e('Open Template Library', 'revslider'); ?></span>				 
 					<?php } ?>
 				</div>
 			</div>
@@ -566,11 +589,11 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 						<div class="rs-dash-strong-content"><?php _e("Ticket Support",'revslider'); ?></div>
 						<div><?php _e("Direct help from our qualified support team",'revslider'); ?></div>
 					</div>
-					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel">Unlock Now</span></span>
+					<span class="rs-dash-more-info" data-takemeback="false" data-title="<?php _e('How to Unlock Premium Features?', 'revslider');?>" data-content="<?php echo __('If you have purchased Slider Revolution from ThemePunch directly you can find your activation code here:', 'revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://revolution.themepunch.com/direct-customer-benefits/#productactivation\' class=\'rs-dash-invers-button\'>'.__('Where is my Purchase Code?','revslider').'</a><div class=\'rs-dash-content-space\'></div>'.__('Dont have a license yet? Purchase a license on CodeCanyon','revslider').'<div class=\'rs-dash-content-space\'></div><a target=\'_blank\' href=\'http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380\' class=\'rs-dash-button-small\'>'.__('Buy Now from $19','revslider').'</a>'; ?>"><span class="rs-dash-invers-button-gray rs-dash-close-panel"><?php _e('Unlock Now', 'revslider'); ?></span></span>
 				<?php } ?>
 
 				<div class="rs-dash-bottom-wrapper">					
-					<a href="http://www.themepunch.com/support-center/" target="_blank" class="rs-dash-button"><?php _e('Visit Support Center', 'revslider'); ?></a>									
+					<a href="http://www.themepunch.com/support-center/?rev=rsb" target="_blank" class="rs-dash-button"><?php _e('Visit Support Center', 'revslider'); ?></a>									
 				</div>
 			</div>
 			
@@ -674,6 +697,12 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 	</div>
 </div>
 
+<div id="dialog_duplicate_slider_package" class="dialog_duplicate_layer" title="<?php _e('Duplicate', 'revslider'); ?>" style="display:none;">
+	<div style="margin-top:14px">
+		<span style="margin-right:15px"><?php _e('Prefix:', 'revslider'); ?></span><input id="rs-duplicate-prefix" type="text" name="rs-duplicate-prefix" value="" />
+	</div>
+</div>
+
 <script type="text/javascript">
 	jQuery(document).ready(function(){
 		RevSliderAdmin.initSlidersListView();
@@ -733,3 +762,85 @@ $stable_version = get_option('revslider-stable-version', '4.1');
 <?php
 require self::getPathTemplate('template-slider-selector');
 ?>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('#regsiter-to-access-update-none, #regsiter-to-access-store-none, #register-wrong-purchase-code').click(function(){		
+			var clicked = jQuery(this).attr('id');	
+			jQuery('#rs-premium-benefits-dialog').dialog({
+				width:830,
+				height:750,
+				modal:true,
+				resizable:false,
+				open:function(ui) {
+					var dialog = jQuery(ui.target).parent(),						
+						dialogtitle = dialog.find('.ui-dialog-title');
+
+				
+
+					dialog.addClass("rs-open-premium-benefits-dialog-container");
+					if (!dialogtitle.hasClass("titlechanged")) {
+						dialogtitle.html("");
+						dialogtitle.append(jQuery('#rs-premium-benefits-dialog .rs-premium-benefits-dialogtitles'));
+						dialogtitle.addClass("titlechanged");
+					}
+					jQuery('#rs-wrong-purchase-code-title, #rs-plugin-update-feedback-title, #rs-plugin-download-template-feedback-title').hide();
+					
+					switch (clicked) {
+						case "regsiter-to-access-update-none":
+							jQuery('#rs-plugin-update-feedback-title').show();
+						break;
+						case "regsiter-to-access-store-none":
+							jQuery('#rs-plugin-download-template-feedback-title').show();
+						break;
+						case "register-wrong-purchase-code":
+							jQuery('#rs-wrong-purchase-code-title').show();
+						break;
+					}
+				}
+			});
+		});
+	});
+</script>
+<div style="visibility: none;" id="register-wrong-purchase-code"></div>
+
+<div id="rs-premium-benefits-dialog" style="display: none;">
+	<div class="rs-premium-benefits-dialogtitles" id="rs-wrong-purchase-code-title">
+		<span class="oppps-icon"></span>
+		<span class="benefits-title-right">
+			<span class="rs-premium-benefits-dialogtitle"><?php _e('Ooops... Wrong Purchase Code!', 'revslider'); ?></span>
+			<span class="rs-premium-benefits-dialogsubtitle"><?php _e('Maybe just a typo? (Click <a target="_blank" href="https://revolution.themepunch.com/direct-customer-benefits/#productactivation">here</a> to find out how to locate your Slider Revolution purchase code.)', 'revslider'); ?></span>
+		</span>
+	</div>
+	<div style="display:none" class="rs-premium-benefits-dialogtitles" id="rs-plugin-update-feedback-title">
+		<span class="oppps-icon"></span>
+		<span class="benefits-title-right">
+			<span class="rs-premium-benefits-dialogtitle"><?php _e('Plugin Activation Required'); ?></span>
+			<span class="rs-premium-benefits-dialogsubtitle"><?php _e('In order to download the <a target="_blank" href="http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380#item-description__update-history">latest update</a> instantly', 'revslider'); ?></span>
+		</span>
+	</div>
+	<div style="display:none" class="rs-premium-benefits-dialogtitles" id="rs-plugin-download-template-feedback-title">
+		<span class="oppps-icon"></span>
+		<span class="benefits-title-right">
+			<span class="rs-premium-benefits-dialogtitle"><?php _e('Plugin Activation Required'); ?></span>
+			<span class="rs-premium-benefits-dialogsubtitle"><?php _e('In order to gain instant access to the entire <a target="_blank" href="https://revolution.themepunch.com/examples/">Template Library</a>', 'revslider'); ?></span>
+		</span>
+	</div>
+	<div class="rs-premium-benefits-block rspb-withborder">
+		<h3><i class="big_present"></i><?php _e('If you purchased a theme that bundled Slider Revolution', 'revslider'); ?></h3>
+		<ul>
+			<li><?php _e('No activation needed to use to use / create sliders with Slider Revolution', 'revslider'); ?></li>
+			<li><?php _e('Update manually through your theme', 'revslider'); ?></li>
+			<li><?php _e('Access our <a target="_blank" class="rspb_darklink" href="https://www.themepunch.com/support-center/#support">FAQ database</a> and <a target="_blank" class="rspb_darklink" href="https://www.youtube.com/playlist?list=PLSCdqDWVMJPPDcH_57CNZvLckoB8cimJF">video tutorials</a> for help', 'revslider'); ?></li>
+		</ul>
+	</div>
+	<div class="rs-premium-benefits-block">
+		<h3><i class="big_diamond"></i><?php _e('Activate Slider Revolution for', 'revslider'); ?> <span class="instant_access"></span> <?php _e('to ...', 'revslider'); ?></h3>
+		<ul>
+			<li><?php _e('<a target="_blank" href="https://revolution.themepunch.com/direct-customer-benefits/#liveupdates">Update</a> to the latest version directly from your dashboard', 'revslider'); ?></li>
+			<li><?php _e('<a target="_blank" href="https://themepunch.ticksy.com/submit/">Support</a> ThemePunch ticket desk', 'revslider'); ?></li>
+			<li><?php _e('<a target="_blank" href="https://revolution.themepunch.com/direct-customer-benefits/#addons">Add-Ons</a> for Slider Revolution', 'revslider'); ?></li>
+			<li><?php _e('<a target="_blank" href="https://revolution.themepunch.com/examples/">Library</a> with tons of free premium slider templates', 'revslider'); ?></li>
+		</ul>
+	</div>
+	<a target="_blank" class="get_purchase_code" href="http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380?ref=themepunch&license=regular&open_purchase_for_item_id=2751380&purchasable=source"><?php _e('GET A PURCHASE CODE', 'revslider'); ?></a>
+</div>

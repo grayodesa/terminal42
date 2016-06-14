@@ -75,14 +75,20 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 		//ajax response to save slider options.
 		self::addActionAjax("ajax_action", "onAjaxAction");
 		
+		$upgrade = new RevSliderUpdate( GlobalsRevSlider::SLIDER_REVISION );
+		
+		$temp_active = get_option('revslider-temp-active', 'false');
+		
+		if($temp_active == 'true'){ //check once an hour
+			$temp_force = (isset($_GET['checktempactivate'])) ? true : false;
+			$upgrade->add_temp_active_check($temp_force);
+		}
+		
 		//add common scripts there
 		$validated = get_option('revslider-valid', 'false');
 		$notice = get_option('revslider-valid-notice', 'true');
 		$latestv = RevSliderGlobals::SLIDER_REVISION;
 		$stablev = get_option('revslider-stable-version', '0');
-		
-		$upgrade = new RevSliderUpdate( GlobalsRevSlider::SLIDER_REVISION );
-		
 		
 		if(!$revSliderAsTheme || version_compare($latestv, $stablev, '<')){
 			if($validated === 'false' && $notice === 'true'){
@@ -96,6 +102,7 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 				$upgrade->add_update_checks();
 			}
 		}
+		
 		
 		if(isset($_REQUEST['update_shop'])){
 			$template->_get_template_list(true);
@@ -115,7 +122,7 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 		
 		add_action( 'admin_head', array('RevSliderAdmin', 'include_custom_css' ));
 		
-		if($pagenow == 'plugins.php'){
+		if(isset($pagenow) && $pagenow == 'plugins.php'){
 			add_action('admin_notices', array('RevSliderAdmin', 'add_plugins_page_notices'));
 		}
 		
@@ -166,7 +173,7 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
         ?>
         <tr class="plugin-update-tr"><td colspan="<?php echo $wp_list_table->get_column_count(); ?>" class="plugin-update colspanchange">
             <div class="update-message installer-q-icon">
-            <?php _e('Activate Slider Revolution for <a href="http://revolution.themepunch.com/direct-customer-benefits/" target="_blank">Premium Benefits</a>. You can <a href="'.admin_url('admin.php?page=revslider').'">Enter an existing licence key</a> or <a href="http://codecanyon.net/item/slider-revolution-responsive-wordpress-plugin/2751380?ref=themepunch&license=regular&open_purchase_for_item_id=2751380&purchasable=source" target="_blank">Purchase a licence key</a>.', 'revslider'); ?>
+            <?php _e('Activate Slider Revolution for <a href="http://revolution.themepunch.com/direct-customer-benefits/" target="_blank">Premium Benefits (e.g. Live Updates)</a>.', 'revslider'); ?>
             </div>
         </tr>
         <?php 
@@ -489,6 +496,19 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 				$notices[99999]->additional = array();
 			}
 			
+			$tmp = get_option('revslider-temp-active-notice', 'false');
+			
+			if($tmp == 'true'){
+				$notices[99998] = new stdClass();
+				$notices[99998]->code = 'DISCARDTEMPACT';
+				$notices[99998]->version = '99.99';
+				$notices[99998]->is_global = false;
+				$notices[99998]->color = 'error';
+				$notices[99998]->text = '<p>'.__('Hi, your Purchase Code for Slider Revolution has been deregistered as it was not a valid Slider Revolution Purchase Code', 'revslider').'</p>';
+				$notices[99998]->disable = false;
+				$notices[99998]->additional = array();
+			}
+			
 			if(!empty($notices) && is_array($notices)){
 				global $revslider_screens;
 				
@@ -704,69 +724,99 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 		dmp(__("downloading template slider from server...", 'revslider'));
 		
 		$uid = esc_attr(RevSliderFunctions::getPostVariable('uid'));
+		
 		if($uid == ''){
 			dmp(__("ID missing, something went wrong. Please try again!", 'revslider'));
 			echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
 			exit;
 		}else{
-			//send request to TP server and download file
 			$tmp = new RevSliderTemplate();
 			
-			$filepath = $tmp->_download_template($uid);
+			$package = esc_attr(RevSliderFunctions::getPostVariable('package'));
+			$package = ($package == 'true') ? true : false;
 			
-			if($filepath !== false && !is_array($filepath)){
-				//check if Slider Template was already imported. If yes, remove the old Slider Template as we now do an "update" (in reality we delete and insert again)
-				//get all template sliders
-				$tmp_slider = $tmp->getThemePunchTemplateSliders();
-				
-				foreach($tmp_slider as $tslider){
-					if(isset($tslider['uid']) && $uid == $tslider['uid']){
-						if(!isset($tslider['installed'])){ //slider is installed
-							//delete template Slider!
-							$mSlider = new RevSlider();
-							$mSlider->initByID($tslider['id']);
-							
-							$mSlider->deleteSlider();
-							//remove the update flag from the slider
-							
-							$tmp->remove_is_new($uid);
-						}
-						break;
-					}
-				}
-				
-				
-				$slider = new RevSlider();
-				$response = $slider->importSliderFromPost($updateAnim, $updateStatic, $filepath, $uid, $single_slide);
-				
-				$tmp->_delete_template($uid);
-				
-				if($single_slide === false){
-					if(empty($viewBack)){
-						$sliderID = $response["sliderID"];
-						$viewBack = self::getViewUrl(self::VIEW_SLIDER,"id=".$sliderID);
-						if(empty($sliderID))
-							$viewBack = self::getViewUrl(self::VIEW_SLIDERS);
-					}
-				}
-
-				//handle error
-				if($response["success"] == false){
-					$message = $response["error"];
-					dmp("<b>Error: ".$message."</b>");
-					echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
-				}else{	//handle success, js redirect.
-					dmp(__("Slider Import Success, redirecting...",'revslider'));
-					echo "<script>location.href='$viewBack'</script>";
-				}
-				
+			//get all in the same package as the uid
+			if($package === true){
+				$uids = $tmp->get_package_uids($uid);
 			}else{
-				if(is_array($filepath)){
-					dmp($filepath['error']);
-				}else{
-					dmp(__("Could not download from server. Please try again later!", 'revslider'));
+				$uids = (array)$uid;
+			}
+			
+			if(!empty($uids)){
+				foreach($uids as $uid){
+					set_time_limit(60); //reset the time limit
+			
+					$filepath = $tmp->_download_template($uid); //can be single or multiple, depending on $package beeing false or true
+					
+					//send request to TP server and download file
+					if(is_array($filepath) && isset($filepath['error'])){
+						dmp($filepath['error']);
+						echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
+						exit;
+					}
+					
+					if($filepath !== false){
+						//check if Slider Template was already imported. If yes, remove the old Slider Template as we now do an "update" (in reality we delete and insert again)
+						//get all template sliders
+						$tmp_slider = $tmp->getThemePunchTemplateSliders();
+						
+						foreach($tmp_slider as $tslider){
+							if(isset($tslider['uid']) && $uid == $tslider['uid']){
+								if(!isset($tslider['installed'])){ //slider is installed
+									//delete template Slider!
+									$mSlider = new RevSlider();
+									$mSlider->initByID($tslider['id']);
+									
+									$mSlider->deleteSlider();
+									//remove the update flag from the slider
+									
+									$tmp->remove_is_new($uid);
+								}
+								break;
+							}
+						}
+						
+						
+						$slider = new RevSlider();
+						$response = $slider->importSliderFromPost($updateAnim, $updateStatic, $filepath, $uid, $single_slide);
+						
+						$tmp->_delete_template($uid);
+						
+						if($single_slide === false){
+							if(empty($viewBack)){
+								$sliderID = $response["sliderID"];
+								$viewBack = self::getViewUrl(self::VIEW_SLIDER,"id=".$sliderID);
+								if(empty($sliderID))
+									$viewBack = self::getViewUrl(self::VIEW_SLIDERS);
+							}
+						}
+
+						//handle error
+						if($response["success"] == false){
+							$message = $response["error"];
+							dmp("<b>Error: ".$message."</b>");
+							echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
+						}else{	//handle success, js redirect.
+							if(count($uids) > 1){
+								dmp(__("Slider Import Success", 'revslider'));
+							}else{
+								dmp(__("Slider Import Success, redirecting...",'revslider'));
+							}
+						}
+						
+					}else{
+						if(is_array($filepath)){
+							dmp($filepath['error']);
+						}else{
+							dmp(__("Could not download from server. Please try again later!", 'revslider'));
+						}
+						echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
+						exit;
+					}
 				}
-				echo RevSliderFunctions::getHtmlLink($viewBack, __("Go Back",'revslider'));
+				echo "<script>location.href='$viewBack'</script>";
+			}else{
+				dmp(__("Could not download package. Please try again later!", 'revslider'));
 				exit;
 			}
 		}
@@ -1061,6 +1111,16 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 					$slider->duplicateSliderFromData($data);
 
 					self::ajaxResponseSuccessRedirect(__("Success! Refreshing page...",'revslider'), self::getViewUrl(self::VIEW_SLIDERS));
+				break;
+				case "duplicate_slider_package":
+
+					$ret = $slider->duplicateSliderPackageFromData($data);
+					
+					if($ret !== true){
+						RevSliderFunctions::throwError($ret);
+					}else{
+						self::ajaxResponseSuccessRedirect(__("Success! Refreshing page...",'revslider'), self::getViewUrl(self::VIEW_SLIDERS));
+					}
 				break;
 				case "add_slide":
 				case "add_bulk_slide":
@@ -1431,17 +1491,26 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 				break;
 				case "activate_purchase_code":
 					$result = false;
-					if(!empty($data['code'])){
+					if(!empty($data['code'])){ // && !empty($data['email'])
 						$result = $operations->checkPurchaseVerification($data);
 					}else{
-						RevSliderFunctions::throwError(__('The API key, the Purchase Code and the Username need to be set!', 'revslider'));
+						RevSliderFunctions::throwError(__('The Purchase Code and the E-Mail address need to be set!', 'revslider'));
 						exit();
 					}
 
-					if($result){
+					if($result === true){
 						self::ajaxResponseSuccessRedirect(__("Purchase Code Successfully Activated",'revslider'), self::getViewUrl(self::VIEW_SLIDERS));
-					}else{
+					}elseif($result === false){
 						RevSliderFunctions::throwError(__('Purchase Code is invalid', 'revslider'));
+					}else{
+						if($result == 'temp'){
+							self::ajaxResponseSuccessRedirect(__("Purchase Code Temporary Activated",'revslider'), self::getViewUrl(self::VIEW_SLIDERS));
+						} /*elseif($result == 'bad_email'){
+							RevSliderFunctions::throwError(__('Please add an valid E-Mail Address', 'revslider'));
+						}elseif($result == 'email_used'){
+							RevSliderFunctions::throwError(__('E-Mail already in use, please choose a different E-Mail', 'revslider'));
+						}*/
+						RevSliderFunctions::throwError(__('Purchase Code could not be validated', 'revslider'));
 					}
 				break;
 				case "deactivate_purchase_code":
@@ -1458,12 +1527,14 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 					self::ajaxResponseSuccess(__(".",'revslider'));
 				break;
 				case 'dismiss_dynamic_notice':
-					if(trim($data['id']) !== 'DISCARD'){
+					if(trim($data['id']) == 'DISCARD'){
+						update_option('revslider-deact-notice', false);
+					}elseif(trim($data['id']) == 'DISCARDTEMPACT'){
+						update_option('revslider-temp-active-notice', 'false');
+					}else{
 						$notices_discarded = get_option('revslider-notices-dc', array());
 						$notices_discarded[] = esc_attr(trim($data['id']));
 						update_option('revslider-notices-dc', $notices_discarded);
-					}else{
-						update_option('revslider-deact-notice', false);
 					}
 					
 					self::ajaxResponseSuccess(__(".",'revslider'));

@@ -64,14 +64,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 				switch ( $order->status ) {
 					case "completed" :
-						echo $order->email_order_items_table( $order->is_download_permitted(), false, true );
-					break;
+						echo $order->email_order_items_table( array( 'show_sku' => false ) );
+						break;
 					case "processing" :
-						echo $order->email_order_items_table( $order->is_download_permitted(), true, true );
-					break;
+						echo $order->email_order_items_table( array( 'show_sku' => true ) );
+						break;
 					default :
-						echo $order->email_order_items_table( $order->is_download_permitted(), true, false );
-					break;
+						echo $order->email_order_items_table( array( 'show_sku' => true ) );
+						break;
 				}
 			?>
 		</tbody>

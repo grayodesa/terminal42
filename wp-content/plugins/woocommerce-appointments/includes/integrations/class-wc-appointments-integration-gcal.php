@@ -51,18 +51,18 @@ class WC_Appointments_Integration_GCal extends WC_Settings_API {
 		add_action( 'woocommerce_api_wc_appointments_oauth_redirect' , array( $this, 'oauth_redirect' ) );
 		add_action( 'woocommerce_api_wc_appointments_callback_read' , array( $this, 'callback_read' ) );
 		add_action( 'woocommerce_appointment_confirmed', array( $this, 'sync_calendar' ) );
-		add_action( 'woocommerce_appointment_confirmed', array( $this, 'sync_appointment' ) );
+		add_action( 'woocommerce_appointment_confirmed', array( $this, 'sync_new_appointment' ) );
 		add_action( 'woocommerce_appointment_confirmed', array( $this, 'sync_callback' ) );
 		add_action( 'woocommerce_appointment_paid', array( $this, 'sync_calendar' ) );
-		add_action( 'woocommerce_appointment_paid', array( $this, 'sync_appointment' ) );
+		add_action( 'woocommerce_appointment_paid', array( $this, 'sync_new_appointment' ) );
 		add_action( 'woocommerce_appointment_paid', array( $this, 'sync_callback' ) );
 		add_action( 'woocommerce_appointment_complete', array( $this, 'sync_calendar' ) );
-		add_action( 'woocommerce_appointment_complete', array( $this, 'sync_appointment' ) );
+		add_action( 'woocommerce_appointment_complete', array( $this, 'sync_new_appointment' ) );
 		add_action( 'woocommerce_appointment_complete', array( $this, 'sync_callback' ) );
 		add_action( 'woocommerce_appointment_cancelled', array( $this, 'remove_appointment' ) );
-		// add_action( 'woocommerce_appointment_process_meta', array( $this, 'sync_edited' ) );
+		add_action( 'woocommerce_appointment_process_meta', array( $this, 'sync_edited_appointment' ) );
 		add_action( 'trashed_post', array( $this, 'remove_appointment' ) );
-		add_action( 'untrashed_post', array( $this, 'sync_edited' ) );
+		add_action( 'untrashed_post', array( $this, 'sync_unstrashed_appointment' ) );
 
 		if ( is_admin() ) {
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
@@ -438,6 +438,21 @@ class WC_Appointments_Integration_GCal extends WC_Settings_API {
 				echo '<div class="error fade"><p><strong>' . __( 'Google Calendar', 'woocommerce-appointments' ) . '</strong> ' . __( 'Failed to disconnect to your account, please try again, if the problem persists, turn on Debug Log option and see what is happening.', 'woocommerce-appointments' ) . '</p></div>';
 			}
 		}
+	}
+	
+	/**
+	 * Sync new Appointment with Google Calendar.
+	 *
+	 * @param  int $appointment_id Appointment ID
+	 *
+	 * @return void
+	 */
+	public function sync_new_appointment( $appointment_id ) {
+		if ( $this->is_edited_from_meta_box() ) {
+			return;
+		}
+
+		$this->sync_appointment( $appointment_id );
 	}
 	
 	/**
@@ -1006,6 +1021,32 @@ class WC_Appointments_Integration_GCal extends WC_Settings_API {
 		}
 
 	}
+	
+	/**
+	 * Sync Appointment with Google Calendar when appointment is edited.
+	 *
+	 * @param  int $appointment_id Appointment ID
+	 *
+	 * @return void
+	 */
+	public function sync_edited_appointment( $appointment_id ) {
+		if ( ! $this->is_edited_from_meta_box() ) {
+			return;
+		}
+
+		$this->maybe_sync_appointment_from_status( $appointment_id );
+	}
+
+	/**
+	 * Sync Appointment with Google Calendar when appointment is untrashed.
+	 *
+	 * @param  int $appointment_id Appointment ID
+	 *
+	 * @return void
+	 */
+	public function sync_unstrashed_appointment( $appointment_id ) {
+		$this->maybe_sync_appointment_from_status( $appointment_id );
+	}
 
 	/**
 	 * Remove/cancel the appointment in Google Calendar
@@ -1054,13 +1095,13 @@ class WC_Appointments_Integration_GCal extends WC_Settings_API {
 	}
 
 	/**
-	 * Sync Appointment with Google Calendar when appointment is edited
+	 * Maybe remove / sync appointment based on appointment status.
 	 *
-	 * @param  int $appointment_id Appointment ID
+	 * @param int $appointment_id Appointment ID
 	 *
 	 * @return void
 	 */
-	public function sync_edited( $appointment_id ) {
+	public function maybe_sync_appointment_from_status( $appointment_id ) {
 		global $wpdb;
 
 		$status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status FROM $wpdb->posts WHERE post_type = 'wc_appointment' AND ID = %d", $appointment_id ) );
@@ -1070,6 +1111,19 @@ class WC_Appointments_Integration_GCal extends WC_Settings_API {
 		} else if ( in_array( $status, apply_filters( 'woocommerce_appointments_gcal_sync_statuses', array( 'confirmed', 'paid', 'complete' ) ) ) ) {
 			$this->sync_appointment( $appointment_id );
 		}
+	}
+	
+	/**
+	 * Is edited from post.php's meta box.
+	 *
+	 * @return bool
+	 */
+	public function is_edited_from_meta_box() {
+		return (
+			! empty( $_POST['wc_appointments_details_meta_box_nonce'] )
+			&&
+			wp_verify_nonce( $_POST['wc_appointments_details_meta_box_nonce'], 'wc_appointments_details_meta_box' )
+		);
 	}
 }
 

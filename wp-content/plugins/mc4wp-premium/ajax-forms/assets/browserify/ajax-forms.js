@@ -1,12 +1,10 @@
 'use strict';
 
 // TODO: Allow choosing loading animation (animated button / opacity)
-
 var forms = window.mc4wp.forms;
 var busy = false;
 var config = mc4wp_ajax_vars || {};
 var loadingCharacter = config.loading_character || '\u00B7';
-var console = window.console || { log: function(msg) {} };
 var generalErrorMessage = '<div class="mc4wp-alert mc4wp-error"><p>'+ config.error_text + '</p></div>';
 
 forms.on('submit', function( form, event ) {
@@ -17,10 +15,15 @@ forms.on('submit', function( form, event ) {
 		return;
 	}
 
+	try{
+		submit(form);
+	} catch(e) {
+		console.error(e);
+		return true;
+	}
+
 	event.returnValue = false;
 	event.preventDefault();
-
-	submit(form);
 	return false;
 });
 

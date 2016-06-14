@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Slider Revolution
-Plugin URI: http://www.revolution.themepunch.com/
+Plugin URI: http://revolution.themepunch.com/
 Description: Slider Revolution - Premium responsive slider
 Author: ThemePunch
-Version: 5.2.2
+Version: 5.1
 Author URI: http://themepunch.com
 */
 
@@ -17,10 +17,10 @@ if(class_exists('RevSliderFront')) {
 	die('ERROR: It looks like you have more than one instance of Slider Revolution installed. Please remove additional instances for this plugin to work again.');
 }
 
-$revSliderVersion = "5.2.2";
+$revSliderVersion = "5.2.5.2";
 $revSliderAsTheme = false;
 $revslider_screens = array();
-
+$revslider_fonts = array();
 
 $rs_plugin_url = str_replace('index.php','',plugins_url( 'index.php', __FILE__ ));
 if(strpos($rs_plugin_url, 'http') === false) {
@@ -79,7 +79,6 @@ require_once(RS_PLUGIN_PATH . 'includes/tinybox.class.php');
 require_once(RS_PLUGIN_PATH . 'includes/extension.class.php');
 require_once(RS_PLUGIN_PATH . 'public/revslider-front.class.php');
 
-
 try{
 	//register the revolution slider widget
 	RevSliderFunctionsWP::registerWidget("RevSliderWidget");
@@ -126,7 +125,6 @@ try{
 			}
 		
 			//handle slider output types
-		
 			$outputType = $slider->getParam("output_type","");
 			switch($outputType){
 				case "compress":

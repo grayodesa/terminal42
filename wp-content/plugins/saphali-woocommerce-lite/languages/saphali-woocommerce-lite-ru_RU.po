@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce theme v1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-02-05 22:39+0300\n"
+"PO-Revision-Date: 2016-04-06 12:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,8 +40,8 @@ msgstr "Российский рубль"
 
 # @ woocommerce
 #: functions.php:40
-msgid "Belarusian ruble"
-msgstr "Белорусский рубль"
+msgid "Belarusian ruble%s"
+msgstr "Белорусский рубль%s"
 
 # @ woocommerce
 #: functions.php:40

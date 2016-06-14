@@ -1,0 +1,475 @@
+# Copyright (C) 2015 Telegram for WordPress
+# This file is distributed under the same license as the Telegram for WordPress package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Telegram for WordPress 1.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/telegram-for-wp\n"
+"POT-Creation-Date: 2016-03-17 15:31+0330\n"
+"PO-Revision-Date: 2016-03-17 15:31+0330\n"
+"Last-Translator: Ameer Mousavi <me@ameer.ir>\n"
+"Language-Team: Ameer Mousavi <me@ameer.ir>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.9\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-Basepath: D:\\wamp\\www\\cest\\wp-content\\plugins\\telegram-for-wp"
+"\\\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/settings-page.php:58
+msgid "Telegram for WordPress"
+msgstr ""
+
+#: admin/settings-page.php:59
+#, php-format
+msgid "Join our channel in Telegram: %s"
+msgstr ""
+
+#: admin/settings-page.php:66
+msgid "Notifications"
+msgstr ""
+
+#: admin/settings-page.php:67
+msgid "Post to Channel"
+msgstr ""
+
+#: admin/settings-page.php:72
+msgid ""
+"You will receive messages in Telegram with the contents of every emails that "
+"sent from your WordPress site."
+msgstr ""
+
+#: admin/settings-page.php:74
+msgid ""
+"For example, once a new comment has been submitted, you will receive the "
+"comment in your Telegram account."
+msgstr ""
+
+#: admin/settings-page.php:79
+msgid "Instructions"
+msgstr ""
+
+#: admin/settings-page.php:82
+msgid "If you want to send notifications to single user:"
+msgstr ""
+
+#: admin/settings-page.php:84
+#, php-format
+msgid "In Telegram app start a new chat with %s ."
+msgstr ""
+
+#: admin/settings-page.php:84
+msgid "Pay attention to underline!"
+msgstr ""
+
+#: admin/settings-page.php:85
+msgid ""
+"Send <code>/token</code> command and the bot will give you an API token for "
+"the user."
+msgstr ""
+
+#: admin/settings-page.php:86 admin/settings-page.php:93
+msgid "Copy and paste it in the below field and hit the save button!"
+msgstr ""
+
+#: admin/settings-page.php:87
+msgid "Kaboom! You are ready to go."
+msgstr ""
+
+#: admin/settings-page.php:90
+msgid "If you want to send notifications to group:"
+msgstr ""
+
+#: admin/settings-page.php:92
+msgid ""
+"Add the bot to your group and bot will give you an API token for the "
+"group( token must be started with <code>g:</code> ) "
+msgstr ""
+
+#: admin/settings-page.php:105
+msgid "Send a test Message"
+msgstr ""
+
+#: admin/settings-page.php:106 admin/settings-page.php:159
+#: admin/settings-page.php:238 admin/settings-page.php:261
+msgid "Send now!"
+msgstr ""
+
+#: admin/settings-page.php:109
+msgid "Hashtag (optional)"
+msgstr ""
+
+#: admin/settings-page.php:112
+msgid "Insert a custom hashtag at the beginning of the messages."
+msgstr ""
+
+#: admin/settings-page.php:113
+msgid "Don't forget <code>#</code> at the beginning"
+msgstr ""
+
+#: admin/settings-page.php:122
+msgid "Introduction"
+msgstr ""
+
+#: admin/settings-page.php:125
+msgid "Telegram channel is a great way for attracting people to your site."
+msgstr ""
+
+#: admin/settings-page.php:127
+msgid ""
+"This option allows you to send posts to your Telegram channel. Intresting, "
+"no?"
+msgstr ""
+
+#: admin/settings-page.php:129
+msgid "So let's start!"
+msgstr ""
+
+#: admin/settings-page.php:132
+msgid "Create a channel (if you don't already have one)."
+msgstr ""
+
+#: admin/settings-page.php:133
+msgid "Create a bot (if you don't already have one)."
+msgstr ""
+
+#: admin/settings-page.php:134
+msgid "Go to channel options and select 'Administrator' option."
+msgstr ""
+
+#: admin/settings-page.php:135
+msgid "Select 'Add Administrator' option."
+msgstr ""
+
+#: admin/settings-page.php:136
+msgid "Search the username of your bot and add it as administrator."
+msgstr ""
+
+#: admin/settings-page.php:137
+msgid ""
+"Copy the bot token (you got it in step two) and paste it in the below field."
+msgstr ""
+
+#: admin/settings-page.php:138
+msgid "Enter the username of the channel and hit SAVE button!!!"
+msgstr ""
+
+#: admin/settings-page.php:139
+msgid ""
+"Yes! Now, whenever you publish or update a post you can choose whether send "
+"it to Telegram (from post editor page)"
+msgstr ""
+
+#: admin/settings-page.php:147 admin/settings-page.php:283
+msgid "Check bot token"
+msgstr ""
+
+#: admin/settings-page.php:149
+msgid "Bot Info: "
+msgstr ""
+
+#: admin/settings-page.php:156
+msgid "Channel Username"
+msgstr ""
+
+#: admin/settings-page.php:160
+msgid "Don't forget <code>@</code> at the beginning"
+msgstr ""
+
+#: admin/settings-page.php:171
+msgid "Always send to Telegram"
+msgstr ""
+
+#: admin/settings-page.php:173
+msgid ""
+"By checking the below option, you don't need to check \"Send to Telegram "
+"Channel\" every time you create a new post."
+msgstr ""
+
+#: admin/settings-page.php:174
+msgid "Send to Telegram Channel"
+msgstr ""
+
+#: admin/settings-page.php:182
+msgid "Use Markdown in messages"
+msgstr ""
+
+#: admin/settings-page.php:184
+msgid ""
+"Telegram supports basic markdown and some HTML tags (bold, italic, inline "
+"links). By checking one of the following options, your messages will be "
+"compatible with Telegram format."
+msgstr ""
+
+#: admin/settings-page.php:187
+msgid "Disable Markdown and remove HTML tags"
+msgstr ""
+
+#: admin/settings-page.php:190
+msgid "Use basic Markdown (less characters)"
+msgstr ""
+
+#: admin/settings-page.php:193
+msgid "Use HTML tags (more speed)"
+msgstr ""
+
+#: admin/settings-page.php:195
+msgid "Learn more"
+msgstr ""
+
+#: admin/settings-page.php:201
+msgid "Web page preview in messages"
+msgstr ""
+
+#: admin/settings-page.php:203
+msgid "Disables link previews for links in the sent message."
+msgstr ""
+
+#: admin/settings-page.php:205
+msgid "Disable Web page preview"
+msgstr ""
+
+#: admin/settings-page.php:218
+#, php-format
+msgid ""
+"If you like this plugin, please rate it in %1$s. You can also support us by "
+"%2$s"
+msgstr ""
+
+#: admin/settings-page.php:218
+msgid "Telegram for Wordpress page in wordpress.org"
+msgstr ""
+
+#: admin/settings-page.php:218
+msgid "donating"
+msgstr ""
+
+#: admin/settings-page.php:227 admin/settings-page.php:251
+#: admin/settings-page.php:272
+msgid "Please wait..."
+msgstr ""
+
+#: admin/settings-page.php:231 admin/settings-page.php:252
+msgid "This is a test message"
+msgstr ""
+
+#: admin/settings-page.php:242
+msgid "api_token field is empty"
+msgstr ""
+
+#: admin/settings-page.php:248
+msgid "This will send a test message to your channel. Do you want to continue?"
+msgstr ""
+
+#: admin/settings-page.php:265
+msgid "bot token/channel username field is empty"
+msgstr ""
+
+#: admin/settings-page.php:286
+msgid "bot token field is empty"
+msgstr ""
+
+#: functions.php:154
+msgid "Persian Tutorial in HamyarWP"
+msgstr ""
+
+#: functions.php:193
+#, php-format
+msgid "Your API token isn't set. Please go to %s and set it."
+msgstr ""
+
+#: functions.php:193 twp.php:39
+msgid "TWP Settings"
+msgstr ""
+
+#: functions.php:206
+msgid "Telegram Channel Options"
+msgstr ""
+
+#: functions.php:258 functions.php:431
+msgid "Bot token or Channel username aren't set!"
+msgstr ""
+
+#: functions.php:289
+msgid "Send to Telegram channel"
+msgstr ""
+
+#: functions.php:291
+msgid "Send this post to channel"
+msgstr ""
+
+#: functions.php:298
+msgid "Sending result: "
+msgstr ""
+
+#: functions.php:303
+msgid "Published successfully"
+msgstr ""
+
+#: functions.php:307
+msgid "Date: "
+msgstr ""
+
+#: inc/composer.php:45
+msgid "Message Pattern"
+msgstr ""
+
+#: inc/composer.php:50
+msgid ""
+"Define the structure of messages that are sent to the channel. Use tags, "
+"emoji shortnames and any other text."
+msgstr ""
+
+#: inc/composer.php:55
+msgid "Select a tag..."
+msgstr ""
+
+#: inc/composer.php:57
+msgid "The title of this post"
+msgstr ""
+
+#: inc/composer.php:58
+msgid "The first 55 words of this post"
+msgstr ""
+
+#: inc/composer.php:59
+msgid "The whole content of this post"
+msgstr ""
+
+#: inc/composer.php:60
+msgid "The display name of author of this post"
+msgstr ""
+
+#: inc/composer.php:61
+msgid "The short url of this post"
+msgstr ""
+
+#: inc/composer.php:62
+msgid "The permalink of this post"
+msgstr ""
+
+#: inc/composer.php:63
+msgid ""
+"The tags of this post. Tags are automatically converted to Telegram hashtags"
+msgstr ""
+
+#: inc/composer.php:64
+msgid ""
+"The categories of this post. Categories are automatically separated by | "
+"symbol"
+msgstr ""
+
+#: inc/composer.php:69
+msgid "The width of this product"
+msgstr ""
+
+#: inc/composer.php:70
+msgid "The length of this product"
+msgstr ""
+
+#: inc/composer.php:71
+msgid "The height of this product"
+msgstr ""
+
+#: inc/composer.php:72
+msgid "The weight of this product"
+msgstr ""
+
+#: inc/composer.php:73
+msgid "The price of this product"
+msgstr ""
+
+#: inc/composer.php:74
+msgid "The regular price of this product"
+msgstr ""
+
+#: inc/composer.php:75
+msgid "The sale price of this product"
+msgstr ""
+
+#: inc/composer.php:76
+msgid "The SKU (Stock Keeping Unit) of this product"
+msgstr ""
+
+#: inc/composer.php:77
+msgid "The stock amount of this product"
+msgstr ""
+
+#: inc/composer.php:78
+msgid "Is this product downloadable? (Yes or No)"
+msgstr ""
+
+#: inc/composer.php:79
+msgid "Is this product virtual? (Yes or No)"
+msgstr ""
+
+#: inc/composer.php:80
+msgid "Is this product sold individually? (Yes or No)"
+msgstr ""
+
+#: inc/composer.php:81
+msgid "The tax status of this product"
+msgstr ""
+
+#: inc/composer.php:82
+msgid "The tax class of this product"
+msgstr ""
+
+#: inc/composer.php:83
+msgid "The stock status of this product"
+msgstr ""
+
+#: inc/composer.php:84
+msgid "Whether or not backorders allowed? "
+msgstr ""
+
+#: inc/composer.php:85
+msgid "Is this a featured product? (Yes or No)"
+msgstr ""
+
+#: inc/composer.php:86
+msgid "Is this product visible? (Yes or No)"
+msgstr ""
+
+#: inc/composer.php:91
+msgid "Emoji..."
+msgstr ""
+
+#: inc/composer.php:285
+msgid "Click to see a full list of available emojis and their shortnames"
+msgstr ""
+
+#: inc/composer.php:285
+msgid "Emoji full list"
+msgstr ""
+
+#: inc/composer.php:286
+msgid "Click to see some patterns template"
+msgstr ""
+
+#: inc/composer.php:286
+msgid "Patterns Template"
+msgstr ""
+
+#: inc/composer.php:295
+msgid "Don't send featured image"
+msgstr ""
+
+#: inc/composer.php:298
+msgid "Send featured image"
+msgstr ""
+
+#: inc/composer.php:306
+msgid "Send custom image"
+msgstr ""
+
+#: inc/composer.php:307
+msgid "Select or Upload the custom photo"
+msgstr ""
+
+#: inc/composer.php:308
+msgid "Use this image"
+msgstr ""

@@ -897,7 +897,7 @@ class WPMUDEV_Dashboard_Ui {
 			if ( ! WPMUDEV_Dashboard::$api->has_key() ) {
 				// Ah, the user is not logged in... update currently not available.
 				$url_action = $this->page_urls->dashboard_url;
-				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s" target="_blank" title="Setup your WPMU DEV account to update">configure to update</a>.', 'wpmudev' );	 		 		 	 	 	 	 	 	
+				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s" target="_blank" title="Setup your WPMU DEV account to update">configure to update</a>.', 'wpmudev' );
 			} else {
 				// User is logged in but apparently no license for the plugin.
 				$url_action = apply_filters(

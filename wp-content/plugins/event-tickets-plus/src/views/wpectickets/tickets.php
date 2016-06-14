@@ -1,4 +1,10 @@
 <?php
+/**
+ * Renders the WPEC tickets table/form
+ *
+ * @version 4.1
+ *
+ */
 ob_start();
 $is_there_any_product = false;
 $is_there_any_product_to_sell = false;
@@ -11,7 +17,7 @@ foreach ( $tickets as $ticket ) {
 
 		echo '<tr>';
 
-		echo "<td width='115' class='wpec'>";
+		echo "<td width='115' class='wpec quantity' data-product-id='" . esc_attr( $ticket->ID ) . "'>";
 		if ( wpsc_product_has_stock( $ticket->ID ) ) {
 
 			$is_there_any_product_to_sell = true;
@@ -22,7 +28,7 @@ foreach ( $tickets as $ticket ) {
 				<fieldset>
 					<legend><?php esc_html_e( 'Quantity', 'event-tickets-plus' ); ?></legend>
 					<div class="wpsc_quantity_update">
-						<input type="text" id="wpec_tickets_quantity_<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_quantity[]" size="2" value="0" />
+						<input type="number" id="wpec_tickets_quantity_<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_quantity[]" size="2" value="0" min="0"/>
 						<input type="hidden" value="<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_product_id[]" />
 					</div>
 					<!--close wpsc_quantity_update-->
@@ -59,6 +65,18 @@ foreach ( $tickets as $ticket ) {
 		echo '</td>';
 
 		echo '</tr>';
+
+		echo
+			'<tr class="tribe-tickets-attendees-list-optout">' .
+				'<td colspan="4">' .
+					'<input type="checkbox" name="wpec_tickets_attendees_optout[]" id="tribe-tickets-attendees-list-optout-wpec">' .
+					'<label for="tribe-tickets-attendees-list-optout-wpec">' .
+						esc_html__( 'Don\'t list me on the public attendee list', 'event-tickets' ) .
+					'</label>' .
+				'</td>' .
+			'</tr>';
+
+		include dirname( __FILE__ ) . '/../meta.php';
 	}
 }
 

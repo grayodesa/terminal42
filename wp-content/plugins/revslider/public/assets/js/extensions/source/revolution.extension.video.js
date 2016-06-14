@@ -1,6 +1,6 @@
 /********************************************
- * REVOLUTION 5.2 EXTENSION - VIDEO FUNCTIONS
- * @version: 1.5 (03.03.2016)
+ * REVOLUTION 5.2.5.1 EXTENSION - VIDEO FUNCTIONS
+ * @version: 1.8 (05.04.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -55,9 +55,9 @@ jQuery.extend(true,_R, {
 			case "youtube":
 				var player=_nc.data('player');
 			 	try{
-					if (_nc.data('forcerewind')=="on" && !_ISM) {
+					if (_nc.data('forcerewind')=="on") {  //Removed Force Rewind Protection for Handy here !!!
 						var s = getStartSec(_nc.data('videostartat'));
-						s= s==-1 ? 0 : s;		
+						s= s==-1 ? 0 : s;						
 						if (_nc.data('player')!=undefined) {					
 							_nc.data('player').seekTo(s);													
 							_nc.data('player').pauseVideo();
@@ -71,7 +71,7 @@ jQuery.extend(true,_R, {
 			case "vimeo":
 				var f = $f(_nc.find('iframe').attr("id"));	
 			 	try{
-					if (_nc.data('forcerewind')=="on" && !_ISM) 	{						
+					if (_nc.data('forcerewind')=="on") 	{	  //Removed Force Rewind Protection for Handy here !!!					
 						var s = getStartSec(_nc.data('videostartat')),
 							ct = 0;
 						s= s==-1 ? 0 : s;													
@@ -97,6 +97,7 @@ jQuery.extend(true,_R, {
 				
 				if (_nc.data('forcerewind')=="on" && !_nc.hasClass("videoisplaying")) {
 					try{
+						
 						var s = getStartSec(_nc.data('videostartat'));					
 						video.currentTime = s == -1 ? 0 : s;	
 					} catch(e) {}
@@ -194,6 +195,11 @@ jQuery.extend(true,_R, {
 
 	stopVideo : function(_nc,opt) {	
 		
+		if (!opt.leaveViewPortBasedStop) 
+			opt.lastplayedvideos = [];
+
+		opt.leaveViewPortBasedStop = false;
+
 		switch (_nc.data('videotype')) {
 			case "youtube":
 				try{
@@ -385,10 +391,10 @@ jQuery.extend(true,_R, {
 			var f = document.createElement("script"),
 				before = document.getElementsByTagName("script")[0],
 				loadit = true;
-			f.src = httpprefix+"://f.vimeocdn.com/js/froogaloop2.min.js"; /* Load Player API*/							
+			f.src = "https://secure-a.vimeocdn.com/js/froogaloop2.min.js"; /* Load Player API*/							
 
 			jQuery('head').find('*').each(function(){
-				if (jQuery(this).attr('src') == httpprefix+"://f.vimeocdn.com/js/froogaloop2.min.js")
+				if (jQuery(this).attr('src') == "https://secure-a.vimeocdn.com/js/froogaloop2.min.js")
 				   loadit = false;
 			});
 			if (loadit)
@@ -418,6 +424,10 @@ jQuery.extend(true,_R, {
 						(videotype=="youtube" && _nc.find('iframe').length==0) ? "youtube" : 
 						(videotype=="vimeo" && _nc.find('iframe').length==0) ? "vimeo" : "none";
 
+			// VideLoop reset if Next Slide at End is set ! 
+			videoloop = _nc.data('nextslideatend') === true ? "" : videoloop;
+
+
 		_nc.data('videotype',videotype);
 		// ADD HTML5 VIDEO IF NEEDED
 		switch (newvideotype) {
@@ -431,7 +441,7 @@ jQuery.extend(true,_R, {
 					tag = "audio";
 					_nc.addClass("tp-audio-html5");
 				}
-
+				
 				var apptxt = '<'+tag+' style="object-fit:cover;background-size:cover;visible:hidden;width:100%; height:100%" class="" '+videoloop+' preload="'+videopreload+'">';
 
 				if (videopreload=="auto") opt.mediapreload = true;
@@ -874,19 +884,23 @@ var exitFullscreen = function() {
 
 
 var checkfullscreenEnabled = function() {
-    // FF provides nice flag, maybe others will add support for this later on?
-    if(window['fullScreen'] !== undefined) {
-      return window.fullScreen;
-    }
-    // 5px height margin, just in case (needed by e.g. IE)
-    var heightMargin = 5;
-    if($.browser.webkit && /Apple Computer/.test(navigator.vendor)) {
-      // Safari in full screen mode shows the navigation bar, 
-      // which is 40px  
-      heightMargin = 42;
-    }
-    return screen.width == window.innerWidth &&
-        Math.abs(screen.height - window.innerHeight) < heightMargin;
+   try{
+	    // FF provides nice flag, maybe others will add support for this later on?
+	    if(window['fullScreen'] !== undefined) {
+	      return window.fullScreen;
+	    }
+	    // 5px height margin, just in case (needed by e.g. IE)
+	    var heightMargin = 5;
+	    if(jQuery.browser.webkit && /Apple Computer/.test(navigator.vendor)) {
+	      // Safari in full screen mode shows the navigation bar, 
+	      // which is 40px  
+	      heightMargin = 42;
+	    }
+	    return screen.width == window.innerWidth &&
+	        Math.abs(screen.height - window.innerHeight) < heightMargin;
+	  } catch(e) {
+
+	  }
   }
 /////////////////////////////////////////	HTML5 VIDEOS 	///////////////////////////////////////////	
 
@@ -907,6 +921,9 @@ var htmlvideoevents = function(_nc,opt,startnow) {
 	html5vid.data('metaloaded',1);
 	// FIRST TIME LOADED THE HTML5 VIDEO
 
+	if (_nc.data('bgvideo')==1 && (_nc.data('videoloop')==="none" || _nc.data('videoloop')===false)) 		
+		pforv = false;
+	
 	
 								
 	
@@ -1026,13 +1043,15 @@ var htmlvideoevents = function(_nc,opt,startnow) {
 		if (seekBar != undefined)	
 			seekBar.value = value;	
 		
-		if (et!=0 && et!=-1 && (Math.abs(et-cs) <=0.3 && et>cs) && _nc.data('nextslidecalled') != 1) {
+		if (et!=0 && et!=-1 && (Math.abs(et-cs) <=0.3 && et>cs) && _nc.data('nextslidecalled') != 1) {			
 			if (loop) {
 				video.play();
 				var s = getStartSec(_nc.data('videostartat'));
 				if (s!=-1) video.currentTime = s;				
 			} else {
-				if (_nc.data('nextslideatend')==true) {		
+
+				
+				if (_nc.data('nextslideatend')==true) {							
 					_nc.data('nextslideatend-triggered',1);		
 					_nc.data('nextslidecalled',1);						
 					opt.just_called_nextslide_at_htmltimer = true; 
@@ -1136,14 +1155,19 @@ var htmlvideoevents = function(_nc,opt,startnow) {
 
 	// VIDEO EVENT LISTENER FOR "END"
 	
+
 	addEvent(video,"ended",function() {		
 		exitFullscreen();
+		
 		remVidfromList(_nc,opt);
 		opt.videoplaying=false;
 		remVidfromList(_nc,opt);
 		if (tag!="audio") opt.c.trigger('starttimer');
 		opt.c.trigger('revolution.slide.onvideostop',getVideoDatas(video,"html5",_nc.data()));
-		if (_nc.data('nextslideatend')==true) {				
+
+
+		if (_nc.data('nextslideatend')===true && video.currentTime>0) {	
+			
 			if (!opt.just_called_nextslide_at_htmltimer==true) {
 				_nc.data('nextslideatend-triggered',1);
 				opt.c.revnext();

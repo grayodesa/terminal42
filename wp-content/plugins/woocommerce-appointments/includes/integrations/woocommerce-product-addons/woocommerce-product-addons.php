@@ -3,12 +3,12 @@
 Plugin Name: WooCommerce Product Add-ons
 Plugin URI: http://www.woothemes.com/products/product-add-ons/
 Description: WooCommerce Product Add-ons lets you add extra options to products which the user can select. Add-ons can be checkboxes, a select box, or custom input. Each option can optionally be given a price which is added to the cost of the product.
-Version: 2.7.15
-Author: WooThemes, BizzThemes
-Author URI: https://bizzthemes.com
+Version: 2.7.17
+Author: WooThemes
+Author URI: http://woothemes.com
 Requires at least: 3.8
 Tested up to: 4.3
-WC tested up to: 2.4
+WC tested up to: 2.5
 	Copyright: © 2009-2015 WooThemes.
 	License: GNU General Public License v3.0
 	License URI: http://www.gnu.org/licenses/gpl-3.0.html

@@ -3,7 +3,7 @@
 Plugin Name: Appointments+
 Description: Lets you accept appointments from front end and manage or create them from admin side
 Plugin URI: http://premium.wpmudev.org/project/appointments-plus/
-Version: 1.7
+Version: 1.9
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Textdomain: appointments
@@ -32,7 +32,7 @@ if ( !class_exists( 'Appointments' ) ) {
 
 class Appointments {
 
-	public $version = "1.7";
+	public $version = "1.9";
 	public $db_version;
 
 	public $timetables = array();
@@ -42,10 +42,8 @@ class Appointments {
 	public $exceptions_table;
 	public $app_table;
 	public $workers_table;
-	/** @var AppointmentsGcal|bool */
-	public $gcal_api = false;
 	/** @var bool|Appointments_Google_Calendar  */
-	public $gcal_api_new = false;
+	public $gcal_api = false;
 	public $locale_error;
 	public $time_format;
 	public $datetime_format;
@@ -60,11 +58,28 @@ class Appointments {
 	/** @var Appointments_Admin  */
 	public $admin;
 
+	/** @var  Appointments_Addons_Loader */
+	public $addons_loader;
+
+	/** @var Appointments_Notifications_Manager */
+	public $notifications;
+
+	public $pro = false;
+
+
 	function __construct() {
 
 		include_once( 'includes/helpers.php' );
 		include_once( 'includes/helpers-settings.php' );
 		include_once( 'includes/deprecated-hooks.php' );
+		include_once( 'includes/class-app-notifications-manager.php' );
+		include_once( 'includes/class-app-api-logins.php' );
+
+		// Load premium features
+		if ( is_readable( appointments_plugin_dir() . 'includes/pro/class-app-pro.php' ) ) {
+			include_once( appointments_plugin_dir() . 'includes/pro/class-app-pro.php' );
+			$this->pro = new Appointments_Pro();
+		}
 
 		$this->timetables = get_transient( 'app_timetables' );
 		if ( ! $this->timetables || ! is_array( $this->timetables ) ) {
@@ -155,7 +170,7 @@ class Appointments {
 		$this->mp_posts = array();
 		add_action( 'plugins_loaded', array( &$this, 'check_marketpress_plugin') );
 
-		add_action('init', array($this, 'setup_gcal_sync'), 10);
+		add_action('init', array($this, 'get_gcal_api'), 10);
 
 		// Database variables
 		global $wpdb;
@@ -169,6 +184,9 @@ class Appointments {
 		$this->cache_table 			= $wpdb->prefix . "app_cache";
 		// DB version
 		$this->db_version 			= get_option( 'app_db_version' );
+
+		// Set meta tables
+		$wpdb->app_appointmentmeta = appointments_get_table( 'appmeta' );
 
 		// Set log file location
 		$uploads = wp_upload_dir();
@@ -195,7 +213,10 @@ class Appointments {
 		if ( isset( $this->options['payment_required'] ) && 'yes' == $this->options['payment_required'] && !empty($this->options['allow_free_autoconfirm'])) {
 			if (!defined('APP_CONFIRMATION_ALLOW_FREE_AUTOCONFIRM')) define('APP_CONFIRMATION_ALLOW_FREE_AUTOCONFIRM', true);
 		}
+
+		$this->notifications = new Appointments_Notifications_Manager();
 	}
+
 
 	public function load_admin() {
 		include_once( 'admin/class-app-admin.php' );
@@ -216,29 +237,18 @@ class Appointments {
 		appointments_clear_cache();
 
 		include_once( 'includes/class-app-upgrader.php' );
+
 		$upgrader = new Appointments_Upgrader( $this->version );
-		$upgrader->upgrade( $this->version );
-
-		update_option( 'app_db_version', $this->version );
+		$upgrader->upgrade( $db_version, $this->version );
 	}
 
-	function setup_gcal_sync () {
-		// GCal Integration
-		// Allow forced disabling in case of emergency
-		if ( !defined( 'APP_GCAL_DISABLE' ) ) {
-			require_once $this->plugin_dir . '/includes/class.gcal.php';
-			$this->gcal_api = new AppointmentsGcal();
-		}
-
-		$this->get_gcal_api();
-	}
 
 	function get_gcal_api() {
-		if ( false === $this->gcal_api_new && ! defined( 'APP_GCAL_DISABLE' ) ) {
+		if ( false === $this->gcal_api && ! defined( 'APP_GCAL_DISABLE' ) ) {
 			require_once $this->plugin_dir . '/includes/class-app-gcal.php';
-			$this->gcal_api_new = new Appointments_Google_Calendar();
+			$this->gcal_api = new Appointments_Google_Calendar();
 		}
-		return $this->gcal_api_new;
+		return $this->gcal_api;
 	}
 
 
@@ -536,7 +546,7 @@ class Appointments {
 	 * @return array of objects
 	 */
 	function get_reserve_apps_by_service( $l, $s, $week=0 ) {
-		_deprecated_function( __FUNCTION__, '1.6', 'appointments_get_appointments()' );
+		_deprecated_function( __FUNCTION__, '1.6', 'appointments_get_appointments_filtered_by_services()' );
 		$args = array(
 			'location' => $l,
 			'service' => $s,
@@ -607,43 +617,6 @@ class Appointments {
 		return appointments_get_worker_name( $worker, $field );
 	}
 
-	/**
-	 * Only for Unit Testing purposes, do not use
-	 */
-	function _old_get_worker_name( $worker=0, $php = true ) {
-		global $current_user;
-		$user_name = '';
-		if ( 0 == $worker ) {
-			// Show different text to authorized people
-			if ( is_admin() || App_Roles::current_user_can( 'manage_options', App_Roles::CTX_STAFF ) || appointments_is_worker( $current_user->ID ) )
-				$user_name = __('Our staff', 'appointments');
-			else
-				$user_name = __('A specialist', 'appointments');
-		}
-		else {
-			$userdata = get_userdata( $worker );
-			if (is_object($userdata) && !empty($userdata->app_name)) {
-				$user_name = $userdata->app_name;
-			}
-			if (empty($user_name)) {
-				if ( !$php ) {
-					$user_name = $userdata->user_login;
-				}
-				else {
-					$user_name = $userdata->display_name;
-				}
-
-				if ( !$user_name ){
-					$first_name = get_user_meta($worker, 'first_name', true);
-					$last_name = get_user_meta($worker, 'last_name', true);
-					$user_name = $first_name . " " . $last_name;
-				}
-				if ( "" == trim( $user_name ) )
-					$user_name = $userdata->user_login;
-			}
-		}
-		return apply_filters( 'app_get_worker_name', $user_name, $worker );
-	}
 
 	/**
 	 * Find worker email given his ID
@@ -998,8 +971,10 @@ class Appointments {
 		if ( $message ) {
 			$to_put = '<b>['. date_i18n( $this->datetime_format, $this->local_time ) .']</b> '. $message;
 			// Prevent multiple messages with same text and same timestamp
-			if ( !file_exists( $this->log_file ) || strpos( @file_get_contents( $this->log_file ), $to_put ) === false )
+			if ( !file_exists( $this->log_file ) || strpos( @file_get_contents( $this->log_file ), $to_put ) === false ) {
 				@file_put_contents( $this->log_file, $to_put . chr(10). chr(13), FILE_APPEND );
+			}
+
 		}
 	}
 
@@ -1131,12 +1106,12 @@ class Appointments {
 	 */
 	function get_classes() {
 		return apply_filters( 'app_box_class_names',
-							array(
-								'free'			=> __('Free', 'appointments'),
-								'busy'			=> __('Busy', 'appointments'),
-								'notpossible'	=> __('Not possible', 'appointments')
-								)
-				);
+			array(
+				'free'        => __( 'Free', 'appointments' ),
+				'busy'        => __( 'Busy', 'appointments' ),
+				'notpossible' => __( 'Not possible', 'appointments' )
+			)
+		);
 	}
 
 	/**
@@ -1207,7 +1182,7 @@ class Appointments {
 				if ( $in_allowed_stat && $_GET['app_nonce'] == md5( $_GET['app_id']. $appointments->salt . strtotime( $app->created ) ) ) {
 					if ( appointments_update_appointment_status( $app_id, 'removed' ) ) {
 						$appointments->log( sprintf( __('Client %s cancelled appointment with ID: %s','appointments'), $appointments->get_client_name( $app_id ), $app_id ) );
-						$appointments->send_notification( $app_id, true );
+						appointments_send_cancel_notification( $app_id );
 
 						do_action('app-appointments-appointment_cancelled', $app_id);
 						// If there is a header warning other plugins can do whatever they need
@@ -1256,7 +1231,7 @@ class Appointments {
 				// Now we can safely continue for cancel
 				if ( appointments_update_appointment_status( $app_id, 'removed' ) ) {
 					$appointments->log( sprintf( __('Client %s cancelled appointment with ID: %s','appointments'), $appointments->get_client_name( $app_id ), $app_id ) );
-					$appointments->send_notification( $app_id, true );
+					appointments_send_cancel_notification( $app_id );
 
 					do_action('app-appointments-appointment_cancelled', $app_id);
 					die( json_encode( array('success'=>1)));
@@ -2952,7 +2927,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 				'error' => __('Login error. Please try again.', 'appointments'),
 				'_can_use_twitter' => (!empty($this->options['twitter-app_id']) && !empty($this->options['twitter-app_secret'])),
 				'show_login_button' => $show_login_button,
-				'gg_client_id' => $this->options['google-client_id'],
 				'register' => ($do_register ? __('Register', 'appointments') : ''),
 				'registration_url' => ($do_register ? wp_registration_url() : ''),
 			)));
@@ -2985,6 +2959,11 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			}
 			do_action('app-scripts-api');
 		}
+
+		/**
+		 * Fired when scripts/styles have been loaded
+		 */
+		do_action( 'appointments_scripts_loaded' );
 	}
 
 	/**
@@ -3013,9 +2992,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			echo 'td.'.$class.',div.'.$class.' {background: #'. $color .' !important;}';
 		}
 
-		// Don't show Google+ button if openid is not enabled
-		if ( !@$this->openid )
-			echo '.appointments-login_link-google{display:none !important;}';
 		?>
 		</style>
 		<?php
@@ -3101,12 +3077,14 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			'cancel_page'				=> 0
 		));
 
+		do_action( 'appointments_init', $this );
+
 		//  Run this code not before 10 mins
-		if ( ( time() - get_option( "app_last_update" ) ) < apply_filters( 'app_update_time', 600 ) )
+		if ( ( time() - get_option( "app_last_update" ) ) < apply_filters( 'app_update_time', 600 ) ) {
 			return;
+		}
+
 		$this->remove_appointments();
-		$this->send_reminder();
-		$this->send_reminder_worker();
 
 	}
 
@@ -3116,415 +3094,48 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 
 	/**
 	 *	Send confirmation email
-	 *  @param app_id: ID of the app whose confirmation will be sent
+	 * @param app_id: ID of the app whose confirmation will be sent
+     * @return boolean
+     * @deprecated since 1.7.3
 	 */
 	function send_confirmation( $app_id ) {
-		if ( !isset( $this->options["send_confirmation"] ) || 'yes' != $this->options["send_confirmation"] )
-			return;
-		global $wpdb;
-		$r = appointments_get_appointment( $app_id );
-		if ( $r != null ) {
-
-			$_REQUEST["app_location_id"] = 0;
-			$_REQUEST["app_service_id"] = $r->service;
-			$_REQUEST["app_provider_id"] = $r->worker;
-
-			// Why oh why didn't we do this all along?
-			if (empty($r->email) && !empty($r->user) && (int)$r->user) {
-				$wp_user = get_user_by('id', (int)$r->user);
-				if ($wp_user && !empty($wp_user->user_email)) $r->email = $wp_user->user_email;
-			}
-
-			$body = apply_filters( 'app_confirmation_message', $this->add_cancel_link( $this->_replace( $this->options["confirmation_message"],
-					$r->name, $this->get_service_name( $r->service), appointments_get_worker_name( $r->worker), $r->start, $r->price,
-					$this->get_deposit($r->price), $r->phone, $r->note, $r->address, $r->email, $r->city ), $app_id ), $r, $app_id );
-
-			$mail_result = wp_mail(
-						$r->email,
-						$this->_replace( $this->options["confirmation_subject"], $r->name,
-							$this->get_service_name( $r->service), appointments_get_worker_name( $r->worker),
-							$r->start, $r->price, $this->get_deposit($r->price), $r->phone, $r->note, $r->address, $r->email, $r->city ),
-						$body,
-						$this->message_headers( ),
-						apply_filters( 'app_confirmation_email_attachments', '' )
-					);
-
-			if ( $r->email && $mail_result ) {
-				// Log only if it is set so
-				if ( isset( $this->options["log_emails"] ) && 'yes' == $this->options["log_emails"] )
-					$this->log( sprintf( __('Confirmation message sent to %s for appointment ID:%s','appointments'), $r->email, $app_id ) );
-
-				do_action( 'app_confirmation_sent', $body, $r, $app_id );
-
-				// Allow disabling of confirmation email to admin
-				$disable = apply_filters( 'app_confirmation_disable_admin', false, $r, $app_id );
-				if ( $disable )
-					return;
-
-				//  Send a copy to admin and service provider
-				$to = array( $this->get_admin_email( ) );
-
-				$worker_email = $this->get_worker_email( $r->worker );
-				if ( $worker_email )
-					$to[]= $worker_email;
-
-				$provider_add_text  = sprintf( __('A new appointment has been made on %s. Below please find a copy of what has been sent to your client:', 'appointments'), get_option( 'blogname' ) );
-				$provider_add_text .= "\n\n\n";
-
-				wp_mail(
-						$to,
-						$this->_replace( __('New Appointment','appointments'), $r->name, $this->get_service_name( $r->service), appointments_get_worker_name( $r->worker),
-							$r->start, $r->price, $this->get_deposit($r->price), $r->phone, $r->note, $r->address, $r->email, $r->city ),
-						$provider_add_text . $body,
-						$this->message_headers( )
-					);
-			}
-		}
-		return true;
+		_deprecated_function( __FUNCTION__, '1.7.3', 'appointments_send_confirmation()' );
+		return appointments_send_confirmation( $app_id );
 	}
 
 	/**
 	 * Send notification email
 	 * @param cancel: If this is a cancellation
 	 * @since 1.0.2
+	 *
+	 * @deprecated since 1.7.3
+	 *
+	 * @return bool
 	 */
 	function send_notification( $app_id, $cancel=false ) {
-		// In case of cancellation, continue
-		if ( !$cancel && !isset( $this->options["send_notification"] ) || 'yes' != $this->options["send_notification"] )
-			return;
-		global $wpdb;
-		$r = appointments_get_appointment( $app_id );
-		if ( $r ) {
-
-			$admin_email = apply_filters( 'app_notification_email', $this->get_admin_email( ), $r );
-
-			if ( $cancel ) {
-				$subject = __('An appointment has been cancelled', 'appointments');
-				$body = sprintf( __('Appointment with ID %s has been cancelled by the client. You can see it clicking this link: %s','appointments'), $app_id, admin_url("admin.php?page=appointments&type=removed") );
-			}
-			else {
-				$subject = __('An appointment requires your confirmation', 'appointments');
-				$body = sprintf( __('The new appointment has an ID %s and you can edit it clicking this link: %s','appointments'), $app_id, admin_url("admin.php?page=appointments&type=pending") );
-			}
-			$body = apply_filters('app_notification_message',
-				apply_filters(
-					'app-messages-' . ($cancel ? 'cancellation' : 'notification') . '-body',
-					$body, $r, $app_id
-				),
-				$r, $app_id
-			);
-			$subject = apply_filters(
-				'app-messages-' . ($cancel ? 'cancellation' : 'notification') . '-subject',
-				$subject, $r, $app_id
-			);
-
-			$mail_result = wp_mail(
-				$admin_email,
-				$subject,
-				$body,
-				$this->message_headers()
-			);
-
-			if ( $mail_result && isset( $this->options["log_emails"] ) && 'yes' == $this->options["log_emails"] ) {
-				$this->log( sprintf( __('Notification message sent to %s for appointment ID:%s','appointments'), $admin_email, $app_id ) );
-				do_action( 'app_notification_sent', $body, $r, $app_id );
-			}
-
-			// Also notify service provider if he is allowed to confirm it
-			// Note that message itself is different from that of the admin
-			// Don't send repeated email to admin if he is the provider
-			if ( $r->worker &&  $admin_email != $this->get_worker_email( $r->worker ) && isset( $this->options['allow_worker_confirm'] ) && 'yes' == $this->options['allow_worker_confirm'] ) {
-
-				if ( $cancel ) {
-				/* Translators: First %s is for appointment ID and the second one is for date and time of the appointment */
-					$body = sprintf(__('Cancelled appointment has an ID %s for %s.','appointments'), $app_id, date_i18n($this->datetime_format, strtotime($r->start)));
-				}
-				else {
-					$body = sprintf(__('The new appointment has an ID %s for %s and you can confirm it using your profile page.','appointments'), $app_id, date_i18n($this->datetime_format, strtotime($r->start)));
-				}
-				$body = apply_filters(
-					'app-messages-worker-' . ($cancel ? 'cancellation' : 'notification'),
-					$body, $r, $app_id
-				);
-				$subject = apply_filters(
-					'app-messages-worker-' . ($cancel ? 'cancellation' : 'notification') . '-subject',
-					$subject, $r, $app_id
-				);
-
-				$mail_result = wp_mail(
-					$this->get_worker_email($r->worker),
-					$subject,
-					$body,
-					$this->message_headers()
-				);
-
-				if ( $mail_result && isset( $this->options["log_emails"] ) && 'yes' == $this->options["log_emails"] ) {
-					$this->log( sprintf( __('Notification message sent to %s for appointment ID:%s','appointments'), $this->get_worker_email( $r->worker ), $app_id ) );
-					do_action( 'appointments_worker_notification_sent', $body, $r, $app_id );
-				}
-			}
-		}
-		return true;
+		_deprecated_function( __FUNCTION__, '1.7.3', 'Appointments_Notification_Manager::send_notification()' );
+		return $this->notifications->send_notification( $app_id, $cancel );
 	}
 
 	/**
 	 * Sends out a removal notification email.
 	 * This email is sent out only on admin status change, *not* on appointment cancellation by user.
 	 * The email will go out to the client and, perhaps, worker and admin.
+	 *
+	 * @deprecated since 1.7.3
 	 */
 	function send_removal_notification ($app_id) {
-		if ( !isset( $this->options["send_removal_notification"] ) || 'yes' != $this->options["send_removal_notification"] ) return false;
-		$app = appointments_get_appointment($app_id);
-		$log = isset($this->options["log_emails"]) && 'yes' == $this->options["log_emails"];
-		$email = !empty($app->email) ? $app->email : false;
-		if (empty($email) && !empty($app->user) && is_numeric($app->user)) {
-			// If we don't have an email, try getting one if user ID is set
-			$wp_user = get_user_by('id', (int)$app->user);
-			if ($wp_user && !empty($wp_user->user_email)) $email = $wp_user->user_email;
-		}
-		if (empty($email)) {
-			// No reason to carry on, we don't know how to notify the client
-			if ($log) $this->log(sprintf(__('Unable to notify the client about the appointment ID:%s removal, stopping.', 'appointments'), $app_id));
-			return false;
-		}
-
-		$subject = !empty($this->options['removal_notification_subject'])
-			? $this->options['removal_notification_subject']
-			: App_Template::get_default_removal_notification_subject()
-		;
-		$subject = $this->_replace($subject,
-			$app->name,
-			$this->get_service_name($app->service),
-			appointments_get_worker_name($app->worker),
-			$app->start,
-			$app->price,
-			$this->get_deposit($app->price),
-			$app->phone,
-			$app->note,
-			$app->address,
-			$app->email,
-			$app->city
-		);
-		$msg = !empty($this->options['removal_notification_message'])
-			? $this->options['removal_notification_message']
-			: App_Template::get_default_removal_notification_message()
-		;
-		$msg = $this->_replace($msg,
-			$app->name,
-			$this->get_service_name($app->service),
-			appointments_get_worker_name($app->worker),
-			$app->start,
-			$app->price,
-			$this->get_deposit($app->price),
-			$app->phone,
-			$app->note,
-			$app->address,
-			$app->email,
-			$app->city
-		);
-		$msg = apply_filters('app_removal_notification_message', $msg, $app, $app_id);
-		$result = wp_mail(
-			$email,
-			$subject,
-			$msg,
-			$this->message_headers()
-		);
-		if ($result && $log) {
-			$this->log(sprintf(__('Removal notification message sent to %s for appointment ID:%s', 'appointments'), $email, $app_id));
-		}
-
-		$disable = apply_filters( 'app_removal_notification_disable_admin', false, $app, $app_id );
-		if ($disable) return false;
-
-		//  Send a copy to admin and service provider
-		$to = array($this->get_admin_email());
-
-		$worker_email = $this->get_worker_email($app->worker);
-		if ($worker_email) $to[]= $worker_email;
-
-		$provider_add_text  = sprintf(__('An appointment removal notification for %s has been sent to your client:', 'appointments'), $app_id);
-		$provider_add_text .= "\n\n\n";
-
-		wp_mail(
-			$to,
-			__('Removal notification', 'appointments'),
-			$provider_add_text . $msg,
-			$this->message_headers()
-		);
-
-
-		return true;
+		_deprecated_function( __FUNCTION__, '1.7.3', 'appointments_send_removal_notification()' );
+		return appointments_send_removal_notification( $app_id );
 	}
 
 	/**
-	 *	Check and send reminders to clients for appointments
-	 *
+	 *	Check and send reminders to clients and workers for appointments
+	 * @deprecated since 1.7.3
 	 */
-	function send_reminder() {
-		if ( !isset( $this->options["reminder_time"] ) || !$this->options["reminder_time"] || 'yes' != $this->options["send_reminder"] )
-			return;
-
-		$hours = explode( "," , trim( $this->options["reminder_time"] ) );
-
-		if ( !is_array( $hours ) || empty( $hours ) )
-			return;
-
-		global $wpdb;
-
-		$messages = array();
-		foreach ( $hours as $hour ) {
-			$results = appointments_get_unsent_appointments( $hour, 'user' );
-
-			if ( $results ) {
-				foreach ( $results as $r ) {
-					$_REQUEST["app_location_id"] = 0;
-					$_REQUEST["app_service_id"] = $r->service;
-					$_REQUEST["app_provider_id"] = $r->worker;
-
-					$messages[] = array(
-						'ID' => $r->ID,
-						'to' => $r->email,
-						'subject' => $this->_replace(
-							$this->options["reminder_subject"],
-							$r->name,
-							$this->get_service_name($r->service),
-							appointments_get_worker_name($r->worker),
-							$r->start,
-							$r->price,
-							$this->get_deposit($r->price),
-							$r->phone,
-							$r->note,
-							$r->address,
-							$r->email,
-							$r->city
-						),
-						'message' => apply_filters('app_reminder_message', $this->add_cancel_link(
-							$this->_replace(
-								$this->options["reminder_message"],
-								$r->name,
-								$this->get_service_name($r->service),
-								appointments_get_worker_name($r->worker),
-								$r->start,
-								$r->price,
-								$this->get_deposit($r->price),
-								$r->phone,
-								$r->note,
-								$r->address,
-								$r->email,
-								$r->city
-							),
-							$r->ID),
-						$r, $r->ID)
-					);
-					// Update "sent" field
-					appointments_update_appointment( $r->ID, array( 'sent' => rtrim($r->sent, ":") . ":" . trim($hour) . ":") );
-				}
-			}
-		}
-		// Remove duplicates
-		$messages = $this->array_unique_by_ID( $messages );
-		if ( is_array( $messages ) && !empty( $messages ) ) {
-			foreach ( $messages as $message ) {
-				$mail_result = wp_mail( $message["to"], $message["subject"], $message["message"], $this->message_headers(), apply_filters( 'app_reminder_email_attachments', '' ) );
-				if ( $mail_result && isset( $this->options["log_emails"] ) && 'yes' == $this->options["log_emails"] )
-					$this->log( sprintf( __('Reminder message sent to %s for appointment ID:%s','appointments'), $message["to"], $message["ID"] ) );
-			}
-		}
-		return true;
-	}
-
-	/**
-	 *	Check and send reminders to worker for appointments
-	 */
-	function send_reminder_worker() {
-		if ( !isset( $this->options["reminder_time_worker"] ) || !$this->options["reminder_time_worker"] || 'yes' != $this->options["send_reminder_worker"] )
-			return;
-
-		$hours = explode( "," , $this->options["reminder_time_worker"] );
-
-		if ( !is_array( $hours ) || empty( $hours ) )
-			return;
-
-		global $wpdb;
-
-		$messages = array();
-		foreach ( $hours as $hour ) {
-			$results = appointments_get_unsent_appointments( $hour, 'user' );
-
-			$provider_add_text  = __('You are receiving this reminder message for your appointment as a provider. The below is a copy of what may have been sent to your client:', 'appointments');
-			$provider_add_text .= "\n\n\n";
-
-			if ( $results ) {
-				foreach ( $results as $r ) {
-					$_REQUEST["app_location_id"] = 0;
-					$_REQUEST["app_service_id"] = $r->service;
-					$_REQUEST["app_provider_id"] = $r->worker;
-
-					$messages[] = array(
-						'ID' => $r->ID,
-						'to' => $this->get_worker_email( $r->worker ),
-						'subject' => $this->_replace(
-							$this->options["reminder_subject"],
-							$r->name,
-							$this->get_service_name($r->service),
-							appointments_get_worker_name($r->worker),
-							$r->start,
-							$r->price,
-							$this->get_deposit($r->price),
-							$r->phone,
-							$r->note,
-							$r->address,
-							$r->email
-						),
-						'message' => apply_filters('app_reminder_message', $provider_add_text . $this->add_cancel_link(
-								$this->_replace(
-									$this->options["reminder_message"],
-									$r->name,
-									$this->get_service_name($r->service),
-									appointments_get_worker_name($r->worker),
-									$r->start,
-									$r->price,
-									$this->get_deposit($r->price),
-									$r->phone,
-									$r->note,
-									$r->address,
-									$r->email
-								),
-								$r->ID),
-							$r, $r->ID),
-					);
-					// Update "sent" field
-					appointments_update_appointment( $r->ID, array( 'sent_worker' => rtrim($r->sent_worker, ":") . ":" . trim($hour) . ":") );
-				}
-			}
-		}
-		// Remove duplicates
-		$messages = $this->array_unique_by_ID( $messages );
-		if ( is_array( $messages ) && !empty( $messages ) ) {
-			foreach ( $messages as $message ) {
-				$mail_result = wp_mail( $message["to"], $message["subject"], $message["message"], $this->message_headers() );
-				if ( $mail_result && isset( $this->options["log_emails"] ) && 'yes' == $this->options["log_emails"] )
-					$this->log( sprintf( __('Reminder message sent to %s for appointment ID:%s','appointments'), $message["to"], $message["ID"] ) );
-			}
-		}
-	}
-
-	/**
-	 *	Remove duplicate messages by app ID
-	 */
-	function array_unique_by_ID( $messages ) {
-		if ( !is_array( $messages ) || empty( $messages ) )
-			return false;
-		$idlist = array();
-		// Save array to a temp area
-		$result = $messages;
-		foreach ( $messages as $key=>$message ) {
-			if ( in_array( $message['ID'], $idlist ) )
-				unset( $result[$key] );
-			else
-				$idlist[] = $message['ID'];
-		}
-		return $result;
+	function maybe_send_reminders() {
+		_deprecated_function( __FUNCTION__, '1.7.3', 'Appointments_Notification_Manager::maybe_send_reminders()' );
+		$this->notifications->maybe_send_reminders();
 	}
 
 	/**
@@ -3562,7 +3173,7 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			'SITE_NAME' => wp_specialchars_decode(get_option('blogname'), ENT_QUOTES),
 			'CLIENT' => $user,
 			'SERVICE_PROVIDER' => $worker,
-			'SERVICE' => $this->escape_backreference($service),
+			'SERVICE' => preg_replace('/\$(\d)/', '\\\$$1', $service),
 			'DATE_TIME' => mysql2date($this->datetime_format, $datetime),
 			'PRICE' => $price,
 			'DEPOSIT' => $deposit,
@@ -3579,14 +3190,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		return $text;
 	}
 
-	/**
-     *	Avoid back-reference collisions.
-     *  http://us1.php.net/manual/en/function.preg-replace.php#103985
-     */
-    function escape_backreference($x)
-    {
-        return preg_replace('/\$(\d)/', '\\\$$1', $x);
-    }
 
 	/**
 	 *	Email message headers
@@ -3622,9 +3225,11 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			return;
 		}
 
+		$options = appointments_get_options();
+
 		$clear_secs = 0;
-		if ( isset( $this->options["clear_time"] ) && $this->options["clear_time"] > 0 ) {
-			$clear_secs = $this->options["clear_time"] * 60;
+		if ( isset( $options["clear_time"] ) && $options["clear_time"] > 0 ) {
+			$clear_secs = $options["clear_time"] * 60;
 		}
 
 		$expireds = appointments_get_expired_appointments( $clear_secs );
@@ -3816,52 +3421,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		return false;
 	}
 
-
-
-
-
-
-
-	private function _create_pages () {
-		// Add an appointment page
-		if ( isset( $_POST["make_an_appointment"] ) ) {
-			$tpl = !empty($_POST['app_page_type']) ? $_POST['app_page_type'] : false;
-			wp_insert_post(
-					array(
-						'post_title'	=> 'Make an Appointment',
-						'post_status'	=> 'publish',
-						'post_type'		=> 'page',
-						'post_content'	=> App_Template::get_default_page_template($tpl)
-					)
-			);
-		}
-
-		// Add an appointment product page
-		if ( isset( $_POST["make_an_appointment_product"] ) && $this->marketpress_active ) {
-			$tpl = !empty($_POST['app_page_type_mp']) ? $_POST['app_page_type_mp'] : false;
-			$post_id = wp_insert_post(
-					array(
-						'post_title'	=> 'Appointment',
-						'post_status'	=> 'publish',
-						'post_type'		=> 'product',
-						'post_content'	=> App_Template::get_default_page_template($tpl)
-					)
-			);
-			if ( $post_id ) {
-				// Add a download link, so that app will be a digital product
-				$file = get_post_meta($post_id, 'mp_file', true);
-				if ( !$file ) add_post_meta( $post_id, 'mp_file', get_permalink( $post_id) );
-
-				// MP requires at least 2 variations, so we add a dummy one
-				add_post_meta( $post_id, 'mp_var_name', array( 0 ) );
-				add_post_meta( $post_id, 'mp_sku', array( 0 ) );
-				add_post_meta( $post_id, 'mp_price', array( 0 ) );
-			}
-		}
-	}
-
-
-
 	/**
 	 *	Sorts a comma delimited string
 	 *	@since 1.2
@@ -3872,24 +3431,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		$temp = explode( ',', $input );
 		sort( $temp );
 		return implode( ',', $temp );
-	}
-
-	/**
-	 *	Packs an array into a string with : as glue
-	 */
-	function _implode( $input ) {
-		if ( !is_array( $input ) || empty( $input ) )
-			return false;
-		return ':'. implode( ':', array_filter( $input ) ) . ':';
-	}
-
-	/**
-	 *	Packs a string into an array assuming : as glue
-	 */
-	function _explode( $input ){
-		if ( !is_string( $input ) )
-			return false;
-		return array_filter( explode( ':' , ltrim( $input , ":") ) );
 	}
 
 	/**
@@ -4456,15 +3997,23 @@ require_once APP_PLUGIN_DIR . '/includes/class_app_timed_abstractions.php';
 require_once APP_PLUGIN_DIR . '/includes/class_app_roles.php';
 require_once APP_PLUGIN_DIR . '/includes/class_app_codec.php';
 require_once APP_PLUGIN_DIR . '/includes/class_app_shortcodes.php';
-require_once APP_PLUGIN_DIR . '/includes/class_app_addon_helper.php';
 
 App_Installer::serve();
 
-App_AddonHandler::serve();
 App_Shortcodes::serve();
 
 global $appointments;
 $appointments = new Appointments();
+
+// Load addons
+include_once( 'includes/class-app-addon.php' );
+include_once( 'includes/class-app-addons-loader.php' );
+if ( ! defined( 'APP_PLUGIN_ADDONS_DIR' ) ) {
+	define('APP_PLUGIN_ADDONS_DIR', APP_PLUGIN_DIR . '/includes/addons');
+}
+$appointments->addons_loader = Appointments_Addons_Loader::get_instance();
+$appointments->addons_loader->load_active_addons();
+
 
 if (is_admin()) {
 	require_once APP_PLUGIN_DIR . '/includes/support/class_app_tutorial.php';
@@ -4474,7 +4023,7 @@ if (is_admin()) {
 	App_AdminHelp::serve();
 
 	// Setup dashboard notices
-	if (file_exists(APP_PLUGIN_DIR . '/includes/external/wpmudev-dash-notification.php')) {
+	if (file_exists(APP_PLUGIN_DIR . '/includes/external/wpmudev-dash/wpmudev-dash-notification.php')) {
 		global $wpmudev_notices;
 		if (!is_array($wpmudev_notices)) $wpmudev_notices = array();
 		$wpmudev_notices[] = array(
@@ -4486,7 +4035,7 @@ if (is_admin()) {
 				'appointments_page_app_faq',
 			),
 		);
-		require_once APP_PLUGIN_DIR . '/includes/external/wpmudev-dash-notification.php';
+		require_once APP_PLUGIN_DIR . '/includes/external/wpmudev-dash/wpmudev-dash-notification.php';
 	}
 	// End dash bootstrap
 }

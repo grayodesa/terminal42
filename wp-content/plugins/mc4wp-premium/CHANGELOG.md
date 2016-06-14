@@ -1,6 +1,44 @@
 Changelog
 ==========
 
+##### 3.1.5 - April 18, 2016
+
+**Fixes**
+
+- WooCommerce orders with an associated user account (instead of guest email address) were not being recorded by the "add past orders" screen.
+- Running the log export on PHP 5.2 would return an empty CSV file
+
+
+##### 3.1.4 - March 30, 2016
+
+**Fixes**
+
+- eCommerce360 would try to add orders without an email address to MailChimp.
+
+ **Improvements**
+
+ - Ensure all WooCommerce filters run when sending order data to MailChimp.
+ - When AJAX form script errors, the form now falls back to a default form submission.
+ - Grouping data is now shown in log table again.
+
+**Additions**
+
+- New "Order Action" for WooCommerce to manually add or delete an eCommerce360 order to/from MailChimp.
+
+
+##### 3.1.3 - March 22, 2016
+
+**Fixes**
+
+- Script for plotting Reports graph wasn't loaded on some servers.
+
+**Improvements**
+
+- Use later hook priority for rendering form preview in Styles Builder for compatibility with Pagelines DMS.
+- Update script dependencies to their latest versions.
+- Escape form name throughout settings pages.
+
+
 ##### 3.1.2 - February 29, 2016
 
 **Fixes**

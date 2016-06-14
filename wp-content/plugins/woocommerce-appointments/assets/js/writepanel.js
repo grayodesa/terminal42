@@ -117,7 +117,7 @@ jQuery(document).ready(function($) {
 					$(row).find( '.appointments-datetime-select-from' ).addClass( 'appointments-datetime-select-both' );
 				}
 			}
-			if ( value === 'duration' || value === 'slots' ) {
+			if ( value === 'duration' || value === 'slots' || value === 'quant' ) {
 				$(row).find('.from, .to').show();
 			}
 			return false;
@@ -174,11 +174,17 @@ jQuery(document).ready(function($) {
 		},
 		wc_appointment_duration_unit: function() {
 			if ( $(this).val() === 'day' ) {
-				$( '.form-field._wc_appointment_padding_duration_wrap' ).hide();
 				$( '.form-field._wc_appointment_interval_duration_wrap' ).hide();
+				$( '#_wc_appointment_padding_duration_unit option[value="minute"]' ).hide();
+				$( '#_wc_appointment_padding_duration_unit option[value="hour"]' ).hide();
+				$( '#_wc_appointment_padding_duration_unit option[value="day"]' ).show();
+				$( '#_wc_appointment_padding_duration_unit' ).val( 'day' );
 			} else {
-				$( '.form-field._wc_appointment_padding_duration_wrap' ).show();
 				$( '.form-field._wc_appointment_interval_duration_wrap' ).show();
+				$( '#_wc_appointment_padding_duration_unit option[value="minute"]' ).show();
+				$( '#_wc_appointment_padding_duration_unit option[value="hour"]' ).show();
+				$( '#_wc_appointment_padding_duration_unit option[value="day"]' ).hide();
+				$( '#_wc_appointment_padding_duration_unit' ).val( wc_appointments_writepanel_js_params.padding_duration_unit );
 			}
 			return false;
 		},

@@ -1,0 +1,247 @@
+body,html {
+  background-color: #ffffff !important;
+}
+#wpcontent {
+    padding-left: 0px;
+}
+#wpfooter {
+    display:none;
+}
+#wpbody-content {
+    padding-bottom: 0px;
+}
+#sumome_instructions {
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  background:#fff;
+  color:#65717b;
+}
+
+#sumome_instructions .row {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display:block;
+}
+
+#sumome_instructions .row .row {
+  width: auto;
+  margin-left: -0.9375rem;
+  margin-right: -0.9375rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: none;
+}
+
+#sumome_instructions .columns {
+  position: relative;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  float: left;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+}
+
+#sumome_instructions .large-4 {
+  width: 33.33333%;
+}
+
+#sumome_instructions .large-6 {
+  width: 50%;
+}
+
+#sumome_instructions .large-8 {
+  width: 66.66667%;
+}
+
+#sumome_instructions .large-12 {
+  width: 100%;
+}
+
+#sumome_instructions .th {
+  line-height: 0;
+  display: inline-block;
+  border: solid 4px #fff;
+  max-width: 100%;
+  -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+  -webkit-transition: all 200ms ease-out;
+  -moz-transition: all 200ms ease-out;
+  transition: all 200ms ease-out;
+}
+
+#sumome_instructions img {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+
+#sumome_instructions h4 {
+  font-size: 1.4375rem;
+  line-height: 1.4;
+  margin: .5em 0;
+}
+
+#sumome_instructions .sumome-instructions {
+  text-align:center;
+  width:50%;
+  margin:0px auto;
+  padding-top:10px;
+}
+
+#sumome_instructions .header-banner {
+  text-align:center;
+  background:#f0f3f5;
+  margin-bottom:20px;
+}
+#sumome_instructions .header-banner img {
+  display: inline-block;
+  vertical-align: middle;
+  /*width: 100%;*/
+  max-width: 100%;
+  height: auto;
+  margin-bottom:0px;
+}
+#sumome_instructions .list-number {
+    border-radius: 25px;
+    background: #6c65c2;
+    width: 35px;
+    height: 35px;
+    color:#fff;
+    display:inline-block;
+    text-align:center;
+    line-height:35px;
+    font-size:18px;
+}
+#sumome_instructions .list-number-title {
+    color:#0f74b5;
+    font-size:24px;
+    font-weight:bold;
+    display:inline-block;
+    width:auto;
+    margin-left:10px;
+}
+#sumome_instructions .row3 .list-bullet{
+    margin-top:80px;
+}
+
+#sumome_instructions .row3, .row3 p.submit {
+    text-align:center;
+    margin:0px auto;
+    padding-top:25px;
+}
+#sumome_instructions .row3 table {
+    margin:0px auto;
+}
+
+#sumome_instructions input[type=text] {
+    border-radius: 5px;
+    border: 1px solid #dcd9ea;
+    height:41px;
+}
+#sumome_instructions button {
+    height:40px;
+    line-height:40px;
+    vertical-align:middle;
+    padding:0px 20px;
+    border-radius: 0px 50px 50px 0px;
+    background-color:#c8cbcd;
+    color:#65717b;
+    position:relative;
+    left:-8px;
+    top:-2px;
+}
+#sumome_instructions input[type=submit] {
+    border-radius: 50px;
+    height:40px;
+    padding:0px 20px;
+    background: #8067db;
+    color:#fff;
+    margin:0px auto;
+    text-transform: uppercase;
+    border-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+#sumome_instructions .footer {
+    background: #f0f3f5;
+    margin:0px auto;
+    text-align:center;
+    position:relative;
+    bottom:0px;
+    left:0px;
+    height:250px;
+    padding-top:60px;
+    line-height:25px;
+    margin-top:50px;
+}
+#sumome_instructions .footer a {
+    color: #8067db;
+}
+#sumome_instructions .sumome-help {
+    width:50%;
+    margin:0px auto;
+    background: #f0f3f5;
+}
+.text {
+    /*padding: 0% 50%;*/
+    width: 80% !important;
+    margin: 0px auto;
+    float: none !important;
+    padding-top:15%;
+}
+#sumome_instructions .sumome-help span {
+    display:block;
+}
+.mobile{
+  display:none;
+}
+.no-mobile{
+  display:block;
+}
+@media screen and (max-width: 1000px) {
+  #sumome_instructions .large-6 {
+    width: 100%;
+  }
+  #sumome_instructions #sumome_site_id {
+    width:150px !important;
+  }
+  #sumome_instructions .sumome-instructions,#sumome_instructions .sumome-help {
+    width:90% !important;
+  }
+  #sumome_instructions .text {
+      padding-top: 0%;
+  }
+  #sumome_instructions .footer {
+      height: 250px;
+      padding-top: 10px;
+      line-height: 25px;
+  }
+  #sumome_instructions .list-bullet {
+      white-space:nowrap;
+  }
+  #sumome_instructions .list-number-title {
+      font-size: 20px;
+  }
+  .mobile{
+    display:block;
+  }
+  .no-mobile{
+    display:none;
+  }
+  #sumome_instructions .sumome-help span {
+      display:inline-block;
+  }
+
+}

@@ -230,8 +230,8 @@ class App_Membership2 {
 							<?php checked( $val_no_advance ); ?>
 							/>
 						<label for="<?php echo esc_attr( $the_id ); ?>_advance">
-							<span class="off"><?php _e( 'Requires advance payment', 'affiliates' ); ?></span>
-							<span class="on"><?php _e( 'No advance payment', 'affiliates' ); ?></span>
+							<span class="off"><?php _e( 'Requires advance payment', 'appointments' ); ?></span>
+							<span class="on"><?php _e( 'No advance payment', 'appointments' ); ?></span>
 						</label>
 					</td>
 				</tr>

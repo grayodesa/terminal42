@@ -2242,10 +2242,16 @@ var UniteLayersRev = new function(){
 		li.find('.action-target-layer').hide();
 		li.find('.action-callback').hide();
 		li.find('.action-toggle_layer').hide();
+		li.find('.action-toggleclass').hide();
+		li.find('.action-delay-wrapper').show();
+		
 		
 		switch (value) {
+			case "none":
+				li.find('.action-delay-wrapper').hide();				
+			break;
 			case "link":
-				li.find('.action-link-wrapper').show();
+				li.find('.action-link-wrapper').show();				
 			break;
 			case "jumpto":
 				li.find('.action-jump-to-slide').show();
@@ -2544,7 +2550,7 @@ var UniteLayersRev = new function(){
 						jQuery('.tp-present-caption-small').parent().addClass("tp-present-wrapper-small");
 						jQuery('.tp-present-caption-small').parent().parent().addClass("tp-present-wrapper-parent-small");
 					},10);
-					return '<div class="tp-present-caption-small"><div class="tp-caption '+this.getAttribute('original-title')+'">example</div></div>';
+					return '<div class="tp-present-caption-small"><div class="example-dark-blinker"></div><div class="tp-caption '+this.getAttribute('original-title')+'">example</div></div>';
 				}
 			});
 		});
@@ -5361,7 +5367,7 @@ var UniteLayersRev = new function(){
 		
 		objLayer.internal_class = objLayer.internal_class || '';
 		
-		// Enabled Hover ?		
+		// Enabled Hover ?
 		objLayer['hover'] = objLayer['hover'] || false;
 
 		objLayer['alias'] = objLayer['alias'] || u.getSortboxText(objLayer.text).toLowerCase();
@@ -5550,15 +5556,21 @@ var UniteLayersRev = new function(){
 		//set style, if empty, add first style from the list		
 			objLayer.style = objLayer.style || '';
 		
-		objLayer['visible-desktop'] = objLayer['visible-desktop'] || true;		
-		objLayer['visible-notebook'] = objLayer['visible-notebook'] || true;		
-		objLayer['visible-tablet'] = objLayer['visible-tablet'] || true;		
-		objLayer['visible-mobile'] = objLayer['visible-mobile'] || true;				
-		objLayer['resize-full'] = objLayer['resize-full'] || true;				
-		objLayer['show-on-hover'] = objLayer['show-on-hover'] || false;				
+		
+		
+		
+		objLayer['visible-desktop'] = (objLayer['visible-desktop']===undefined) ? true : objLayer['visible-desktop'];
+		objLayer['visible-notebook'] = (objLayer['visible-notebook']===undefined) ? true : objLayer['visible-notebook'];
+		objLayer['visible-tablet'] = (objLayer['visible-tablet']===undefined) ? true : objLayer['visible-tablet'];
+		objLayer['visible-mobile'] = (objLayer['visible-mobile']===undefined) ? true : objLayer['visible-mobile'];
+		
+		objLayer['resize-full'] = objLayer['resize-full'] !== undefined ? objLayer['resize-full'] : true;				
+		objLayer['hiddenunder'] = objLayer['hiddenunder'] !== undefined ? objLayer['hiddenunder'] : false;	
+		objLayer['show-on-hover'] = objLayer['show-on-hover'] !== undefined ? objLayer['show-on-hover'] : false;				
 		objLayer.basealign = objLayer.basealign || 'grid';						
-		objLayer.responsive_offset = objLayer.responsive_offset || true;				
+		objLayer.responsive_offset = objLayer.responsive_offset!==undefined ? objLayer.responsive_offset : true;				
 		objLayer.style = jQuery.trim(objLayer.style);
+		
 
 		if(isInit == false && objLayer.type == "text" && (!objLayer.style || objLayer.style == ""))	do_style_reset = true;				
 		
@@ -6120,7 +6132,12 @@ var UniteLayersRev = new function(){
 		obj2.order = undefined;
 		obj2.time = undefined;
 		obj2.createdOnInit = false;
-		addLayer(obj2);		
+		
+		//unique_id change as the true in addLayer is not triggering this
+		unique_layer_id++;
+		obj2.unique_id = unique_layer_id;
+		
+		addLayer(obj2, true);
 		initDisallowCaptionsOnClick();
 		var key;
 		jQuery.each(t.getLayers(),function(k,layer) {

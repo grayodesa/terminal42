@@ -362,7 +362,7 @@ var UniteAdminRev = new function(){
 	 * Ajax request function. call wp ajax, if error - print error message.
 	 * if success, call "success function" 
 	 */
-	t.ajaxRequest = function(action,data,successFunction,hideOverlay){
+	t.ajaxRequest = function(action,data,successFunction,hideOverlay,hideError){
 		
 		var objData = {
 			action:g_uniteDirPlugin+"_ajax_action",
@@ -410,23 +410,29 @@ var UniteAdminRev = new function(){
 				}
 				
 				if(response.success == false){
-					t.showErrorMessage(response.message);
-					return(false);
-				}
-				
-				//success actions:
+					if(hideError===undefined){
+						t.showErrorMessage(response.message);
+						return(false);
+					}else{
+						if(typeof successFunction == "function"){
+							successFunction(response);
+						}
+					}
+				}else{
+					
+					//success actions:
 
-				//run a success event function
-				if(typeof successFunction == "function"){
-					successFunction(response);
+					//run a success event function
+					if(typeof successFunction == "function"){
+						successFunction(response);
+					}
+					
+					if(response.message)
+						showSuccessMessage(response.message);
+					
+					if(response.is_redirect)
+						location.href=response.redirect_url;
 				}
-				
-				if(response.message)
-					showSuccessMessage(response.message);
-				
-				if(response.is_redirect)
-					location.href=response.redirect_url;
-				
 			},		 	
 			error:function(jqXHR, textStatus, errorThrown){
 				if(hideOverlay===undefined)
@@ -859,9 +865,10 @@ var UniteAdminRev = new function(){
 		//set html in dialog
 		setYoutubeDialogHtml(data);
 		
-		//set the youtube arguments
+		//set the vimeo arguments
 		var objArguments = jQuery("#input_video_arguments");
-		objArguments.val(objArguments.data("vimeo"));
+		if(objArguments.val() == "")
+			objArguments.val(objArguments.data("vimeo"));
 		
 		//store last video data
 		lastVideoData = data;
@@ -1686,20 +1693,25 @@ var UniteAdminRev = new function(){
 		
 		jQuery('#rs-validation-activate').click(function(){
 			
-			UniteAdminRev.setAjaxLoaderID("rs_purchase_validation");
-			UniteAdminRev.setAjaxHideButtonID("rs-validation-activate");
+			//UniteAdminRev.setAjaxLoaderID("rs_purchase_validation");
+			//UniteAdminRev.setAjaxHideButtonID("rs-validation-activate");
 			
 			var data = {
-				code: jQuery('input[name="rs-validation-token"]').val()
+				code: jQuery('input[name="rs-validation-token"]').val()/*,
+				email: jQuery('input[name="rs-validation-email"]').val()*/
 			}
 			
-			UniteAdminRev.ajaxRequest("activate_purchase_code",data);
+			UniteAdminRev.ajaxRequest("activate_purchase_code",data,function(response){
+				if(response.success == false){
+					jQuery('#register-wrong-purchase-code').click();
+				}
+			},undefined,true);
 		});
 		
 		jQuery('#rs-validation-deactivate').click(function(){
 			
-			UniteAdminRev.setAjaxLoaderID("rs_purchase_validation");
-			UniteAdminRev.setAjaxHideButtonID("rs-validation-deactivate");
+			//UniteAdminRev.setAjaxLoaderID("rs_purchase_validation");
+			//UniteAdminRev.setAjaxHideButtonID("rs-validation-deactivate");
 			
 			UniteAdminRev.ajaxRequest("deactivate_purchase_code",'');
 			

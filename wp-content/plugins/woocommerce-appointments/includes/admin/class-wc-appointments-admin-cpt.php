@@ -354,13 +354,13 @@ class WC_Appointments_Admin_CPT {
 				break;
 			case 'customer' :
 				$customer = $appointment->get_customer();
-
+				
 				if ( $customer && $customer->user_id ) {
 					echo '<a href="' .  get_edit_user_link( $customer->user_id ) . '">' . $customer->name . '</a>';
-				} else if ( $customer && ! $customer->user_id ) {
+				} else if ( $customer && ! $customer->user_id && $customer->name ) {
 					echo $customer->name;
 				} else {
-					echo '-';
+					_e( 'Guest', 'woocommerce-appointments' );
 				}
 				break;
 			case 'scheduled_product' :
@@ -377,13 +377,8 @@ class WC_Appointments_Admin_CPT {
 				}
 				break;
 			case 'qty' :
-				$order = $appointment->get_order();
-
-				if ( $order ) {
-					echo $order->get_item_count();
-				} else {
-					echo 1;
-				}
+				$saved_qty = get_post_meta( $post->ID, '_appointment_qty', true );
+				echo $saved_qty ? $saved_qty : 1;
 				break;
 			case 'appointment_date' :
 				echo $appointment->get_start_date( wc_date_format(), '' );
@@ -430,9 +425,10 @@ class WC_Appointments_Admin_CPT {
 	 */
 	public function custom_columns_sort( $columns ) {
 		$custom = array(
-			'appointment_id'		=> 'appointment_id',
-			'scheduled_product'		=> 'scheduled_product',
 			'appointment_status'	=> 'status',
+			'appointment_id'		=> 'appointment_id',
+			'order'					=> 'order',
+			'scheduled_product'		=> 'scheduled_product',
 			'appointment_date'		=> 'start_date',
 		);
 		unset( $columns['comments'] );
@@ -450,8 +446,18 @@ class WC_Appointments_Admin_CPT {
 	 * @return array
 	 */
 	public function custom_columns_orderby( $vars ) {
-		if ( isset( $vars['orderby'] ) ) {
-			if ( 'appointment_id' == $vars['orderby'] ) {
+
+		if ( isset( $vars['meta_key'] ) ) {
+			if ( '_booking_start' == $vars['meta_key'] ) {
+				$vars = array_merge( $vars, array(
+					'meta_key' 	=> '_appointment_start',
+					'orderby' 	=> 'meta_value_num'
+				) );
+			}
+		}
+		
+		/*
+			if ( 'ID' == $vars['orderby'] ) {
 				$vars = array_merge( $vars, array(
 					'orderby' 	=> 'ID'
 				) );
@@ -469,15 +475,7 @@ class WC_Appointments_Admin_CPT {
 					'orderby' 	=> 'post_status'
 				) );
 			}
-
-			if ( 'appointment_date' == $vars['orderby'] ) {
-				$vars = array_merge( $vars, array(
-					'meta_key' 	=> '_appointment_start',
-					'orderby' 	=> 'meta_value_num'
-				) );
-			}
-
-		}
+		*/
 
 		return $vars;
 	}
@@ -609,6 +607,9 @@ class WC_Appointments_Admin_CPT {
 				esc_attr( $_GET['s'] )
 			)
 		);
+		
+		// ensure db query doesn't throw an error due to empty post_parent value
+		$order_ids = empty( $order_ids ) ? array( '-1' ) : $order_ids;
 
 		// Remove s - we don't want to search order name
 		unset( $wp->query_vars['s'] );

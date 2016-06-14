@@ -38,7 +38,7 @@
 			$(".rs-addon-not-installed").click(function(){
 				showWaitAMinute({fadeIn:300,text:rev_slider_addon.please_wait_a_moment});
 				$this = $(this);
-				console.log("install process");
+				//console.log("install process");
 				$.ajax({
 				url : rev_slider_addon.ajax_url,
 				type : 'post',
@@ -48,22 +48,28 @@
 					plugin: $this.data("plugin")
 				},
 				success : function( response ) {
-					console.log(response);
+					//console.log(response);
 					switch(response){
 						case "0":
-								console.log("Something Went Wrong");
+								showWaitAMinute({fadeOut:300,text:rev_slider_addon.please_wait_a_moment});
+								UniteAdminRev.showErrorMessage("Something went wrong!");
+								//console.log("Something Went Wrong");
 								break;
 						case "1":
-								console.log("Plugin installed");
+								//console.log("Plugin installed");
 								location.reload();
 								break;
 						case "-1":
-								console.log("Nonce missing");
+								showWaitAMinute({fadeOut:300,text:rev_slider_addon.please_wait_a_moment});
+								UniteAdminRev.showErrorMessage("Nonce missing!");
+								//console.log("Nonce missing");
 								break;
 					}
 				},
 				error : function ( response ){
-					console.log('Ajax Error');
+					//console.log('Ajax Error');
+					showWaitAMinute({fadeOut:300,text:rev_slider_addon.please_wait_a_moment});
+					UniteAdminRev.showErrorMessage("Something went wrong!");
 				}
 			}); // End Ajax
 		}); // End Click
@@ -106,7 +112,7 @@
 			$(".rs-addon-activated").click(function(){
 				showWaitAMinute({fadeIn:300,text:rev_slider_addon.please_wait_a_moment});
 				$this = $(this);
-				console.log("deactivate process");
+				//console.log("deactivate process");
 				$.ajax({
 				url : rev_slider_addon.ajax_url,
 				type : 'post',
@@ -130,7 +136,7 @@
 					}
 				},
 				error : function ( response ){
-					console.log('Ajax Error');
+					//console.log('Ajax Error');
 				}
 			}); // End Ajax
 		}); // End Click

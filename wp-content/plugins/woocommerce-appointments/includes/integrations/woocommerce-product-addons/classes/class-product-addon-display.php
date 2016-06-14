@@ -61,13 +61,13 @@ class Product_Addon_Display {
 	public function addon_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'accounting', WC_APPOINTMENTS_PLUGIN_URL . '/includes/integrations/woocommerce-product-addons/assets/js/accounting' . $suffix . '.js', '', '0.3.2' );
+		wp_register_script( 'accounting', WC()->plugin_url() . '/assets/js/accounting/accounting' . $suffix . '.js', array( 'jquery' ), '0.4.2' );
 
-		wp_enqueue_script( 'woocommerce-addons', WC_APPOINTMENTS_PLUGIN_URL . '/includes/integrations/woocommerce-product-addons/assets/js/addons' . $suffix . '.js', array( 'jquery', 'accounting' ), '1.0', true );
+		wp_enqueue_script( 'woocommerce-addons', WC_APPOINTMENTS_PLUGIN_URL . '/includes/integrations/woocommerce-product-addons/assets/js/addons.js', array( 'jquery', 'accounting' ), '1.0', true );
 
 		$params = array(
 			'price_display_suffix'         => esc_attr( get_option( 'woocommerce_price_display_suffix' ) ),
-			'ajax_url'                     => WC()->ajax_url(),
+			'ajax_url'                     => admin_url( 'admin-ajax.php' ),
 			'i18n_addon_total'             => __( 'Options total:', 'woocommerce-appointments' ),
 			'i18n_grand_total'             => __( 'Grand total:', 'woocommerce-appointments' ),
 			'i18n_remaining'               => __( 'characters remaining', 'woocommerce-appointments' ),
@@ -102,7 +102,7 @@ class Product_Addon_Display {
 
 		wp_localize_script( 'woocommerce-addons', 'woocommerce_addons_params', $params );
 	}
-	
+
 	public function quick_view_single_compat() {
 		if ( is_singular( 'product' ) && class_exists( 'WC_Quick_View' ) ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -307,7 +307,7 @@ class Product_Addon_Display {
 	public function get_custom_letters_only_html( $addon ) {
 		woocommerce_get_template( 'addons/custom_pattern.php', array(
 				'addon' => $addon,
-				'pattern' => '[A-Za-z]+',
+				'pattern' => '[A-Za-z]*',
 				'title' => __( 'Please enter letters only', 'woocommerce-appointments' )
 			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 	}
@@ -321,7 +321,7 @@ class Product_Addon_Display {
 	public function get_custom_digits_only_html( $addon ) {
 		woocommerce_get_template( 'addons/custom_pattern.php', array(
 				'addon' => $addon,
-				'pattern' => '[0-9]+',
+				'pattern' => '[0-9]*',
 				'title' => __( 'Please enter digits only', 'woocommerce-appointments' )
 			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 	}
@@ -335,7 +335,7 @@ class Product_Addon_Display {
 	public function get_custom_letters_or_digits_html( $addon ) {
 		woocommerce_get_template( 'addons/custom_pattern.php', array(
 				'addon' => $addon,
-				'pattern' => '[A-Za-z0-9]+',
+				'pattern' => '[A-Za-z0-9]*',
 				'title' => __( 'Please enter letters or digits only', 'woocommerce-appointments' )
 			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 	}
@@ -407,7 +407,7 @@ class Product_Addon_Display {
 
 		return $text;
 	}
-	
+
 	/**
 	 * Removes ajax-add-to-cart functionality in WC 2.5 when a product has required add-ons.
 	 *

@@ -23,12 +23,16 @@ table.tribe-events-tickets td {
 	border: 0;
 }
 
+.tribe-rsvp-message-display .tribe-rsvp-messages {
+	display: block;
+}
+
 .tribe-rsvp-messages {
+	display: none;
 	padding: 10px 10px 5px;
 }
 
 .tribe-rsvp-message {
-	margin-bottom: 5px;
 	-khtml-border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -54,59 +58,4 @@ table.tribe-events-tickets td {
 
 .tribe-ticket-quantity {
 	width: 100%;
-}
-
-form.cart,
-.tribe-events-tickets {
-    margin-bottom: 0 !important;
-}
-
-.cart td {
-    vertical-align: top !important;
-}
-
-table.tribe-events-tickets td input {
-    padding: 0 5px;
-    box-sizing: border-box;
-}
-
-.tribe-events-tickets-rsvp tr {
-    border-top: 1px solid #e5e5e5;
-}
-
-.tribe-tickets-full-name-row,
-.tribe-tickets-email-row {
-    border: 0 !important;
-}
-
-.add-to-cart .button {
-    background: #ffd600 !important;
-    border: 0 !important;
-    color: #424242;
-    padding: 0 15px;
-    line-height: 36px;
-    border-radius: 0;
-    box-shadow: none;
-    transition: background .2s linear;
-    font-family: 'fira-sans', Helvetica, sans-serif;
-    font-size: 14px;
-}
-
-.add-to-cart .button:hover {
-    background: #000 !important;
-    color: #fff;
-}
-
-.tribe-tickets-full-name-row td,
-.tribe-tickets-email-row td {
-    padding: 8px 20px 0 0 !important;
-}
-
-#tribe-tickets-full-name,
-#tribe-tickets-email {
-    width: 200px;
-}
-
-.tribe-tickets-meta-row table {
-    margin-bottom: 10px;
 }

@@ -54,6 +54,7 @@
 				<option value="weeks" <?php selected( $pricing['type'], 'weeks' ); ?>><?php _e( 'Range of weeks', 'woocommerce-appointments' ); ?></option>
 				<option value="days" <?php selected( $pricing['type'], 'days' ); ?>><?php _e( 'Range of days', 'woocommerce-appointments' ); ?></option>
 				<!--<option value="slots" <?php selected( $pricing['type'], 'slots' ); ?>><?php _e( 'Slot count', 'woocommerce-appointments' ); ?></option>-->
+				<option value="quant" <?php selected( $pricing['type'], 'quant' ); ?>><?php _e( 'Capacity count', 'woocommerce-appointments' ); ?></option>
 				<optgroup label="<?php _e( 'Time Ranges', 'woocommerce-appointments' ); ?>">
 					<option value="time" <?php selected( $pricing['type'], 'time' ); ?>><?php _e( 'Time Range (all week)', 'woocommerce-appointments' ); ?></option>
 					<option value="time:range" <?php selected( $pricing['type'], 'time:range' ); ?>><?php _e( 'Time Range (date range)', 'woocommerce-appointments' ); ?></option>

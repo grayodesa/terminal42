@@ -1,4 +1,4 @@
-/* globals wc_appointment_form_params, wc_appointment_form_params */
+/* globals wc_appointment_form_params */
 jQuery(document).ready(function($) {
 
 	/*
@@ -11,12 +11,12 @@ jQuery(document).ready(function($) {
 	}
 	*/
 	
-	var startDate;
-    var endDate;
-	var duration = wc_appointment_form_params.appointment_duration;
-	var days_needed = ( duration < 1 ) ? 1 : duration;
-	var days_highlighted = days_needed;
-	var wc_appointments_date_picker = {
+	var startDate,
+		endDate,
+		duration = wc_appointment_form_params.appointment_duration,
+		days_needed = ( duration < 1 ) ? 1 : duration,
+		days_highlighted = days_needed,
+		wc_appointments_date_picker = {
 		init: function() {
 			$( 'body' ).on( 'change', '#wc_appointments_field_staff', this.date_picker_init );
 			$( '.wc-appointments-date-picker legend small.wc-appointments-date-picker-choose-date' ).show();
@@ -31,19 +31,17 @@ jQuery(document).ready(function($) {
 				$( '.wc-appointments-date-picker-choose-date', fieldset ).hide();
 			} );
 		},
-		select_date_trigger: function( date, inst ) {
-			var fieldset		= $( this ).closest( 'fieldset' );
-			var form			= $( this ).closest( 'form' );
-			var parsed_date		= date.split( '-' );
-			var the_date		= new Date( date );
-			var year			= the_date.getFullYear();
-			var month			= the_date.getMonth();
-			var day				= the_date.getDate();
+		select_date_trigger: function( date ) {
+			var fieldset		= $( this ).closest( 'fieldset' ),
+				parsed_date		= date.split( '-' ),
+				year  			= parseInt( parsed_date[0], 10 ),
+				month 			= parseInt( parsed_date[1], 10 ),
+				day   			= parseInt( parsed_date[2], 10 );
 			
 			//* Full appointment duration length
-            startDate = new Date( year, month, day );
-            endDate = new Date( year, month, day - 1 + parseInt( days_highlighted ) );
-
+            startDate = new Date( year, month - 1, day );
+            endDate = new Date( year, month - 1, day + ( parseInt( days_highlighted, 10 ) - 1 ) );
+			
 			// Set fields
 			fieldset.find( 'input.appointment_to_date_year' ).val( '' );
 			fieldset.find( 'input.appointment_to_date_month' ).val( '' );
@@ -91,10 +89,10 @@ jQuery(document).ready(function($) {
 
 			$( '.ui-datepicker-current-day' ).removeClass( 'ui-datepicker-current-day' );
 
-			var form  = $picker.closest( 'form' );
-			var year  = parseInt( form.find( 'input.appointment_date_year' ).val(), 10 );
-			var month = parseInt( form.find( 'input.appointment_date_month' ).val(), 10 );
-			var day   = parseInt( form.find( 'input.appointment_date_day' ).val(), 10 );
+			var form  = $picker.closest( 'form' ),
+				year  = parseInt( form.find( 'input.appointment_date_year' ).val(), 10 ),
+				month = parseInt( form.find( 'input.appointment_date_month' ).val(), 10 ),
+				day   = parseInt( form.find( 'input.appointment_date_day' ).val(), 10 );
 
 			if ( year && month && day ) {
 				var date = new Date( year, month - 1, day );
@@ -102,31 +100,32 @@ jQuery(document).ready(function($) {
 			}
 		},
 		is_appointable: function( date ) {
-			var $form                      = $( this ).closest('form');
-			var availability               = $( this ).data( 'availability' );
-			var default_availability       = $( this ).data( 'default-availability' );
-			var fully_scheduled_days       = $( this ).data( 'fully-scheduled-days' );
-			var partially_scheduled_days   = $( this ).data( 'partially-scheduled-days' );
-			var remaining_scheduled_days   = $( this ).data( 'remaining-scheduled-days' );
-			var availability_span		   = wc_appointment_form_params.availability_span;
-			var css_classes                = '';
-			var staff_id 				   = 0;
-			var title                      = '';
+			var $form                      = $( this ).closest('form'),
+				availability               = $( this ).data( 'availability' ),
+				default_availability       = $( this ).data( 'default-availability' ),
+				fully_scheduled_days       = $( this ).data( 'fully-scheduled-days' ),
+				partially_scheduled_days   = $( this ).data( 'partially-scheduled-days' ),
+				remaining_scheduled_days   = $( this ).data( 'remaining-scheduled-days' ),
+				padding_days               = $( this ).data( 'padding-days' ),
+				discounted_days            = $( this ).data( 'discounted-days' ),
+				availability_span		   = wc_appointment_form_params.availability_span,
+				has_staff                  = wc_appointment_form_params.has_staff,
+				staff_assignment           = wc_appointment_form_params.staff_assignment,
+				staff_id 				   = 0,
+				css_classes                = '',
+				title                      = '',
+				discounted_title           = '';
 
 			// Get selected staff
 			if ( $form.find('select#wc_appointments_field_staff').val() > 0 ) {
 				staff_id = $form.find('select#wc_appointments_field_staff').val();
-			} else {
-				staff_id = 0;
 			}
 
 			// Get days needed for slot - this affects availability
-			var the_date 	= new Date( date );
-			var year     	= the_date.getFullYear();
-			var month    	= the_date.getMonth() + 1;
-			var day      	= the_date.getDate();
-			var day_of_week	= the_date.getDay();
-			var week        = $.datepicker.iso8601Week( the_date );
+			var the_date 	= new Date( date ),
+				year     	= the_date.getFullYear(),
+				month    	= the_date.getMonth() + 1,
+				day      	= the_date.getDate();
 
 			// Fully scheduled?
 			if ( fully_scheduled_days[ year + '-' + month + '-' + day ] ) {
@@ -134,12 +133,17 @@ jQuery(document).ready(function($) {
 					return [ false, 'fully_scheduled', wc_appointment_form_params.i18n_date_fully_scheduled ];
 				}
 			}
+			
+			// Padding days?
+			if ( 'undefined' !== typeof padding_days && padding_days[ year + '-' + month + '-' + day ] ) {
+				return [ false, 'not_appointable', wc_appointment_form_params.i18n_date_unavailable ];
+			}
 
 			if ( '' + year + month + day < wc_appointment_form_params.current_time ) {
 				return [ false, 'not_appointable', wc_appointment_form_params.i18n_date_unavailable ];
 			}
 
-			// Partially scheduled?
+			// Apply Partially scheduled class.
 			if ( partially_scheduled_days && partially_scheduled_days[ year + '-' + month + '-' + day ] ) {
 				if ( partially_scheduled_days[ year + '-' + month + '-' + day ][0] || partially_scheduled_days[ year + '-' + month + '-' + day ][ staff_id ] ) {
 					css_classes = css_classes + 'partial_scheduled ';
@@ -158,99 +162,86 @@ jQuery(document).ready(function($) {
 				css_classes = 'ui-datepicker-selected-day';
 			}
 			
-			if ( availability_span == 'start' ) {
+			//* Discounted day?
+			if ( 'undefined' !== typeof discounted_days && discounted_days[ year + '-' + month + '-' + day ] ) {
+				css_classes = css_classes + ' discounted_day';
+				discounted_title = discounted_title + discounted_days[ year + '-' + month + '-' + day ];
+			}
+			
+			if ( availability_span === 'start' ) {
 				days_needed = 1;
 			}
 			
-			var appointable = default_availability;
+			var slot_args = {
+				start_date				: date,
+				number_of_days			: days_needed,
+				fully_scheduled_days	: fully_scheduled_days,
+				availability			: availability,
+				default_availability	: default_availability,
+				has_staff				: has_staff,
+				staff_id				: staff_id,
+				staff_assignment		: staff_assignment
+			};
+			
+			var appointable = wc_appointments_date_picker.is_slot_appointable( slot_args );
+			
+			if ( ! appointable ) {
+				return [ appointable, css_classes + ' not_appointable', wc_appointment_form_params.i18n_date_unavailable ];
+			} else {
+				if ( css_classes.indexOf( 'partial_scheduled' ) > -1 ) {
+					title = wc_appointment_form_params.i18n_date_partially_scheduled;
+				} else if ( css_classes.indexOf( 'discounted_day' ) > -1 ) {
+					title = discounted_title;
+				} else {
+					title = wc_appointment_form_params.i18n_date_available;
+				}
+				return [ appointable, css_classes + ' appointable', title ];
+			}
+		},
+		is_slot_appointable: function( args ) {
+			var appointable = args.default_availability;
 
-			// Loop all the days we need to check for this slot
-			for ( var i = 0; i < days_needed; i++ ) {
-				the_date     	= new Date( date );
+			// Loop all the days we need to check for this slot.
+			for ( var i = 0; i < args.number_of_days; i++ ) {
+				var the_date     = new Date( args.start_date );
 				the_date.setDate( the_date.getDate() + i );
 
-				year        = the_date.getFullYear();
-				month       = the_date.getMonth() + 1;
-				month_zero  = ("0" + (the_date.getMonth() + 1)).slice(-2);
-				day         = the_date.getDate(); 
-				day_zero    = ("0" + the_date.getDate()).slice(-2);
-				day_of_week = the_date.getDay();
-				week        = $.datepicker.iso8601Week( the_date );
-				day_format 	= year + '-' + month_zero + '-' + day_zero;
-
-				// Reset appointable for each day being checked
-				appointable = default_availability;
+				var year        = the_date.getFullYear(),
+					month       = the_date.getMonth() + 1,
+					day         = the_date.getDate(),
+					day_of_week = the_date.getDay();
 
 				// Sunday is 0, Monday is 1, and so on.
 				if ( day_of_week === 0 ) {
 					day_of_week = 7;
 				}
 
-				$.each( availability[ staff_id ], function( index, rule ) {
-					var type  = rule[0];
-					var rules = rule[1];
-					try {
-						switch ( type ) {
-							case 'months':
-								if ( typeof rules[ month ] !== 'undefined' ) {
-									appointable = rules[ month ];
-									return false;
-								}
-							break;
-							case 'weeks':
-								if ( typeof rules[ week ] !== 'undefined' ) {
-									appointable = rules[ week ];
-									return false;
-								}
-							break;
-							case 'days':
-								if ( typeof rules[ day_of_week ] !== 'undefined' ) {
-									appointable = rules[ day_of_week ];
-									return false;
-								}
-							break;
-							case 'custom':
-								if ( typeof rules[ year ][ month ][ day ] !== 'undefined' ) {
-									appointable = rules[ year ][ month ][ day ];
-									return false;
-								}
-							break;
-							case 'time_date':
-								if ( rules['date'] === day_format ) {
-									appointable = true;
-									return false;
-								}
-							break;
-							/*
-							case 'time':
-							case 'time:1':
-							case 'time:2':
-							case 'time:3':
-							case 'time:4':
-							case 'time:5':
-							case 'time:6':
-							case 'time:7':
-								if ( false === default_availability && ( day_of_week === rules.day || 0 === rules.day ) ) {
-									appointable = rules.rule;
-									return false;
-								}
-							break;
-							case 'time:range':
-								if ( false === default_availability && ( typeof rules[ year ][ month ][ day ] != 'undefined' ) ) {
-									appointable = rules[ year ][ month ][ day ].rule;
-									return false;
-								}
-							break;
-							*/
-						}
-					} catch( err ) {}
+				// Is staff available in current date?
+				// Note: staff_id = 0 is product's availability rules.
+				// Each staff rules also contains product's rules.
+				var staff_args = {
+					staff_rules: args.availability[ args.staff_id ],
+					date: the_date,
+					default_availability: args.default_availability
+				};
+				appointable = wc_appointments_date_picker.is_staff_available( staff_args );
 
-					return true;
-				});
+				// In case of automatic assignment we want to make sure at least one staff is available.
+				if ( 'automatic' === args.staff_assignment || ( args.has_staff && 0 === args.staff_id ) ) {
+					var automatic_staff_args = $.extend(
+						{
+							availability: args.availability,
+							fully_scheduled_days: args.fully_scheduled_days
+						},
+						staff_args
+					);
+
+					appointable = wc_appointments_date_picker.has_available_staff( automatic_staff_args );
+				}
 
 				// Fully scheduled in entire slot?
-				if ( fully_scheduled_days[ year + '-' + month + '-' + day ] ) {
-					if ( fully_scheduled_days[ year + '-' + month + '-' + day ][0] || fully_scheduled_days[ year + '-' + month + '-' + day ][ staff_id ] ) {
+				if ( args.fully_scheduled_days[ year + '-' + month + '-' + day ] ) {
+					if ( args.fully_scheduled_days[ year + '-' + month + '-' + day ][0] || args.fully_scheduled_days[ year + '-' + month + '-' + day ][ args.staff_id ] ) {
 						appointable = false;
 					}
 				}
@@ -260,17 +251,103 @@ jQuery(document).ready(function($) {
 				}
 			}
 
-			if ( ! appointable ) {
-				return [ appointable, css_classes + ' not_appointable', wc_appointment_form_params.i18n_date_unavailable ];
-			} else {
-				if ( css_classes.indexOf( 'partial_scheduled' ) > -1 ) {
-					title = wc_appointment_form_params.i18n_date_partially_scheduled;
-				} else {
-					title = wc_appointment_form_params.i18n_date_available;
-				}
-				
-				return [ appointable, css_classes + ' appointable', title ];
+			return appointable;
+		},
+		is_staff_available: function( args ) {
+			var availability = args.default_availability,
+				year         = args.date.getFullYear(),
+				month        = args.date.getMonth() + 1,
+				day          = args.date.getDate(),
+				day_of_week  = args.date.getDay(),
+				week         = $.datepicker.iso8601Week( args.date );
+
+			// Sunday is 0, Monday is 1, and so on.
+			if ( day_of_week === 0 ) {
+				day_of_week = 7;
 			}
+
+			// `args.fully_scheduled_days` and `args.staff_id` only available
+			// when checking 'automatic' staff assignment.
+			if ( args.fully_scheduled_days && args.fully_scheduled_days[ year + '-' + month + '-' + day ] && args.fully_scheduled_days[ year + '-' + month + '-' + day ][ args.staff_id ] ) {
+				return false;
+			}
+
+			$.each( args.staff_rules, function( index, rule ) {
+				var type  = rule[0];
+				var rules = rule[1];
+				try {
+					switch ( type ) {
+						case 'months':
+							if ( typeof rules[ month ] !== 'undefined' ) {
+								availability = rules[ month ];
+								return false;
+							}
+						break;
+						case 'weeks':
+							if ( typeof rules[ week ] !== 'undefined' ) {
+								availability = rules[ week ];
+								return false;
+							}
+						break;
+						case 'days':
+							if ( typeof rules[ day_of_week ] !== 'undefined' ) {
+								availability = rules[ day_of_week ];
+								return false;
+							}
+						break;
+						case 'custom':
+							if ( typeof rules[ year ][ month ][ day ] !== 'undefined' ) {
+								availability = rules[ year ][ month ][ day ];
+								return false;
+							}
+						break;
+						/*
+						case 'time':
+						case 'time:1':
+						case 'time:2':
+						case 'time:3':
+						case 'time:4':
+						case 'time:5':
+						case 'time:6':
+						case 'time:7':
+							if ( false === args.default_availability && ( day_of_week === rules.day || 0 === rules.day ) ) {
+								availability = rules.rule;
+								return false;
+							}
+						break;
+						case 'time:range':
+							if ( false === args.default_availability && ( typeof rules[ year ][ month ][ day ] !== 'undefined' ) ) {
+								availability = rules[ year ][ month ][ day ].rule;
+								return false;
+							}
+						break;
+						*/
+					}
+
+				} catch( err ) {}
+
+				return true;
+			});
+
+			return availability;
+		},
+		has_available_staff: function( args ) {
+			for ( var staff_id in args.availability ) {
+				staff_id = parseInt( staff_id, 10 );
+
+				// Skip staff_id '0' that has been performed before.
+				if ( 0 === staff_id ) {
+					continue;
+				}
+
+				args.staff_rules = args.availability[ staff_id ];
+				args.staff_id = staff_id;
+				if ( wc_appointments_date_picker.is_staff_available( args ) ) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 	};
 

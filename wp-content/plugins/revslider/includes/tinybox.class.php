@@ -46,19 +46,11 @@ class RevSliderTinyBox {
 	 */
 	public static function visual_composer_include(){
 		
-		if(is_user_logged_in()){
+		if(@is_user_logged_in()){
 			
-			if(!function_exists('vc_map') || !function_exists('Vc_Manager')) return false;
+			if(!function_exists('vc_map') || !function_exists('vc_action')) return false;
 			
-			global $wp_query;
-			if(empty($wp_query)){ //if wp_query does not exist, create it, so VC can work with it
-				$wp_query = new WP_Query();
-			}
-			
-			Vc_Manager()->init();
-			$mode = Vc_Manager()->mode();
-			
-			if ( in_array($mode, array('admin_page', 'admin_frontend_editor')) ) {
+			if('vc_inline' === vc_action() || is_admin()){
 				add_action( 'init', array('RevSliderTinyBox', 'add_to_VC' ));
 			}
 		}

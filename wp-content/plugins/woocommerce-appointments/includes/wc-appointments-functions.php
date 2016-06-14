@@ -92,6 +92,20 @@ function get_wc_appointment_statuses( $context = 'fully_scheduled' ) {
 			'in-cart',
 		) );
 	}
+	
+	/* Register statuses for translation purpose only
+	 * does nothing, but registers statuses as text-strings for translation purposes
+	 */
+	$statuses = array(
+		__( 'paid', 'woocommerce-appointments' ),
+		__( 'unpaid', 'woocommerce-appointments' ),
+		__( 'pending-confirmation', 'woocommerce-appointments' ),
+		__( 'confirmed', 'woocommerce-appointments' ),
+		__( 'cancelled', 'woocommerce-appointments' ),
+		__( 'complete', 'woocommerce-appointments' ),
+		__( 'in-cart', 'woocommerce-appointments' ),
+	);
+	
 }
 
 /**
@@ -289,7 +303,7 @@ function wc_appointment_get_product_staff( $product_id ) {
 	global $wpdb;
 
 	$staff = array();
-	$users     = $wpdb->get_results(
+	$users = $wpdb->get_results(
 		$wpdb->prepare( "
 			SELECT users.ID, users.display_name
 			FROM {$wpdb->prefix}wc_appointment_relationships AS relationships
@@ -299,9 +313,11 @@ function wc_appointment_get_product_staff( $product_id ) {
 			ORDER BY sort_order ASC
 		", $product_id )
 	);
-
-	foreach ( $users as $staff_member ) {
-		$staff[] = new WC_Product_Appointment_Staff( $staff_member, $product_id );
+	
+	if ( $users ) {
+		foreach ( $users as $staff_member ) {
+			$staff[] = new WC_Product_Appointment_Staff( $staff_member, $product_id );
+		}
 	}
 
 	return $staff;

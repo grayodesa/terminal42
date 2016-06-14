@@ -13,12 +13,19 @@ class MC4WP_Ecommerce_Admin {
 	protected $plugin;
 
 	/**
+	 * @var boolean
+	 */
+	protected $enabled;
+
+	/**
 	 * MC4WP_Ecommerce_Admin constructor.
 	 *
 	 * @param MC4WP_Plugin $plugin
+	 * @param boolean $enabled
 	 */
-	public function __construct( MC4WP_Plugin $plugin ) {
+	public function __construct( MC4WP_Plugin $plugin, $enabled = false ) {
 		$this->plugin = $plugin;
+		$this->enabled = $enabled;
 	}
 
 	/**
@@ -39,6 +46,37 @@ class MC4WP_Ecommerce_Admin {
 		add_action( 'mc4wp_admin_ecommerce_add_untracked_orders', array( $this, 'add_untracked_orders' ) );
 
 		add_action( 'admin_menu', array( $this, 'register_hidden_pages' ) );
+
+		if( $this->enabled ) {
+			// add new WooCommerce order action to manually add / delete order from MailChimp
+			add_filter( 'woocommerce_order_actions', array( $this, 'add_woocommerce_order_action' ) );
+			add_action( 'woocommerce_order_action_mailchimp_ecommerce', array( $this, 'run_woocommerce_order_action' ) );
+		}
+	}
+
+	/**
+	 * @param array $actions
+	 * @return array
+	 */
+	public function add_woocommerce_order_action( $actions ) {
+		global $theorder;
+		$tracked = !! get_post_meta( $theorder->id, '_mc4wp_ecommerce_tracked', true );
+		$actions['mailchimp_ecommerce'] = $tracked ? __( 'Delete from MailChimp', 'mailchimp-for-wp' ) : __( 'Add to MailChimp', 'mailchimp-for-wp' );
+		return $actions;
+	}
+
+	/**
+	 * @param WC_Order $order
+	 */
+	public function run_woocommerce_order_action( $order ) {
+		$tracked = !! get_post_meta( $order->id, '_mc4wp_ecommerce_tracked', true );
+		$ecommerce = $this->get_ecommerce();
+
+		if( $tracked ) {
+			$ecommerce->delete_order( $order->id );
+		} else {
+			$ecommerce->add_woocommerce_order( $order->id );
+		}
 	}
 
 	/**

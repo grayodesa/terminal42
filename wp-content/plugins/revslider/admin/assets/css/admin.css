@@ -1357,6 +1357,47 @@ position: absolute !important;
 z-index: 10000;
 }
 
+
+.benefits-title-right 					{	margin-left:20px; box-sizing: border-box; display: inline-block; vertical-align: top;}
+.rs-premium-benefits-dialogtitle 		{ 	font-size:30px; line-height:35px; font-weight:600; color:#00263b;display: block}
+.rs-premium-benefits-dialogsubtitle		{	font-size:14px; font-weight: 600; color:#00263b;opacity:0.4; display:block;}
+
+.rs-premium-benefits-dialogtitles .oppps-icon { vertical-align: top; background:url(../images/oops/oopps_blue.png); width:60px;height:60px; display: inline-block; }
+
+.rs-open-premium-benefits-dialog-container .ui-dialog-titlebar-close { height:22px; width:20px; background:url(../images/oops/close_cross_x.png); top:30px; right:30px; }
+.rs-open-premium-benefits-dialog-container .ui-dialog-titlebar-close:before { display:none; }
+
+.rs-open-premium-benefits-dialog-container .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix { height:auto; padding:30px 30px 20px; border-bottom:1px solid #9fadb4 !important; background: #e5e5e5}
+#rs-premium-benefits-dialog 			{	min-height:715px !important; padding:0px; background: #f5f5f5;  background-image:url(../images/oops/getpurchasecode_deko.png);background-position: bottom -50px center; background-repeat: no-repeat;}
+
+
+.rs-premium-benefits-block  			{	padding: 20px 30px 50px; }
+.rs-premium-benefits-block .big_present { 	vertical-align: top; background:url(../images/oops/gift_big.png); width:48px;height:52px; display: inline-block; margin-right: 25px; } 
+.rs-premium-benefits-block .big_diamond { 	vertical-align: top; background:url(../images/oops/diamond_big.png); width:52px;height:48px; display: inline-block; margin-right: 25px; } 
+.rs-premium-benefits-block h3 			{	font-size:20px; line-height:52px; font-weight:600; color:#00263b; margin-top:10px;margin-bottom:10px;}
+
+.rs-premium-benefits-block ul 			{	margin-top:0px;margin-bottom:0px;}
+.rs-premium-benefits-block ul li 		{	font-size:18px; color:#00263b; font-weight: 400; line-height: 32px; padding-left:75px; position: relative; margin:0px;}
+.rs-premium-benefits-block ul li:before { 	content:"";position:absolute; left:35px;top:10px; background:url(../images/oops/right-bold-arrow.png); width:15px;height:16px; }
+
+.rspb-withborder 						{	border-bottom:1px solid #9fadb4 !important;}
+
+.rs-premium-benefits-block a,
+.rs-premium-benefits-block a:visited 			{	color:#009aee; text-decoration: none; font-weight: 700; outline: none; box-shadow: none !important; text-shadow: none !important}
+.rs-premium-benefits-block a:hover 		{	text-decoration: underline;}
+
+.rs-premium-benefits-block a.rspb_darklink,
+.rs-premium-benefits-block a.rspb_darklink:visited 	{	color:#00263b; text-decoration: underline; font-weight: 400;outline: none; box-shadow: none !important; text-shadow: none !important}
+.rs-premium-benefits-block a.rspb_darklink:hover 	{	text-decoration: none;}
+
+.instant_access 						{	width:168px; height:30px; background:url(../images/oops/instantaccess.png); display: inline-block; vertical-align: middle;margin-top:9px;}
+
+a.get_purchase_code 					{	letter-spacing:1px;text-decoration:none; margin:auto;display: block; width:700px; border-radius: 6px; background: #009aee; color:#fff; text-align: center; font-size:17px; text-transform: uppercase;; line-height: 60px; font-weight: 700;  box-shadow: none !important; text-shadow: none !important}
+a.get_purchase_code:hover 				{	background:#2980b9;}
+
+.rs-premium-benefits-dialogsubtitle a,
+.rs-premium-benefits-dialogsubtitle a:visited 				{	font-size:14px; font-weight: 600; color:#00263b; text-decoration: underline;outline: none; box-shadow: none !important; text-shadow: none !important}
+.rs-premium-benefits-dialogsubtitle a:hover 				{	text-decoration: none;}
 /* ====================================== */
 /* 			Video Dialog
 /* ====================================== */
@@ -2505,8 +2546,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00252525', e
 
 
 .install_template_slider,
+.install_template_slider_package,
 .install_template_slide,
 .add_template_slider_item,
+.add_template_slider_item_package,
 .add_template_slide_item,
 .dontadd_template_slider_item 			{	background:#009cdd; color:#fff; font-weight: 600; cursor: pointer; border-radius: 4px; font-size:12px; line-height: 25px; padding:0px 5px; display: inline-block;}
 
@@ -2515,14 +2558,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00252525', e
 .dontadd_template_slider_item i 		{	width:12px;height:12px; background-size:cover;}
 
 .install_template_slider i:before,
+.install_template_slider_package i:before,
 .install_template_slide i:before,
 .add_template_slider_item i:before,
+.add_template_slider_item_package i:before,
 .add_template_slide_item i:before,
 .dontadd_template_slider_item i:before {	color:#fff;margin-right:5px;}
 
 .install_template_slider:hover,
+.install_template_slider_package:hover,
 .install_template_slide:hover,
 .add_template_slider_item:hover,
+.add_template_slider_item_package:hover,
 .add_template_slide_item:hover  			{	background: #2980b9}
 
 
@@ -2772,7 +2819,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00252525', e
 	color:#fff;
 }
 
-
+.rs-open-premium-benefits-dialog-container.ui-dialog { z-index:1000105 !important; }
 
 /*************************************
 	- 	ALPHA COLOR PICKER 	-

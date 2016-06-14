@@ -1,4 +1,4 @@
-/* global appointment_form_params */
+/* global wc_appointment_form_params */
 jQuery(document).ready(function($) {
 
 	/*

@@ -1,6 +1,6 @@
 /********************************************
  * REVOLUTION 5.2 EXTENSION - ACTIONS
- * @version: 1.3.1 (03.03.2016)
+ * @version: 1.3.2 (12.04.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
@@ -40,6 +40,11 @@ if (as)
 		}
 
 		var tnc = a.layer == "backgroundvideo" ? jQuery(".rs-background-video-layer") : a.layer == "firstvideo" ? jQuery(".tp-revslider-slidesli").find('.tp-videolayer') : jQuery("#"+a.layer);
+
+		// NO NEED EXTRA TOGGLE CLASS HANDLING
+		if (jQuery.inArray(a.action,["toggleslider","toggle_mute_video","toggle_global_mute_video","togglefullscreen"])!=-1) {
+			_nc.data('togglelisteners',true);
+		}
 		// COLLECT ALL TOGGLE TRIGGER TO CONNECT THEM WITH TRIGGERED LAYER
 		switch (a.action) {
 			case "togglevideo":

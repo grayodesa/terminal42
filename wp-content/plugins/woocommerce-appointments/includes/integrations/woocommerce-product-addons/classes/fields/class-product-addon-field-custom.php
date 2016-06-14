@@ -60,17 +60,17 @@ class Product_Addon_Field_Custom extends Product_Addon_Field {
 					}
 				break;
 				case "custom_letters_only" :
-					if ( 1 !== preg_match( '/^[A-Z]+$/i', $posted ) ) {
+					if ( 1 !== preg_match( '/^[A-Z]*$/i', $posted ) ) {
 						return new WP_Error( 'error', sprintf( __( 'Only letters are allowed for "%s - %s".', 'woocommerce-appointments' ), $this->addon['name'], $option['label'] ) );
 					}
 				break;
 				case "custom_digits_only" :
-					if ( 1 !== preg_match( '/^[0-9]+$/', $posted ) ) {
+					if ( 1 !== preg_match( '/^[0-9]*$/', $posted ) ) {
 						return new WP_Error( 'error', sprintf( __( 'Only digits are allowed for "%s - %s".', 'woocommerce-appointments' ), $this->addon['name'], $option['label'] ) );
 					}
 				break;
 				case "custom_letters_or_digits" :
-					if ( 1 !== preg_match( '/^[A-Z0-9]+$/i', $posted ) ) {
+					if ( 1 !== preg_match( '/^[A-Z0-9]*$/i', $posted ) ) {
 						return new WP_Error( 'error', sprintf( __( 'Only letters and digits are allowed for "%s - %s".', 'woocommerce-appointments' ), $this->addon['name'], $option['label'] ) );
 					}
 				break;
@@ -118,12 +118,16 @@ class Product_Addon_Field_Custom extends Product_Addon_Field {
 				break;
 				case "input_multiplier" :
 					$posted = absint( $posted );
-
-					$cart_item_data[] = array(
-						'name' 		=> $label,
-						'value'		=> $posted,
-						'price' 	=> $posted * $price
-					);
+					
+					if ( 0 === $posted ) {
+						$cart_item_data = array();
+					} else {
+						$cart_item_data[] = array(
+							'name'   => $label,
+							'value'  => $posted,
+							'price'  => $posted * $price
+						);
+					}
 				break;
 				default :
 					$cart_item_data[] = array(

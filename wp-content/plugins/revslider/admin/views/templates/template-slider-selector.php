@@ -31,6 +31,7 @@ $all_slider = $tmp_slider->getArrSliders();
 				<span class="template_filter_button selected" data-type="temp_all"><?php _e('All Templates', 'revslider'); ?></span>
 				<span class="template_filter_button" data-type="template_free"><?php _e('Free Templates', 'revslider'); ?></span>
 				<span class="template_filter_button" data-type="template_premium"><?php _e('Premium Templates', 'revslider'); ?></span>
+				<span class="template_filter_button" data-type="template_package"><?php _e('Packages', 'revslider'); ?></span>
 				<span class="template_filter_button" data-type="temp_slider"><?php _e('Slider', 'revslider'); ?></span>
 				<span class="template_filter_button" data-type="temp_carousel"><?php _e('Carousel', 'revslider'); ?></span>			
 				<span class="template_filter_button" data-type="temp_hero"><?php _e('Hero', 'revslider'); ?></span>
@@ -63,7 +64,11 @@ $all_slider = $tmp_slider->getArrSliders();
 				
 				$slidercat = $m_slider['cat'] == 'Revolution Base' ? " template_free " : " template_premium ";				
 				$etikett_a = $m_slider['cat'] == 'Revolution Base' ? __("Free", 'revslider') : __("Premium", 'revslider');
+				$is_package = (isset($m_slider['package']) && $m_slider['package'] !== '') ? true : false;
 				$isnew = (isset($m_slider['new_slider'])) ? true : false;
+				$package = ($is_package) ? ' template_package' : '';
+				
+				$m_slider['package_full_installded'] = $tmpl->check_package_all_installed($m_slider['uid'], $tp_template_slider);
 				
 				$slidercat_new = $isnew ? " temp_newupdate " : "";
 				
@@ -108,7 +113,7 @@ $all_slider = $tmp_slider->getArrSliders();
 					
 					if(!empty($c_slides)){
 						?>
-						<div class="template_group_wrappers <?php echo $slidercat.$slidercat_new; if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
+						<div class="template_group_wrappers <?php echo $slidercat.$package.$slidercat_new; if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
 							<?php
 							foreach($c_slides as $key => $c_slide){
 								
@@ -132,7 +137,9 @@ $all_slider = $tmp_slider->getArrSliders();
 								$c_slide['number'] = $key;
 								$c_slide['current_version'] = ($version_installed !== '') ? $version_installed : __('N/A', 'revslider');
 								$c_slide['title'] = $c_title;
-								
+							
+								$c_slide['package'] = ($is_package) ? $m_slider['package'] : '';
+								$c_slide['package_full_installded'] = $m_slider['package_full_installded'];
 								
 								$tmpl->write_template_markup($c_slide, $c_slider->getID()); //add the Slider ID as we want to add a Slider and no Slide
 								break; //only write the first, as we want to add a Slider and not a Slide
@@ -153,7 +160,7 @@ $all_slider = $tmp_slider->getArrSliders();
 					}
 				}else{
 					?>
-					<div class="template_group_wrappers <?php echo $slidercat_new.$slidercat; ?> temp_notinstalled not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
+					<div class="template_group_wrappers <?php echo $slidercat_new.$slidercat.$package; ?> temp_notinstalled not-imported-wrapper <?php if(isset($m_slider['filter'])){ echo implode(' ', $m_slider['filter']); } ?>">
 						<?php
 						$tmpl->write_import_template_markup($m_slider); //add the Slider ID as we want to add a Slider and no Slide
 						?>
@@ -392,5 +399,6 @@ $all_slider = $tmp_slider->getArrSliders();
 		<input type="hidden" name="client_action" value="import_slider_online_template_slidersview">
 		<input type="hidden" name="nonce" value="<?php echo wp_create_nonce("revslider_actions"); ?>">
 		<input type="hidden" name="uid" class="rs-uid" value="">
+		<input type="hidden" name="package" class="rs-package" value="false">
 	</form>
 </div>

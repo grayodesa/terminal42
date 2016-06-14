@@ -34,7 +34,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 		/* Show qunatity only when no Staff is assigned and qty is larger than 1 ... duuuuuuh
 		 * Why hide if Staff is assigned? - because only 1 staff is available per appointment
 		 */
-		if ( $product->get_qty() > 1 && ! $product->has_staff() ) {
+		if ( $product->get_qty() > 1 ) {
 			woocommerce_quantity_input( array(
 				'min_value'   => apply_filters( 'woocommerce_quantity_input_min', 1, $product ),
 				'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_qty(), $product ),

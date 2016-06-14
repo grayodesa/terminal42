@@ -18,7 +18,7 @@ class MC4WP_Form_Notification_Factory {
 
 	public function add_hooks() {
 		add_filter( 'mc4wp_form_settings', array( $this, 'settings' ) );
-		add_action( 'mc4wp_form_subscribed',array( $this, 'send_form_notification' ), 10, 3 );
+		add_action( 'mc4wp_form_subscribed',array( $this, 'send_form_notification' ), 10, 4 );
 	}
 
 	/**
@@ -49,15 +49,22 @@ class MC4WP_Form_Notification_Factory {
 
 	/**
 	 * @param MC4WP_Form $form
-	 * @param array $data Data that was sent to MailChimo
+	 * @param string $email
+	 * @param array $merge_vars Merge vars that were sent to MailChimo
 	 * @param array $pretty_data Pretty representation of data that was sent to MailChimp
 	 *
 	 * @return bool
 	 */
-	public function send_form_notification( MC4WP_Form $form, array $data = array(), array $pretty_data = array() ) {
+	public function send_form_notification( MC4WP_Form $form, $email, $merge_vars = array(), $pretty_data = array() ) {
 
 		if ( ! $form->settings['email_notification']['enabled'] ) {
 			return false;
+		}
+
+		// for BC with MailChimp for WordPress < 3.1.6
+		if( is_array( $email ) ) {
+			$pretty_data = $merge_vars;
+			$merge_vars = $email;
 		}
 
 		$email = new MC4WP_Email_Notification(
@@ -66,11 +73,11 @@ class MC4WP_Form_Notification_Factory {
 			$form->settings['email_notification']['message_body'],
 			$form->settings['email_notification']['content_type'],
 			$form,
-			$data,
+			$merge_vars,
 			$pretty_data
 		);
 
-		// TODO: Move this into a queue which is processed in the background
+		// TODO: Move this into a queue which is processed in the background?
 		$email->send();
 	}
 

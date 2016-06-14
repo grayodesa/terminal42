@@ -1,8 +1,8 @@
 === Woocommerce Abandoned Cart Lite ===
-Contributors: ashokrane, pinal.shah, mansishah, dharakothari, bhavik.kiri
+Contributors: ashokrane, pinal.shah, mansishah, dharakothari, bhavik.kiri, chetnapatel
 Tags: abandon cart, shopping cart abandonment
 Requires at least: 1.3
-Tested up to: 4.4
+Tested up to: 4.5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,7 +44,7 @@ Abandoned Cart PRO plugin enables to do the following additional things:
 
 **Pro Version:**
 
-**[WooCommerce Abandoned Cart Pro 2.6](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "WooCommerce Abandoned Cart Pro")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
+**[WooCommerce Abandoned Cart Pro 3.1](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "WooCommerce Abandoned Cart Pro")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
 
 
 **Email Sending Setup:**
@@ -88,6 +88,35 @@ The documentation can be found **[here](https://www.tychesoftwares.com/woocommer
 4. Lists Recovered Orders.
 
 == Changelog ==
+
+= 2.8 =
+
+* We have changed the encryption for the links that are sent in the Abandoned cart email notifications. Earlier we were using the mcrypt library for encoding the data. If mcrypt library was not installed on the server, then abandoned cart email notifications were not sent. Now we have used different functions for encoding the string. We have used microtime function & a security key. Using this security key, and after applying an algorithm on it, we generate the encoded string.
+
+* The session now starts only on required pages of the store. Earlier it was started globally. This will help to improve the site performance.
+
+* If billing email address of the logged-in user is not set then it was showing blank space on the abandoned orders list. This has been fixed. Now it will show the email address which was used while registering to the store.
+
+* Earlier if email body was blank and we send the test email then blank email was sent. This has been fixed. Now if email body is blank then test email will not be sent.
+
+* Tweak - Earlier we were populating the guest cart information by looping into the global WooCommerce cart. Now we are not looping & instead using the WooCommerce session object itself.
+
+* Tweak - Earlier if the 'wp-content' directory has been renamed, then wp-load.php file was not included and abandoned cart reminder email was not sent.  Now, we have changed the way of including the wp-load.php file for sending the abandoned cart reminder notifications.
+
+* Tweak - Earlier when {{products.cart}} merge tag is used in abandoned cart email template, then on click of the product name and product image, it was redirecting to the product page. Now it will redirect the user to the cart page.
+
+* Tweak - We are now rounding off the prices with the 'round' function.
+
+= 2.7 =
+
+* New setting named as "Email Template Header Text" is added in Add / Edit template page. It will allow to change the header text of the email which have WooCommerce template style setting enabled for the template.
+
+* From this version, the email sending process will run every 15 minutes instead of every 5 minutes. This will result in improved overall performance of the website.
+
+* When Lite version of the plugin is activated on the site then it was not allowing to activate the PRO version of the plugin. This has been fixed.
+
+* When templates are created / updated and if it has the same duration as one of the existing templates, then new template was not saved. This has been fixed.
+
 
 = 2.6 =
 

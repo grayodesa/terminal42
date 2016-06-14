@@ -120,6 +120,7 @@
 		<select name="_wc_appointment_padding_duration_unit" id="_wc_appointment_padding_duration_unit" class="short" style="width: auto; margin-right: 7px;">
 			<option value="minute" <?php selected( $padding_duration_unit, 'minute' ); ?>><?php _e( 'Minute(s)', 'woocommerce-appointments' ); ?></option>
 			<option value="hour" <?php selected( $padding_duration_unit, 'hour' ); ?>><?php _e( 'Hour(s)', 'woocommerce-appointments' ); ?></option>
+			<option value="day" <?php selected( $padding_duration_unit, 'day' ); ?>><?php _e( 'Day(s)', 'woocommerce-appointments' ); ?></option>
 		</select>
 		<select name="_wc_appointment_padding_duration_when" id="_wc_appointment_padding_duration_when" class="short" style="width: auto; margin-right: 7px;">
 			<option value="before" <?php selected( $padding_duration_when, 'before' ); ?>><?php _e( 'Before', 'woocommerce-appointments' ); ?></option>

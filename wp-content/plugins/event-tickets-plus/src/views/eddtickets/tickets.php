@@ -1,4 +1,10 @@
 <?php
+/**
+ * Renders the EDD tickets table/form
+ *
+ * @version 4.1
+ *
+ */
 global $edd_options;
 
 $is_there_any_product = false;
@@ -23,7 +29,7 @@ ob_start();
 					echo sprintf( '<input type="hidden" name="product_id[]"" value="%d">', esc_attr( $ticket->ID ) );
 
 					echo '<tr>';
-					echo '<td width="75" class="edd">';
+					echo '<td width="75" class="edd quantity" data-product-id="' . esc_attr( $ticket->ID ) . '">';
 
 
 					if ( $stock->available_units( $product->ID ) ) {
@@ -68,6 +74,18 @@ ob_start();
 					echo '</td>';
 
 					echo '</tr>';
+
+					echo
+					'<tr class="tribe-tickets-attendees-list-optout">' .
+						'<td colspan="4">' .
+							'<input type="checkbox" name="optout_'  . esc_attr( $ticket->ID ) . '" id="tribe-tickets-attendees-list-optout-edd">' .
+							'<label for="tribe-tickets-attendees-list-optout-edd">' .
+								esc_html__( 'Don\'t list me on the public attendee list', 'event-tickets' ) .
+							'</label>' .
+						'</td>' .
+					'</tr>';
+
+					include dirname( __FILE__ ) . '/../meta.php';
 				}
 			}
 			?>

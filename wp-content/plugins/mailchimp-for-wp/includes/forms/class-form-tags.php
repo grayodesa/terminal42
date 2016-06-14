@@ -18,6 +18,10 @@ class MC4WP_Form_Tags {
 	 */
 	protected $form;
 
+	/**
+	 * @var MC4WP_Form_Element
+	 */
+	protected $form_element;
 
 	/**
 	 * Constructor
@@ -30,7 +34,7 @@ class MC4WP_Form_Tags {
 	public function add_hooks() {
 		add_filter( 'mc4wp_dynamic_content_tags_form', array( $this, 'register' ) );
 		add_filter( 'mc4wp_form_response_html', array( $this, 'replace' ), 10, 2 );
-		add_filter( 'mc4wp_form_content', array( $this, 'replace' ), 10, 2 );
+		add_filter( 'mc4wp_form_content', array( $this, 'replace' ), 10, 3 );
 		add_filter( 'mc4wp_form_redirect_url', array( $this, 'replace_in_url' ), 10, 2 );
 	}
 
@@ -109,6 +113,12 @@ class MC4WP_Form_Tags {
 			'example'     => "user property='user_email'"
 		);
 
+		$tags['post'] = array(
+			'description' => sprintf( __( "Property of the current page or post.", 'mailchimp-for-wp' ) ),
+			'callback'    => array( $this, 'get_post_property' ),
+			'example'     => "post property='ID'"
+		);
+
 		return $tags;
 	}
 
@@ -120,11 +130,13 @@ class MC4WP_Form_Tags {
 	 *
 	 * @param string $string
 	 * @param MC4WP_Form $form
+	 * @param MC4WP_Form_Element $element
 	 *
 	 * @return string
 	 */
-	public function replace( $string, MC4WP_Form $form ) {
+	public function replace( $string, MC4WP_Form $form, MC4WP_Form_Element $element = null ) {
 		$this->form = $form;
+		$this->form_element = $element;
 		$string = $this->tags->replace( $string );
 		return $string;
 	}
@@ -159,7 +171,12 @@ class MC4WP_Form_Tags {
 	 * @return string
 	 */
 	public function get_form_response() {
-		return $this->form->get_response_html();
+
+		if( $this->form_element instanceof MC4WP_Form_Element ) {
+			return $this->form_element->get_response_html();
+		}
+
+		return '';
 	}
 
 	/**
@@ -196,6 +213,24 @@ class MC4WP_Form_Tags {
 
 		if( $user instanceof WP_User ) {
 			return $user->{$property};
+		}
+
+		return '';
+	}
+
+	/*
+	 * Get property of viewed post
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function get_post_property( $args = array() ) {
+		$property = empty( $args['property'] ) ? 'ID' : $args['property'];
+		global $post;
+
+		if( $post instanceof WP_Post ) {
+			return $post->{$property};
 		}
 
 		return '';

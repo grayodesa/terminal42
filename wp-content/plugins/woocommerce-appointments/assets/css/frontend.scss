@@ -77,13 +77,14 @@
 		}
 		li.selected a,
 		li.selected:hover a {
-			background-color: #935386;
+			background-color: #a46497;
 			color: #fff;
 			outline-color: transparent;
 			text-decoration: none;
 		}
 		li.slot_empty {
-			display: none;
+			padding: .8em 5px;
+			text-align: center;
 		}
 	}
 	fieldset{
@@ -164,11 +165,13 @@
 		margin: 0;
 		padding: 0.25em 0 0;
 	}
-	div.product-addon {
-		margin: 1em 0;
+	.product-addon-add-ons {
+		border-top: 1px dashed #ddd;
+		padding: 1em;
+		margin: 0 -1em;
 	}
 	.product-addon h3 {
-		margin: 1em 0 .75em;
+		margin: .35em 0 .75em;
 	}
 	#product-addons-total dl {
 		margin-top: 1.25em;
@@ -176,7 +179,10 @@
 	}
 	.addon-duration {
 		font-size: .75em;
-		margin-left: 5px;
+		margin-left: .15em;
+	}
+	.amount-symbol {
+		margin-right: .15em;
 	}
 }
 
@@ -315,7 +321,7 @@
 		}
 		td.ui-datepicker-current-day a,
 		td.ui-datepicker-current-day a:hover {
-			background-color: #935386;
+			background-color: #a46497;
 			color: #fff;
 			opacity: 1;
 			&:before {
@@ -330,8 +336,45 @@
 
 		}
 		td.appointable-range .ui-state-default {
-			background: #935386;
+			background: #a46497;
 			color: #fff;
+		}
+		td.discounted_day.appointable {
+			white-space: nowrap;
+			&:after {
+				background: #7ad03a;
+				border-radius: 50%;
+				color: #fff;
+				content: attr(title);
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-flex-direction: row;
+					-ms-flex-direction: row;
+						flex-direction: row;
+				-webkit-flex-wrap: wrap;
+					-ms-flex-wrap: wrap;
+						flex-wrap: wrap;
+				-webkit-justify-content: center;
+					-ms-flex-pack: center;
+						justify-content: center;
+				-webkit-align-content: center;
+					-ms-flex-line-pack: center;
+						align-content: center;
+				-webkit-align-items: center;
+					-ms-flex-align: center;
+						align-items: center;
+				font-family: monospace;
+				font-weight: 400;
+				font-size: 11px;
+				position: absolute;
+					top: -9px;
+					left: 50%;
+					margin-left: -11px;
+				width: 22px;
+				height: 22px;
+				z-index: 1;
+			}
 		}
 	}
 }

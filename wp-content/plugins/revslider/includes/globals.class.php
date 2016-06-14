@@ -11,7 +11,7 @@ define("REVSLIDER_TEXTDOMAIN","revslider"); //just here for fallback reasons of 
 
 class RevSliderGlobals{
 
-	const SLIDER_REVISION = '5.2.2';
+	const SLIDER_REVISION = '5.2.5.2';
 	const TABLE_SLIDERS_NAME = "revslider_sliders";
 	const TABLE_SLIDES_NAME = "revslider_slides";
 	const TABLE_STATIC_SLIDES_NAME = "revslider_static_slides";
@@ -26,10 +26,10 @@ class RevSliderGlobals{
 	const YOUTUBE_EXAMPLE_ID = "iyuxFo-WBiU";
 	const DEFAULT_YOUTUBE_ARGUMENTS = "hd=1&amp;wmode=opaque&amp;showinfo=0&amp;rel=0;";
 	const DEFAULT_VIMEO_ARGUMENTS = "title=0&amp;byline=0&amp;portrait=0&amp;api=1";
-	const LINK_HELP_SLIDERS = "http://www.themepunch.com/revslider-doc/slider-revolution-documentation/";
-	const LINK_HELP_SLIDER = "http://www.themepunch.com/revslider-doc/slider-settings/#generalsettings";
-	const LINK_HELP_SLIDE_LIST = "http://www.themepunch.com/revslider-doc/individual-slide-settings/";
-	const LINK_HELP_SLIDE = "http://www.themepunch.com/revslider-doc/individual-slide-settings/";
+	const LINK_HELP_SLIDERS = "https://www.themepunch.com/revslider-doc/slider-revolution-documentation/?rev=rsb";
+	const LINK_HELP_SLIDER = "https://www.themepunch.com/revslider-doc/slider-settings/?rev=rsb#generalsettings";
+	const LINK_HELP_SLIDE_LIST = "https://www.themepunch.com/revslider-doc/individual-slide-settings/?rev=rsb";
+	const LINK_HELP_SLIDE = "https://www.themepunch.com/revslider-doc/individual-slide-settings/?rev=rsb";
 
 	public static $table_sliders;
 	public static $table_slides;

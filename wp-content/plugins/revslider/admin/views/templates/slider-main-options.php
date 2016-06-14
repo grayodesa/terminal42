@@ -1376,8 +1376,8 @@ if(!isset($linksEditSlides)) $linksEditSlides = '';
 									<span style="clear:both;float:none; height:25px;display:block"></span>
 
 									<span style="text-align:left; padding:0px 20px;">
-										<span class="rs-preset-label noopacity " style="display:inline-block;margin-right:20px"><?php _e("Disable Force FullWidth", 'revslider');?> </span>
-										<input type="checkbox"  class="tp-moderncheckbox withlabel" id="autowidth_force" name="autowidth_force" data-unchecked="off" <?php checked(RevSliderFunctions::getVal($arrFieldsParams, 'autowidth_force', 'off'), "on");?>>
+										<span class="rs-preset-label noopacity" style="display:inline-block;margin-right:20px"><?php _e("Disable Force FullWidth", 'revslider');?> </span>
+										<input type="checkbox"  class="tp-moderncheckbox " id="autowidth_force" name="autowidth_force" data-unchecked="off" <?php checked(RevSliderFunctions::getVal($arrFieldsParams, 'autowidth_force', 'off'), "on");?>>
 										<span class="description" style="padding:0px 20px;"><?php _e("Disable the FullWidth Force function, and allow to float the Fullheight slider horizontal.", 'revslider');?></span>
 									</span>
 
@@ -2090,7 +2090,11 @@ if (isset($linksEditSlides)) {
 									<?php $layer_selection = RevSliderFunctions::getVal($arrFieldsParams, 'def-layer_selection', 'off'); ?>									
 									<span id="def-layer_selection" origtitle="<?php _e("Default Layer Selection on Frontend enabled or disabled", 'revslider');?>" class="label"><?php _e('Layers Selectable:', 'revslider');?></span>
 									<input type="checkbox" class="tp-moderncheckbox withlabel" id="def-layer_selection" name="def-layer_selection" data-unchecked="off" <?php checked($layer_selection, 'on');?>>
-
+									
+									<!-- SLIDER ID -->
+									<span class="label" id="label_slider_id" origtitle="<?php _e("Set a specific ID to the Slider, if empty, there will be a default one written", 'revslider');?>"><?php _e("Slider ID", 'revslider');?> </span>
+									<input type="text"  class="text-sidebar withlabel" id="slider_id" name="slider_id" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'slider_id', '');?>">
+									<div class="clearfix"></div>
 
 									<!-- DELAY -->
 									<span class="label" id="label_delay" origtitle="<?php _e("The time one slide stays on the screen in Milliseconds. This is a Default Global value. Can be adjusted slide to slide also in the slide editor.", 'revslider');?>"><?php _e("Default Slide Duration", 'revslider');?> </span>
@@ -4230,6 +4234,21 @@ if (isset($linksEditSlides)) {
 									<a original-title="" href="javascript:void(0)" class="button-image-select-background-img button-primary revblue"><?php _e('Set', 'revslider'); ?></a>
 									<div class="clear"></div>
 								</div>
+								
+								<div class="rs-show-on-auto">
+									<div id="label_ignore_height_changes" class="label" origtitle="<?php _e("Prevents jumping of background image for Android devices for example", 'revslider');?>"><?php _e("Ignore Height Changes", 'revslider');?> </div>
+									<select id="ignore_height_changes" name="ignore_height_changes" class="withlabel">
+										<option value="off" <?php selected(RevSliderFunctions::getVal($arrFieldsParams, "ignore_height_changes", "off"), "off");?>><?php _e("Off", 'revslider');?></option>
+										<option value="mobile" <?php selected(RevSliderFunctions::getVal($arrFieldsParams, "ignore_height_changes", "off"), "mobile");?>><?php _e("On Mobile", 'revslider');?></option>
+										<option value="always" <?php selected(RevSliderFunctions::getVal($arrFieldsParams, "ignore_height_changes", "off"), "always");?>><?php _e("Always", 'revslider');?></option>
+									</select>
+									<div class="clear"></div>
+									
+									<span class="label" id="label_ignore_height_changes_px" origtitle="<?php _e("Ignores the Ignore Height Changes feature under a certain amount of pixels.", 'revslider');?>"><?php _e("Ignore Height Changes Under", 'revslider');?></span>
+									<input type="text" class="text-sidebar withlabel" id="ignore_height_changes_px" name="ignore_height_changes_px" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'ignore_height_changes_px', '0');?>">
+									<span><?php _e("px", 'revslider');?></span>
+									<div class="clear"></div>
+								</div>
 							</div>
 							<div id="problem-troubleshooting" style="display:none;">
 								<div id="label_jquery_noconflict" class="label" origtitle="<?php _e("Turns on / off jquery noconflict mode. Try to enable this option if javascript conflicts exist on the page.", 'revslider');?>"><?php _e("JQuery No Conflict Mode", 'revslider');?> </div>
@@ -4924,8 +4943,7 @@ if (isset($linksEditSlides)) {
 					
 					
 					if (sbut=="arrows") {
-						ap.show();		
-																				
+						ap.show();
 						jQuery.each(sfor,function(i,sf) {
 							
 							jQuery.each(settings.placeholders,function(i,o) {
@@ -5238,11 +5256,13 @@ if (isset($linksEditSlides)) {
 						
 						if(jQuery.isEmptyObject(m)) continue;
 						
-						var isfor = 'ph-'+cur_edit_type+'-'+navtype+'-'+m['handle']+'-'+m["type"]						
-							ph_title = (m['title'] == undefined) ? '##'+m['handle']+'##' : m['title'],
-							ph_html = '<div class="placeholder-single-wrapper '+m["nav-type"]+'"><input type="checkbox" name="ph-'+cur_edit_type+'-'+navtype+'-'+m['handle']+'-'+m["type"]+'-def" data-isfor="'+isfor+'" class="tp-moderncheckbox placeholder-checkbox custom-preset-val triggernavstyle" data-unchecked="off" ';															
+						var deftype = (m["type"] == 'font-family') ? 'font_family' : m["type"];
 						
-						ph_html+= (m['default'][m["type"]] == undefined || m['default'][m["type"]] == 'off') ? '>' : ' checked="checked">';
+						var isfor = 'ph-'+cur_edit_type+'-'+navtype+'-'+m['handle']+'-'+deftype,
+							ph_title = (m['title'] == undefined) ? '##'+m['handle']+'##' : m['title'],
+							ph_html = '<div class="placeholder-single-wrapper '+m["nav-type"]+'"><input type="checkbox" name="ph-'+cur_edit_type+'-'+navtype+'-'+m['handle']+'-'+deftype+'-def" data-isfor="'+isfor+'" class="tp-moderncheckbox placeholder-checkbox custom-preset-val triggernavstyle" data-unchecked="off" ';															
+						
+						ph_html+= (m['default'][deftype] == undefined || m['default'][deftype] == 'off') ? '>' : ' checked="checked">';
 						ph_html+= '<span class="label placeholder-label triggernavstyle">'+ph_title+'</span>';
 
 						switch(m['type']){
@@ -5407,7 +5427,7 @@ if (isset($linksEditSlides)) {
 											break;
 											case 'font_family':
 												jQuery('select name=["ph-'+sel_value+'-'+type+'-'+m['handle']+'-font_family"] option[value="'+m['data']['font_family']+'"]').attr('selected', true);
-												jQuery('input[name="ph-'+sel_value+'-'+type+'-'+m['handle']+'-font_family-def"]').attr('checked', false);
+												jQuery('input[name="ph-'+sel_value+'-'+type+'-'+m['handle']+'-font-family-def"]').attr('checked', false);
 											break;
 											case 'custom':
 												jQuery('input[name="ph-'+sel_value+'-'+type+'-'+m['handle']+'-custom"]').val(m['data']['custom']);

@@ -178,14 +178,15 @@ abstract class Tribe__Events__Importer__File_Importer {
 			return 0;
 		}
 		$query_args = array(
-			'post_type'   => $post_type,
-			'post_status' => 'publish',
-			'post_title'  => $name,
-			'fields'      => 'ids',
+			'post_type'        => $post_type,
+			'post_status'      => 'publish',
+			'post_title'       => $name,
+			'fields'           => 'ids',
+			'suppress_filters' => false,
 		);
 		add_filter( 'posts_search', array( $this, 'filter_query_for_title_search' ), 10, 2 );
 		$ids = get_posts( $query_args );
-		remove_filter( 'posts_search', array( $this, 'filter_query_for_title_search' ), 10, 2 );
+		remove_filter( 'posts_search', array( $this, 'filter_query_for_title_search' ), 10 );
 
 		return empty( $ids ) ? 0 : reset( $ids );
 	}
@@ -206,6 +207,14 @@ abstract class Tribe__Events__Importer__File_Importer {
 	 * @return Tribe__Events__Importer__Featured_Image_Uploader
 	 */
 	protected function featured_image_uploader( $featured_image ) {
-		return empty( $this->featured_image_uploader ) ? new Tribe__Events__Importer__Featured_Image_Uploader( $featured_image ) : $this->featured_image_uploader;
+		// Remove any leading/trailing whitespace (if the string is a URL, extra whitespace
+		// could result in URL validation fail)
+		if ( is_string( $featured_image ) ) {
+			$featured_image = trim( $featured_image );
+		}
+
+		return empty( $this->featured_image_uploader )
+			? new Tribe__Events__Importer__Featured_Image_Uploader( $featured_image )
+			: $this->featured_image_uploader;
 	}
 }

@@ -1,3 +1,92 @@
+2016-05-24 - 1.9
+-------------------------------
+- Fix: Note on site gets overridden by GCal sync
+- Fix: removed var_dump code added by mistake that was preventing to delete users that are not workers providers
+- Fix: Undefined error when attempting to login with Twitter, FB or Google
+- Fix: If Auto confirm is set to yes, confirmation emails are not sent
+- Fix: If custom field is added and client doesn't enter anything the email will send additional field macro instead.
+- Fix: Confirmation notification email to workers contains cancelled appointment text
+- Fix: Confirmation notification email to users did not parse location
+- Enhance: GCal API improvements to avoid conflicts with other plugins
+- Enhance: Added subsections to Settings page
+- Enhance: Better addons screen
+- Enhance: Added Service Provider column in users list
+- Enhance: Moved "Records per page" setting to screen option in Appointments list screen
+- Enhance: Better Addons Loader that wastes less resources from server
+- Enhance: New filters on GCal API to customize the way an event is imported/synced
+- Other minor fixes and improvements
+
+2016-04-28 - 1.8.2
+-------------------------------
+- Fix: Cannot edit notes on appointments
+- Fix: Google Calendar is not sending appointment location properly
+- Fix: notification not sent when an appointment is manually removed
+- Fix: If custom field is added and client doesn't enter anything the email will send field placeholder instead.
+- Fix: Appointments sending cancelled email instead of confirmation depending on settings combination
+- Fix: Locations in confirmation email not being parsed properly
+- Fix: Typo in default email reminder template
+- Fix: Emails were not being logged
+- Some othe minor improvements
+
+2016-04-21 - 1.8.1
+-------------------------------
+- Fixed: Google Calendar time query was not propery parsed
+- Fixed: Some notifications were sent even if they were disabled in settings
+
+2016-04-21 - 1.8
+-------------------------------
+- Enhance: Better UX for Appointments admin page
+- Enhance: Better notification system, now more extensible
+- Fix: GCal import was setting services and service providers back to default
+- Fix: Confirmation emails were always being sent even if option was unchecked
+- Fix: Javascript error when adding additional fields
+- Fix: Addtional fields being processed after an appointment is already updated was causing to send confirmation emails twice
+- Fix: Locations in confirmation email not parsed
+- Fix: Appointments set to removed status when it was completed in some cases
+- Fix: Some strings textdomains
+
+2016-04-11 - 1.7.2.2
+-------------------------------
+- Fix: Workers were unable to save their profile if GCall Access Code was empty
+- Fix: Additional Fields - Mandatory text field was not processed
+
+2016-04-06 - 1.7.2.1
+-------------------------------
+- Fix: Additional fields addon not saving fields
+- Fix: Additional fields addon not showing up fields in admin
+- Fix: Double check for Google autoloader to prevent other plugins conflicts
+- Fix: When Service Locations Addon was active, GCal events were duplicated
+
+2016-03-31 - 1.7.2
+-------------------------------
+- Fix: Appointments dates were set to 12AM when importing manually
+- Fix: When no cancel Appointment page is set, the URL was malformed
+- Fix fatal error when saving a BuddyPress profile
+- Fix warning in user profile
+- Fix: Plugin was sending too many reminders to workers
+- Fix: In some cases, Appointments were not inserted if gcal_ID was an empty string
+- Fix: Appointments list are reversed ordered by default
+- Fix: Appointments GCal syncing was updating custom inserted data in Google Calendar
+- Fix: If an Appointment is set to completed or penmding do not delete it from Google Calendar
+- Fix: Typo in function name was preventing posts content to render if some of the A+ Settings were checked
+- Fix: Appointments were not properly sorted on admin list
+- Fix: JS Conflicts in Profile page
+- Enhance: Improved upgrader class
+- Other minor fixes and improvements
+
+
+2016-03-16 - 1.7.1
+-------------------------------
+- Fix: app_services shortcode: order_by attribute doesn't seem to take any effect
+- Fix: Custom checkbox field shows as a text field on backend
+- Fix: Google Calendar API was not deleting appointments that were deleted from GCal
+- Fix: Updating schedule in user profiles not working when the user editing was not the same than the edited one
+- Fix: Search client feature not returning any results
+- Enhance: Improved Appointments screen UX
+- New: Added new hooks in My APpointments list
+- New: Appointments meta table
+- New: Added get/delete/update appointments meta functions
+
 2016-03-11 - 1.7
 -------------------------------
 - Fix: Plugin was redirecting to Thank You Page even if the appointment reservation failed
@@ -573,4 +662,4 @@ V1.0.0:
 - Initial release
 
 
-373982-1457772005-au
+373982-1464250108-au

@@ -202,6 +202,21 @@ class WC_Product_Appointment_Rule_Manager {
 	}
 	
 	/**
+	 * Get quant range
+	 * @param  [type] $from
+	 * @param  [type] $to
+	 * @param  [type] $value
+	 * @return [type]
+	 */
+	private static function get_quant_range( $from, $to, $value ) {
+		return array(
+			'from' => $from,
+			'to'   => $to,
+			'rule' => $value
+			);
+	}
+	
+	/**
 	 * Process and return formatted cost rules
 	 * @param  $rules array
 	 * @return array
@@ -303,7 +318,7 @@ class WC_Product_Appointment_Rule_Manager {
 			}
 			
 			$priority = isset( $fields['priority'] ) ? $fields['priority'] : 10;
-			$qty = isset( $fields['qty'] ) ? absint( $fields['qty'] ) : 1;
+			$qty = isset( $fields['qty'] ) ? absint( $fields['qty'] ) : 0;
 
 			// Ensure day gets specified for time: rules
 			if ( strrpos( $fields['type'], 'time:' ) === 0 && 'time:range' !== $fields['type'] ) {

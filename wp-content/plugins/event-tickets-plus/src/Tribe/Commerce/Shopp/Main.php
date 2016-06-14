@@ -31,6 +31,11 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 	private static $instance;
 
 	/**
+	 * Instance of Tribe__Tickets_Plus__Commerce__Shopp__Meta
+	 */
+	private static $meta;
+
+	/**
 	 * ShoppTickets will attempt to generate tickets when this action fires. It can be
 	 * adjusted to run earlier or later (for instance on the equivalent captured_order
 	 * hook, depending on payment methods, how quickly tickets should be dispatched etc).
@@ -143,6 +148,12 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 	public $deleted_product = '_tribe_deleted_product_name';
 
 	/**
+	 * Meta key that holds if the attendee has opted out of the front-end listing
+	 * @var string
+	 */
+	const ATTENDEE_OPTOUT_KEY = '_tribe_shoppticket_attendee_optout';
+
+	/**
 	 * Current version of this plugin
 	 */
 	const VERSION = '3.12a1';
@@ -170,6 +181,7 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		parent::__construct();
 		$this->setup();
 		$this->hooks();
+		$this->meta();
 	}
 
 	/**
@@ -221,6 +233,111 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		add_filter( 'shopp_tag_cartitem_url', array( $this, 'change_product_links' ), 10, 3 );
 		add_filter( 'shopp_tag_product_url', array( $this, 'change_product_links' ), 10, 3 );
 		add_filter( 'tribe_tickets_settings_post_types', array( $this, 'exclude_product_post_type' ) );
+		add_filter( 'event_tickets_attendees_shopp_checkin_stati', array( $this, 'checkin_statuses' ), 10, 2 );
+
+		add_action( 'shopp_invoiced_order_event', array( $this, 'save_attendee_optout_choice_to_order' ), 5 );
+		add_filter( 'shopp_cartitem_data', array( $this, 'set_attendee_optout_choice' ), 10, 2 );
+	}
+
+
+	/**
+	 * Sets attendee optout choice on order posts
+	 *
+	 * @since 4.1
+	 *
+	 * @param OrderEventMessage $order_event Shopp order event
+	 */
+	public function save_attendee_optout_choice_to_order( OrderEventMessage $order_event ) {
+		$order = shopp_order( $order_event->order );
+		$order_items = $order->purchased;
+
+		// Bail if the order is empty
+		if ( empty( $order_items ) ) {
+			return;
+		}
+
+		$cookie_key = 'tribe-event-tickets-shopp-attendee-optout';
+		if ( empty( $_COOKIE[ $cookie_key ] ) ) {
+			return;
+		}
+
+		$data = $_COOKIE[ $cookie_key ];
+		$data = urldecode( $data );
+		parse_str( $data, $data );
+
+		$optout = false;
+
+		// gather product ids
+		foreach ( (array) $order_items as $item ) {
+			if ( true === $optout ) {
+				continue;
+			}
+
+			if ( empty( $item->product ) ) {
+				continue;
+			}
+
+			if ( ! isset( $data[ $item->product ] ) ) {
+				continue;
+			}
+
+			$optout = (bool) $data[ $item->product ];
+		}
+
+		// store the custom meta on the order
+		$status = shopp_set_meta( $order->id, 'purchase', self::ATTENDEE_OPTOUT_KEY, $optout, 'meta' );
+	}
+
+	/**
+	 * After placing the Order make sure we store the users option to show the Attendee Optout
+	 *
+	 * This method on shopp doesn't do anything to the variable filtered, we use this to set Cookies
+	 */
+	public function set_attendee_optout_choice( $data ) {
+		if ( empty( $_POST['product_id'] ) || ! is_array( $_POST['product_id'] ) ) {
+			return $data;
+		}
+		$product_ids = (array) $_POST['product_id'];
+		$cookie_key = 'tribe-event-tickets-shopp-attendee-optout';
+
+		$optout = isset( $_POST['tribe_shopp_optout'] ) ? (bool) $_POST['tribe_shopp_optout'] : false;
+
+		if ( ! empty( $_COOKIE[ $cookie_key ] ) ) {
+			$defaults = $_COOKIE[ $cookie_key ];
+		} else {
+			$defaults = array();
+		}
+
+		foreach ( $product_ids as $product_id ) {
+			$key = (string) absint( $product_id );
+			$query[ $key ] = $optout;
+		}
+
+		// Merge Cookies
+		$query = wp_parse_args( $query, $defaults );
+
+		// Build new Str
+		$query_str = build_query( $query );
+
+		// Set the query string on a Cookie
+		setcookie( $cookie_key, $query_str, time() + ( 7 * DAY_IN_SECONDS ), '/' );
+
+		return $data;
+	}
+
+	/**
+	 * Custom meta integration object accessor method
+	 *
+	 * @since 4.1
+	 *
+	 * @return Tribe__Tickets_Plus__Commerce__Shopp__Meta
+	 */
+	public function meta() {
+		if ( ! self::$meta ) {
+			self::$meta = new Tribe__Tickets_Plus__Commerce__Shopp__Meta;
+		}
+
+		return self::$meta;
 	}
 
 	/**
@@ -274,8 +391,12 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		$order = shopp_order( $order_event->order );
 		$has_tickets = false;
 
+		$optout = (bool) shopp_meta( $order->id, 'purchase', self::ATTENDEE_OPTOUT_KEY );
+
 		// Iterate over each product
 		foreach ( $order->purchased as $item ) {
+			$order_attendee_id = 0;
+
 			$event_id = $this->get_related_event( $item->product );
 			if ( empty( $event_id ) ) {
 				continue;
@@ -298,6 +419,19 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 				update_post_meta( $attendee_id, self::ATTENDEE_ORDER_KEY, $order->id );
 				update_post_meta( $attendee_id, self::ATTENDEE_EVENT_KEY, $event_id );
 				update_post_meta( $attendee_id, $this->security_code, $this->generate_security_code( $order->id, $attendee_id ) );
+				update_post_meta( $attendee_id, self::ATTENDEE_OPTOUT_KEY, $optout );
+
+				/**
+				 * Action fired when an attendee ticket is generated
+				 *
+				 * @var $attendee_id ID of attendee ticket
+				 * @var $order_id ID of order
+				 * @var $product_id Product ID attendee is "purchasing"
+				 * @var $order_attendee_id Attendee # for order
+				 */
+				do_action( 'event_tickets_shopp_ticket_created', $attendee_id, $order->id, $item->product, $order_attendee_id );
+
+				$order_attendee_id++;
 			}
 			$has_tickets = true;
 		}
@@ -361,6 +495,26 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		if ( ! $ticket->ID ) {
 			return false;
 		}
+
+		/**
+		 * Generic action fired after saving a ticket (by type)
+		 *
+		 * @var int Post ID of post the ticket is tied to
+		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @var array Ticket data
+		 * @var string Commerce engine class
+		 */
+		do_action( 'event_tickets_after_' . $save_type . '_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
+
+		/**
+		 * Generic action fired after saving a ticket
+		 *
+		 * @var int Post ID of post the ticket is tied to
+		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @var array Ticket data
+		 * @var string Commerce engine class
+		 */
+		do_action( 'event_tickets_after_save_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
 		return true;
 	}
 
@@ -637,17 +791,23 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 	 * Get all the attendees for an event. It returns an array with the following fields:
 	 *
 	 *     order_id
+	 *     order_id_link
+	 *     order_id_link_src
 	 *     order_status
+	 *     order_status_label
+	 *     order_warning
 	 *     purchaser_name
 	 *     purchaser_email
-	 *     ticket
+	 *     provider
+	 *     provider_slug
 	 *     attendee_id
 	 *     security
+	 *     optout
 	 *     product_id
 	 *     check_in
-	 *     provider
+	 *     ticket
 	 *
-	 * @param $event_id
+	 * @param int $event_id
 	 * @return array
 	 */
 	protected function get_attendees( $event_id ) {
@@ -670,46 +830,111 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 			$order_id = get_post_meta( $attendee->ID, self::ATTENDEE_ORDER_KEY, true );
 			$checkin = get_post_meta( $attendee->ID, $this->checkin_key, true );
 			$security = get_post_meta( $attendee->ID, $this->security_code, true );
+			$optout = (bool) get_post_meta( $attendee->ID, self::ATTENDEE_OPTOUT_KEY, true );
 			$product_id = get_post_meta( $attendee->ID, self::ATTENDEE_PRODUCT_KEY, true );
 
-			$admin_url  = admin_url( sprintf( 'admin.php?page=shopp-orders&id=%d', $order_id ) );
-			$admin_link = sprintf( '<a href="%s">%d</a>', $admin_url, $order_id );
+			$order_data = $this->get_order_data( $order_id );
 
-			$order = shopp_order( $order_id );
-			$customer = shopp_customer( $order->customer );
-			if ( false === $order || false === $customer ) {
+			if ( false === $order_data ) {
 				continue;
 			}
 
-			// Set warning flag for refunded, voided or declined transactions
-			switch ( $order->txnstatus ) {
-				case 'refunded': case 'voided':	case 'auth-failed':
-					$order_warning = true;
-				break;
-
-				default:
-					$order_warning = false;
-				break;
-			}
-
-			$attendees[] = array(
-				'order_id'           => $order_id,
-				'order_id_link'      => $admin_link,
-				'order_status'       => $order->txnstatus,
-				'order_status_label' => $this->order_status_label( $order->txnstatus ),
-				'order_warning'      => $order_warning,
-				'purchaser_name'     => $customer->firstname . ' ' . $customer->lastname,
-				'purchaser_email'    => $customer->email,
-				'ticket'             => $this->retrieve_product_name( $product_id, $order->purchased ),
-				'attendee_id'        => $attendee->ID,
-				'security'           => $security,
-				'product_id'         => $product_id,
-				'check_in'           => $checkin,
-				'provider'           => __CLASS__,
+			// Add the Attendee Data to the Order data
+			$attendee_data = array_merge(
+				$order_data,
+				array(
+					'attendee_id' => $attendee->ID,
+					'security'    => $security,
+					'optout'      => $optout,
+					'product_id'  => $product_id,
+					'check_in'    => $checkin,
+					'ticket'      => $this->retrieve_product_name( $product_id, $order->purchased ),
+				)
 			);
+
+			/**
+			 * Allow users to filter the Attendee Data
+			 *
+			 * @var array An associative array with the Information of the Attendee
+			 * @var string What Provider is been used
+			 * @var WP_Post Attendee Object
+			 * @var int Event ID
+			 *
+			 */
+			$attendee_data = apply_filters( 'tribe_tickets_attendee_data', $attendee_data, 'shopp', $attendee, $event_id );
+
+			$attendees[] = $attendee_data;
 		}
 
 		return $attendees;
+	}
+
+	/**
+	 * Retreive only order related information
+	 *
+	 *     order_id
+	 *     order_id_link
+	 *     order_id_link_src
+	 *     order_status
+	 *     order_status_label
+	 *     order_warning
+	 *     purchaser_name
+	 *     purchaser_email
+	 *     provider
+	 *     provider_slug
+	 *
+	 * @param int $order_id
+	 * @return array
+	 */
+	public function get_order_data( $order_id ) {
+		$order = shopp_order( $order_id );
+		$customer = shopp_customer( $order->customer );
+
+
+		if ( false === $order || false === $customer ) {
+			return false;
+		}
+
+		$admin_url  = admin_url( sprintf( 'admin.php?page=shopp-orders&id=%d', $order_id ) );
+		$admin_link = sprintf( '<a href="%s">%d</a>', $admin_url, $order_id );
+
+		// Set warning flag for refunded, voided or declined transactions
+		switch ( $order->txnstatus ) {
+			case 'refunded':
+			case 'voided':
+			case 'auth-failed':
+				$order_warning = true;
+			break;
+
+			default:
+				$order_warning = false;
+			break;
+		}
+
+		$data = array(
+			'order_id'           => $order_id,
+			'order_id_link'      => $admin_link,
+			'order_id_link_src'  => $admin_url,
+			'order_status'       => $order->txnstatus,
+			'order_status_label' => $this->order_status_label( $order->txnstatus ),
+			'order_warning'      => $order_warning,
+			'purchaser_name'     => $customer->firstname . ' ' . $customer->lastname,
+			'purchaser_email'    => $customer->email,
+			'provider'           => __CLASS__,
+			'provider_slug'      => 'shopp',
+		);
+
+		/**
+		 * Allow users to filter the Order Data
+		 *
+		 * @var array An associative array with the Information of the Order
+		 * @var string What Provider is been used
+		 * @var int Order ID
+		 *
+		 */
+		$data = apply_filters( 'tribe_tickets_order_data', $data, 'shopp', $order_id );
+
+		return $data;
 	}
 
 	/**
@@ -763,12 +988,35 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 	/**
 	 * Marks an attendee as checked in for an event
 	 *
+	 * Because we must still support our legacy ticket plugins, we cannot change the abstract
+	 * checkin() method's signature. However, the QR checkin process needs to move forward
+	 * so we get around that problem by leveraging func_get_arg() to pass a second argument.
+	 *
+	 * It is hacky, but we'll aim to resolve this issue when we end-of-life our legacy ticket plugins
+	 * OR write around it in a future major release
+	 *
 	 * @param $attendee_id
+	 * @param $qr true if from QR checkin process (NOTE: this is a param-less parameter for backward compatibility)
+	 *
 	 * @return bool
 	 */
 	public function checkin( $attendee_id ) {
+		$qr = null;
+
 		update_post_meta( $attendee_id, $this->checkin_key, 1 );
-		do_action( 'shopptickets_checkin', $attendee_id );
+
+		if ( func_num_args() > 1 && $qr = func_get_arg( 1 ) ) {
+			update_post_meta( $attendee_id, '_tribe_qr_status', 1 );
+		}
+
+		/**
+		 * Fires a checkin action
+		 *
+		 * @var int $attendee_id
+		 * @var bool|null $qr
+		 */
+		do_action( 'shopptickets_checkin', $attendee_id, $qr );
+
 		return true;
 	}
 
@@ -781,7 +1029,9 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 	 */
 	public function uncheckin( $attendee_id ) {
 		delete_post_meta( $attendee_id, $this->checkin_key );
+		delete_post_meta( $attendee_id, '_tribe_qr_status' );
 		do_action( 'shopptickets_uncheckin', $attendee_id );
+
 		return true;
 	}
 
@@ -1015,9 +1265,12 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		) );
 
 		foreach ( $query->posts as $post ) {
+			$product = get_post( get_post_meta( $post->ID, self::ATTENDEE_PRODUCT_KEY, true ) );
+
 			$attendees[] = array(
 				'event_id'      => get_post_meta( $post->ID, self::ATTENDEE_EVENT_KEY, true ),
-				'ticket_name'   => get_post( get_post_meta( $post->ID, self::ATTENDEE_PRODUCT_KEY, true ) )->post_title,
+				'product_id'    => $product->ID,
+				'ticket_name'   => $product->post_title,
 				'holder_name'   => $order->firstname . ' ' . $order->lastname,
 				'order_id'      => $order->id,
 				'ticket_id'     => $post->ID,
@@ -1082,5 +1335,44 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets__Tickets
 		}
 
 		return $post_types;
+	}
+
+	/**
+	 * Ensures that tickets belonging to completed orders, or where the payment has been authorized
+	 * or captured, are flagged as suitable for checkin.
+	 *
+	 * In Shopp, the order's transaction status (invoiced, authorized, captured etc) is divorced from
+	 * the overall order status (completed or pending). While we still wish to accurately reflect the
+	 * transaction status in the attendee list - because it communicates useful information - it
+	 * generally shouldn't alone be used to dictate whether check in should be allowed or not.
+	 *
+	 * The role this filter plays is to check if the order itself has been marked as "complete" and,
+	 * if so, it allows checkin by adding the transaction status to the list of statuses for which
+	 * checkin facilities should be provided. It will also default to treating the "authed" and
+	 * "captured" statuses as indicating the order is effectively complete.
+	 *
+	 * This filter executes on the "event_tickets_attendees_shopp_checkin_stati" hook and so
+	 * further modifications are possible by adding an additional filter(s) at a higher-than-default
+	 * priority.
+	 *
+	 * @param array $statuses
+	 * @param int   $order_id
+	 *
+	 * @return array
+	 */
+	public function checkin_statuses( $statuses, $order_id ) {
+		$order = shopp_order( $order_id );
+
+		$allow_checkin = array(
+			'authed',
+			'captured',
+		);
+
+		// Orders with a status of 1 are complete, regardless of the actual transaction status
+		if ( 1 === (int) $order->status && ! in_array( $order->txnstatus, $allow_checkin ) ) {
+			$allow_checkin[] = $order->txnstatus;
+		}
+
+		return array_merge( $statuses, $allow_checkin );
 	}
 }

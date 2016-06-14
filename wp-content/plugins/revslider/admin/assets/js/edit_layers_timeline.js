@@ -4,8 +4,13 @@
 
 // AUDIO CONTEXT
 window.AudioContext = window.AudioContext || window.webkitAudioContext ;
-var audioContext = new AudioContext(),
-	audiosource = audioContext.createBufferSource(); 	// creates a sound source
+if (window.AudioContext) {
+	var audioContext = new AudioContext(),
+		audiosource = audioContext.createBufferSource(); 	// creates a sound source
+} else {
+	audiosource = null;
+}
+
 
 
 /*****************************************************
@@ -2560,6 +2565,7 @@ var tpLayerTimelinesRev = new function(){
 
 	// MUSIC LOADER + DECODE
 	function loadMusicTimeLine(li,url) {   
+		if (audioContext === null || !AudioContext) return false;
 	    var req = new XMLHttpRequest(),	    	
 	    	currentBuffer  = null;
 	    
