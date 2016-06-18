@@ -22,7 +22,7 @@
 /** MySQL database password */
 
 /** MySQL hostname */
-define('WP_CACHE', true); //Added by WP-Cache Manager
+//define('WP_CACHE', true); //Added by WP-Cache Manager
 define( 'WPCACHEHOME', '/var/www/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_HOST', 'localhost');
 

@@ -1,6 +1,6 @@
 /************************************************
  * REVOLUTION 5.2 EXTENSION - LAYER ANIMATION
- * @version: 2.5 (28.04.2016)
+ * @version: 2.6 (30.05.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 ************************************************/
@@ -611,12 +611,15 @@ jQuery.extend(true,_R, {
 
 						 	if (nc.data('newhoveranim')===undefined || 	nc.data('newhoveranim')==="none")	{						 		
 						 		nc.data('newhoveranim',punchgs.TweenLite.to(nc,t.speed,t.anim));
+						 		if (t.anim && t.anim.zIndex)
+						 			nc.data('newhoverparanim',punchgs.TweenLite.to(nc.data('_pw'),t.speed,{zIndex:t.anim.zIndex}));
 						 		if ($svg.svg)  
 						 			nc.data('newsvghoveranim',punchgs.TweenLite.to($svg.svg,t.speed,nc.data('hoversvg').anim));						 	
 
 						 	} else {						 		
-						 		nc.data('newhoveranim').progress(0);
-						 		nc.data('newhoveranim').play();
+						 		nc.data('newhoveranim').progress(0).play();									 		
+						 		if ((t.anim && t.anim.zIndex) || (t.anim.css && t.anim.css.zIndex)) 						 			
+						 			nc.data('newhoverparanim').progress(0).play();						 			
 						 		if ($svg.svg) nc.data('newsvghoveranim').progress(0).play();
 						 	}
 						 }
@@ -627,6 +630,8 @@ jQuery.extend(true,_R, {
 
 					 	if (intl && intl.progress()==1 && nc.data('newhoveranim')!=undefined) {							 						 		
 					 		nc.data('newhoveranim').reverse();
+					 		if (nc.data('newhoverparanim'))
+					 			nc.data('newhoverparanim').reverse();
 					 		if ($svg.svg) nc.data('newsvghoveranim').reverse();
 					 	}
 					 });
@@ -1225,14 +1230,14 @@ var convertHoverStyle = function(t,s) {
 	s = s.replace("br:","borderRadius:");
 	s = s.replace("bs:","border-style:");
 	s = s.replace("td:","text-decoration:");
+	s = s.replace("zi:","zIndex:");
 	var sp = s.split(";");
 	if (sp)
 		jQuery.each(sp,function(key,cont){
 			var attr = cont.split(":");
 			if (attr[0].length>0)
 				t.anim[attr[0]] = attr[1];		
-		})			
-
+		})				
 	return t;
 
 }
@@ -1256,7 +1261,7 @@ var getcssParams = function(nc,level) {
 	obj.fontSize = gp ? pc.data('fontsize')===undefined ?  parseInt(pc.css('fontSize'),0) || 0 : pc.data('fontsize')  :  nc.data('fontsize')===undefined ?  parseInt(nc.css('fontSize'),0) || 0 : nc.data('fontsize'); 
 	obj.fontWeight = gp ? pc.data('fontweight')===undefined ?  parseInt(pc.css('fontWeight'),0) || 0 : pc.data('fontweight')  :  nc.data('fontweight')===undefined ?  parseInt(nc.css('fontWeight'),0) || 0 : nc.data('fontweight'); 
 	obj.whiteSpace = gp ? pc.data('whitespace')===undefined ?  pc.css('whitespace') || "normal" : pc.data('whitespace')  :  nc.data('whitespace')===undefined ?  nc.css('whitespace') || "normal" : nc.data('whitespace'); 
-	
+	obj.zIndex = gp ? pc.data('zIndex')===undefined ?  pc.css('zIndex') || "inherit" : pc.data('zIndex')  :  nc.data('zIndex')===undefined ?  nc.css('zIndex') || "inherit" : nc.data('zIndex'); 
 	
 	if (jQuery.inArray(nc.data('layertype'),["video","image","audio"])===-1 && !nc.is("img"))
 		obj.lineHeight = gp ? pc.data('lineheight')===undefined ? parseInt(pc.css('lineHeight'),0) || 0 : pc.data('lineheight')  :  nc.data('lineheight')===undefined ? parseInt(nc.css('lineHeight'),0) || 0 : nc.data('lineheight');
@@ -1327,7 +1332,7 @@ var getcssParams = function(nc,level) {
 							 "borderTopLeftRadius",
 							 "borderTopRightRadius",
 							 "borderBottomLeftRadius",
-							 "borderBottomRightRadius"							 
+							 "borderBottomRightRadius"							
 							 ]);		 
 	
 	return obj;

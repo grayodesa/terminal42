@@ -68,12 +68,12 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 						'option label', 'wpsso' ), null, 'og_art_section' ).
 					'<td>'.$this->form->get_select( 'og_art_section', $this->p->util->get_topics() ).'</td>';
 
-					$table_rows['og_site_name'] = $this->form->get_th_html( _x( 'Site Name',
+					$table_rows['og_site_name'] = $this->form->get_th_html( _x( 'Website Name',
 						'option label', 'wpsso' ), null, 'og_site_name', array( 'is_locale' => true ) ).
 					'<td>'.$this->form->get_input( SucomUtil::get_key_locale( 'og_site_name', $this->p->options ),
 						null, null, null, get_bloginfo( 'name', 'display' ) ).'</td>';
 
-					$table_rows['og_site_description'] = $this->form->get_th_html( _x( 'Site Description',
+					$table_rows['og_site_description'] = $this->form->get_th_html( _x( 'Website Description',
 						'option label', 'wpsso' ), null, 'og_site_description', array( 'is_locale' => true ) ).
 					'<td>'.$this->form->get_textarea( SucomUtil::get_key_locale( 'og_site_description', $this->p->options ),
 						null, null, null, get_bloginfo( 'description', 'display' ) ).'</td>';
@@ -123,7 +123,7 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 						'option label', 'wpsso' ), null, 'schema_social_json' ).
 					'<td>'.
 					'<p>'.$this->form->get_checkbox( 'schema_website_json' ).' '.
-						sprintf( __( 'Include <a href="%s">WebSite Information</a> for Google Search',
+						sprintf( __( 'Include <a href="%s">Website Information</a> for Google Search',
 							'wpsso' ), 'https://developers.google.com/structured-data/site-name' ).'</p>'.
 					'<p>'.$this->form->get_checkbox( 'schema_organization_json' ).
 						sprintf( __( ' Include <a href="%s">Organization Social Profile</a>',
@@ -134,8 +134,9 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 								$this->form->get_select( 'schema_person_id', $users, null, null, true ).'</p>'.
 					'</td>';
 
-					$table_rows['schema_logo_url'] = $this->form->get_th_html( '<a href="https://developers.google.com/structured-data/customize/logos">'.
-						_x( 'Business / Organization Logo URL', 'option label', 'wpsso' ).'</a>', null, 'schema_logo_url' ).
+					$table_rows['schema_logo_url'] = $this->form->get_th_html( 
+						'<a href="https://developers.google.com/structured-data/customize/logos">'.
+						_x( 'Organization Logo Image URL', 'option label', 'wpsso' ).'</a>', null, 'schema_logo_url' ).
 					'<td>'.$this->form->get_input( 'schema_logo_url', 'wide' ).'</td>';
 
 					$table_rows['subsection_pinterest'] = '<td></td><td class="subsection"><h4>'.

@@ -150,6 +150,9 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	 */
 	public function addSubscriber( $list_identifier, $arguments ) {
 		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+
+		$double_optin = isset( $arguments['drip_optin'] ) && $arguments['drip_optin'] == 's' ? false : true;
+
 		$phone = ! empty( $arguments['phone'] ) ? $arguments['phone'] : '';
 
 		try {
@@ -160,6 +163,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 				'account_id'    => $this->param( 'client_id' ),
 				'campaign_id'   => $list_identifier,
 				'email'         => $arguments['email'],
+				'double_optin'  => $double_optin,
 				'ip_address'    => $_SERVER['REMOTE_ADDR'],
 				'custom_fields' => array(
 					'thrive_first_name' => $first_name,
@@ -197,6 +201,19 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}
+	}
+
+	/**
+	 * Allow the user to choose whether to have a single or a double optin for the form being edited
+	 * It will hold the latest selected value in a cookie so that the user is presented by default with the same option selected the next time he edits such a form
+	 *
+	 * @param array $params
+	 */
+	public function renderExtraEditorSettings( $params = array() ) {
+		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? $_COOKIE['tve_api_drip_optin'] : 'd' ) : $params['optin'];
+		setcookie( 'tve_api_drip_optin', $params['optin'], strtotime( '+6 months' ), '/' );
+
+		$this->_directFormHtml( 'drip/optin-type', $params );
 	}
 
 	/**

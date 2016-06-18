@@ -130,6 +130,13 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 			$GLOBALS['tcb_main_post_lightbox'] = $old_post;
 			$post                              = $lightbox;
 
+			/**
+			 * this if was added for TU Main Ajax request, the the html must be returned
+			 */
+			if ( ! has_filter( 'the_content', 'tve_editor_content' ) ) {
+				add_filter( 'the_content', 'tve_editor_content' );
+			}
+
 			$lightbox_content = str_replace( ']]>', ']]&gt;', apply_filters( 'the_content', $lightbox->post_content ) );
 			$config           = tve_get_lightbox_globals( $lightbox->ID );
 
@@ -232,14 +239,14 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 				tve_output_extra_custom_fonts_css( $lightbox_id );
 			}
 
-			$js_suffix = defined('TVE_DEBUG') && TVE_DEBUG ? '.js' : '.min.js';
+			$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
 
-			if (tve_get_post_meta($lightbox_id, 'tve_has_masonry')) {
-				wp_script_is("jquery-masonry") || wp_enqueue_script("jquery-masonry", array('jquery'));
+			if ( tve_get_post_meta( $lightbox_id, 'tve_has_masonry' ) ) {
+				wp_script_is( "jquery-masonry" ) || wp_enqueue_script( "jquery-masonry", array( 'jquery' ) );
 			}
 
-			if (tve_get_post_meta($lightbox_id, 'tve_has_typefocus')) {
-				wp_script_is("tve_typed") || wp_enqueue_script("tve_typed", tve_editor_js() . '/typed' . $js_suffix, array('tve_frontend'));
+			if ( tve_get_post_meta( $lightbox_id, 'tve_has_typefocus' ) ) {
+				wp_script_is( "tve_typed" ) || wp_enqueue_script( "tve_typed", tve_editor_js() . '/typed' . $js_suffix, array( 'tve_frontend' ) );
 			}
 
 			$lightbox_content = get_post_meta( $lightbox_id, 'tve_updated_post', true );

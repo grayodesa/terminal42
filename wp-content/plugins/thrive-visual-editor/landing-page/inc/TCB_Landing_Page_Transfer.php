@@ -19,6 +19,8 @@ class TCB_Landing_Page_Cloud_Templates_Api {
 
 	const API_URL_DEV = 'http://thrive.tpl/cloud-api/index-api.php';
 	const API_URL = 'http://landingpages.thrivethemes.com/cloud-api/index-api.php';
+	const API_SERVICE = 'http://service-api.thrivethemes.com/cloud-templates-api';
+	const API_SERVICE_DEV = 'http://thrive.service/cloud-templates-api';
 
 	/**
 	 * @var TCB_Landing_Page_Cloud_Templates_Api
@@ -26,6 +28,8 @@ class TCB_Landing_Page_Cloud_Templates_Api {
 	protected static $_instance = null;
 
 	protected $received_auth_header = '';
+
+	protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
 	/**
 	 * holds the last response from the API server
@@ -169,7 +173,13 @@ class TCB_Landing_Page_Cloud_Templates_Api {
 			'body'    => $params,
 		);
 
-		$response = wp_remote_post( defined( 'TVE_DEBUG' ) && TVE_DEBUG ? self::API_URL_DEV : self::API_URL, array(
+		$url = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? self::API_SERVICE_DEV : self::API_SERVICE;
+
+		$url = add_query_arg( array(
+			'p' => $this->calc_hash( $params ),
+		), $url );
+
+		$response = wp_remote_post( $url, array(
 			'timeout'   => 20,
 			'headers'   => $headers,
 			'body'      => $params,
@@ -216,6 +226,17 @@ class TCB_Landing_Page_Cloud_Templates_Api {
 		}
 
 		return md5( $string );
+	}
+
+	/**
+	 * Calculates the has that signs the requests for service.thrivethemes.com
+	 *
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	public function calc_hash( $data ) {
+		return md5( $this->secret_key . serialize( $data ) . $this->secret_key );
 	}
 
 	/**

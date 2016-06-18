@@ -7,7 +7,7 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 	 * @return String
 	 */
 	public static function getType() {
-		return 'autoresponder';
+		return 'other';
 	}
 
 	/**

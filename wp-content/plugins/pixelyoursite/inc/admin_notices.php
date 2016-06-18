@@ -33,16 +33,18 @@ $link_2 = 'http://www.pixelyoursite.com/super-offer?utm_source=wadmin&utm_medium
 
 
 //Message for day 1
-$day_1_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$day_1_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
+$day_1_text  = '<span class="pysf_note"><b>Limited Offer, ends on “'.$expiration_date.'”:</b></span> If you are not using Dynamic Events - ';
+$day_1_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-dynamic-events" target="_blank">see guide</a>';
+$day_1_text .= ' - you are leaving money on the table. Optimize your ads for actions on your website, create better Custom Audiences, and get better conversion reports. ';
+$day_1_text .= '<a href="'.$link_1.'" target="_blank">Enable Dynamic Events with PixelYourSite PRO</a>';
 
 //Message for day 2
-$day_2_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$day_2_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
+$day_2_text = '<span class="pysf_note"><b>Limited Offer, ending in 1 day:</b></span> Enable Dynamic Events and optimize your campaigns for site actions (newsletter sign up, contact forms, pop-ups). ';
+$day_2_text .= '<a href="'.$link_1.'" target="_blank">Download now for a big discount</a>';
 
 //Message for day 3
-$day_3_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$day_3_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
+$day_3_text  = '<span class="pysf_note"><b>Limited Offer Ends Today, “'.$expiration_date.'”:</b></span> Last chance to get your big discount for PixelYourSite PRO and start to use <b>Dynamic Events.</b> ';
+$day_3_text .= 'Don’t lose this opportunity, because you might need the plugin later: <a href="'.$link_1.'" target="_blank">Click here for your big discount</a>';
 
 //Message for day 4 to 7;
 $day_4_to_7_text = '';
@@ -116,21 +118,19 @@ $options = array(
 
 //WooCommerce Message for day 1
 $woo_day_1_text  = 'WooCommerce Day 1 Message';
-$woo_day_1_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$woo_day_1_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
-
+$woo_day_1_text  = '<span class="pysf_note"><b>Limited Offer, ends on “'.$expiration_date.'”:</b></span> Track Facebook Ads conversion value and enable Facebook Dynamic Ads for WooCommerce: ';
+$woo_day_1_text .= '<a href="'.$link_1.'" target="_blank">Download PixelYourSite PRO for a big discount</a>';
 
 
 //WooCommerce Message for day 2
 $woo_day_2_text = 'WooCommerce Day 2 Message.';
-$woo_day_2_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$woo_day_2_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
-
+$woo_day_2_text = '<span class="pysf_note"><b>Limited Offer, ending in 1 day:</b></span> Enable Facebook Dynamic Ads for WooCommerce and automatically retarget your visitors. ';
+$woo_day_2_text .= '<a href="'.$link_1.'" target="_blank">Update now for a big discount</a>';
 
 //WooCommerce Message for day 3
 $woo_day_3_text  = 'WooCommerce Day 3 Message.';
-$woo_day_3_text = '<span class="pysf_note"><b>Crazy Offer Ending Friday, April 15:</b></span> Get PixelYourSite Pro for FREE. ';
-$woo_day_3_text .= '<a href="http://www.pixelyoursite.com/get-pro-free" target="_blank">Click here for details</a>';
+$woo_day_3_text  = '<span class="pysf_note"><b>Limited Offer Ends Today, “'.$expiration_date.'”:</b></span> With PixelYourSite PRO you can enable WooCommerce Dynamic Ads and you can use Dynamic Events for your campaings. ';
+$woo_day_3_text .= 'Don’t lose this opportunity, because you might need the plugin later: <a href="'.$link_1.'" target="_blank">Click here for your big discount</a>';
 
 
 //WooCommerce Message for day 4 to 7;

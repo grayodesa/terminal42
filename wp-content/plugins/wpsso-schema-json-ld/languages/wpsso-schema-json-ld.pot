@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WPSSO Schema JSON-LD Markup (WPSSO JSON) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.7.4-1\n"
+"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.7.5-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-schema-json-"
 "ld\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
@@ -25,7 +25,7 @@ msgid ""
 "Place, Product, etc.) for Google and Pinterest."
 msgstr ""
 
-#: lib/filters.php:118
+#: lib/filters.php:111
 msgid ""
 "The Free / Basic version of WPSSO JSON does not include support for the "
 "Schema type <a href=\"%1$s\">%1$s</a> &mdash; only the basic Schema "
@@ -33,55 +33,71 @@ msgid ""
 "included in the Schema JSON-LD markup."
 msgstr ""
 
-#: lib/filters.php:118
+#: lib/filters.php:111
 msgid ""
 "The <a href=\"%1$s\">Pro version of WPSSO JSON</a> includes a wide selection "
 "of supported Schema types, including the Schema type <a href=\"%2$s\">%2$s</"
 "a>."
 msgstr ""
 
-#: lib/filters.php:118
+#: lib/filters.php:111
 msgid ""
 "If this Schema is an important classification for your content, you should "
 "consider purchasing the Pro version."
 msgstr ""
 
-#: lib/filters.php:122
+#: lib/filters.php:115
 msgid "This notice is only shown to users with Administrative privileges."
 msgstr ""
 
-#: lib/gpl/admin/post.php:42 lib/pro/admin/post.php:53
+#: lib/gpl/admin/post.php:28 lib/pro/admin/post.php:39
+msgid "Save a draft version or publish the %s to update this value."
+msgstr ""
+
+#: lib/gpl/admin/post.php:36 lib/pro/admin/post.php:48
+msgctxt "option comment"
+msgid "%s extension required"
+msgstr ""
+
+#: lib/gpl/admin/post.php:40 lib/pro/admin/post.php:46
+#: lib/pro/admin/post.php:52
+msgctxt "option value"
+msgid "Website"
+msgstr ""
+
+#: lib/gpl/admin/post.php:55 lib/pro/admin/post.php:70
 msgctxt "metabox title"
 msgid "Google Structured Data / Schema Markup"
 msgstr ""
 
-#: lib/gpl/admin/post.php:45 lib/pro/admin/post.php:56
+#: lib/gpl/admin/post.php:58 lib/pro/admin/post.php:73
 msgctxt "option label"
 msgid "Main Entity of Page"
 msgstr ""
 
-#: lib/gpl/admin/post.php:50 lib/pro/admin/post.php:61
+#: lib/gpl/admin/post.php:63 lib/pro/admin/post.php:78
 msgctxt "option label"
 msgid "Schema Item Type"
 msgstr ""
 
-#: lib/gpl/admin/post.php:57 lib/pro/admin/post.php:68
+#: lib/gpl/admin/post.php:70 lib/pro/admin/post.php:85
 msgctxt "option label"
 msgid "Schema Item Name"
 msgstr ""
 
-#: lib/gpl/admin/post.php:65 lib/pro/admin/post.php:76
+#: lib/gpl/admin/post.php:78 lib/pro/admin/post.php:93
 msgctxt "option label"
 msgid "Article Headline"
 msgstr ""
 
-#: lib/gpl/admin/post.php:72 lib/pro/admin/post.php:83
+#: lib/gpl/admin/post.php:85 lib/pro/admin/post.php:101
 msgctxt "option label"
-msgid "Schema Description"
+msgid "Article Publisher"
 msgstr ""
 
-#: lib/gpl/admin/post.php:80 lib/pro/admin/post.php:91
-msgid "Save a draft version or publish the %s to update this value."
+#: lib/gpl/admin/post.php:91 lib/pro/admin/post.php:108
+msgctxt "option label"
+msgid "Schema Description"
 msgstr ""
 
 #: lib/submenu/schema-json-ld.php:29
@@ -94,52 +110,52 @@ msgctxt "option label"
 msgid "Website Alternate Name"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:53
+#: lib/submenu/schema-json-ld.php:54
 msgctxt "option label"
-msgid "Business / Organization Logo URL"
+msgid "Organization Logo Image URL"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:57
+#: lib/submenu/schema-json-ld.php:58
 msgctxt "option label"
-msgid "Business Banner 600x60px Image URL"
+msgid "Organization Banner (600x60px) URL"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:61
+#: lib/submenu/schema-json-ld.php:62
 msgctxt "option label"
 msgid "Maximum Images to Include"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:66
+#: lib/submenu/schema-json-ld.php:67
 msgctxt "option comment"
 msgid "<em>video preview images are enabled</em> (and included first)"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:69
+#: lib/submenu/schema-json-ld.php:70
 msgctxt "option label"
 msgid "Schema Image Dimensions"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:74
+#: lib/submenu/schema-json-ld.php:75
 msgctxt "option label"
 msgid "Maximum Description Length"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:77
+#: lib/submenu/schema-json-ld.php:78
 msgctxt "option comment"
 msgid "characters or less"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:80
+#: lib/submenu/schema-json-ld.php:81
 msgctxt "option label"
 msgid "Author / Person Name Format"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:92
+#: lib/submenu/schema-json-ld.php:93
 msgctxt "option label"
 msgid "Default Item Type for Home Page"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:97
+#: lib/submenu/schema-json-ld.php:98
 msgctxt "option label"
 msgid "Default Item Type by Post Type"
 msgstr ""

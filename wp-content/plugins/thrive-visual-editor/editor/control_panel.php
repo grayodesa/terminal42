@@ -52,6 +52,11 @@ if ( is_array( $tve_facebook_admins ) ) {
 
 $web_safe_fonts = tve_dash_font_manager_get_safe_fonts();
 
+$show_thrive_theme_elements = $is_thrive_theme || $landing_page_template;
+
+$show_page_sections         = apply_filters( 'tcb_show_page_sections_menu', $show_thrive_theme_elements );
+$show_thrive_theme_elements = $show_page_sections;
+
 ?>
 <div class="tve_wrapper <?php echo $_cPanelPosition . ' ' . $_dColor ?>" id="tve_cpanel">
 	<div class="tve_editor">
@@ -87,7 +92,7 @@ $web_safe_fonts = tve_dash_font_manager_get_safe_fonts();
 
 			<?php include $side_menu_path . 'advanced_elements.php' ?>
 
-			<?php if ( $is_thrive_theme || $landing_page_template ): ?>
+			<?php if ( $show_thrive_theme_elements ) : ?>
 				<?php include $side_menu_path . 'thrive_theme_elements.php' ?>
 			<?php endif; ?>
 
@@ -170,7 +175,7 @@ $web_safe_fonts = tve_dash_font_manager_get_safe_fonts();
 			<?php include $menu_path . 'content_container.php' ?>
 		</div>
 
-		<?php if ( $is_thrive_theme || $landing_page_template ): ?>
+		<?php if ( $show_page_sections ) : ?>
 			<div id="page_section_menu">
 				<?php include $menu_path . 'page_section.php' ?>
 			</div>

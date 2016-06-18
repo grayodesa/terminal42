@@ -34,11 +34,10 @@ if ( ! class_exists( 'WpssoProSeoAutoDescription' ) ) {
 				'post_url' => 2,
 			), WPSSO_SEO_FILTERS_PRIORITY );
 
-			add_filter( 'the_seo_framework_current_object_id',			// since the SEO framework v2.6.2
-				array( &$this, 'current_object_id' ), 10, 1 );
-
-			add_filter( 'the_seo_framework_ldjson_scripts',
-				'__return_empty_string' );
+			add_filter( 'the_seo_framework_current_object_id', array( &$this, 'current_object_id' ), 10, 1 );
+			add_filter( 'the_seo_framework_ldjson_scripts', '__return_empty_string' );
+			add_filter( 'the_seo_framework_json_search_output', '__return_false' );
+			add_filter( 'the_seo_framework_ldjson_plugin_detected', '__return_false' );
 		}
 
 		public function filter_title_seed( $title, $mod ) {

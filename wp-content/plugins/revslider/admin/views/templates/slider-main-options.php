@@ -196,36 +196,36 @@ if(!isset($linksEditSlides)) $linksEditSlides = '';
 					
 					<div id="rs-instagram-settings-wrapper" class="rs-settings-wrapper">
 						<div style="width:50%;display:block;float:left;">
-							<span class="rev-new-label"><?php _e('Slides (max 33)', 'revslider');?></span>
+							<span class="rev-new-label"><?php _e('Slides (max 20)', 'revslider');?></span>
 							<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-count', '');?>" name="instagram-count" title="<?php _e('Display this number of photos', 'revslider');?>">
 							<p>
 								<span class="rev-new-label"><?php _e('Cache (sec)', 'revslider');?></span>
 								<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-transient', '1200');?>" name="instagram-transient" title="<?php _e('Cache the result', 'revslider');?>">
 							</p>
-							<p>
+							<!--p>
 								<span class="rev-new-label"><?php _e('Access Token', 'revslider');?></span>
 								<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-access-token', '');?>" name="instagram-access-token" title="<?php _e('Put in your Instagram Access Token', 'revslider');?>">
 							</p>
 							<p>
 								<span class="description"><?php _e('Get your Instagram Access Token <a target="_blank" href="http://jelled.com/instagram/access-token">here</a>', 'revslider');?></span>
-							</p>
+							</p-->
 						</div>
 						<div style="width:50%;display:block;float:left;">
 							<span class="rev-new-label"><?php _e('Source', 'revslider');?></span>
 							<select name="instagram-type">
-								<option value="user" title="<?php _e('Display a user\'s public photos', 'revslider');?>" <?php selected(RevSliderFunctions::getVal($arrFieldsParams, 'instagram-type', 'user'), 'user');?>> <?php _e('User Public Photos', 'revslider');?></option>
-								<option value="hash" title="<?php _e('Display photos with one special hashtag', 'revslider');?>"<?php selected(RevSliderFunctions::getVal($arrFieldsParams, 'instagram-type', 'user'), 'hash');?>> <?php _e('Hashtag', 'revslider');?></option>
+								<option value="user" title="<?php _e('Display a user\'s public photos', 'revslider');?>" selected <?php //selected(RevSliderFunctions::getVal($arrFieldsParams, 'instagram-type', 'user'), 'user');?>> <?php _e('User Public Photos', 'revslider');?></option>
+								<!--option value="hash" title="<?php _e('Display photos with one special hashtag', 'revslider');?>"<?php selected(RevSliderFunctions::getVal($arrFieldsParams, 'instagram-type', 'user'), 'hash');?>> <?php _e('Hashtag', 'revslider');?></option-->
 								</select>
 							<div id="instagram_user">
 								<p>
-									<span class="rev-new-label"><?php _e('Instagram User ID', 'revslider');?></span>
-									<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-user-id', '');?>" name="instagram-user-id" title="<?php _e('Put in the Instagram User ID', 'revslider');?>">
+									<span class="rev-new-label"><?php _e('Instagram User Name', 'revslider');?></span>
+									<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-user-id', '');?>" name="instagram-user-id" title="<?php _e('Put in the Instagram User Name', 'revslider');?>">
 								</p>
-								<p>
+								<!--p>
 									<span class="description"><?php _e('Find the Instagram User ID <a target="_blank" href="http://www.otzberg.net/iguserid/">here</a>', 'revslider');?></span>
-								</p>
+								</p-->
 							</div>
-							<div id="instagram_hash">
+							<!--div id="instagram_hash">
 								<p>
 									<span class="rev-new-label"><?php _e('Instagram Hashtag', 'revslider');?></span>
 									<input type="text" value="<?php echo RevSliderFunctions::getVal($arrFieldsParams, 'instagram-hash-tag', '');?>" name="instagram-hash-tag" title="<?php _e('Put in one Instagram Hashtag', 'revslider');?>">
@@ -233,7 +233,7 @@ if(!isset($linksEditSlides)) $linksEditSlides = '';
 								<p>
 									<span class="description"><?php _e('Finds the latest photos posted with one certain hashtag (#)', 'revslider');?></span>
 								</p>
-							</div>
+							</div-->
 						</div>
 					</div>
 
@@ -1715,7 +1715,7 @@ if (isset($linksEditSlides)) {
 							</span>
 
 							<span class="one-third-container" style="text-align:center">
-								<img style="width:100%;max-width:325px;" src="<?php echo RS_PLUGIN_URL;?>/admin/assets/images/mainoptions/mini-implement.jpg"><span class="description"><?php _e("", 'revslider');?></span>
+								<img style="width:100%;max-width:325px;" src="<?php echo RS_PLUGIN_URL;?>/admin/assets/images/mainoptions/mini-implement.jpg"><span class="description"></span>
 								<span class="cbi-title"><?php _e("Implement your Slider", 'revslider');?></span>
 								<span class="description" style="text-align:center;min-height:60px;"><?php _e("There are several ways to add your slider to your wordpress post / page / etc.", 'revslider');?></span>
 								<div style="float:none; clear:both; height:20px;"></div>

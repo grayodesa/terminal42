@@ -1960,8 +1960,8 @@ var UniteLayersRev = new function(){
 						backgroundColor:"transparent"});		
 			break;
 			case "trans":
-
-				jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css("background-image","").addClass("mini-transparent").css({backgroundSize:"inherit"});
+			case "transparent":
+				jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css("background-image","").css("background-repeat","repeat").addClass("mini-transparent").css({backgroundSize:"inherit"});
 				nextsh.find('.defaultimg, .slotslidebg').css({
 						backgroundImage:"none",
 						backgroundPosition:bgpos,
@@ -2080,8 +2080,9 @@ var UniteLayersRev = new function(){
 
 			break;
 		}
-		if (bbggtt != "solid" && bbggtt!="trans")
+		if (bbggtt != "solid" && bbggtt!="trans" && bbggtt!="transparent")
 			jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css("background-image","url("+bgimg+")");
+		
 		jQuery('#divbgholder').css({background:"none",backgroundImage:"none",backgroundColor:"transparent"});
 		
 		// Use Admin Thumbnail if Selected
@@ -5982,6 +5983,9 @@ var UniteLayersRev = new function(){
 		if(objLayer['deformation-hover']['speed'] == undefined)
 			objLayer['deformation-hover']['speed'] = 0;
 		
+		if(objLayer['deformation-hover']['zindex'] == undefined)
+			objLayer['deformation-hover']['zindex'] = "auto";
+		
 		if(objLayer['deformation-hover']['easing'] == undefined)
 			objLayer['deformation-hover']['easing'] = 'Linear.easeNone';
 		
@@ -6807,6 +6811,7 @@ var UniteLayersRev = new function(){
 		objUpdate['deformation-hover']['2d_rotation'] = parseInt(jQuery('#hover_layer_2d_rotation').val(),0); //z rotate
 		
 		objUpdate['deformation-hover']['speed'] = jQuery('#hover_speed').val();
+		objUpdate['deformation-hover']['zindex'] = jQuery('#hover_zindex').val();
 		objUpdate['deformation-hover']['easing'] = jQuery('#hover_easing option:selected').val();
 		objUpdate['deformation-hover']['css_cursor'] = jQuery('#css_cursor option:selected').val();
 		
@@ -7322,6 +7327,7 @@ var UniteLayersRev = new function(){
 				jQuery('#css_cursor option[value="'+objLayer['deformation-hover']['css_cursor']+'"]').attr('selected', true);
 				
 				jQuery('#hover_speed').val(objLayer['deformation-hover']['speed']);
+				jQuery('#hover_zindex').val(objLayer['deformation-hover']['zindex']);
 				jQuery('#hover_easing option[value="'+objLayer['deformation-hover']['easing']+'"]').attr('selected', true);
 				
 			}

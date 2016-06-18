@@ -545,6 +545,7 @@ function woofp_currency_options( $current='USD' ){
 	<option <?php echo selected( 'HUF', $current, true ); ?> value="HUF">Hungarian Forint </option>
 	<option <?php echo selected( 'ILS', $current, true ); ?> value="ILS">Israeli New Sheqel</option>
 	<option <?php echo selected( 'JPY', $current, true ); ?> value="JPY">Japanese Yen</option>
+	<option <?php echo selected( 'IDR', $current, true ); ?> value="USD">Indonesian Rupiah</option>
 	<option <?php echo selected( 'KRW', $current, true ); ?> value="KRW">Korean Won</option>
 	<option <?php echo selected( 'MYR', $current, true ); ?> value="MYR">Malaysian Ringgit</option>
 	<option <?php echo selected( 'MXN', $current, true ); ?> value="MXN">Mexican Peso</option>

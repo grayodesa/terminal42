@@ -10,46 +10,47 @@ class Thrive_Dash_List_Manager {
 	public static $ADMIN_HAS_ERROR = false;
 
 	public static $API_TYPES = array(
-		'autoresponder' => 'Autoresponders / CRMs',
-		'webinar'       => 'Webinar Services',
-		'captcha'       => 'Captcha Services',
+		'autoresponder' => 'Email Marketing',
+		'webinar'       => 'Webinars',
+		'other'         => 'Other',
 	);
 
 	public static $AVAILABLE = array(
-		'mailchimp'        => 'Thrive_Dash_List_Connection_Mailchimp',
-		'aweber'           => 'Thrive_Dash_List_Connection_AWeber',
-		'get-response'     => 'Thrive_Dash_List_Connection_GetResponse',
-		'mailpoet'         => 'Thrive_Dash_List_Connection_MailPoet',
-		'wordpress'        => 'Thrive_Dash_List_Connection_Wordpress',
-		'ontraport'        => 'Thrive_Dash_List_Connection_Ontraport',
-		'icontact'         => 'Thrive_Dash_List_Connection_iContact',
-		'convertkit'       => 'Thrive_Dash_List_Connection_ConvertKit',
+
 		'activecampaign'   => 'Thrive_Dash_List_Connection_ActiveCampaign',
-		'infusionsoft'     => 'Thrive_Dash_List_Connection_Infusionsoft',
-		'sendreach'        => 'Thrive_Dash_List_Connection_Sendreach',
-		'klicktipp'        => 'Thrive_Dash_List_Connection_KlickTipp',
-		'sendy'            => 'Thrive_Dash_List_Connection_Sendy',
 		'arpreach'         => 'Thrive_Dash_List_Connection_ArpReach',
-		'drip'             => 'Thrive_Dash_List_Connection_Drip',
+		'aweber'           => 'Thrive_Dash_List_Connection_AWeber',
 		'constantcontact'  => 'Thrive_Dash_List_Connection_ConstantContact',
-		'madmimi'          => 'Thrive_Dash_List_Connection_MadMimi',
-		'webinarjamstudio' => 'Thrive_Dash_List_Connection_WebinarJamStudio',
+		'convertkit'       => 'Thrive_Dash_List_Connection_ConvertKit',
+		'drip'             => 'Thrive_Dash_List_Connection_Drip',
+		'get-response'     => 'Thrive_Dash_List_Connection_GetResponse',
 		'gotowebinar'      => 'Thrive_Dash_List_Connection_GoToWebinar',
-		'recaptcha'        => 'Thrive_Dash_List_Connection_ReCaptcha',
 		'hubspot'          => 'Thrive_Dash_List_Connection_HubSpot',
+		'icontact'         => 'Thrive_Dash_List_Connection_iContact',
+		'infusionsoft'     => 'Thrive_Dash_List_Connection_Infusionsoft',
+		'klicktipp'        => 'Thrive_Dash_List_Connection_KlickTipp',
+		'madmimi'          => 'Thrive_Dash_List_Connection_MadMimi',
+		'mailchimp'        => 'Thrive_Dash_List_Connection_Mailchimp',
+		'mailpoet'         => 'Thrive_Dash_List_Connection_MailPoet',
+		'ontraport'        => 'Thrive_Dash_List_Connection_Ontraport',
+		'recaptcha'        => 'Thrive_Dash_List_Connection_ReCaptcha',
+		'sendreach'        => 'Thrive_Dash_List_Connection_Sendreach',
 		'sendinblue'       => 'Thrive_Dash_List_Connection_Sendinblue',
+		'sendy'            => 'Thrive_Dash_List_Connection_Sendy',
+		'webinarjamstudio' => 'Thrive_Dash_List_Connection_WebinarJamStudio',
+		'wordpress'        => 'Thrive_Dash_List_Connection_Wordpress',
 	);
 
 	private static $_available = array();
 
 	/**
- * get a list of all available APIs
- *
- * @param bool $onlyConnected if true, it will return only APIs that are already connected
- * @param array $exclude_types exclude connection by their type
- *
- * @return array Thrive_Dash_List_Connection_Abstract[]
- */
+	 * get a list of all available APIs
+	 *
+	 * @param bool $onlyConnected if true, it will return only APIs that are already connected
+	 * @param array $exclude_types exclude connection by their type
+	 *
+	 * @return array Thrive_Dash_List_Connection_Abstract[]
+	 */
 	public static function getAvailableAPIs( $onlyConnected = false, $exclude_types = array(), $onlyNames = false ) {
 		$lists = array();
 
@@ -64,9 +65,9 @@ class Thrive_Dash_List_Manager {
 			if ( ( $onlyConnected && empty( $credentials[ $key ] ) ) || in_array( $instance->getType(), $exclude_types ) ) {
 				continue;
 			}
-			if($onlyNames){
+			if ( $onlyNames ) {
 				$lists[ $key ] = self::connectionInstance( $key, isset( $credentials[ $key ] ) ? $credentials[ $key ] : array() )->getTitle();
-			}else{
+			} else {
 				$lists[ $key ] = self::connectionInstance( $key, isset( $credentials[ $key ] ) ? $credentials[ $key ] : array() );
 			}
 		}

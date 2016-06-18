@@ -10,7 +10,7 @@ License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
 Requires At Least: 3.1
 Tested Up To: 4.5.2
-Stable Tag: 1.7.4-1
+Stable Tag: 1.7.5-1
 
 WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.
 
@@ -895,7 +895,21 @@ Purchase the [WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro](http://wpsso.com/ext
 
 = Changelog / Release Notes =
 
-**Version 1.7.5-1 (2016/06/13)**
+**Version 1.7.6-dev2 (2016/06/16)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* Added support for the http://schema.org/Event type and its sub-types (including event image and video media).
+	* Added an "Event Organizer" option in the Social Settings metabox (WPSSO ORG extension required).
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* None
+
+**Version 1.7.5-1 (2016/06/14)**
 
 Official announcement: N/A
 
@@ -908,66 +922,13 @@ Official announcement: N/A
 * *Developer Notes*
 	* Updated the `add_single_organization_data()` method arguments for WPSSO v3.32.4-1.
 
-**Version 1.7.4-1 (2016/06/02)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Updated some option labels and help texts.
-	* Added image and video properties to the Organization markup (Pro version).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
-
-**Version 1.7.2-1 (2016/05/27)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Added support for the schema.org/CreativeWork top-level type, which includes the date published / modified, author (and contributors), image(s), video(s), and language (Pro version).
-* *Bugfixes*
-	* Added a check in the Article schema for cases where the current page does not have a module object (Pro version).
-* *Developer Notes*
-	* Moved the schema.org/BlogPosting and schema.org/WebPage support into a new head/webpage.php library file (Free version).
-
-**Version 1.7.1-1 (2016/05/18)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Added support for multiple product offers (price, currency, availability), including product variation details (url, name, sku, color, description, width, height, length, weight, and image) (Pro version).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
-
-**Version 1.7.0-1 (2016/05/14)**
-
-Official announcement: [WPSSO Update – Adds Support for Co-Authors Plus](http://wpsso.com/2016/05/13/wpsso-update-adds-support-for-co-authors-plus/)
-
-* *New Features*
-	* Added contributor markup for [Co-Authors Plus](https://wordpress.org/plugins/co-authors-plus/) authors and guest authors (requires [WPSSO Pro](http://wpsso.com/)).
-* *Improvements*
-	* Categorized the display of Free / Pro features in the sidebar metabox.
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
-
 == Upgrade Notice ==
+
+= 1.7.6-dev2 =
+
+(2016/06/16) Added basic support for the http://schema.org/Event type and its sub-types (including event image and video media).
 
 = 1.7.5-1 =
 
-(2016/06/13) Added a new "Article Publisher" option in the Social Settings metabox for posts and pages (WPSSO ORG extension required).
-
-= 1.7.4-1 =
-
-(2016/06/02) Updated some option labels and help texts.
+(2016/06/14) Added a new "Article Publisher" option in the Social Settings metabox for posts and pages (WPSSO ORG extension required).
 

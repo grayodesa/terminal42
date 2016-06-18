@@ -9,17 +9,23 @@
 			</p>
 		<?php else : ?>
 			<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline">
-				<select id="thrive-api-list-select"<?php echo ( empty( $lists ) ) ? ' disabled' : '' ?> >
+				<select id="thrive-api-list-select"<?php echo ( empty( $lists ) ) ? ' disabled' : 'class="tve_change"
+			        data-ctrl="function:auto_responder.api.api_get_groups" data-api="' . $selected_api->getKey() .  '"' ?>  >
 					<?php if ( empty( $lists ) ) : ?>
 						<option value=""><?php echo __( 'No list available', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
 					<?php endif ?>
 					<?php foreach ( $lists as $list ) : ?>
-						<option value="<?php echo $list['id'] ?>"<?php echo ! empty( $selected_list ) && $selected_list == $list['id'] ? ' selected="selected"' : '' ?>><?php echo $list['name'] ?></option>
+						<option data-group="<?php echo $list['group_count'] ?>" value="<?php echo $list['id'] ?>"<?php echo ! empty( $selected_list ) && $selected_list == $list['id'] ? ' selected="selected"' : '' ?>><?php echo $list['name'] ?></option>
 					<?php endforeach ?>
 				</select>
 			</div>
 			&nbsp;&nbsp;&nbsp;
 			<a href="javascript:void(0)" class="tve_click tve_lightbox_link tve_lightbox_link_refresh" data-ctrl="function:auto_responder.api.reload_lists" data-force-fetch="1"" data-api="<?php echo $selected_api->getKey() ?>"><?php echo __( 'Reload', TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<?php
+			if(!empty($selected_list)) {
+				$extra_settings[ $selected_api->getKey() ]['list_id'] = $selected_list;
+			}
+			?>
 			<?php if ( ! empty( $lists ) ) : ?>
 				<?php echo $selected_api->renderExtraEditorSettings( empty( $extra_settings[ $selected_api->getKey() ] ) ? array() : $extra_settings[ $selected_api->getKey() ] ) ?>
 			<?php endif ?>

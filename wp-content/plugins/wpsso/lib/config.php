@@ -20,7 +20,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			'feed_cache_exp' => 86400,	// 24 hours
 			'plugin' => array(
 				'wpsso' => array(
-					'version' => '3.32.3-1',	// plugin version
+					'version' => '3.32.4-2',	// plugin version
 					'opt_version' => '434',		// increment when changing default options
 					'short' => 'WPSSO',		// short plugin name
 					'name' => 'WordPress Social Sharing Optimization (WPSSO)',
@@ -140,7 +140,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				),
 				'wpssoam' => array(
 					'short' => 'WPSSO AM',		// short plugin name
-					'name' => 'WPSSO App Meta (WPSSO AM)',
+					'name' => 'WPSSO Mobile App Meta (WPSSO AM)',
 					'desc' => 'WPSSO extension to provide Apple Store / iTunes and Google Play App meta tags for Apple\'s mobile Safari and Twitter\'s App Card.',
 					'slug' => 'wpsso-am',
 					'base' => 'wpsso-am/wpsso-am.php',
@@ -192,6 +192,34 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 						'notes' => '',
 						'feed' => 'http://wpsso.com/category/application/wordpress/wp-plugins/wpsso-schema-json-ld/feed/',
 						'pro_support' => 'http://wpsso-schema-json-ld.support.wpsso.com/',
+					),
+				),
+				'wpssoorg' => array(
+					'short' => 'WPSSO ORG',		// short plugin name
+					'name' => 'WPSSO Organization Markup (WPSSO ORG)',
+					'desc' => 'WPSSO extension to manage multiple Organizations / Publishers and additional properties for the Schema Article types (BlogPosting, etc.).',
+					'slug' => 'wpsso-organization',
+					'base' => 'wpsso-organization/wpsso-organization.php',
+					'update_auth' => 'tid',
+					'img' => array(
+						'icon_small' => 'https://surniaulula.github.io/wpsso-organization/assets/icon-128x128.png',
+						'icon_medium' => 'https://surniaulula.github.io/wpsso-organization/assets/icon-256x256.png',
+					),
+					'url' => array(
+						// wordpress
+						'download' => 'https://wordpress.org/plugins/wpsso-organization/',
+						'review' => 'https://wordpress.org/support/view/plugin-reviews/wpsso-organization?filter=5&rate=5#postform',
+						'readme' => 'https://plugins.svn.wordpress.org/wpsso-organization/trunk/readme.txt',
+						'wp_support' => 'https://wordpress.org/support/plugin/wpsso-organization',
+						// surniaulula
+						'update' => 'http://wpsso.com/extend/plugins/wpsso-organization/update/',
+						'purchase' => 'http://wpsso.com/extend/plugins/wpsso-organization/',
+						'changelog' => 'http://wpsso.com/extend/plugins/wpsso-organization/changelog/',
+						'codex' => 'http://wpsso.com/codex/plugins/wpsso-organization/',
+						'faq' => 'http://wpsso.com/codex/plugins/wpsso-organization/faq/',
+						'notes' => '',
+						'feed' => 'http://wpsso.com/category/application/wordpress/wp-plugins/wpsso-organization/feed/',
+						'pro_support' => 'http://wpsso-organization.support.wpsso.com/',
 					),
 				),
 				'wpssoplm' => array(
@@ -320,15 +348,13 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'schema_banner_url' => '',
 					'schema_desc_len' => 250,		// meta itemprop="description" maximum text length
 					'schema_type_for_home_page' => 'website',
-					'schema_type_for_post' => 'webpage',
+					'schema_type_for_post' => 'blog.posting',
 					'schema_type_for_page' => 'webpage',
 					'schema_type_for_attachment' => 'webpage',
 					'schema_type_for_article' => 'article',
-					'schema_type_for_article.news' => 'article.news',
-					'schema_type_for_article.tech' => 'article.tech',
 					'schema_type_for_book' => 'book',
 					'schema_type_for_blog' => 'blog',
-					'schema_type_for_blog.posting' => 'blog.posting',
+					'schema_type_for_business' => 'local.business',
 					'schema_type_for_download' => 'product',
 					'schema_type_for_organization' => 'organization',
 					'schema_type_for_person' => 'person',
@@ -337,7 +363,6 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'schema_type_for_recipe' => 'recipe',
 					'schema_type_for_review' => 'review',
 					'schema_type_for_other' => 'other',
-					'schema_type_for_local.business' => 'local.business',
 					'schema_type_for_webpage' => 'webpage',
 					'schema_type_for_website' => 'website',
 					'schema_author_name' => 'display_name',
@@ -352,17 +377,17 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'seo_def_author_on_index' => 0,
 					'seo_def_author_on_search' => 0,
 					'seo_author_field' => '',		// default value set by WpssoOptions::get_defaults()
-					'seo_publisher_url' => '',		// multilingual
-					'fb_publisher_url' => '',		// multilingual
+					'seo_publisher_url' => '',		// (multilingual)
+					'fb_publisher_url' => '',		// (multilingual)
 					'fb_app_id' => '',
 					'fb_admins' => '',
 					'fb_author_name' => 'display_name',
 					'fb_lang' => 'en_US',
-					'instgram_publisher_url' => '',		// multilingual
-					'linkedin_publisher_url' => '',		// multilingual
-					'myspace_publisher_url' => '',		// multilingual
-					'og_site_name' => '',			// multilingual
-					'og_site_description' => '',		// multilingual
+					'instgram_publisher_url' => '',		// (multilingual)
+					'linkedin_publisher_url' => '',		// (multilingual)
+					'myspace_publisher_url' => '',		// (multilingual)
+					'og_site_name' => '',			// (multilingual)
+					'og_site_description' => '',		// (multilingual)
 					'og_art_section' => 'none',
 					'og_img_width' => 600,
 					'og_img_height' => 315,
@@ -395,7 +420,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'og_title_len' => 70,
 					'og_desc_len' => 300,
 					'og_desc_hashtags' => 3,
-					'rp_publisher_url' => '',		// multilingual
+					'rp_publisher_url' => '',		// (multilingual)
 					'rp_author_name' => 'display_name',	// rich-pin specific article:author
 					'rp_img_width' => 800,
 					'rp_img_height' => 1600,
@@ -403,8 +428,8 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'rp_img_crop_x' => 'center',
 					'rp_img_crop_y' => 'center',
 					'rp_dom_verify' => '',
-					'tc_site' => '',			// multilingual
-					'tc_desc_len' => 200,
+					'tc_site' => '',			// Twitter Business @username (multilingual)
+					'tc_desc_len' => 200,			// Maximum Description Length
 					// summary card
 					'tc_sum_width' => 600,
 					'tc_sum_height' => 600,
@@ -581,9 +606,6 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_add_to_term' => 1,
 					'plugin_add_to_topic' => 0,	// bbpress
 					'plugin_add_to_user' => 1,
-					'plugin_add_tab_preview' => 1,
-					'plugin_add_tab_tags' => 1,
-					'plugin_add_tab_validate' => 1,
 					'plugin_cf_img_url' => '_format_image_url',
 					'plugin_cf_vid_url' => '_format_video_url',
 					'plugin_cf_vid_embed' => '_format_video_embed',

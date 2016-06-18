@@ -3,7 +3,7 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WordPress Social Sharing Optimization (WPSSO)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>Fast, light-weight, full-featured plugin for great looking shares on all social sites - no matter how your content is shared or re-shared!</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.32.3-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.32.4-2</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
 <tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.2</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
@@ -83,6 +83,7 @@
 
 <ul>
 <li><a href="https://wordpress.org/plugins/wpsso-am/">WPSSO Mobile App Meta</a> (Free version)</li>
+<li><a href="https://wordpress.org/plugins/wpsso-organization/">WPSSO Organization Markup</a> (Free version)</li>
 <li><a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO Place / Location and Local Business Meta</a> (Free version)</li>
 <li><a href="https://wordpress.org/plugins/wpsso-rrssb/">WPSSO Ridiculously Responsive Social Sharing Buttons</a> (Free version)</li>
 <li><a href="https://wordpress.org/plugins/wpsso-schema-json-ld/">WPSSO Schema JSON-LD Markup</a> (Free version)</li>
@@ -200,6 +201,7 @@
 
 <ul>
 <li><a href="https://wpsso.com/extend/plugins/wpsso-am/">WPSSO Mobile App Meta</a> (Pro version)</li>
+<li><a href="https://wpsso.com/extend/plugins/wpsso-organization/">WPSSO Organization Markup</a> (Pro version)</li>
 <li><a href="https://wpsso.com/extend/plugins/wpsso-plm/">WPSSO Place / Location and Local Business Meta</a> (Pro version)</li>
 <li><a href="https://wpsso.com/extend/plugins/wpsso-rrssb/">WPSSO Ridiculously Responsive Social Sharing Buttons</a> (Pro version)</li>
 <li><a href="https://wpsso.com/extend/plugins/wpsso-schema-json-ld/">WPSSO Schema JSON-LD Markup</a> (Pro version)</li>
@@ -393,6 +395,7 @@
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/modify-the-articletag-keywords-names/">Modify the "article:tag" Keywords / Names</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/modify-the-default-topics-list/">Modify the Default Topics List</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/modify-the-home-page-title-for-facebook-open-graph/">Modify the Home Page Title for Facebook / Open Graph</a></li>
+<li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/remove-hentry-from-theme-templates/">Remove 'hentry' from Theme Templates</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/use-the-request_uri-for-post-urls/">Use the REQUEST_URI for Post URLs</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/examples/working-with-pre-defined-meta-tags-and-custom-post-types/">Working with Pre-defined Meta Tags and Custom Post Types</a></li>
 </ul></li>

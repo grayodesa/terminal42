@@ -38,9 +38,14 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 */
 	public function readCredentials() {
 		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$email = ! empty( $_POST['connection']['email'] ) ? $_POST['connection']['email'] : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid Mandrill key', TVE_DASH_TRANSLATE_DOMAIN ) );
+		}
+
+		if ( empty( $email ) ) {
+			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
 		$this->setCredentials( $_POST['connection'] );
@@ -68,8 +73,48 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	public function testConnection() {
 		$mandrill = $this->getApi();
 
+		if ( isset( $_POST['connection']['email'] ) ) {
+			$from_email = $_POST['connection']['email'];
+			$to         = $_POST['connection']['email'];
+		} else {
+			$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
+			if ( isset( $credentials ) ) {
+				$from_email = $credentials['email'];
+				$to         = $credentials['email'];
+			} else {
+				return false;
+			}
+		}
+
+		$subject      = 'API connection test';
+		$html_content = 'This is a test email from Thrive Leads Mandrill API.';
+		$text_content = 'This is a test email from Thrive Leads Mandrill API.';
+
+		$message = array(
+			'html'           => $html_content,
+			'text'           => $text_content,
+			'subject'        => $subject,
+			'from_email'     => $from_email,
+			'from_name'      => '',
+			'to'             => array(
+				array(
+					'email' => $to,
+					'name'  => '',
+					'type'  => 'to'
+				)
+			),
+			'headers'        => array( 'Reply-To' => $from_email ),
+			'merge'          => true,
+			'merge_language' => 'mailchimp'
+
+		);
+		$async   = false;
+		$ip_pool = 'Main Pool';
+
+
+
 		try {
-			$result = $mandrill->users->info();
+			$mandrill->messages->send( $message, $async, $ip_pool );
 		} catch ( Thrive_Dash_Api_Mandrill_Exceptions $e ) {
 			return $e->getMessage();
 		}
@@ -85,6 +130,62 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		/**
 		 * just try getting a list as a connection test
 		 */
+	}
+
+	/**
+	 * Send custom email
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string true for success or error message for failure
+	 */
+	public function sendCustomEmail( $data ) {
+		$mandrill = $this->getApi();
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
+		if ( isset( $credentials ) ) {
+			$domain = $credentials['domain'];
+		} else {
+			return false;
+		}
+
+		if ( isset( $credentials ) ) {
+			$from_email = $credentials['email'];
+		} else {
+			return false;
+		}
+
+		try {
+
+
+			$message = array(
+				'html'           => empty ( $data['html_content'] ) ? '' : $data['html_content'],
+				'text'           => empty ( $data['text_content'] ) ? '' : $data['text_content'],
+				'subject'        => $data['subject'],
+				'from_email'     => $from_email,
+				'from_name'      => '',
+				'to'             => array(
+					array(
+						'email' => $data['email'],
+						'name'  => '',
+						'type'  => 'to'
+					)
+				),
+				'headers'        => array( 'Reply-To' => $from_email ),
+				'merge'          => true,
+				'merge_language' => 'mailchimp'
+
+			);
+			$async   = false;
+			$ip_pool = 'Main Pool';
+
+			$mandrill->messages->send( $message, $async, $ip_pool );
+
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
 	}
 
 	/**
@@ -104,7 +205,14 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		if ( $subject == "" ) {
 			$subject = get_option( 'tve_leads_asset_mail_subject' );
 		}
-		$from_email   = get_option( 'admin_email' );
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
+		if ( isset( $credentials ) ) {
+			$from_email = $credentials['email'];
+		} else {
+			return false;
+		}
+
 		$html_content = $asset->post_content;
 
 		if ( $html_content == "" ) {

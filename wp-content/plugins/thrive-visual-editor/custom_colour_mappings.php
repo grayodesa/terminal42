@@ -2191,10 +2191,11 @@ return array(
 				),
 				3 => array(
 					"label"    => "Link color",
-					"selector" => ".tve_contents_table a",
+					"selector" => ".tve_contents_table",
+					'selector_suffix' => ' a',
 					"property" => "color",
 					"value"    => "[color]"
-				)
+				),
 			),
 			"Classy"  => array(
 				0 => array(

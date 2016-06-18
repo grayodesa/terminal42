@@ -76,6 +76,13 @@ class RevSliderPluginUpdate {
 			self::change_slide_settings_5_1_1();
 			self::set_version($version);
 		}
+		
+		if(version_compare($version, '5.2.5.4', '<')){
+			$version = '5.2.5.4';
+			
+			self::change_layers_svg_5_2_5_4();
+			self::set_version($version);
+		}
 	}
 	
 	
@@ -1011,6 +1018,63 @@ class RevSliderPluginUpdate {
 		}
 	}
 	
+	
+	/**
+	 * change svg path of all layers to the upload folder
+	 * @since 5.2.5.4
+	 */
+	public static function change_layers_svg_5_2_5_4($sliders = false){
+		$sr = new RevSlider();
+		$sl = new RevSliderSlide();
+		$upload_dir = wp_upload_dir();
+		$path = $upload_dir['baseurl'].'/revslider/assets/svg/';
+		
+		//$operations = new RevSliderOperations();
+		if($sliders === false){ //do it on all Sliders
+			$sliders = $sr->getArrSliders(false);
+		}else{
+			$sliders = array($sliders);
+		}
+		
+		if(!empty($sliders) && is_array($sliders)){
+			foreach($sliders as $slider){
+				$slides = $slider->getSlides();
+				$staticID = $sl->getStaticSlideID($slider->getID());
+				if($staticID !== false){
+					$msl = new RevSliderSlide();
+					if(strpos($staticID, 'static_') === false){
+						$staticID = 'static_'.$slider->getID();
+					}
+					$msl->initByID($staticID);
+					if($msl->getID() !== ''){
+						$slides = array_merge($slides, array($msl));
+					}
+				}
+				
+				if(!empty($slides) && is_array($slides)){
+					foreach($slides as $slide){
+						$layers = $slide->getLayers();
+						if(!empty($layers) && is_array($layers)){
+							foreach($layers as $lk => $layer){
+								if(isset($layer['type']) && $layer['type'] == 'svg'){
+									if(isset($layer['svg']) && isset($layer['svg']->src)){
+										//change older path to new path
+										if(strpos($layers[$lk]['svg']->src, RS_PLUGIN_URL . 'public/assets/assets/svg/') !== false){
+											
+											$layers[$lk]['svg']->src = str_replace(RS_PLUGIN_URL . 'public/assets/assets/svg/', $path, $layers[$lk]['svg']->src);
+										}
+									}
+								}
+							}
+							
+							$slide->setLayersRaw($layers);
+							$slide->saveLayers();
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**

@@ -16,6 +16,12 @@ add_filter( 'affwp_force_frontend_scripts', 'tve_compat_wp_affiliate_scripts' );
 add_filter( 'fp5_filter_has_shortcode', 'tve_compat_flowplayer5_has_shortcode' );
 
 /**
+ *
+ * Compatibility with S2Member plugin - it fails to include CSS / JS on pages / posts created with TCB
+ */
+add_filter( 'ws_plugin__s2member_lazy_load_css_js', '__return_true' );
+
+/**
  * Checks if a post / page has a shortcode in TCB content
  *
  * @param string $shortcode
@@ -71,6 +77,7 @@ function tve_hooked_in_template_redirect() {
 		'wordpress-seo/wp-seo.php',
 		'wordpress-seo-premium/wp-seo-premium.php',
 		'membermouse/index.php',
+		'ultimate-member/index.php',
 	);
 
 	foreach ( $hooked_in_template_redirect as $plugin ) {
@@ -159,6 +166,10 @@ function tve_compat_content_filters_before_shortcode( $content ) {
 	 */
 	if ( function_exists( 'fdfootnote_convert' ) ) {
 		$content = fdfootnote_convert( $content );
+	}
+
+	if ( function_exists( 'ec' ) ) {
+		$content = ec( $content );
 	}
 
 	/**

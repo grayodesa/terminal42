@@ -48,7 +48,7 @@ if ( ! class_exists( 'WpssoProAdminGeneral' ) ) {
 				range( 0, $this->p->cf['form']['max_media_items'] ), 'short', null, true ).'</td>';
 
 			$table_rows['og_vid_https'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Use HTTPS for Video API',
+			$form->get_th_html( _x( 'Use HTTPS for Video API Requests',
 				'option label', 'wpsso' ), null, 'og_vid_https' ).
 			'<td>'.$form->get_checkbox( 'og_vid_https' ).' '.
 				sprintf( _x( 'uses %s', 'option comment', 'wpsso' ),

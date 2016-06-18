@@ -93,7 +93,6 @@ if( !defined( 'ABSPATH') ) exit();
 				if(intval($numSlides) == 0){
 					$first_slide_id = 'new&slider='.$id;
 					
-					
 				}else{
 					$slides = $slider->getSlides(false);
 					
@@ -119,7 +118,8 @@ if( !defined( 'ABSPATH') ) exit();
 				$numSlides = "";
 				$isFromPosts = false;
 			}
-			
+			//var_dump($first_slide_image_thumb);
+			//exit;
 			?>
 			<li class="tls-slide tls-stype-all tls-stype-<?php echo $slider_type; ?>" data-favorit="<?php echo ($is_favorite) ? 'a' : 'b'; ?>" data-id="<?php echo $id; ?>" data-name="<?php echo $title; ?>" data-type="<?php echo $slider_type; ?>">
 				<div class="tls-main-metas">

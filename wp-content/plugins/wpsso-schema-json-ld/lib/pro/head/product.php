@@ -52,7 +52,7 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 			 * Property:
 			 * 	sku
 			 */
-			WpssoSchema::add_data_itemprop_from_og( $ret, $mt_og, array( 
+			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array( 
 				'sku' => 'product:sku',
 				'color' => 'product:color',
 				'category' => 'product:category',
@@ -71,7 +71,7 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 			 */
 			if ( empty( $mt_og['product:offer'] ) ) {
 
-				if ( ( $offer = WpssoSchema::get_data_itemprop_from_og( $mt_og, array( 
+				if ( ( $offer = WpssoSchema::get_data_itemprop_from_assoc( $mt_og, array( 
 					'price' => 'product:price:amount',
 					'priceCurrency' => 'product:price:currency',
 					'availability' => 'product:availability',
@@ -82,14 +82,14 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 				foreach ( $mt_og['product:offer'] as $mt_offer ) {
 
 					// setup the offer with basic itemprops
-					if ( ( $offer = WpssoSchema::get_data_itemprop_from_og( $mt_offer, array( 
+					if ( ( $offer = WpssoSchema::get_data_itemprop_from_assoc( $mt_offer, array( 
 						'price' => 'product:offer:price:amount',
 						'priceCurrency' => 'product:offer:price:currency',
 						'availability' => 'product:offer:availability',
 					) ) ) !== false ) {
 
 						// add additional product information to the offer
-						if ( ( $product = WpssoSchema::get_data_itemprop_from_og( $mt_offer, array( 
+						if ( ( $product = WpssoSchema::get_data_itemprop_from_assoc( $mt_offer, array( 
 							'url' => 'product:offer:url',
 							'name' => 'product:offer:title',
 							'sku' => 'product:offer:sku',

@@ -2363,7 +2363,7 @@ function tve_thrive_shortcodes( $content, $keepConfig = false ) {
 	$shortcode_pattern = '#>__CONFIG_%s__(.+?)__CONFIG_%s__</div>#';
 
 	foreach ( $tve_thrive_shortcodes as $shortcode => $callback ) {
-		if ( ! tve_check_if_thrive_theme() && $shortcode !== 'widget' && $shortcode !== 'post_grid' && $shortcode !== 'widget_menu' && $shortcode !== 'leads_shortcode' && $shortcode !== 'tve_leads_additional_fields_filters' && $shortcode !== 'social_default' ) {
+		if ( ! tve_check_if_thrive_theme() && $shortcode !== 'widget' && $shortcode !== 'post_grid' && $shortcode !== 'widget_menu' && $shortcode !== 'leads_shortcode' && $shortcode !== 'tve_leads_additional_fields_filters' && $shortcode !== 'social_default' && $shortcode !== 'tvo_shortcode' ) {
 			continue;
 		}
 
@@ -3883,18 +3883,16 @@ function tve_find_quick_link_contents() {
 	function_exists( 'tve_leads_get_groups' ) ? $leads = array( 'tve_lead_2s_lightbox' ) : $leads = array();
 
 	if ( ! $post_types ) {
-		$default    = array( 'post', 'page', 'tcb_lightbox' );
-		$post_types = array_merge( $default, $leads );
-	} else {
+		$post_types    = array( 'post', 'page' );
 
+	} else {
 		$accepted    = unserialize( $post_types );
-		$thriveboxes = array( 'tcb_lightbox' );
 
 		if ( ! $accepted ) {
 			$accepted = array();
 		}
 
-		$post_types = array_merge( $accepted, $thriveboxes, $leads );
+		$post_types = $accepted;
 	}
 
 	$postList = array();
@@ -3903,13 +3901,28 @@ function tve_find_quick_link_contents() {
 			'post_type'   => $post_types,
 			'post_status' => 'publish',
 			's'           => $s,
-			'numberposts' => - 1
+			'numberposts' => 5,
+			'sort_order'  => 'asc',
 		);
-		$posts_array = get_posts( $args );
+		$accepted_array = get_posts( $args );
+
+		$lightbox = array('tcb_lightbox');
+		$boxes = array_merge( $lightbox, $leads );
+
+		$lightbox_args        = array(
+			'post_type'   => $boxes,
+			'post_status' => 'publish',
+			's'           => $s,
+			'numberposts' => 5,
+			'sort_order'  => 'asc',
+		);
+		$lightbox_array = get_posts( $lightbox_args );
+
+		$posts_array = array_merge( $lightbox_array, $accepted_array );
 
 		foreach ( $posts_array as $id => $item ) {
 
-			$item->post_title = str_ireplace( $s, "<strong>" . $s . "</strong>", $item->post_title );
+			$item->post_title = preg_replace( "#($s)#i", "<b>$0</b>", $item->post_title );
 			$postList []      = array(
 				'label' => $item->post_title,
 				'id'    => $item->ID,

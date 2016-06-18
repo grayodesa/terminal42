@@ -677,6 +677,10 @@ $this->render_header( $page_title );
 		<p><span class="count notification">5</span> <code>&lt;span class="count notification">5&lt;/span></code></p>
 		<p><span class="count reply">5</span> <code>&lt;span class="count reply">5&lt;/span></code></p>
 		<p><span class="count reply notification">5</span> <code>&lt;span class="count reply notification">5&lt;/span></code></p>
+		<hr />
+		<div class="inline-notice">Default notification <code>class="inline-notice"</code> <button>OK</button></div>
+		<div class="inline-notice ok">Success notification <code>class="inline-notice ok"</code> <button>OK</button></div>
+		<div class="inline-notice err">Error notification <code>class="inline-notice err"</code> <button>OK</button></div>
 	</div>
 </section>
 

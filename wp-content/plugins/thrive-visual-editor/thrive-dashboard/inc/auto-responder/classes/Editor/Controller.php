@@ -13,9 +13,11 @@
  */
 class Thrive_Dash_List_Editor_Controller {
 	protected $_viewPath;
+	protected $_viewSetupPath;
 
 	public function __construct() {
 		$this->_viewPath = TVE_DASH_PATH . '/inc/auto-responder/views/editor/';
+		$this->_viewSetupPath = TVE_DASH_PATH . '/inc/auto-responder/views/setup/';
 	}
 
 	/**
@@ -46,8 +48,13 @@ class Thrive_Dash_List_Editor_Controller {
 		}
 
 		$path = $this->_viewPath . $file;
+		// Search for the file in the editor path
 		if ( ! file_exists( $path ) ) {
-			return '';
+			// Search for the file in the setup path too
+			$path = $this->_viewSetupPath . $file;
+			if ( ! file_exists( $path ) ) {
+				return '';
+			}
 		}
 
 		ob_start();
@@ -212,6 +219,25 @@ class Thrive_Dash_List_Editor_Controller {
 			'lists'        => $connection->getLists( $this->_param( 'force_fetch' ) ? false : true )
 		) );
 
+		exit();
+	}
+
+	/**
+	 * get groups from an API and include them in an html select element
+	 */
+	public function apiGroupsAction() {
+		$api = $this->_param( 'api' );
+		$list_id = $this->_param( 'list' );
+
+		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::$AVAILABLE ) ) {
+			exit();
+		}
+
+		$connection = Thrive_Dash_List_Manager::connectionInstance( $api );
+
+		echo $this->_view( 'mailchimp/api-groups', array(
+			'groups' => $connection->getGroups($list_id),
+		) );
 		exit();
 	}
 

@@ -67,7 +67,7 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 			 * Property:
 			 *	url
 			 */
-			WpssoSchema::add_data_itemprop_from_og( $ret, $mt_og, array( 'url' => 'og:url' ) );
+			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array( 'url' => 'og:url' ) );
 
 			/*
 			 * Property:
@@ -89,14 +89,7 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 			$ret['description'] = $this->p->webpage->get_description( $this->p->options['schema_desc_len'], 
 				'...', $mod, true, false, true, 'schema_desc' );
 
-			/*
-			 * Property:
-			 *	mainEntityOfPage as http://schema.org/WebPage
-			 */
-			if ( $is_main )
-				WpssoSchema::add_main_entity_data( $ret, $ret['url'] );
-
-			return WpssoSchema::return_data_from_filter( $json_data, $ret );
+			return WpssoSchema::return_data_from_filter( $json_data, $ret, $is_main );
 		}
 
 		public function action_admin_post_header( $mod ) {
@@ -129,6 +122,7 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 				'schema_type' => $this->p->schema->get_head_item_type( $mod, true, false ),	// $return_id = true, $use_mod_opts = false
 				'schema_title' => '',
 				'schema_headline' => '',
+				'schema_pub_org_id' => 'site',
 				'schema_desc' => '',
 			) );
 		}

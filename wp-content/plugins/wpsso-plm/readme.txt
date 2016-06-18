@@ -10,7 +10,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.1
 Tested Up To: 4.5.2
-Stable Tag: 2.0.5-1
+Stable Tag: 2.0.6-1
 
 WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
 
@@ -130,7 +130,7 @@ Purchase the [WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro](ht
 
 = Changelog / Release Notes =
 
-**Version 2.0.6-1 (2016/06/13)**
+**Version 2.0.6-1 (2016/06/14)**
 
 Official announcement: N/A
 
@@ -163,7 +163,7 @@ Official announcement: N/A
 
 = 2.0.6-1 =
 
-(2016/06/13) Added a new checkbox to delete addresses. Replaced two methods in WpssoPlmAddress for SucomUtil methods. Added a new hook for the 'wpsso_place_options' filter.
+(2016/06/14) Added a new checkbox to delete addresses. Replaced two methods in WpssoPlmAddress for SucomUtil methods. Added a new hook for the 'wpsso_place_options' filter.
 
 = 2.0.5-1 =
 

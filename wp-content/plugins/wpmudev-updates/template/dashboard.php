@@ -26,7 +26,7 @@ $level = $points['rep_level'];
 if ( ! is_array( $history ) ) { $history = array(); }
 
 // URL for the edit my profile functin.
-$url_profile = $urls->remote_site . 'dashboard/profile/';
+$url_profile = $urls->remote_site . 'hub/profile/';
 
 // Upgrade membership URL.
 $url_upgrade = $urls->remote_site . '#pricing';

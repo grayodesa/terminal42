@@ -87,7 +87,7 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 * @throws MissingRequiredParameters
 	 */
 	public function get( $endpointUrl, $queryString = array() ) {
-		$response = $this->mgClient->get( $endpointUrl, [ 'query' => $queryString ] );
+		$response = $this->mgClient->get( $endpointUrl, array( 'query' => $queryString ) );
 
 		return $this->responseHandler( $response );
 	}

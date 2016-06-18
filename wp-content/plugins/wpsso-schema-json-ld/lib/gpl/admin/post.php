@@ -25,10 +25,23 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 			$title_max_len = $this->p->options['og_title_len'];
 			$desc_max_len = $this->p->options['schema_desc_len'];
 			$headline_max_len = WpssoJsonConfig::$cf['schema']['article']['headline']['max_len'];
+			$auto_draft_msg = sprintf( __( 'Save a draft version or publish the %s to update this value.',
+				'wpsso-schema-json-ld' ), ucfirst( $mod['post_type'] ) );
+
+			if ( ! empty( $this->p->cf['plugin']['wpssoorg'] ) &&
+				empty( $this->p->cf['plugin']['wpssoorg']['version'] ) ) {
+
+				$info = $this->p->cf['plugin']['wpssoorg'];
+				$org_req_msg = ' <em><a href="'.$info['url']['download'].'" target="_blank">'.
+					sprintf( _x( '%s extension required', 'option comment', 'wpsso-schema-json-ld' ),
+						$info['short'] ).'</a></em>';
+			} else $org_req_msg = '';
+
+			$org_names = array( 'site' => _x( 'Website', 'option value', 'wpsso-schema-json-ld' ) );
 
 			// javascript hide/show classes for schema type rows
 			$tr_class = array(
-				'article' => 'schema_type_article schema_type_article_news schema_type_article_tech',
+				'article' => $this->p->schema->get_schema_type_css_classes( 'article' ),
 			);
 
 			foreach ( array( 'schema_desc', 'subsection_schema' ) as $key )
@@ -65,8 +78,14 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 					'label' => _x( 'Article Headline', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_headline', 'td_class' => 'blank',
 					'no_auto_draft' => true,
-					'content' => $form->get_no_input_value( $this->p->webpage->get_title( $headline_max_len,
-						'...', $mod ), 'wide' ),
+					'content' => $form->get_no_input_value( $this->p->webpage->get_title( $headline_max_len, '...', $mod ), 'wide' ),
+				),
+				'schema_pub_org_id' => array(
+					'tr_class' => 'schema_type '.$tr_class['article'],
+					'label' => _x( 'Article Publisher', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_pub_org_id', 'td_class' => 'blank',
+					'no_auto_draft' => true,
+					'content' => $form->get_no_select( 'schema_pub_org_id', $org_names, 'long_name' ).$org_req_msg,
 				),
 				'schema_desc' => array(
 					'label' => _x( 'Schema Description', 'option label', 'wpsso-schema-json-ld' ),
@@ -76,9 +95,6 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 						'...', $mod ), '', '', $desc_max_len ),
 				),
 			);
-
-			$auto_draft_msg = sprintf( __( 'Save a draft version or publish the %s to update this value.',
-				'wpsso-schema-json-ld' ), ucfirst( $mod['post_type'] ) );
 
 			$table_rows = $form->get_md_form_rows( $table_rows, $form_rows, $head, $mod, $auto_draft_msg );
 

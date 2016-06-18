@@ -134,7 +134,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 				'url' => esc_url( $media_url ),
 			);
 
-			WpssoSchema::add_data_itemprop_from_og( $ret, $opts, array(
+			WpssoSchema::add_data_itemprop_from_assoc( $ret, $opts, array(
 				'name' => $prefix.':title',
 				'description' => $prefix.':description',
 				'fileFormat' => $prefix.':type',

@@ -22,7 +22,7 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 				$this->p->debug->mark();
 			$this->p->util->add_plugin_filters( $this, array( 
 				'option_type' => 2,	// identify option type for sanitation
-			) );
+			), 5 );	// $prio = 5
 			do_action( $this->p->cf['lca'].'_init_options' );
 		}
 
@@ -319,9 +319,9 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 
 			// get / remove dimensions for remote image urls
 			$this->p->util->add_image_url_sizes( array(
-				'rp_img_url',
 				'og_img_url',
 				'og_def_img_url',
+				'rp_img_url',
 				'schema_logo_url',
 				'schema_banner_url',
 			), $opts );
@@ -382,6 +382,10 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 				return $type;
 
 			switch ( $key ) {
+				// optimize and check for add meta tags options now
+				case ( strpos( $key, 'add_' ) === 0 ? true : false ):
+					return 'checkbox';
+					break;
 				// empty string or must include at least one HTML tag
 				case 'og_vid_embed':
 					return 'html';
@@ -403,15 +407,15 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 				// must be a url
 				case 'sharing_url':
 				case 'fb_page_url':
-				case 'fb_publisher_url':
-				case 'seo_publisher_url':
-				case 'schema_logo_url':
-				case 'schema_banner_url':
-				case 'og_def_img_url':
 				case 'og_img_url':
 				case 'og_vid_url':
+				case 'og_def_img_url':
 				case 'rp_img_url':
+				case 'schema_logo_url':
+				case 'schema_banner_url':
 				case 'plugin_yourls_api_url':
+				case ( strpos( $key, '_url' ) && 
+					isset( $this->p->cf['form']['social_accounts'][$key] ) ? true : false ):
 					return 'url';
 					break;
 				// must be numeric (blank and zero are ok)

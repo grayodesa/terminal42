@@ -710,19 +710,30 @@ class RevSliderSlider extends RevSliderElementsBase{
 		
 		
 		//remove image_id as it is not needed in export
+		//plus remove background image if solid color or transparent 
 		if(!empty($arrSlides)){
 			foreach($arrSlides as $k => $s){
 				if(isset($arrSlides[$k]['params']['image_id'])) unset($arrSlides[$k]['params']['image_id']);
+				if(isset($arrSlides[$k]['params']["background_type"]) && ($arrSlides[$k]['params']["background_type"] == 'solid' || $arrSlides[$k]['params']["background_type"] == "trans" || $arrSlides[$k]['params']["background_type"] == "transparent")){
+					if(isset($arrSlides[$k]['params']['background_image']))
+						$arrSlides[$k]['params']['background_image'] = '';
+				}
 			}
 		}
 		if(!empty($arrStaticSlide)){
 			foreach($arrStaticSlide as $k => $s){
 				if(isset($arrStaticSlide[$k]['params']['image_id'])) unset($arrStaticSlide[$k]['params']['image_id']);
+				if(isset($arrStaticSlide[$k]['params']["background_type"]) && ($arrStaticSlide[$k]['params']["background_type"] == 'solid' || $arrStaticSlide[$k]['params']["background_type"] == "trans" || $arrStaticSlide[$k]['params']["background_type"] == "transparent")){
+					if(isset($arrStaticSlide[$k]['params']['background_image']))
+						$arrStaticSlide[$k]['params']['background_image'] = '';
+				}
 			}
 		}
 		
 		if(!empty($cfw) && count($cfw) > 0){
 			foreach($cfw as $key => $slide){
+				//check if we are transparent and so on
+				
 				if(isset($slide['params']['image']) && $slide['params']['image'] != '') $usedImages[$slide['params']['image']] = true; //['params']['image'] background url
 				if(isset($slide['params']['background_image']) && $slide['params']['background_image'] != '') $usedImages[$slide['params']['background_image']] = true; //['params']['image'] background url
 				if(isset($slide['params']['slide_thumb']) && $slide['params']['slide_thumb'] != '') $usedImages[$slide['params']['slide_thumb']] = true; //['params']['image'] background url
@@ -856,17 +867,18 @@ class RevSliderSlider extends RevSliderElementsBase{
 		if(!empty($usedSVG)){
 			$content_url = content_url();
 			$content_path = ABSPATH . 'wp-content';
+			$ud = wp_upload_dir();
+			$up_dir = $ud['baseurl'];
+			
 			foreach($usedSVG as $file => $val){
 				if(strpos($file, 'http') !== false){ //remove all up to wp-content folder
-					$checkpath = str_replace($content_url, '', $file); 
-					
+					$checkpath = str_replace($content_url, '', $file);
+					$checkpath2 = str_replace($up_dir, '', $file);
+					if($checkpath2 === $file){ //we have an SVG like whiteboard, fallback to older export
+						$checkpath2 = $checkpath;
+					}
 					if(is_file($content_path.$checkpath)){
-						/*if(!$usepcl){
-							$zip->addFile($content_path.$checkpath, 'svg/'.$checkpath);
-						}else{
-							$v_list = $pclzip->add($content_path.$checkpath, PCLZIP_OPT_REMOVE_PATH, $content_path, PCLZIP_OPT_ADD_PATH, 'svg/');
-						}*/
-						$strExport = str_replace($file, $checkpath, $strExport);
+						$strExport = str_replace($file, str_replace('/revslider/assets/svg', '', $checkpath2), $strExport);
 					}
 				}
 			}
@@ -1022,7 +1034,6 @@ class RevSliderSlider extends RevSliderElementsBase{
 					case UPLOAD_ERR_INI_SIZE:
 					case UPLOAD_ERR_FORM_SIZE:
 						RevSliderFunctions::throwError(__('Exceeded filesize limit.', 'revslider'));
-						
 					default:
 					break;
 				}
@@ -1316,8 +1327,9 @@ class RevSliderSlider extends RevSliderElementsBase{
 			
 			$alreadyImported = array();
 			
-			$content_url = content_url();
-			$content_path = ABSPATH . 'wp-content';
+			//$content_url = content_url();
+			$upload_dir = wp_upload_dir();
+			$content_url = $upload_dir['baseurl'].'/revslider/assets/svg/';
 			
 			//wpml compatibility
 			$slider_map = array();
@@ -1410,7 +1422,11 @@ class RevSliderSlider extends RevSliderElementsBase{
 						
 						if(isset($layer['type']) && $layer['type'] == 'svg'){
 							if(isset($layer['svg']) && isset($layer['svg']->src)){
-								$layer['svg']->src = $content_url.$layer['svg']->src;
+								if(strpos($layer['svg']->src, 'revslider-whiteboard-addon') !== false){
+									$layer['svg']->src = content_url().$layer['svg']->src;
+								}else{
+									$layer['svg']->src = str_replace('/plugins/revslider/public/assets/assets/svg/', '', $content_url.$layer['svg']->src);
+								}
 							}
 						}
 						
@@ -1419,6 +1435,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 					$layer['text'] = stripslashes($layer['text']);
 					$layers[$key] = $layer;
 				}
+				
 				$arrSlides[$sl_key]['layers'] = $layers;
 				
 				//create new slide
@@ -1651,7 +1668,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 						
 						if(isset($layer['type']) && $layer['type'] == 'svg'){
 							if(isset($layer['svg']) && isset($layer['svg']->src)){
-								$layer['svg']->src = $content_url.$layer['svg']->src;
+								$layer['svg']->src = str_replace('/plugins/revslider/public/assets/assets/svg/', '', $content_url.$layer['svg']->src);
 							}
 						}
 						
@@ -1747,6 +1764,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 			RevSliderPluginUpdate::change_settings_on_layers($c_slider); //set to version 5
 			RevSliderPluginUpdate::add_general_settings($c_slider); //set to version 5
 			RevSliderPluginUpdate::change_general_settings_5_0_7($c_slider); //set to version 5.0.7
+			RevSliderPluginUpdate::change_layers_svg_5_2_5_4($c_slider); //set to version 5.2.5.4
 			
 			$cus_js = $c_slider->getParam('custom_javascript', '');
 			

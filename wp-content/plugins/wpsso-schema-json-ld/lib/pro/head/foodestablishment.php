@@ -54,7 +54,7 @@ if ( ! class_exists( 'WpssoJsonProHeadFoodEstablishment' ) ) {
 			$lca = $this->p->cf['lca'];
 			$ret = array();
 
-			WpssoSchema::add_data_itemprop_from_og( $ret, $mt_og, array( 
+			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array( 
 				'menu' => 'place:business:menu_url',
 				'acceptsReservations' => 'place:business:accepts_reservations',
 			) );

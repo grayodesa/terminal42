@@ -412,13 +412,13 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 		public function sanitize_option_value( $key, $val, $def_val, $network = false, &$mod = false ) {
 
-			// remove localization for more generic match
-			if ( preg_match( '/(#.*|:[0-9]+)$/', $key ) > 0 )
-				$key = preg_replace( '/(#.*|:[0-9]+)$/', '', $key );
+			// remove multiples, localization, and status for more generic match
+			$option_key = preg_replace( '/(_[0-9]+)?(#.*|:[0-9]+)?$/', '', $key );
 
 			// hooked by the sharing class
-			$option_type = apply_filters( $this->p->cf['lca'].'_option_type', false, $key, $network, $mod );
+			$option_type = apply_filters( $this->p->cf['lca'].'_option_type', false, $option_key, $network, $mod );
 
+			// translate error messages only once
 			if ( $this->sanitize_error_msgs === null ) {
 				$this->sanitize_error_msgs = array(
 					'url' => __( 'The value of option \'%s\' must be a URL - resetting the option to its default value.',
@@ -446,7 +446,10 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 			// pre-filter most values to remove html
 			switch ( $option_type ) {
-				case 'html':	// leave html and css / javascript code blocks as-is
+				case 'ignore':
+					return $val;	// stop here
+					break;
+				case 'html':		// leave html and css / javascript code blocks as-is
 				case 'code':
 					$val = stripslashes( $val );
 					break;
@@ -509,7 +512,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					elseif ( ! is_numeric( $val ) || $val < $min_int ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs['pos_num'], $key, $min_int ), true );
 						$val = $def_val;
-					} else $val = (int) $val;		// cast as integer
+					} else $val = (int) $val;	// cast as integer
 
 					break;
 
@@ -528,7 +531,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( ! is_numeric( $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (int) $val;		// cast as integer
+					} else $val = (int) $val;	// cast as integer
 					break;
 
 				// empty of alpha-numeric uppercase (hyphens are allowed as well)
@@ -537,7 +540,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' && preg_match( '/[^A-Z0-9\-]/', $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $val, $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;		// cast as string
+					} else $val = (string) $val;	// cast as string
 					break;
 
 				// empty or alpha-numeric (upper or lower case), plus underscores
@@ -546,7 +549,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' && preg_match( '/[^a-zA-Z0-9_]/', $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;		// cast as string
+					} else $val = (string) $val;	// cast as string
 					break;
 
 				case 'date':
@@ -556,7 +559,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' && ! preg_match( $fmt, $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;		// cast as string
+					} else $val = (string) $val;	// cast as string
 					break;
 
 				// text strings that can be blank
@@ -691,19 +694,19 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		}
 
 		public function get_default_author_id( $opt_pre = 'og' ) {
-			$lca = $this->p->cf['lca'];
-			$user_id = isset( $this->p->options[$opt_pre.'_def_author_id'] ) ? 
-				$this->p->options[$opt_pre.'_def_author_id'] : null;
-			return apply_filters( $lca.'_'.$opt_pre.'_default_author_id', $user_id );
+			if ( SucomUtil::get_const( 'WPSSO_DEFAULT_AUTHOR_OPTIONS' ) ) {
+				$user_id = isset( $this->p->options[$opt_pre.'_def_author_id'] ) ? 
+					$this->p->options[$opt_pre.'_def_author_id'] : null;
+				return apply_filters( $this->p->cf['lca'].'_'.$opt_pre.'_default_author_id', $user_id );
+			} else return null;
 		}
 
 		// returns an author id if the default author is forced
 		public function force_default_author( array &$mod, $opt_pre = 'og' ) {
-			$author_id = $this->get_default_author_id( $opt_pre );
-
-			return $author_id && 
-				$this->force_default( 'author', $mod, $opt_pre ) ?
-					$author_id : false;
+			if ( SucomUtil::get_const( 'WPSSO_DEFAULT_AUTHOR_OPTIONS' ) ) {
+				$author_id = $this->get_default_author_id( $opt_pre );
+				return $author_id && $this->force_default( 'author', $mod, $opt_pre ) ? $author_id : false;
+			} else return false;
 		}
 
 		// returns true if the default image is forced
@@ -1054,7 +1057,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				$url = apply_filters( $lca.'_post_url', $url, $mod, $add_page );
 
 			} else {
-				if ( is_home() ) {
+				if ( $mod['is_home'] ) {
 					if ( 'page' === get_option( 'show_on_front' ) ) {	// show_on_front = posts | page
 						$url = get_permalink( get_option( 'page_for_posts' ) );
 						if ( $this->p->debug->enabled )
@@ -1493,6 +1496,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			$show_opts = class_exists( $lca.'user' ) ? call_user_func( array( $lca.'user', 'show_opts' ) ) : 'basic';
 
 			foreach ( $table_rows as $key => $row ) {
+				if ( empty( $row ) )	// just in case
+					continue;
+
 				// default row class and id attribute values
 				$tr = array(
 					'class' => 'sucom_alt'.( $count_rows % 2 ).
@@ -1573,16 +1579,6 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			}
 		}
 
-		// tab titles in the array should already be translated:
-		//
-		// $tabs = array(
-		//		'header' => _x( 'Edit Text', 'metabox tab', 'wpsso' ),
-		//		'media' => _x( 'Select Media', 'metabox tab', 'wpsso' ),
-		//		'preview' => _x( 'Preview', 'metabox tab', 'wpsso' ),
-		//		'tags' => _x( 'Head Tags', 'metabox tab', 'wpsso' ),
-		//		'validate' => _x( 'Validate', 'metabox tab', 'wpsso' ),
-		// );
-		//
 		public function do_metabox_tabs( $metabox = '', $tabs = array(), $table_rows = array(), $args = array() ) {
 			$tab_keys = array_keys( $tabs );
 			$default_tab = '_'.reset( $tab_keys );		// must start with an underscore

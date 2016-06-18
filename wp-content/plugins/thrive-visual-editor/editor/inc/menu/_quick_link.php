@@ -3,7 +3,7 @@
 
     <div class="tve_option_separator">
         <span class="tve-link-message" style="dysplay:none;"></span>
-        <span class="tve_button_disabled tve_click tve_mousedown tve_lb_small tve_icm tve-ic-chain" data-ctrl-mousedown="controls.save_selection"  data-key="linkSel" id="lb_text_link"
+        <span class="tve_button_disabled tve_click tve_mousedown tve_lb_small tve_icm tve-ic-chain" data-ctrl-mousedown="controls.save_selection" data-ctrl="controls.quick_link.updateContentList"  data-key="linkSel" id="lb_text_link"
               title="<?php echo __("Create link", "thrive-cb") ?>"></span>
         <input  style="float:right" class="tve_button_disabled tve_text tve_keyup tve_right_click tve_mousedown tve_quick_link_input" data-ctrl="controls.quick_link.updateContentList" type="text" data-ctrl-mousedown="controls.save_selection" data-key="linkSel" placeholder="Search or type URL"/>
         <div class="tve_sub_btn">

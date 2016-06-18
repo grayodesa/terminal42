@@ -331,22 +331,31 @@ class RevSliderBase {
 	public static function get_svg_sets_url(){
 		$svg_sets = array();
 		
-		$svg_sets['Actions'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/action/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/action/');
-		$svg_sets['Alerts'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/alert/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/alert/');
-		$svg_sets['AV'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/av/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/av/');
-		$svg_sets['Communication'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/communication/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/communication/');
-		$svg_sets['Content'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/content/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/content/');
-		$svg_sets['Device'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/device/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/device/');
-		$svg_sets['Editor'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/editor/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/editor/');
-		$svg_sets['File'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/file/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/file/');
-		$svg_sets['Hardware'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/hardware/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/hardware/');
-		$svg_sets['Images'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/image/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/image/');
-		$svg_sets['Maps'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/maps/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/maps/');
-		$svg_sets['Navigation'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/navigation/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/navigation/');
-		$svg_sets['Notifications'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/notification/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/notification/');
-		$svg_sets['Places'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/places/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/places/');
-		$svg_sets['Social'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/social/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/social/');
-		$svg_sets['Toggle'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/toggle/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/toggle/');
+		$path = RS_PLUGIN_PATH . 'public/assets/assets/svg/';
+		$url = RS_PLUGIN_URL . 'public/assets/assets/svg/';
+		
+		if(!file_exists($path.'action/ic_3d_rotation_24px.svg')){ //the path needs to be changed to the uploads folder then
+			$upload_dir = wp_upload_dir();
+			$path = $upload_dir['basedir'].'/revslider/assets/svg/';
+			$url = $upload_dir['baseurl'].'/revslider/assets/svg/';
+		}
+		
+		$svg_sets['Actions'] = array('path' => $path.'action/', 'url' => $url.'action/');
+		$svg_sets['Alerts'] = array('path' => $path.'alert/', 'url' => $url.'alert/');
+		$svg_sets['AV'] = array('path' => $path.'av/', 'url' => $url.'av/');
+		$svg_sets['Communication'] = array('path' => $path.'communication/', 'url' => $url.'communication/');
+		$svg_sets['Content'] = array('path' => $path.'content/', 'url' => $url.'content/');
+		$svg_sets['Device'] = array('path' => $path.'device/', 'url' => $url.'device/');
+		$svg_sets['Editor'] = array('path' => $path.'editor/', 'url' => $url.'editor/');
+		$svg_sets['File'] = array('path' => $path.'file/', 'url' => $url.'file/');
+		$svg_sets['Hardware'] = array('path' => $path.'hardware/', 'url' => $url.'hardware/');
+		$svg_sets['Images'] = array('path' => $path.'image/', 'url' => $url.'image/');
+		$svg_sets['Maps'] = array('path' => $path.'maps/', 'url' => $url.'maps/');
+		$svg_sets['Navigation'] = array('path' => $path.'navigation/', 'url' => $url.'navigation/');
+		$svg_sets['Notifications'] = array('path' => $path.'notification/', 'url' => $url.'notification/');
+		$svg_sets['Places'] = array('path' => $path.'places/', 'url' => $url.'places/');
+		$svg_sets['Social'] = array('path' => $path.'social/', 'url' => $url.'social/');
+		$svg_sets['Toggle'] = array('path' => $path.'toggle/', 'url' => $url.'toggle/');
 		
 		$svg_sets = apply_filters('revslider_get_svg_sets', $svg_sets);
 		
@@ -628,7 +637,50 @@ class RevSliderBase {
 			return false;
 		}
 	}
-
+	
+	
+	
+	public static function public_folder_unzip(){
+		$opt = get_option('rs_public_version', '1');
+		
+		$do_update = false;
+		
+		
+		//on revslider update, unzip it
+		if(version_compare($opt, RevSliderGlobals::SLIDER_REVISION, '<')){
+			$do_update = true;
+		}
+		
+		$upload_dir = wp_upload_dir();
+		$path = $upload_dir['basedir'].'/revslider/assets/svg/';
+		
+		//if both are not existing, update
+		if(!file_exists($path.'action/ic_3d_rotation_24px.svg')){ //!file_exists(RS_PLUGIN_PATH . 'public/assets/assets/svg/action/ic_3d_rotation_24px.svg') && 
+			$do_update = true;
+		}
+		
+		if($do_update){
+			require_once(ABSPATH . 'wp-admin/includes/file.php');
+		
+			WP_Filesystem();
+			
+			//$unzipfile = unzip_file( RS_PLUGIN_PATH . 'public/assets/assets/svg/svg.zip', RS_PLUGIN_PATH . 'public/assets/assets/svg/');
+			$unzipfile = unzip_file(RS_PLUGIN_PATH . 'public/assets/assets/svg/svg.zip', $path);
+			if($unzipfile === true){
+				update_option('rs_public_version', RevSliderGlobals::SLIDER_REVISION);
+			}else{
+				add_action('admin_notices', array('RevSliderBase', 'copy_notice'));
+			}
+		}
+	}
+	
+	public static function copy_notice(){
+		?>
+		<div class="error below-h2 rs-update-notice-wrap" id="message" style="clear:both;display: block;position:relative;margin:35px 20px 25px 0px"><div style="display:table;width:100%;"><div style="vertical-align:middle;display:table-cell;min-width:100%;padding-right:15px;">
+			<p><?php _e('Slider Revolution error: could not unzip revslider/public/assets/svg/svg.zip into the uploads/revslider/assets/svg/ folder, please make sure that the uploads folders is writable', 'revslider'); ?></p>
+		</div></div></div>
+		<?php
+	}
 }
 
 /**

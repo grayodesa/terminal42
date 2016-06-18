@@ -34,17 +34,31 @@ if ( ! class_exists( 'WpssoProAdminPost' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$og_article_disabled = isset( $head['og:type'] ) && $head['og:type'] === 'article' ? false : true;
-			$seo_desc_disabled = $this->p->options['add_meta_name_description'] ? false : true;
-			$seo_desc_msg = __( 'The SEO description field is disabled - the "meta name description" option is disabled and/or a known SEO plugin has been detected.', 'wpsso' );
+			$is_og_article = isset( $head['og:type'] ) && 
+				$head['og:type'] === 'article' ? false : true;
+
+			$seo_desc_msg = empty( $this->p->options['add_meta_name_description'] ) ? 
+				'<p class="status-msg smaller">'.
+					__( 'The SEO description field is disabled (the description meta tag is disabled and/or a known SEO plugin is active).',
+						'wpsso' ).'</p>' : '';
+
+			// wpsso json is available, but not active
+			if ( ! empty( $this->p->cf['plugin']['wpssojson'] ) &&
+				empty( $this->p->cf['plugin']['wpssojson']['version'] ) ) {
+				$info = $this->p->cf['plugin']['wpssojson'];
+				$schema_desc_msg = '<p class="status-msg smaller">'.
+					sprintf( __( 'Activate the %s extension for additional Schema markup features and options.', 'wpsso' ),
+					'<a href="'.$info['url']['download'].'" target="_blank">'.$info['short'].'</a>' ).'</p>';
+			} else $schema_desc_msg = '';
 
 			$form_rows = array(
 				'og_art_section' => array(
-					'tr_class' => ( $og_article_disabled ? 'hide_in_basic' : '' ),
+					'tr_class' => ( $is_og_article ? '' : 'hide_in_basic' ),	// hide if not an article
 					'label' => _x( 'Article Topic', 'option label', 'wpsso' ),
 					'th_class' => 'medium', 'tooltip' => 'post-og_art_section',
 					'content' => $form->get_select( 'og_art_section', array_merge( array( -1 ), 
-						$this->p->util->get_topics() ), '', '', false, $og_article_disabled ),
+						$this->p->util->get_topics() ), '', '', false, 
+							( $is_og_article ? false : true ) ),		// disable if not an article
 				),
 				'og_title' => array(
 					'label' => _x( 'Default Title', 'option label', 'wpsso' ),
@@ -63,14 +77,13 @@ if ( ! class_exists( 'WpssoProAdminPost' ) ) {
 							'...', $mod, true, true, true, 'none' ) ),	// $md_idx = 'none'
 				),
 				'seo_desc' => array(
-					'tr_class' => ( $seo_desc_disabled ? 'hide_in_basic' : '' ),
+					'tr_class' => ( $seo_desc_msg ? 'hide_in_basic' : '' ),		// hide if seo description is disabled
 					'label' => _x( 'Google Search / SEO Description', 'option label', 'wpsso' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-seo_desc',
 					'no_auto_draft' => true,
 					'content' => $form->get_textarea( 'seo_desc', '', $this->p->cf['lca'].'_seo_desc',
 						$this->p->options['seo_desc_len'], $this->p->webpage->get_description( $this->p->options['seo_desc_len'],
-							'...', $mod, true, false ), $seo_desc_disabled ).		// $add_hashtags = false
-						( $seo_desc_disabled ? '<p class="status-msg smaller">'.$seo_desc_msg.'</p>' : '' ),
+							'...', $mod, true, false ), ( $seo_desc_msg ? true : false ) ).$seo_desc_msg,
 				),
 				'tc_desc' => array(
 					'label' => _x( 'Twitter Card Description', 'option label', 'wpsso' ),
@@ -98,26 +111,14 @@ if ( ! class_exists( 'WpssoProAdminPost' ) ) {
 					'no_auto_draft' => true,
 					'content' => $form->get_textarea( 'schema_desc', '', $this->p->cf['lca'].'_schema_desc',
 						$this->p->options['schema_desc_len'], $this->p->webpage->get_description( $this->p->options['schema_desc_len'],
-							'...', $mod ) ),
+							'...', $mod ) ).$schema_desc_msg,
 				),
 			);
 
 			$auto_draft_msg = sprintf( __( 'Save a draft version or publish the %s to update this value.',
 				'wpsso' ), ucfirst( $mod['post_type'] ) );
 
-			$table_rows = $form->get_md_form_rows( $table_rows, $form_rows, $head, $mod, $auto_draft_msg );
-
-			// wpsso json is available, but not active
-			if ( ! empty( $this->p->cf['plugin']['wpssojson'] ) &&
-				empty( $this->p->cf['plugin']['wpssojson']['version'] ) ) {
-
-				$info = $this->p->cf['plugin']['wpssojson'];
-				$table_rows[] = '<td colspan="2" align="center"><p class="ext-about-msg">'.
-					sprintf( __( 'Activate the %s extension for additional Schema markup features and options.', 'wpsso' ),
-						'<a href="'.$info['url']['download'].'" target="_blank">'.$info['name'].'</a>' ).'</p></td>';
-			}
-
-			return $table_rows;
+			return $form->get_md_form_rows( $table_rows, $form_rows, $head, $mod, $auto_draft_msg );
 		}
 	}
 }

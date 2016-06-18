@@ -47,7 +47,7 @@
 	?>
 	<p><br /><br /><small>
 	<?php
-	$url_support = WPMUDEV_Dashboard::$ui->page_urls->remote_site . 'dashboard/support/';
+	$url_support = WPMUDEV_Dashboard::$ui->page_urls->remote_site . 'hub/support/';
 	printf(
 		wp_kses_post(
 			__( 'If the above step does not solve this issue then <br>please %sget in touch with our support heroes%s to find a solution for this.', 'wpmudev' )

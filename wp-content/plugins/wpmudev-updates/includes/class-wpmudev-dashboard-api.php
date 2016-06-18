@@ -459,6 +459,70 @@ class WPMUDEV_Dashboard_Api {
 	}
 
 	/**
+	 * Returns a list of all plugins and themes on the WordPress site that have
+	 * an pending update. WPMU DEV projects are not included here.
+	 *
+	 * @since  4.1.0
+	 * @return array Array that contains 2 sub-arrays: 'plugins' and 'themes'.
+	 */
+	public function get_core_updates_infos() {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		$core_updates = array(
+			'plugins' => array(),
+			'themes' => array(),
+		);
+
+		// Remote our custom filters, so we get the original updates list.
+		remove_filter(
+			'site_transient_update_plugins',
+			array( WPMUDEV_Dashboard::$site, 'filter_plugin_update_count' )
+		);
+		remove_filter(
+			'site_transient_update_themes',
+			array( WPMUDEV_Dashboard::$site, 'filter_theme_update_count' )
+		);
+
+		// Get the available updates list.
+		$plugin_data = get_site_transient( 'update_plugins' );
+		$theme_data = get_site_transient( 'update_themes' );
+
+		// Restore our filters to include WPMU DEV projects in the updates list.
+		add_filter(
+			'site_transient_update_plugins',
+			array( WPMUDEV_Dashboard::$site, 'filter_plugin_update_count' )
+		);
+		add_filter(
+			'site_transient_update_themes',
+			array( WPMUDEV_Dashboard::$site, 'filter_theme_update_count' )
+		);
+
+		// Extract and collect details we need.
+		if ( isset( $plugin_data->response ) ) {
+			foreach ( $plugin_data->response as $slug => $infos ) {
+				$item = get_plugin_data( WP_PLUGIN_DIR . '/' . $infos->plugin );
+				$core_updates['plugins'][ $slug ] = array(
+					'name' => $item['Name'],
+					'version' => $item['Version'],
+					'new_version' => $infos->new_version,
+				);
+			}
+		}
+
+		if ( isset( $theme_data->response ) ) {
+			foreach ( $theme_data->response as $slug => $infos ) {
+				$item = wp_get_theme( $slug );
+				$core_updates['themes'][ $slug ] = array(
+					'name' => $item->Name,
+					'version' => $item->Version,
+					'new_version' => $infos['new_version'],
+				);
+			}
+		}
+
+		return $core_updates;
+	}
+
+	/**
 	 * The proper way to get the array of profile data from cache/Api.
 	 *
 	 * @since  1.0.0
@@ -559,6 +623,40 @@ class WPMUDEV_Dashboard_Api {
 	 * *********************************************************************** *
 	 */
 
+
+	/**
+	 * Contacts the API to send current status of an async/batch upgrade process.
+	 * Values completed and failed are total values of current batch-upgrade
+	 * process.
+	 *
+	 * @since  4.1.0
+	 * @param  int  $completed Number of successfully completed updates.
+	 * @param  int  $failed Number of failed updates.
+	 * @param  int  $remaining Number of remaining updates in batch.
+	 * @return bool Result of API call (true means no error happened)
+	 */
+	public function send_remote_upgrade_status( $completed, $failed, $remaining ) {
+		$res = false;
+
+		$response = WPMUDEV_Dashboard::$api->call_auth(
+			'upgrade-status',
+			array(
+				'domain' => network_site_url(),
+				'completed' => $completed,
+				'failed' => $failed,
+				'remaining' => $remaining,
+			),
+			'POST'
+		);
+
+		if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
+			$res = true;
+		} else {
+			$this->parse_api_error( $response );
+		}
+
+		return $res;
+	}
 
 	/**
 	 * Contacts the API to get the latest API updates data.
@@ -671,6 +769,9 @@ class WPMUDEV_Dashboard_Api {
 			$wp_ver .= ', BuddyPress ' . BP_VERSION;
 		}
 
+		// Get a list of pending WP updates of non-WPMUDEV themes/plugins.
+		$core_updates = $this->get_core_updates_infos();
+
 		$response = WPMUDEV_Dashboard::$api->call_auth(
 			'updates',
 			array(
@@ -680,6 +781,7 @@ class WPMUDEV_Dashboard_Api {
 				'domain' => network_site_url(),
 				'admin_url' => network_admin_url(),
 				'home_url' => network_home_url(),
+				'core_updates' => $core_updates,
 			),
 			'POST'
 		);
@@ -693,6 +795,15 @@ class WPMUDEV_Dashboard_Api {
 				if ( is_array( $data ) ) {
 					if ( empty( $data['membership'] ) ) {
 						WPMUDEV_Dashboard::$site->logout();
+					}
+
+					// Default order to display plugins is the order in the array.
+					if ( isset( $data['projects'] ) ) {
+						$pos = 1;
+						foreach ( $data['projects'] as $id => $project ) {
+							$data['projects'][ $id ]['_order'] = $pos;
+							$pos += 1;
+						}
 					}
 
 					// Remove projects that are not accessible for current member.
@@ -924,7 +1035,7 @@ class WPMUDEV_Dashboard_Api {
 				if ( ! $item->has_update ) { continue; }
 
 				// Schedule auto-upgrade if that feature is enabled.
-				WPMUDEV_Dashboard::$site->maybe_auto_upgrade( $item );
+				WPMUDEV_Dashboard::$upgrader->maybe_auto_upgrade( $item );
 
 				/**
 				 * Allows excluding certain projects from update notifications.
@@ -1121,7 +1232,7 @@ class WPMUDEV_Dashboard_Api {
 
 		$hash_source = '';
 		foreach ( $params as $param ) {
-			$hash_source .= $_REQUEST[ $param ];
+			$hash_source .= stripslashes( $_REQUEST[ $param ] );
 		}
 
 		$valid = hash_hmac( 'sha256', $hash_source, $apikey );
@@ -1331,7 +1442,7 @@ class WPMUDEV_Dashboard_Api {
 			$error = 'invalid';
 		} elseif ( $_REQUEST['wdpunkey'] == $access['key'] ) {
 			$error = 'invalid';
-		} elseif ( (int) $access['expire'] <= time() ) {
+		} elseif ( (int) $access['expire'] <= current_time( 'timestamp' ) ) {
 			$error = 'expired';
 		}
 

@@ -36,21 +36,15 @@ if ( ! class_exists( 'WpssoPlmGplAdminPost' ) ) {
 		public function filter_post_plm_rows( $table_rows, $form, $head, $mod ) {
 
 			$half_hours = SucomUtil::get_hours_range( 0, 86400, 60 * 30, '' );	// $format = ''
-			$business_types = $this->p->schema->get_schema_types_select( $this->p->cf['head']['schema_type']['place']['local.business'], false );
+			$all_types = $this->p->schema->get_schema_types( false );		// $flatten = false
+			$business_types = $this->p->schema->get_schema_types_select( $all_types['place']['local.business'], false );	// $add_none = false
 			$address_names = array( 'custom' => WpssoPlmConfig::$cf['form']['plm_addr_select']['custom'] );
 
-			// check to make sure the selected id exists
-			// if not, then unset to use the default
-			if ( isset( $form->options['plm_addr_id'] ) ) {
-				$id = $form->options['plm_addr_id'];
-				// test if the address name is missing or blank
-				if ( ! isset( $this->p->options['plm_addr_name_'.$id] ) ||
-					trim( $this->p->options['plm_addr_name_'.$id] ) === '' )
-						unset( $form->options['plm_addr_id'] );
-			}
+			unset( $form->options['plm_addr_id'] );
 
 			$table_rows[] = '<td colspan="4" align="center">'.
-				$this->p->msgs->get( 'pro-feature-msg', array( 'lca' => 'wpssoplm' ) ).'</td>';
+				$this->p->msgs->get( 'pro-feature-msg', 
+					array( 'lca' => 'wpssoplm' ) ).'</td>';
 
 			$table_rows['plm_addr_id'] = $form->get_th_html( _x( 'Select an Address',
 				'option label', 'wpsso-plm' ), 'medium', 'post-plm_addr_id' ).

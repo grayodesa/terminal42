@@ -162,7 +162,7 @@ if ( ! $item->is_installed ) : ?>
 					wp_kses_post( $note )
 				);
 			}
-			if ( count( $details ) ) {
+			if ( count( $notes_details ) ) {
 				printf(
 					'<li class="toggle-details">
 					<a href="#" class="for-intro">%s</a><a href="#" class="for-detail">%s</a>
@@ -224,8 +224,15 @@ jQuery(function(){
 		pid = "<?php echo esc_attr( $pid ); ?>",
 		box = jQuery('.project-box.project-' + pid);
 
-	btnUpdate.on('click', function() {
-		var data = {};
+	btnUpdate.on('click', updateHandler);
+
+	function updateHandler(ev) {
+		var data = {},
+			res = {"scope":this, "param":ev, "func":updateHandler};
+
+		jQuery(document).trigger('wpmu:before-update', [res]);
+		if (res && res.cancel) { return false; }
+
 		data.action = 'wdp-project-update';
 		data.hash = "<?php echo esc_attr( wp_create_nonce( 'project-update' ) ); ?>";
 		data.pid = pid;
@@ -236,6 +243,8 @@ jQuery(function(){
 			window.ajaxurl,
 			data,
 			function(response) {
+				WDP.closeOverlay(); // close overlay, if any is open.
+
 				if (!response || !response.success) {
 					if (response && response.data && response.data.message) {
 						WDP.showError(response.data.message);
@@ -265,7 +274,7 @@ jQuery(function(){
 		});
 
 		return false;
-	});
+	}
 });
 </script>
 </div>

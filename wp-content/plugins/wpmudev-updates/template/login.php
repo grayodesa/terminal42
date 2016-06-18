@@ -22,6 +22,11 @@ $trial_info_url = 'https://premium.wpmudev.org/manuals/how-free-trials-work/';
 $websites_url = 'https://premium.wpmudev.org/hub/my-websites/';
 $security_info_url = 'https://premium.wpmudev.org/manuals/hub-security/';
 
+$login_url = $urls->dashboard_url;
+if ( ! empty( $_GET['pid'] ) ) {
+	$login_url = add_query_arg( 'pid', $_GET['pid'], $login_url );
+}
+
 $last_user = WPMUDEV_Dashboard::$site->get_option( 'auth_user' );
 
 // Check for errors.
@@ -64,7 +69,6 @@ if ( isset( $_GET['api_error'] ) ) {
 		$errors[] = __( 'Unknown error. Please update the WPMU DEV Dashboard plugin and try again.', 'wpmudev' );
 
 	}
-
 } elseif ( $connection_error ) {
 	// Variable `$connection_error` is set by the UI function `render_dashboard`.
 	$errors[] = sprintf(
@@ -139,7 +143,7 @@ $form_action = WPMUDEV_Dashboard::$api->rest_url( 'authenticate' );
 					id="password"
 					autocomplete="off"
 					placeholder="<?php echo esc_attr__( 'Your password', 'wpmudev' ); ?>" />
-				<input type="hidden" name="redirect_url" value="<?php echo esc_url( $urls->dashboard_url ); ?>" />
+				<input type="hidden" name="redirect_url" value="<?php echo esc_url( $login_url ); ?>" />
 				<input type="hidden" name="domain" value="<?php echo esc_url( network_site_url() ); ?>" />
 			</div>
 			<div class="buttons">

@@ -51,7 +51,7 @@ if ( ! class_exists( 'WpssoJsonGplHeadWebPage' ) ) {
 			 * 	datepublished
 			 * 	datemodified
 			 */
-			WpssoSchema::add_data_itemprop_from_og( $ret, $mt_og, array(
+			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array(
 				'datepublished' => 'article:published_time',
 				'datemodified' => 'article:modified_time',
 			) );
@@ -66,7 +66,14 @@ if ( ! class_exists( 'WpssoJsonGplHeadWebPage' ) ) {
 			 * Property:
 			 *	publisher as http://schema.org/Organization
 			 */
-			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, 'schema_logo_url', false );	// $list_element = false
+			$org_id = is_object( $mod['obj'] ) ?
+				$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : false;	// null, false, 'none', 'site', or number (including 0)
+
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'custom publisher / organization id is '.
+					( empty( $org_id ) ? 'empty' : $org_id ) );
+
+			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, $org_id, 'org_logo_url', false );	// $list_element = false
 
 			/*
 			 * Property:

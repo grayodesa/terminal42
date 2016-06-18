@@ -212,4 +212,12 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 
 		$this->_directFormHtml( 'klicktipp/tags', $params );
 	}
+
+	/**
+	 * Return the connection email merge tag
+	 * @return String
+	 */
+	public static function getEmailMergeTag() {
+		return '%Subscriber:EmailAddress%';
+	}
 }

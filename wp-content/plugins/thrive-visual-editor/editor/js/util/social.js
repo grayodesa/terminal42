@@ -92,7 +92,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
             },
             linkedin: function () {
                 if (!window.IN) {
-                    $.getScript('http://platform.linkedin.com/in.js');
+                    $.getScript('https://platform.linkedin.com/in.js');
                 }
             },
             pinterest: function () {
@@ -106,7 +106,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
                     var s = document.createElement("script");
                     s.type = "text/javascript";
                     s.async = true;
-                    s.src = "http://assets.pinterest.com/js/pinit.js";
+                    s.src = "https://assets.pinterest.com/js/pinit.js";
                     s["data-pin-build"] = "parsePins";
 
                     var x = document.getElementsByTagName("script")[0];

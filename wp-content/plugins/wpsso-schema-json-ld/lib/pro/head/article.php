@@ -59,17 +59,24 @@ if ( ! class_exists( 'WpssoJsonProHeadArticle' ) ) {
 				$ret['headline'] = $mod['obj']->get_options( $mod['id'], 'schema_headline' );
 			if ( empty( $ret['headline'] ) ) {
 				$headline_max_len = WpssoJsonConfig::$cf['schema']['article']['headline']['max_len'];
-				$ret['headline'] = $this->p->webpage->get_title( 110, '...', $mod );
+				$ret['headline'] = $this->p->webpage->get_title( $headline_max_len, '...', $mod );
 			}
 
 			/*
 			 * Property:
 			 *	publisher as http://schema.org/Organization
 			 *
-			 * Uses the 'schema_banner_url' image instead of the 'schema_logo_url' image for Google's Article markup.
+			 * Uses the 'org_banner_url' image instead of 'org_logo_url' for Google's Article markup.
 			 * See https://developers.google.com/structured-data/rich-snippets/articles for more info.
 			 */
-			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, 'schema_banner_url', false );	// $list_element = false
+			$org_id = is_object( $mod['obj'] ) ?
+				$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : false;	// null, false, 'none', 'site', or number (including 0)
+
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'custom publisher / organization id is '.
+					( empty( $org_id ) ? 'empty' : $org_id ) );
+
+			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, $org_id, 'org_banner_url', false );	// $list_element = false
 
 			return WpssoSchema::return_data_from_filter( $json_data, $ret );
 		}

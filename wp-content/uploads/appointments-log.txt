@@ -66,4 +66,5 @@
 <b>[14.06.2016 15:37]</b> Notification message sent to gray@odesseya.net for appointment ID:33
 <b>[14.06.2016 16:10]</b> Confirmation message sent to Izachok@yandex.ru for appointment ID:33
 <b>[14.06.2016 16:12]</b> Reminder message sent to Izachok@yandex.ru for appointment ID:33
+<b>[15.06.2016 10:05]</b> Reminder message sent to gray@odesseya.net for appointment ID:33
 

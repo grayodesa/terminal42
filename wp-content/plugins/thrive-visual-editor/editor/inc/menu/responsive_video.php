@@ -134,7 +134,7 @@
 		<input class="tve_change tve_left tve_checkbox_bottom" data-ctrl="controls.responsive_video.play_bar" type="checkbox" id="rv_option_play_bar"/>
 		<label for="rv_option_play_bar" class="tve_left"><?php echo __( "Play bar", "thrive-cb" ) ?></label>
 	</li>
-	<li class="tve_text clearfix responsive_video_option" data-apply-to="[youtube|wistia|self]" data-multiple-hide>
+	<li class="tve_text clearfix responsive_video_option" data-apply-to="[youtube|self]" data-multiple-hide>
 		<input class="tve_change tve_left tve_checkbox_bottom" type="checkbox" id="rv_option_controls"/>
 		<label for="rv_option_controls" class="tve_left"><?php echo __( "Auto-hide player controls", "thrive-cb" ) ?></label>
 	</li>

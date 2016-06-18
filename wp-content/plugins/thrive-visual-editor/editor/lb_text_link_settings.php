@@ -8,7 +8,7 @@
             <?php
             $all_post_types = get_post_types();
 
-            $exceptionList = apply_filters('tve_post_types_blacklist', array('attachment', 'focus_area', 'thrive_optin', 'wysijap', 'revision', 'nav_menu_item', 'tve_lead_shortcode', 'tve_lead_1c_signup', 'tve_form_type', 'tve_lead_group', 'tcb_lightbox', 'tve_lead_2s_lightbox'));
+            $exceptionList = apply_filters('tve_post_types_blacklist', array('attachment', 'focus_area', 'thrive_optin', 'wysijap', 'revision', 'nav_menu_item', 'tve_lead_shortcode', 'tve_lead_1c_signup', 'tve_form_type', 'tve_lead_group', 'tcb_lightbox', 'tve_lead_2s_lightbox', 'tve_ult_campaign', 'tve_ult_schedule'));
             $post_types = array_diff($all_post_types, $exceptionList);
             $opt_settings = get_option('tve_hyperlink_settings', array());
 
@@ -22,6 +22,7 @@
             }
 
             $i = 0;
+            
             foreach($post_types as $post_type) {
                 $post_type_obj = get_post_type_object($post_type);
                 $i++;

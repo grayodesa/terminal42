@@ -1,18 +1,22 @@
 ===Facebook Pixel by PixelYourSite - Standard Events & WooCommerce===
 Contributors: PixelYourSite, c0d3fev3r
-Tags: Facebook Pixel, New Facebook Pixel, Facebook Conversion Pixel, Facebook Pixel Events, New Facebook Pixel Events, Dynamic Events, Standard Events, Facebook Events, Facebook Standard Events, Facebook Dynamic Ads, WooCommerce, WooCommerce Facebook Pixel, Facebook Custom Events, Facebook Conversion Value, WooCommerce Affiliate Products, Facebook Pixel PayPal
+Tags: Facebook Pixel, New Facebook Pixel, Facebook Conversion Pixel, Facebook Pixel Events, Facebook, New Facebook Pixel Events, Dynamic Events, Standard Events, Facebook Events, Facebook Standard Events, Facebook Dynamic Product Ads, WooCommerce, WooCommerce Facebook Pixel, Facebook Custom Events, Facebook Conversion Value, WooCommerce Affiliate Products, Facebook Pixel PayPal
 Requires at least: 3.0.1
-Tested up to: 4.4.2
-Stable tag: 2.2.4
+Tested up to: 4.5.2
+Stable tag: 2.2.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Insert the new Facebook Pixel on WordPress, add Standard Events, enjoy superb WooCommerce Facebook Pixel integration
 
 == Description ==
+**Note:** Version 3.0 is in the final testing stage and will be realeased in a few days with new and powerful features.
+
+
 As you probably know, Facebook will retire the old Facebook Conversion Pixel in 2016. They recommend to use the new Facebook Pixel for conversion tracking, optimization and remarketing. **This plugin will help you insert the pixel code on every page with just one click and setup custom or standard events on any page or post.** There is an **out of the box WooCommerce setup** that will configure all the necessary standard events for you.  
 
 **Visit this page for [more details about how to use the pixel plugin: Click here](http://www.pixelyoursite.com/facebook-pixel-plugin-help)**
+
 
 * You can **insert the pixel on every page of your website with just a few clicks**. No need to edit any post or pages
 
@@ -51,6 +55,8 @@ Facebook Pixel did not load.
 Event ID: AddToCart
 
 You can safely ignore them. It is a normal error trigger by the dynamic AddToCart event, that will disappear after you click on the add to cart button.  
+
+For more details on Facebook Pixel errors [read this article](http://www.pixelyoursite.com/facebook-pixel-helper-errors)
 
 **Instal the plugin now, because it is easy to use, and will help you with your Facebook campaigns.**
 
@@ -149,6 +155,16 @@ We have an article about how to optimize Facebook Ads Reports:
 9. This is a Purchase event on WooCommerce Thank You page. You can optimize your Facebook Campaigns for this event
 
 == Changelog ==
+
+PixelYourSite 2.2.6
+
+- Fixing activate error
+
+
+PixelYourSite 2.2.5
+
+- Adding IDR (Indonezian Ruphiah) in the currency list
+
 
 PixelYourSite 2.2.4
 

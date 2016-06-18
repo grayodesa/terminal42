@@ -5,6 +5,23 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+4.1.0 - 06/06/2016 - Philipp
+----------------------------------------------------------------------
+Enables the brand new "Update All" function in Hub! Also includes several small bugfixes and improvements.
+
+- Add support for the lightning fast "Update All" feature in Hub!
+- Add entry for WPMU DEV Dashboard to the "My Sites" menu in multisite installations.
+- Improved default display order of plugins and themes in WPMUDEV pages.
+- Improved plugin activation refreshes the page to display the plugin menu item.
+- Disable auto-update function for legacy plugins and themes that cannot be updated via the WPMU DEV Dashboard.
+- Fix remote access expiration time to use timezone defined by WordPress.
+- Fix date formatting issues in the Support tab, that displayed a weird expiration time for support access.
+- Fix a PHP warning / missing details inside the "Update Theme/Plugin" popup
+- Fix some links that point to the WPMU DEV website.
+- Fix display of special characters inside Notes-field for support access.
+- Fix rare fatal error about `Call function has_cap() on boolean` during plugin activation.
+- A handful of other small improvements, like fixing typos
+
 4.0.9 - 3/28/2016 - Philipp
 ----------------------------------------------------------------------
 - Improved error messages
@@ -359,4 +376,4 @@ Added option to disable admin notices.
 Initial Release.
 
 
-373982-1459841791-au
+373982-1466155928-au

@@ -2754,6 +2754,7 @@ class RevSliderSlide extends RevSliderElementsBase{
 		
 		switch($slider_type){
 			case 'gallery':
+				//check if we are transparent for example
 				$imageID = RevSliderBase::getVar($params, "image_id");
 				if(empty($imageID)){
 					$thumb = RevSliderBase::getVar($params, "image");
@@ -2826,8 +2827,10 @@ class RevSliderSlide extends RevSliderElementsBase{
 		}
 		
 		if($bgType=="trans" || $bgType=="transparent"){
+			$data_urlImageForView = '';
 			$bg_extraClass = 'mini-transparent';
 			$bg_fullstyle = 'background-size: inherit; background-repeat: repeat;';
+			
 		}
 		
 		return apply_filters('revslider_slide_get_image_attributes', array(

@@ -4,6 +4,7 @@
 	<div class="tvd-col tvd-s4">
 		<div class="tvd-input-field">
 			<input id="get-response_cycleday" type="text"
+			       maxlength="3"
 			       class="tve-api-extra tve_lightbox_input tve_lightbox_input_inline"
 			       name="get-response_cycleday"
 			       value="<?php echo ! empty( $data['cycleday'] ) ? $data['cycleday'] : '0' ?>"
@@ -17,7 +18,9 @@
 		TVE_Content_Builder.auto_responder['get-response'] = TVE_Content_Builder.auto_responder['get-response'] || {};
 
 		TVE_Content_Builder.auto_responder['get-response'].validate = function () {
-			var value = parseInt( $( '#get-response_cycleday' ).val() );
+			var $input = $( '#get-response_cycleday' ),
+				value = $input.val();
+
 
 			if ( isNaN( value ) || value < 0 || value > 103 ) {
 				alert( 'Invalid cycle day' );

@@ -42,8 +42,8 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 
 			$lca = $this->p->cf['lca'];
 			$ret = array();
-			$geo = array();
 			$address = array();
+			$geo = array();
 
 			/*
 			 * Property:
@@ -57,6 +57,9 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 				return $json_data;
 
 			/*
+			 * Property:
+			 *	address as http://schema.org/PostalAddress
+			 *
 			 * <meta property="place:street_address" content="1234 Some Road"/>
 			 * <meta property="place:po_box_number" content=""/>
 			 * <meta property="place:locality" content="In A City"/>
@@ -81,6 +84,9 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 				$ret['address'] = WpssoSchema::get_item_type_context( 'http://schema.org/PostalAddress', $address );
 
 			/*
+			 * Property:
+			 *	geo as http://schema.org/GeoCoordinates
+			 *
 			 * <meta property="place:location:altitude" content="2,200"/>
 			 * <meta property="place:location:latitude" content="45"/>
 			 * <meta property="place:location:longitude" content="-73"/>

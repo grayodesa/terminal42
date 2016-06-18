@@ -334,7 +334,7 @@
 	font-weight: 400;
 }
 
-.dev-overlay .dev-error .the-hero {
+.dev-overlay .the-hero {
 	position: absolute;
 	color: #EEE;
 	z-index: -1;
@@ -342,7 +342,7 @@
 	left: -45px;
 	text-align: left;
 }
-.dev-overlay .dev-error .the-hero .dev-icon {
+.dev-overlay .the-hero .dev-icon {
 	font-size: 160px;
 }
 
@@ -950,4 +950,4 @@
 }
 
 
-/* 373982-1459841791-au */
+/* 373982-1466155928-au */

@@ -5,7 +5,7 @@ Description: Add the Facebook Pixel code into your Wordpress site and set up sta
 Plugin URI: http://www.pixelyoursite.com/facebook-pixel-plugin-help
 Author: PixelYourSite
 Author URI: http://www.pixelyoursite.com
-Version: 2.2.4
+Version: 2.2.7
 License: GPLv3
 */
 

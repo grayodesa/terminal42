@@ -17,7 +17,7 @@ class WPMUDEV_Dashboard_Message {
 	 * Max number of notices that are stored in the message-queue.
 	 * If more messages are added then the oldest ones are removed.
 	 */
-	const MAX_QUEUE_COUNT = 20;
+	const MAX_QUEUE_COUNT = 10;
 
 	/**
 	 * The message-queue contains recently scheduled messages.
@@ -147,12 +147,8 @@ class WPMUDEV_Dashboard_Message {
 				$msg['dismissed'] = false;
 				$changed = true;
 			}
-			if ( ! isset( $msg['time_dismiss'] ) ) {
-				$msg['time_dismiss'] = 0;
-				$changed = true;
-			}
 			if ( ! isset( $msg['time_create'] ) ) {
-				$msg['time_create'] = 0;
+				$msg['time_create'] = time();
 				$changed = true;
 			}
 			$this->queue[ $id ] = $msg;
@@ -218,7 +214,6 @@ class WPMUDEV_Dashboard_Message {
 			'dismissed' => false,
 			'can_dismiss' => $can_dismiss,
 			'cta' => '',
-			'time_dismiss' => 0,
 			'time_create' => time(),
 		);
 
@@ -255,11 +250,7 @@ class WPMUDEV_Dashboard_Message {
 			}
 			$dismissed = '?';
 			if ( $item['dismissed'] ) {
-				if ( $item['time_dismiss'] ) {
-					$dismissed = date( 'Y-m-d H:i', $item['time_dismiss'] );
-				} else {
-					$dismissed = 'Yes';
-				}
+				$dismissed = 'Yes';
 			} else {
 				$dismissed = 'No';
 			}
@@ -325,7 +316,6 @@ class WPMUDEV_Dashboard_Message {
 
 		if ( isset( $this->queue[ $msg_id ] ) ) {
 			$this->queue[ $msg_id ]['dismissed'] = true;
-			$this->queue[ $msg_id ]['time_dismiss'] = time();
 			$this->save_queue();
 		}
 	}

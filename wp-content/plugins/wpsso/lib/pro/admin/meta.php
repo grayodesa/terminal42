@@ -42,8 +42,10 @@ if ( ! class_exists( 'WpssoProAdminMeta' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$seo_desc_disabled = $this->p->options['add_meta_name_description'] ? false : true;
-			$seo_desc_msg = __( 'The SEO description field is disabled - the "meta name description" option is disabled and/or a known SEO plugin has been detected.', 'wpsso' );
+			$seo_desc_msg = empty( $this->p->options['add_meta_name_description'] ) ? 
+				'<p class="status-msg smaller">'.
+					__( 'The SEO description field is disabled (the description meta tag is disabled and/or a known SEO plugin is active).',
+						'wpsso' ).'</p>' : '';
 
 			$form_rows = array(
 				'og_title' => array(
@@ -61,13 +63,12 @@ if ( ! class_exists( 'WpssoProAdminMeta' ) ) {
 							'...', $mod, true, true, true, 'none' ) ),	// $md_idx = 'none'
 				),
 				'seo_desc' => array(
-					'tr_class' => ( $seo_desc_disabled ? 'hide_in_basic' : '' ),
+					'tr_class' => ( $seo_desc_msg ? 'hide_in_basic' : '' ),		// hide if seo description is disabled
 					'label' => _x( 'Google Search / SEO Description', 'option label', 'wpsso' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-seo_desc',
 					'content' => $form->get_textarea( 'seo_desc', '', $this->p->cf['lca'].'_seo_desc',
 						$this->p->options['seo_desc_len'], $this->p->webpage->get_description( $this->p->options['seo_desc_len'],
-							'...', $mod, true, false ), $seo_desc_disabled ).		// $add_hashtags = false
-						( $seo_desc_disabled ? '<p class="status-msg smaller">'.$seo_desc_msg.'</p>' : '' ),
+							'...', $mod, true, false ), ( $seo_desc_msg ? true : false ) ).$seo_desc_msg,
 				),
 				'tc_desc' => array(
 					'label' => _x( 'Twitter Card Description', 'option label', 'wpsso' ),

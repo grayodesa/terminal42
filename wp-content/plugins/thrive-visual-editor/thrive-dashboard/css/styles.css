@@ -2710,7 +2710,7 @@ table.tvd-collection {
   text-transform: capitalize; }
 
 .tvd-normalize {
-  text-transform: none; }
+  text-transform: none !important; }
 
 .tvd-underline {
   text-decoration: underline !important; }

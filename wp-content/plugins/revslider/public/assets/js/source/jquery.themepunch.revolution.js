@@ -1,6 +1,6 @@
 /**************************************************************************
  * jquery.themepunch.revolution.js - jQuery Plugin for Revolution Slider
- * @version: 5.2.5.1 (28.04.2016)
+ * @version: 5.2.5.3 (30.05.2016)
  * @requires jQuery v1.7 or later (tested on 1.9)
  * @author ThemePunch
 **************************************************************************/
@@ -702,7 +702,7 @@ jQuery.extend(true, _R, {
 		container.trigger("revolution.nextslide.waiting");
 				
 
-		if (nindex !== aindex && nindex!=-1)
+		if ((aindex===nindex && aindex === opt.last_shown_slide) || (nindex !== aindex && nindex!=-1))
 			swapSlide(container,opt);	
 		else
 			container.find('.next-revslide').removeClass("next-revslide");

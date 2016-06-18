@@ -64,15 +64,15 @@ if ( ! class_exists( 'WpssoJsonProHeadLocalBusiness' ) ) {
 
 					$dayofweek = array(
 						'@context' => 'http://schema.org',
-						'@type' => 'openingHoursSpecification',
+						'@type' => 'OpeningHoursSpecification',
 						'dayOfWeek' => $label,
 					);
 					foreach ( array(
-						'place:business:day:'.$day.':open' => 'opens',
-						'place:business:day:'.$day.':close' => 'closes',
-						'place:business:season:from' => 'validFrom',
-						'place:business:season:to' => 'validThrough',
-					) as $mt_key => $prop_name )
+						'opens' => 'place:business:day:'.$day.':open',
+						'closes' => 'place:business:day:'.$day.':close',
+						'validFrom' => 'place:business:season:from',
+						'validThrough' => 'place:business:season:to',
+					) as $prop_name => $mt_key )
 						if ( isset( $mt_og[$mt_key] ) )
 							$dayofweek[$prop_name] = $mt_og[$mt_key];
 					$opening_hours[] = $dayofweek;

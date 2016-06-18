@@ -506,6 +506,13 @@ $slider_addons = apply_filters('revslider_slide_addons', array(), $slide, $slide
 									<option value="zoom-out"><?php _e('zoom-out', 'revslider'); ?></option>
 								</select>
 								
+								
+								<span class="rs-layer-toolbar-space" style="margin-right: 10px"></span>
+
+								<!-- HOVER Z-INDEX -->
+								<i class="rs-mini-layer-icon eg-icon-resize-vertical rs-toolbar-icon tipsy_enabled_top" title="<?php _e("Z-Index",'revslider'); ?>" style="margin-right:10px"></i>
+								<input type="text" style="width:90px; padding-right:10px;" class="rs-staticcustomstylechange textbox-caption rs-layer-input-field tipsy_enabled_top" title="<?php _e("Hover Z-Index (Enter z-index level or enter auto for default value)",'revslider'); ?>" id="hover_zindex" name="hover_zindex" value="auto">
+								
 							</span>
 
 							<!-- LAYER TOGGLE SETTINGS -->

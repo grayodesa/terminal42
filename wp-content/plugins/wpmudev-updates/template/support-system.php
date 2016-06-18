@@ -210,7 +210,7 @@ if ( is_wp_error( $remote_paypal ) ) {
 	$remote_paypal = wp_remote_retrieve_response_message( $remote_paypal );
 }
 
-$dump_http['WPMU DEV API Server'] = $url['scheme'] . '://' . $url['host'];	 		 		 	 	 	 	 	 	
+$dump_http['WPMU DEV API Server'] = $url['scheme'] . '://' . $url['host'];
 $dump_http['WPMU DEV: GET'] = $remote_get;
 $dump_http['WPMU DEV: POST'] = $remote_post;
 $dump_http['PayPal API: POST'] = $remote_paypal;

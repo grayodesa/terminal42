@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WPSSO Place / Location and Local Business Meta (WPSSO "
-"PLM) 2.0.5-1\n"
+"PLM) 2.0.6-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-plm\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
 "MIME-Version: 1.0\n"
@@ -65,253 +65,257 @@ msgid ""
 "Schema Local Business + Local SEO meta tags."
 msgstr ""
 
-#: lib/filters.php:344
+#: lib/filters.php:349
+msgctxt "option value"
+msgid "Address #%d"
+msgstr ""
+
+#: lib/filters.php:364
 msgid "Select an address or enter a customized address bellow."
 msgstr ""
 
-#: lib/filters.php:356
+#: lib/filters.php:376
 msgid ""
 "Select an address to include as a Schema <em>Place</em> or <em>Local "
 "Business</em> in your non-static home page."
 msgstr ""
 
-#: lib/filters.php:356
+#: lib/filters.php:376
 msgid ""
 "An address for a static home page can be selected in the %1$s metabox when "
 "editing the static page."
 msgstr ""
 
-#: lib/filters.php:356 lib/filters.php:411
+#: lib/filters.php:376 lib/filters.php:431
 msgctxt "metabox title"
 msgid "Social Settings"
 msgstr ""
 
-#: lib/filters.php:359
+#: lib/filters.php:379
 msgid "A default country to use when creating a new address."
 msgstr ""
 
-#: lib/filters.php:362
+#: lib/filters.php:382
 msgid ""
 "Select an address to edit. The address and business information is used for "
 "Open Graph meta tags and Schema markup."
 msgstr ""
 
-#: lib/filters.php:365
+#: lib/filters.php:385
 msgid ""
 "Enter a descriptive name for this address. The address name appears in drop-"
-"down fields and the Schema Place name property. Leave the address name blank "
-"to remove the address."
+"down fields and the Schema Place name property."
 msgstr ""
 
-#: lib/filters.php:368
+#: lib/filters.php:388
 msgid ""
 "An optional Street Address used for Pinterest Rich Pin / Schema <em>Place</"
 "em> meta tags and related markup."
 msgstr ""
 
-#: lib/filters.php:371
+#: lib/filters.php:391
 msgid ""
 "An optional Post Office Box Number for the Pinterest Rich Pin / Schema "
 "<em>Place</em> meta tags and related markup."
 msgstr ""
 
-#: lib/filters.php:374
+#: lib/filters.php:394
 msgid ""
 "An optional City name for the Pinterest Rich Pin / Schema <em>Place</em> "
 "meta tags and related markup."
 msgstr ""
 
-#: lib/filters.php:377
+#: lib/filters.php:397
 msgid ""
 "An optional State or Province name for the Pinterest Rich Pin / Schema "
 "<em>Place</em> meta tags and related markup."
 msgstr ""
 
-#: lib/filters.php:380
+#: lib/filters.php:400
 msgid ""
 "An optional Zip or Postal Code for the Pinterest Rich Pin / Schema "
 "<em>Place</em> meta tags and related markup."
 msgstr ""
 
-#: lib/filters.php:383
+#: lib/filters.php:403
 msgid ""
 "An optional Country for the Pinterest Rich Pin / Schema <em>Place</em> meta "
 "tags and related markup."
 msgstr ""
 
-#: lib/filters.php:386
+#: lib/filters.php:406
 msgid ""
 "The numeric <em>decimal degrees</em> latitude for the main content of this "
 "webpage."
 msgstr ""
 
-#: lib/filters.php:386 lib/filters.php:389
+#: lib/filters.php:406 lib/filters.php:409
 msgid ""
 "You may use a service like <a href=\"http://www.gps-coordinates.net/"
 "\">Google Maps GPS Coordinates</a> (as an example), to find the approximate "
 "GPS coordinates of a street address."
 msgstr ""
 
-#: lib/filters.php:389
+#: lib/filters.php:409
 msgid ""
 "The numeric <em>decimal degrees</em> longitude for the main content of this "
 "webpage."
 msgstr ""
 
-#: lib/filters.php:392
+#: lib/filters.php:412
 msgid ""
 "An optional numeric altitude (in meters above sea level) for the main "
 "content of this webpage."
 msgstr ""
 
-#: lib/filters.php:395
+#: lib/filters.php:415
 msgid ""
 "A more descriptive Schema type for this local business. You must select a "
 "food establishment (fast food restaurant, ice cream shop, restaurant, etc.) "
 "to include Schema markup for a food menu and/or reservation information."
 msgstr ""
 
-#: lib/filters.php:398
+#: lib/filters.php:418
 msgid "Select the days and hours this business is open."
 msgstr ""
 
-#: lib/filters.php:401
+#: lib/filters.php:421
 msgid ""
 "This business is only open for part of the year, between these two dates."
 msgstr ""
 
-#: lib/filters.php:404
+#: lib/filters.php:424
 msgid ""
 "The menu URL for this food establishment (fast food restaurant, ice cream "
 "shop, restaurant, etc.)"
 msgstr ""
 
-#: lib/filters.php:408
+#: lib/filters.php:428
 msgid "This food establishment accepts reservations."
 msgstr ""
 
-#: lib/filters.php:411
+#: lib/filters.php:431
 msgid ""
 "A <em>%1$s</em> tab can be added to the %2$s metabox on Posts, Pages, and "
 "custom post types, allowing you to enter specific address information for "
 "that webpage (ie. GPS coordinates and/or street address)."
 msgstr ""
 
-#: lib/filters.php:411 lib/gpl/admin/post.php:30 lib/pro/admin/post.php:41
+#: lib/filters.php:431 lib/gpl/admin/post.php:30 lib/pro/admin/post.php:41
 msgctxt "metabox tab"
 msgid "Place / Location"
 msgstr ""
 
-#: lib/gpl/admin/post.php:55 lib/pro/admin/post.php:65
+#: lib/gpl/admin/post.php:49 lib/pro/admin/post.php:67
 msgctxt "option label"
 msgid "Select an Address"
 msgstr ""
 
-#: lib/gpl/admin/post.php:61 lib/pro/admin/post.php:71
-#: lib/submenu/plm-general.php:147
+#: lib/gpl/admin/post.php:55 lib/pro/admin/post.php:73
+#: lib/submenu/plm-general.php:136
 msgctxt "metabox title"
 msgid "Pinterest Rich Pin / Schema Place"
 msgstr ""
 
-#: lib/gpl/admin/post.php:63 lib/pro/admin/post.php:78
-#: lib/pro/admin/post.php:103 lib/submenu/plm-general.php:153
+#: lib/gpl/admin/post.php:57 lib/pro/admin/post.php:80
+#: lib/pro/admin/post.php:105 lib/submenu/plm-general.php:142
 msgctxt "option label"
 msgid "Street Address"
 msgstr ""
 
-#: lib/gpl/admin/post.php:67 lib/pro/admin/post.php:82
-#: lib/pro/admin/post.php:107 lib/submenu/plm-general.php:157
+#: lib/gpl/admin/post.php:61 lib/pro/admin/post.php:84
+#: lib/pro/admin/post.php:109 lib/submenu/plm-general.php:146
 msgctxt "option label"
 msgid "P.O. Box Number"
 msgstr ""
 
-#: lib/gpl/admin/post.php:71 lib/pro/admin/post.php:86
-#: lib/pro/admin/post.php:111 lib/submenu/plm-general.php:161
+#: lib/gpl/admin/post.php:65 lib/pro/admin/post.php:88
+#: lib/pro/admin/post.php:113 lib/submenu/plm-general.php:150
 msgctxt "option label"
 msgid "City"
 msgstr ""
 
-#: lib/gpl/admin/post.php:75 lib/pro/admin/post.php:90
-#: lib/pro/admin/post.php:115 lib/submenu/plm-general.php:165
+#: lib/gpl/admin/post.php:69 lib/pro/admin/post.php:92
+#: lib/pro/admin/post.php:117 lib/submenu/plm-general.php:154
 msgctxt "option label"
 msgid "State / Province"
 msgstr ""
 
-#: lib/gpl/admin/post.php:79 lib/pro/admin/post.php:94
-#: lib/pro/admin/post.php:119 lib/submenu/plm-general.php:169
+#: lib/gpl/admin/post.php:73 lib/pro/admin/post.php:96
+#: lib/pro/admin/post.php:121 lib/submenu/plm-general.php:158
 msgctxt "option label"
 msgid "Zip / Postal Code"
 msgstr ""
 
-#: lib/gpl/admin/post.php:83 lib/pro/admin/post.php:98
-#: lib/pro/admin/post.php:127 lib/submenu/plm-general.php:174
+#: lib/gpl/admin/post.php:77 lib/pro/admin/post.php:100
+#: lib/pro/admin/post.php:129 lib/submenu/plm-general.php:163
 msgctxt "option label"
 msgid "Country"
 msgstr ""
 
-#: lib/gpl/admin/post.php:88 lib/pro/admin/post.php:134
-#: lib/submenu/plm-general.php:180
+#: lib/gpl/admin/post.php:82 lib/pro/admin/post.php:136
+#: lib/submenu/plm-general.php:169
 msgctxt "metabox title"
 msgid "Facebook / Open Graph Location"
 msgstr ""
 
-#: lib/gpl/admin/post.php:90 lib/pro/admin/post.php:141
-#: lib/pro/admin/post.php:153 lib/submenu/plm-general.php:186
+#: lib/gpl/admin/post.php:84 lib/pro/admin/post.php:143
+#: lib/pro/admin/post.php:155 lib/submenu/plm-general.php:175
 msgctxt "option label"
 msgid "Latitude"
 msgstr ""
 
-#: lib/gpl/admin/post.php:94 lib/pro/admin/post.php:145
-#: lib/pro/admin/post.php:157 lib/submenu/plm-general.php:190
+#: lib/gpl/admin/post.php:88 lib/pro/admin/post.php:147
+#: lib/pro/admin/post.php:159 lib/submenu/plm-general.php:179
 msgctxt "option label"
 msgid "Longitude"
 msgstr ""
 
-#: lib/gpl/admin/post.php:98 lib/pro/admin/post.php:149
-#: lib/pro/admin/post.php:161 lib/submenu/plm-general.php:194
+#: lib/gpl/admin/post.php:92 lib/pro/admin/post.php:151
+#: lib/pro/admin/post.php:163 lib/submenu/plm-general.php:183
 msgctxt "option label"
 msgid "Altitude in Meters"
 msgstr ""
 
-#: lib/gpl/admin/post.php:103 lib/pro/admin/post.php:168
-#: lib/submenu/plm-general.php:200
+#: lib/gpl/admin/post.php:97 lib/pro/admin/post.php:170
+#: lib/submenu/plm-general.php:189
 msgctxt "metabox title"
 msgid "Schema Local Business"
 msgstr ""
 
-#: lib/gpl/admin/post.php:105 lib/pro/admin/post.php:175
-#: lib/pro/admin/post.php:183 lib/submenu/plm-general.php:207
+#: lib/gpl/admin/post.php:99 lib/pro/admin/post.php:177
+#: lib/pro/admin/post.php:185 lib/submenu/plm-general.php:196
 msgctxt "option label"
 msgid "Local Business Type"
 msgstr ""
 
-#: lib/gpl/admin/post.php:113 lib/pro/admin/post.php:192
-#: lib/submenu/plm-general.php:215
+#: lib/gpl/admin/post.php:107 lib/pro/admin/post.php:194
+#: lib/submenu/plm-general.php:204
 msgctxt "option label"
 msgid "Business Hours"
 msgstr ""
 
-#: lib/gpl/admin/post.php:127 lib/pro/admin/post.php:224
-#: lib/pro/admin/post.php:237 lib/submenu/plm-general.php:232
+#: lib/gpl/admin/post.php:121 lib/pro/admin/post.php:226
+#: lib/pro/admin/post.php:239 lib/submenu/plm-general.php:221
 msgctxt "option label"
 msgid "Seasonal Business Dates"
 msgstr ""
 
-#: lib/gpl/admin/post.php:132 lib/pro/admin/post.php:229
-#: lib/pro/admin/post.php:242
+#: lib/gpl/admin/post.php:126 lib/pro/admin/post.php:231
+#: lib/pro/admin/post.php:244
 msgctxt "option label"
 msgid "Food Menu URL"
 msgstr ""
 
-#: lib/gpl/admin/post.php:136 lib/pro/admin/post.php:233
-#: lib/pro/admin/post.php:247 lib/submenu/plm-general.php:241
+#: lib/gpl/admin/post.php:130 lib/pro/admin/post.php:235
+#: lib/pro/admin/post.php:249 lib/submenu/plm-general.php:230
 msgctxt "option label"
 msgid "Accepts Reservations"
 msgstr ""
 
 #: lib/submenu/plm-general.php:28
 msgctxt "metabox title"
-msgid "Addresses / Contact Information"
+msgid "Addresses and Contact Information"
 msgstr ""
 
 #: lib/submenu/plm-general.php:32
@@ -319,37 +323,42 @@ msgctxt "metabox title"
 msgid "Place / Location Settings"
 msgstr ""
 
-#: lib/submenu/plm-general.php:84
-msgctxt "option label"
-msgid "Show Tab on Post Types"
+#: lib/submenu/plm-general.php:41
+msgctxt "metabox tab"
+msgid "Addresses / Local Business"
 msgstr ""
 
-#: lib/submenu/plm-general.php:94
+#: lib/submenu/plm-general.php:68
 msgctxt "option label"
 msgid "Address for Non-static Homepage"
 msgstr ""
 
-#: lib/submenu/plm-general.php:99
+#: lib/submenu/plm-general.php:73
 msgctxt "option label"
 msgid "Address Default Country"
 msgstr ""
 
-#: lib/submenu/plm-general.php:131
+#: lib/submenu/plm-general.php:90
+msgctxt "option label"
+msgid "Show Tab on Post Types"
+msgstr ""
+
+#: lib/submenu/plm-general.php:117
 msgctxt "option label"
 msgid "Edit an Address"
 msgstr ""
 
-#: lib/submenu/plm-general.php:140
+#: lib/submenu/plm-general.php:128
+msgctxt "option comment"
+msgid "delete this address"
+msgstr ""
+
+#: lib/submenu/plm-general.php:130
 msgctxt "option label"
 msgid "Address Name"
 msgstr ""
 
-#: lib/submenu/plm-general.php:143
-msgctxt "option comment"
-msgid "leave blank to delete an address"
-msgstr ""
-
-#: lib/submenu/plm-general.php:237
+#: lib/submenu/plm-general.php:226
 msgctxt "option label"
 msgid "Food Establishment Menu URL"
 msgstr ""
@@ -366,7 +375,7 @@ msgid ""
 "activate the %3$s plugin."
 msgstr ""
 
-#: wpsso-plm.php:131
+#: wpsso-plm.php:130
 msgid ""
 "The %1$s extension version %2$s requires the use of %3$s version %4$s or "
 "newer (version %5$s is currently installed)."

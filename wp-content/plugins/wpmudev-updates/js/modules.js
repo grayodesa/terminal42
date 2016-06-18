@@ -215,7 +215,15 @@ jQuery(function initModules() {
 		var jq = jQuery(this),
 			box = jq.closest('.project-box'),
 			actions = jQuery('.project-action a'),
-			data = {};
+			data = {},
+			res = {"scope":this, "param":el, "func":ajaxProjectAction},
+			theAction = jq.data('action'),
+			msg = jq.data("loading");
+
+		if ("project-install" === theAction)  {
+			jQuery(document).trigger('wpmu:before-update', [res]);
+			if (res && res.cancel) { return false; }
+		}
 
 		// Disable all project actions.
 		actions.each(function() {
@@ -233,27 +241,22 @@ jQuery(function initModules() {
 		}
 		if (! box.length) { return; }
 
-		data.action = 'wdp-' + jq.data('action');
+		data.action = 'wdp-' + theAction;
 		data.hash = jq.data('hash');
 		data.pid = box.data('project');
-		data.is_network = +(jQuery('body').hasClass('network-admin'));
 
-		jq.loading(true);
+		// The '+' is intentional, to convert the boolean into 1/0.
+		data.is_network = + (jQuery('body').hasClass('network-admin'));
+
+		jq.loading(true, msg);
 		jQuery.post(
 			window.ajaxurl,
 			data,
 			function(response) {
-				if (!response || !response.success) {
-					if (response && response.data && response.data.message) {
-						WDP.showError('message', response.data.message);
-					} else {
-						WDP.showError('message');
-					}
-					WDP.showError();
-					return;
-				}
-
 				WDP.closeOverlay(); // close overlay, if any is open.
+
+				if (handleError(response)) { return; }
+
 				jQuery(document).trigger(
 					'wpmu:show-project',
 					[box, response.data.html]
@@ -270,6 +273,18 @@ jQuery(function initModules() {
 							'wpmu:show-project',
 							[box2, response.data.other[pid2]]
 						);
+					}
+				}
+
+				// Optionally refresh the admin menu.
+				if (response.data.admin_menu) {
+					var html = jQuery(response.data.admin_menu);
+					if (! html.find("#adminmenu").length) {
+						reloadPage();
+						return;
+					} else {
+						jQuery("#adminmenu").html( html.find("#adminmenu").html() );
+						jQuery(window).trigger("resize");
 					}
 				}
 
@@ -293,9 +308,8 @@ jQuery(function initModules() {
 					.prop('disabled', false)
 					.removeClass('disabled');
 			});
-		}).fail(function() {
-			WDP.showError('message');
-			WDP.showError();
+		}).fail(function(xhr) {
+			handleError(xhr);
 		});
 
 		return false;
@@ -445,10 +459,14 @@ jQuery(function initModules() {
 
 	// Sort Projects by current sort option.
 	function sortProjects() {
-		var option = jQuery('#sel_sort').val();
+		var option = jQuery('#sel_sort').val(),
+			sort_dir = 'DESC';
 
 		// Def/Popularity are equal, except def will display updates in top.
-		if ('def' === option) { option = 'popularity'; }
+		if ('def' === option) {
+			option = 'order';
+			sort_dir = 'ASC';
+		}
 
 		for (var i = 0; i < rows.length; i += 1) {
 			var row = jQuery('.content-inner', rows[i]),
@@ -461,9 +479,9 @@ jQuery(function initModules() {
 						valB = parseInt(valB);
 					}
 					if (valA > valB) {
-						return -1;
+						return ('ASC' == sort_dir ? 1 : -1);
 					} else {
-						return 1;
+						return ('ASC' == sort_dir ? -1 : 1);
 					}
 				});
 
@@ -544,15 +562,7 @@ jQuery(function initModules() {
 			ajaxurl,
 			data,
 			function(response) {
-				if (!response || !response.success) {
-					if (response && response.data && response.data.message) {
-						WDP.showError('message', response.data.message);
-					} else {
-						WDP.showError('message');
-					}
-					WDP.showError();
-					return;
-				}
+				if (handleError(response)) { return; }
 
 				WDP.showSuccess();
 			},
@@ -560,9 +570,8 @@ jQuery(function initModules() {
 		).always(function() {
 			jq.prop('disabled', false);
 			toggle.loading(false);
-		}).fail(function() {
-			WDP.showError('message');
-			WDP.showError();
+		}).fail(function(xhr) {
+			handleError(xhr);
 		});
 	}
 
@@ -586,24 +595,15 @@ jQuery(function initModules() {
 			ajaxurl,
 			data,
 			function(response) {
-				if (!response || !response.success) {
-					if (response && response.data && response.data.message) {
-						WDP.showError('message', response.data.message);
-					} else {
-						WDP.showError('message');
-					}
-					WDP.showError();
-					return;
-				}
+				if (handleError(response)) { return; }
 
 				userSearch.trigger('results:show', [response.data]);
 			},
 			'json'
 		).always(function() {
 			userSearch.trigger('progress:stop');
-		}).fail(function() {
-			WDP.showError('message');
-			WDP.showError();
+		}).fail(function(xhr) {
+			handleError(xhr);
 		});
 	}
 
@@ -627,24 +627,49 @@ jQuery(function initModules() {
 			ajaxurl,
 			data,
 			function(response) {
-				if (!response || !response.success) {
-					if (response && response.data && response.data.message) {
-						WDP.showError('message', response.data.message);
-					} else {
-						WDP.showError('message');
-					}
-					WDP.showError();
-					return;
-				}
+				if (handleError(response)) { return; }
 
 				projectSearch.trigger('results:show', [response.data]);
 			},
 			'json'
 		).always(function() {
 			projectSearch.trigger('progress:stop');
-		}).fail(function() {
-			WDP.showError('message');
-			WDP.showError();
+		}).fail(function(xhr) {
+			handleError(xhr);
 		});
+	}
+
+	// Parse the response and display the error message
+	function handleError(response) {
+		if (!response) {
+			// The requiest failed, definitely an error.
+			WDP.showError('Unknown server error.');
+			return true;
+		}
+
+		if (response.statusText) {
+			// The requiest failed, we have a server error-status.
+			WDP.showError('Server error status: ' + response.statusText + ' [' + response.status + ']');
+			return true;
+		}
+
+		if (response.success && 'function' !== typeof response.success) {
+			// This is no error, it's a success message!
+			return false;
+		}
+
+		// WordPress returned an error-state.
+		if (response.data && response.data.message) {
+			WDP.showError(response.data.message);
+		} else {
+			WDP.showError('Unexpected response from WordPress.');
+		}
+		return true;
+	}
+
+	// Reload the page.
+	function reloadPage() {
+		WDP.showOverlay('#reload');
+		window.location.reload();
 	}
 });

@@ -22,8 +22,8 @@ $can_manage_users = true;
 $profile = $member['profile'];
 
 // Upgrade membership URL.
-$url_membership = $urls->remote_site . 'dashboard/account/';
-$url_api_setting = $urls->remote_site . 'dashboard/account/';
+$url_membership = $urls->remote_site . 'hub/account/';
+$url_api_setting = $urls->remote_site . 'hub/account/';
 $url_settings = $urls->settings_url;
 
 // Render the page header section.

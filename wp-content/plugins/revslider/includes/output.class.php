@@ -2957,6 +2957,8 @@ class RevSliderOutput {
 					$st_hover['bg'] = array(RevSliderFunctions::hex2rgba($bg_color, $bg_trans), 'ALWAYS');
 				}
 				
+				$st_hover['zi'] = array(RevSliderFunctions::getVal($def_val, 'zindex', 'auto'), 'auto'); 
+
 				$my_padding = RevSliderFunctions::getVal($def_val, 'padding', array('0px','0px','0px','0px'));
 				if(!empty($my_padding)){
 					$my_padding = implode(' ', $my_padding);
@@ -2996,12 +2998,13 @@ class RevSliderOutput {
 					'bs' => 'border-style',
 					'bw' => 'border-width',
 					'br' => 'border-radius',
+					'zi' => 'zIndex'
 				);
 				
-				foreach($st_hover as $sk => $sv){ //do not write values for hover if idle is the same value
-					if(isset($st_idle[$st_trans[$sk]]) && $st_idle[$st_trans[$sk]][0] == $sv[0]) unset($st_hover[$sk]);
+				foreach($st_hover as $sk => $sv){ //do not write values for hover if idle is the same value					
+					if(isset($st_idle[$st_trans[$sk]]) && $st_idle[$st_trans[$sk]][0] == $sv[0]) 
+						unset($st_hover[$sk]);
 				}
-				
 				
 				//Advanced Styles here:
 				if(isset($adv_style['hover'])){
@@ -3548,7 +3551,7 @@ class RevSliderOutput {
 			echo $a_html;
 			
 			// SVG OUTPUT
-			if (!empty($svg_val) && sizeof($svg_val)>0) {				
+			if (!empty($svg_val) && sizeof($svg_val)>0) {
 				echo '			data-svg_src="'.$svg_val->{'src'}.'"'." \n";
 				echo '			data-svg_idle="sc:'.$svg_val->{'svgstroke-color'}.';sw:'.$svg_val->{'svgstroke-width'}.';sda:'.$svg_val->{'svgstroke-dasharray'}.';sdo:'.$svg_val->{'svgstroke-dashoffset'}.';"'." \n";
 				if($is_hover_active){

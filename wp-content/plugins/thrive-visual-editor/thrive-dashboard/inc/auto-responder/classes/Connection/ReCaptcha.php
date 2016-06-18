@@ -12,7 +12,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	 * @return String
 	 */
 	public static function getType() {
-		return 'captcha';
+		return 'other';
 	}
 
 	/**

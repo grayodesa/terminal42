@@ -124,6 +124,11 @@ function tve_dash_api_handle_save() {
 	);
 	if ( ! empty( $_REQUEST['disconnect'] ) ) {
 		$connection->disconnect()->success( $connection->getTitle() . ' ' . __( "is now disconnected", TVE_DASH_TRANSLATE_DOMAIN ) );
+		//delete active conection for thrive ovation
+		$active_connection = get_option( 'tvo_api_delivery_service', false );
+		if ( $active_connection && $active_connection == $_REQUEST['api'] ) {
+			delete_option( 'tvo_api_delivery_service' );
+		}
 		tve_dash_remove_api_from_one_click_signups( $_REQUEST['api'] );
 		$response['success'] = true;
 		$response['message'] = __( "Service disconnected", TVE_DASH_TRANSLATE_DOMAIN );

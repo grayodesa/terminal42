@@ -92,13 +92,20 @@ class Thrive_Dash_Api_ActiveCampaign {
 	public function addSubscriber( $list_id, $email, $firstName = '', $lastName = '', $phone = '', $form_id = 0, $organizationName = '', $tags = array(), $ip = null ) {
 		$body = array(
 			'email'                               => $email,
-			'first_name'                          => $firstName,
-			'last_name'                           => $lastName,
 			'phone'                               => $phone,
 			'p[' . $list_id . ']'                 => $list_id,
 			'instantresponders[' . $list_id . ']' => 1,
 			'status[' . $list_id . ']'            => 1
 		);
+
+		if(!empty($firstName) ) {
+			$body['first_name'] = $firstName;
+		}
+
+		if(!empty($lastName) ) {
+			$body['last_name'] = $lastName;
+		}
+
 		if ( ! empty( $form_id ) ) {
 			$body['form'] = $form_id;
 		}

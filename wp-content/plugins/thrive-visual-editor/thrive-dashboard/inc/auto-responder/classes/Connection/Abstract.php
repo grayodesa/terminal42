@@ -333,6 +333,25 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	}
 
 	/**
+	 * Check connection and get all groups for a specific list
+	 *
+	 * @param $list_id
+	 *
+	 * @return bool
+	 */
+	public function getGroups ($list_id) {
+		if ( ! $this->isConnected() ) {
+			$this->_error = $this->getTitle() . ' ' . __( "is not connected", TVE_DASH_TRANSLATE_DOMAIN );
+
+			return false;
+		}
+
+		$params['list_id'] = $list_id;
+
+		return $this->_getGroups($params);
+	}
+
+	/**
 	 * if an API instance has a special way of designating the list, it should override this method
 	 * e.g. "Choose the mailing list you want your subscribers to be assigned to"
 	 *

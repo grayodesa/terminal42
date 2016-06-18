@@ -309,17 +309,31 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 		 */
 		api: {
 			readExtraSettings: function ( $container ) {
-				var _settings = lead_generation && lead_generation.api_form_data && lead_generation.api_form_data.extra ? lead_generation.api_form_data.extra : {};
+				var _settings = lead_generation && lead_generation.api_form_data && lead_generation.api_form_data.extra ? lead_generation.api_form_data.extra : {},
+					reset_field = false;
 				$container.find( '.tve-api-extra' ).filter( ':not(.tve_disabled)' ).each( function () {
 					var $this = $( this ),
 						_parts = $this.attr( 'name' ).split( '_' ),
 						_main = _parts.shift(),
 						_field = _parts.join( '_' );
 
-					_settings[_main] = _settings[_main] || {};
-					_settings[_main][_field] = $this.val();
-				} );
+					if(!reset_field) {
+						reset_field = true;
+						_settings[_main] = '';
+					}
 
+					if ( $this.is( 'input:radio, input:checkbox' ) ) {
+						if($this.is(':radio') && $this.is( ':checked' )) {
+							_settings[_main][_field] = $this.val();
+						} else if ($this.is(':checkbox') && $this.is( ':checked' )) {
+							!_settings[_main][_field] ? _settings[_main][_field] = $this.val(): _settings[_main][_field] += ',' + $this.val();
+						}
+					} else {
+						_settings[_main] = _settings[_main] || {};
+						_settings[_main][_field] = $this.val();
+					}
+
+				} );
 				return _settings;
 			},
 			_ajax: function ( data ) {
@@ -363,6 +377,26 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				} ).done( function ( response ) {
 					$( '#thrive-api-list' ).replaceWith( response );
 				} );
+			},
+
+			api_get_groups: function ( $list ) {
+				var $group_count = $list.find( ":selected" ).data( 'group' );
+				var $api = $list.attr( 'data-api' );
+
+				if ( $group_count > 0 ) {
+					this._ajax( {
+						route: 'apiGroups',
+						api: $api,
+						list: $list.jquery ? $list.val() : $list,
+						force_fetch: '1',
+						extra: lead_generation.api_form_data && lead_generation.api_form_data.extra ? lead_generation.api_form_data.extra : {}
+					} ).done( function ( response ) {
+						$( '#thrive-api-groups' ).replaceWith( response );
+					} );
+				} else {
+					$( '#thrive-api-groups' ).empty();
+				}
+
 			},
 			/**
 			 * reload Lists from an API connection
@@ -615,8 +649,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 
 							if ( _inputIcon.length ) {
 								var _icon = _inputIcon.find( '.tve_sc_icon' ).data( 'tve-icon' );
-								jQuery( '#icon_' + elem ).prop( 'checked', true )
-								                         .parent().append( '<span data-cls="' + _icon + '" class="icomoon-icon"><span class="' + _icon + '"></span></span>' );
+								jQuery( '#icon_' + elem ).prop( 'checked', true ).parent().append( '<span data-cls="' + _icon + '" class="icomoon-icon"><span class="' + _icon + '"></span></span>' );
 
 								if ( self.connection_type == 'api' ) {
 									// set these values also in the element's config
@@ -803,8 +836,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						return;
 					}
 
-					icon.find( 'span' ).attr( 'class', 'tve_sc_icon' ).addClass( selected.attr( 'data-cls' ) )
-					    .attr( 'data-tve-icon', selected.attr( 'data-cls' ) );
+					icon.find( 'span' ).attr( 'class', 'tve_sc_icon' ).addClass( selected.attr( 'data-cls' ) ).attr( 'data-tve-icon', selected.attr( 'data-cls' ) );
 
 					this.copyIconStyles( $oldInput.parent().find( '.thrv_icon' ), icon );
 
@@ -1113,8 +1145,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						style = $element.is( '.thrv_lead_generation_vertical' ) ? 'thrv_lead_generation_vertical' : 'thrv_lead_generation_horizontal';
 					}
 
-					$element.removeClass( 'thrv_lead_generation_vertical thrv_lead_generation_horizontal' ).addClass( style )
-					        .find( '.tve_lg_input_container' ).removeClass( 'tve_lg_2 tve_lg_3' );
+					$element.removeClass( 'thrv_lead_generation_vertical thrv_lead_generation_horizontal' ).addClass( style ).find( '.tve_lg_input_container' ).removeClass( 'tve_lg_2 tve_lg_3' );
 
 					var totalInputs = $element.find( '.tve_lg_input,.tve_lg_radio,.tve_lg_checkbox,.tve_lg_textarea' ).length;
 

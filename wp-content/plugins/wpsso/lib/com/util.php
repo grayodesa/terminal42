@@ -16,12 +16,13 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 
 		protected static $is_mobile = null;		// is_mobile cached value
 		protected static $mobile_obj = null;		// SuextMobileDetect class object
-		protected static $plugins_index = null;		// hash of active site and network plugins
+		protected static $plugins_index = null;		// active site and network plugins
 		protected static $site_plugins = null;
 		protected static $network_plugins = null;
 		protected static $crawler_name = null;		// saved crawler name from user-agent
 		protected static $filter_values = array();	// saved filter values
 		protected static $user_exists = array();	// saved user_exists() values
+		protected static $locales = array();		// saved get_locale() values
 
 		private static $pub_lang = array(
 			// https://www.facebook.com/translations/FacebookLocales.xml
@@ -475,16 +476,16 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return $found;
 		}
 
-		public static function preg_grep_keys( $preg, array &$arr, $invert = false, $replace = false ) {
+		public static function preg_grep_keys( $pattern, array &$input, $invert = false, $replace = false ) {
 			$invert = $invert == false ? 
 				null : PREG_GREP_INVERT;
-			$match = preg_grep( $preg, array_keys( $arr ), $invert );
+			$match = preg_grep( $pattern, array_keys( $input ), $invert );
 			$found = array();
 			foreach ( $match as $key ) {
 				if ( $replace !== false ) {
-					$fixed = preg_replace( $preg, $replace, $key );
-					$found[$fixed] = $arr[$key]; 
-				} else $found[$key] = $arr[$key]; 
+					$fixed = preg_replace( $pattern, $replace, $key );
+					$found[$fixed] = $input[$key]; 
+				} else $found[$key] = $input[$key]; 
 			}
 			return $found;
 		}
@@ -503,13 +504,13 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return $opts;
 		}
 
-		public static function next_key( $needle, $arr, $cycle = true ) {
-			$keys = array_keys( $arr );
+		public static function next_key( $needle, array &$input, $loop = true ) {
+			$keys = array_keys( $input );
 			$pos = array_search( $needle, $keys );
 			if ( $pos !== false ) {
 				if ( isset( $keys[ $pos + 1 ] ) )
 					return $keys[ $pos + 1 ];
-				elseif ( $cycle === true )
+				elseif ( $loop === true )
 					return $keys[0];
 			}
 			return false;
@@ -683,17 +684,62 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			else return $key_locale;
 		}
 
+		public static function get_multi_key_locale( $prefix, array &$opts, $add_none = false ) {
+			$default = SucomUtil::get_locale( 'default' );
+			$current = SucomUtil::get_locale( 'current' );
+			$matches = SucomUtil::preg_grep_keys( '/^'.$prefix.'_([0-9]+)(#.*)?$/', $opts );
+			$results = array();
+
+			foreach ( $matches as $key => $value ) {
+				$num = preg_replace( '/^'.$prefix.'_([0-9]+)(#.*)?$/', '$1', $key );
+
+				if ( ! empty( $results[$num] ) )	// preserve the first non-blank value
+					continue;
+				elseif ( ! empty( $opts[$prefix.'_'.$num.'#'.$current] ) )	// current locale
+					$results[$num] = $opts[$prefix.'_'.$num.'#'.$current];
+				elseif ( ! empty( $opts[$prefix.'_'.$num.'#'.$default] ) )	// default locale
+					$results[$num] = $opts[$prefix.'_'.$num.'#'.$default];
+				elseif ( ! empty( $opts[$prefix.'_'.$num] ) )			// no locale
+					$results[$num] = $opts[$prefix.'_'.$num];
+				else $results[$num] = $value;					// use value (could be empty)
+			}
+			asort( $results );	// sort values for display
+
+			if ( $add_none )
+				return array_merge( array( 'none' => '[None]' ), $results );
+			else return $results;
+		}
+
+		public static function get_first_last_next_nums( array &$input ) {
+			$keys = array_keys( $input );
+			if ( ! empty( $keys ) &&
+				! is_numeric( implode( $keys ) ) )	// array cannot be associative
+					return false;
+			sort( $keys );
+			$first = (int) reset( $keys );
+			$last = (int) end( $keys );
+			$next = $last ? $last + 1 : $last;	// next is 0 for an empty array
+			return array( $first, $last, $next );
+		}
+
 		// $mixed = 'default' | 'current' | post ID | $mod array
 		public static function get_locale( $mixed = 'current' ) {
-			switch ( true ) {
-				case ( $mixed === 'default' ):
-					$wp_locale = defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US';
-					break;
-				default:
-					$wp_locale = get_locale();
-					break;
-			}
-			return apply_filters( 'sucom_locale', $wp_locale, $mixed );
+			$key = is_array( $mixed ) ?
+				$key = $mixed['name'].'_'.$mixed['id'] : $mixed;
+
+			/*
+			 * We use a class static variable (instead of a method static variable)
+			 * to cache both self::get_locale() and SucomUtil::get_locale() in the
+			 * same variable.
+			 */
+			if ( isset( self::$locales[$key] ) )
+				return self::$locales[$key];
+
+			if ( $mixed === 'default' )
+				$wp_locale = defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US';
+			else $wp_locale = get_locale();
+
+			return self::$locales[$key] = apply_filters( 'sucom_locale', $wp_locale, $mixed );
 		}
 
 		public static function get_mod_salt( array $mod ) {

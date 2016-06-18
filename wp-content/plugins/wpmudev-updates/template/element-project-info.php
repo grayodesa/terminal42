@@ -30,6 +30,7 @@ $action_class = '';
 $action_ajax = '';
 $action_attr = array();
 $show_badge = false;
+$loading_msg = false;
 $target = '_self';
 
 if ( ! $res->is_installed ) {
@@ -46,6 +47,10 @@ if ( ! $res->is_installed ) {
 	} elseif ( $res->is_compatible && $res->url->install ) {
 		$action = __( 'Install', 'wpmudev' );
 		$action_ajax = 'project-install';
+		$loading_msg = sprintf(
+			__( 'Hang on while we install %s...', 'wpmudev' ),
+			esc_attr( $res->name )
+		);
 		$action_url = $res->url->install;
 		$action_class = 'button-green button-cta';
 	} elseif ( $res->is_compatible ) {
@@ -182,6 +187,16 @@ if ( $res->is_active && $res->url->config ) {
 		( 'theme' == $res->type ? __( 'Customize', 'wpmudev' ) : __( 'Configure', 'wpmudev' ) )
 	);
 }
+/*
+if ( 'plugin' == $res->type && $res->is_active && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	$minor_actions[] = sprintf(
+		'<span tooltip="%s" class="tooltip-l"><a href="#reload" class="reload-page">%s %s</a></span>',
+		__( 'Maybe this plugin added a new menu item. Reload the page to see it', 'wpmudev' ),
+		'<i class="wdv-icon wdv-icon-refresh spin-on-click"></i>',
+		__( 'Reload page', 'wpmudev' )
+	);
+}
+*/
 
 $attr = array(
 	'project' => $pid,
@@ -190,6 +205,7 @@ $attr = array(
 	'hasupdate' => intval( $res->has_update ),
 	'incompatible' => intval( $res->is_compatible ),
 	'active' => intval( $res->is_active ),
+	'order' => intval( $res->default_order ),
 	'popularity' => $res->popularity,
 	'downloads' => $res->downloads,
 	'released' => $res->release_stamp,
@@ -231,6 +247,9 @@ if ( $action_ajax && empty( $action_url ) ) {
 		<?php if ( $action_ajax ) : ?>
 		data-action="<?php echo esc_attr( $action_ajax ); ?>"
 		data-hash="<?php echo esc_attr( wp_create_nonce( $action_ajax ) ); ?>"
+		<?php endif; ?>
+		<?php if ( $loading_msg ) : ?>
+		data-loading="<?php echo esc_attr( $loading_msg ); ?>"
 		<?php endif; ?>
 		<?php
 		if ( $action_attr && is_array( $action_attr ) ) {

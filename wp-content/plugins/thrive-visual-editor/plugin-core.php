@@ -1,7 +1,7 @@
 <?php
 
 /* global constants */
-defined( 'TVE_VERSION' ) || DEFINE( "TVE_VERSION", '1.200.9' );
+defined( 'TVE_VERSION' ) || DEFINE( "TVE_VERSION", '1.200.10' );
 defined( 'TVE_TCB_DB_VERSION' ) || define( 'TVE_TCB_DB_VERSION', '1.1' );
 defined( 'TVE_TEMPLATES_PATH' ) || DEFINE( "TVE_TEMPLATES_PATH", plugin_dir_path( __FILE__ ) . 'shortcodes/templates' );
 defined( 'TVE_LANDING_PAGE_TEMPLATE' ) || DEFINE( "TVE_LANDING_PAGE_TEMPLATE", plugins_url() . '/thrive-visual-editor/landing-page/templates' );
@@ -39,7 +39,8 @@ $tve_thrive_shortcodes = array(
 	'widget_menu'                         => 'tve_render_widget_menu',
 	'leads_shortcode'                     => 'tve_do_leads_shortcode',
 	'tve_leads_additional_fields_filters' => 'tve_leads_additional_fields_filters',
-	'social_default'                      => 'tve_social_render_default'
+	'social_default'                      => 'tve_social_render_default',
+	'tvo_shortcode'                       => 'tvo_render_shortcode',
 );
 
 // set colour schemes for all shortcode templates.  The "tve_" prefix is added at a later stage, so no need to add these here.
