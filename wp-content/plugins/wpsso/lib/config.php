@@ -20,11 +20,11 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			'feed_cache_exp' => 86400,	// 24 hours
 			'plugin' => array(
 				'wpsso' => array(
-					'version' => '3.32.4-2',	// plugin version
-					'opt_version' => '434',		// increment when changing default options
+					'version' => '3.33.2-1',	// plugin version
+					'opt_version' => '440',		// increment when changing default options
 					'short' => 'WPSSO',		// short plugin name
 					'name' => 'WordPress Social Sharing Optimization (WPSSO)',
-					'desc' => 'Fast, light-weight, full-featured plugin for great looking shares on all social sites - no matter how your content is shared or re-shared!',
+					'desc' => 'A fast, light-weight, comprehensive plugin to manage all aspects of social meta tags & Schema markup for Google + all social websites.',
 					'slug' => 'wpsso',
 					'base' => 'wpsso/wpsso.php',
 					'update_auth' => 'tid',
@@ -100,6 +100,9 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 								'wpecommerce' => '(plugin) WP eCommerce',
 								'yotpowc' => '(plugin) Yotpo Social Reviews for WooCommerce',
 							),
+							'event' => array(
+								'tribe_events' => '(plugin) The Events Calendar',
+							),
 							'forum' => array(
 								'bbpress' => '(plugin) bbPress',
 							),
@@ -169,7 +172,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				'wpssojson' => array(
 					'short' => 'WPSSO JSON',		// short plugin name
 					'name' => 'WPSSO Schema JSON-LD Markup (WPSSO JSON)',
-					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest.',
+					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.',
 					'slug' => 'wpsso-schema-json-ld',
 					'base' => 'wpsso-schema-json-ld/wpsso-schema-json-ld.php',
 					'update_auth' => 'tid',
@@ -197,7 +200,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				'wpssoorg' => array(
 					'short' => 'WPSSO ORG',		// short plugin name
 					'name' => 'WPSSO Organization Markup (WPSSO ORG)',
-					'desc' => 'WPSSO extension to manage multiple Organizations / Publishers and additional properties for the Schema Article types (BlogPosting, etc.).',
+					'desc' => 'WPSSO extension to manage Organizations and additional Schema Article / Event properties (Publisher, Organizer, Performer, etc.).',
 					'slug' => 'wpsso-organization',
 					'base' => 'wpsso-organization/wpsso-organization.php',
 					'update_auth' => 'tid',
@@ -281,7 +284,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				'wpssossb' => array(
 					'short' => 'WPSSO SSB',		// short plugin name
 					'name' => 'WPSSO Social Sharing Buttons (WPSSO SSB)',
-					'desc' => 'WPSSO extension to add traditional Social Sharing Buttons with support for hashtags, short URLs, bbPress, BuddyPress, WooCommerce, and much more.',
+					'desc' => 'WPSSO extension to add Social Sharing Buttons with support for hashtags, short URLs, bbPress, BuddyPress, WooCommerce, and much more.',
 					'slug' => 'wpsso-ssb',
 					'base' => 'wpsso-ssb/wpsso-ssb.php',
 					'update_auth' => 'tid',
@@ -356,13 +359,15 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'schema_type_for_blog' => 'blog',
 					'schema_type_for_business' => 'local.business',
 					'schema_type_for_download' => 'product',
+					'schema_type_for_event' => 'event',
 					'schema_type_for_organization' => 'organization',
+					'schema_type_for_other' => 'other',
 					'schema_type_for_person' => 'person',
 					'schema_type_for_place' => 'place',
 					'schema_type_for_product' => 'product',
 					'schema_type_for_recipe' => 'recipe',
 					'schema_type_for_review' => 'review',
-					'schema_type_for_other' => 'other',
+					'schema_type_for_tribe_events' => 'event',
 					'schema_type_for_webpage' => 'webpage',
 					'schema_type_for_website' => 'website',
 					'schema_author_name' => 'display_name',
@@ -570,24 +575,30 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'add_meta_itemprop_worstrating' => 1,
 					'add_meta_itemprop_bestrating' => 1,
 					'add_meta_itemprop_reviewcount' => 1,
+					'add_meta_itemprop_startdate' => 1,	// Schema Event
+					'add_meta_itemprop_enddate' => 1,	// Schema Event
+					'add_meta_itemprop_location' => 1,	// Schema Event
 					/*
 					 * Advanced Settings
 					 */
 					// Plugin Settings Tab
+					'plugin_clear_on_save' => 1,			// Clear All Cache(s) on Save Settings
 					'plugin_preserve' => 0,				// Preserve Settings on Uninstall
 					'plugin_debug' => 0,				// Add Hidden Debug Messages
-					'plugin_clear_on_save' => 1,			// Clear All Cache(s) on Save Settings
+					'plugin_hide_pro' => 0,				// Hide All Pro Version Options
 					'plugin_show_opts' => 'basic',			// Options to Show by Default
 					// Content and Filters Tab
-					'plugin_filter_title' => 0,
-					'plugin_filter_content' => 0,
-					'plugin_filter_excerpt' => 0,
-					'plugin_p_strip' => 0,
-					'plugin_use_img_alt' => 1,
-					'plugin_img_alt_prefix' => 'Image:',
-					'plugin_p_cap_prefix' => 'Caption:',
-					'plugin_gravatar_api' => 1,
-					'plugin_slideshare_api' => 1,
+					'plugin_filter_title' => 0,			// Use Filtered (SEO) Title
+					'plugin_filter_content' => 0,			// Apply WordPress Content Filters
+					'plugin_filter_excerpt' => 0,			// Apply WordPress Excerpt Filters
+					'plugin_p_strip' => 0,				// Content Starts at 1st Paragraph
+					'plugin_use_img_alt' => 1,			// Use Image Alt if No Content
+					'plugin_img_alt_prefix' => 'Image:',		// Image Alt Text Prefix
+					'plugin_p_cap_prefix' => 'Caption:',		// WP Caption Prefix
+					'plugin_content_img_max' => 5,			// Maximum Images from Content
+					'plugin_content_vid_max' => 5,			// Maximum Videos from Content
+					'plugin_gravatar_api' => 1,			// Include Author Gravatar Image
+					'plugin_slideshare_api' => 1,			// Check for Embedded Media from
 					'plugin_vimeo_api' => 1,
 					'plugin_wistia_api' => 1,
 					'plugin_youtube_api' => 1,
@@ -619,7 +630,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_auto_img_resize' => 1,			// Create Missing WP Media Images
 					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
 					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
-					'plugin_upscale_img_max' => 50,			// Maximum Image Upscale Percentage
+					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
 					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
 					'plugin_widgets' => 1,				// Enable Plugin Widget(s)
 					'plugin_page_excerpt' => 0,			// Enable WP Excerpt for Pages
@@ -885,12 +896,14 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'og_desc_len' => 156,
 					'og_img_width' => 200,
 					'og_img_height' => 200,
-					'schema_img_width' => 696,
+					'schema_img_width' => 696,	// https://developers.google.com/search/docs/data-types/articles#article_types
+					'schema_img_height' => 279,
 				),
 				'max' => array(
 					'og_img_ratio' => 3,
+					'schema_img_ratio' => 2.5,	// https://developers.google.com/+/web/snippet/article-rendering
 				),
-				'og_type_ns' => array(		// from http://ogp.me/#types
+				'og_type_ns' => array(		// http://ogp.me/#types
 					'article' => 'http://ogp.me/ns/article#',
 					'book' => 'http://ogp.me/ns/book#',
 					'music.album' => 'http://ogp.me/ns/music#',
@@ -1023,6 +1036,27 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 						'review' => 'http://schema.org/Review',
 						'webpage' => 'http://schema.org/WebPage',
 						'website' => 'http://schema.org/WebSite',
+					),
+					'event' => array(
+						'event' => 'http://schema.org/Event',
+						'event.business' => 'http://schema.org/BusinessEvent',
+						'event.childrens' => 'http://schema.org/ChildrensEvent',
+						'event.comedy' => 'http://schema.org/ComedyEvent',
+						'event.dance' => 'http://schema.org/DanceEvent',
+						'event.delivery' => 'http://schema.org/DeliveryEvent',
+						'event.education' => 'http://schema.org/EducationEvent',
+						'event.exhibition' => 'http://schema.org/ExhibitionEvent',
+						'event.festival' => 'http://schema.org/Festival',
+						'event.food' => 'http://schema.org/FoodEvent',
+						'event.literary' => 'http://schema.org/LiteraryEvent',
+						'event.music' => 'http://schema.org/MusicEvent',
+						'event.publication' => 'http://schema.org/PublicationEvent',
+						'event.sale' => 'http://schema.org/SaleEvent',
+						'event.screening' => 'http://schema.org/ScreeningEvent',
+						'event.social' => 'http://schema.org/SocialEvent',
+						'event.sports' => 'http://schema.org/SportsEvent',
+						'event.theater' => 'http://schema.org/TheaterEvent',
+						'event.visual.arts' => 'http://schema.org/VisualArtsEvent',
 					),
 					'organization' => array(
 						'airline' => 'http://schema.org/Airline',
@@ -1256,8 +1290,9 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			$var_const['WPSSO_DEBUG_FILE_EXP'] = 300;
 			$var_const['WPSSO_MENU_ORDER'] = '99.10';		// position of the SSO menu item
 			$var_const['WPSSO_MENU_ICON_HIGHLIGHT'] = true;		// highlight the SSO menu icon
+			$var_const['WPSSO_HIDE_ALL_ERRORS'] = false;		// auto-hide all error notices
 			$var_const['WPSSO_HIDE_ALL_WARNINGS'] = false;		// auto-hide all warning notices
-			$var_const['WPSSO_JSON_PRETTY_PRINT'] = true;		// don't minimize json code
+			$var_const['WPSSO_JSON_PRETTY_PRINT'] = true;		// output pretty / human readable json
 
 			/*
 			 * WPSSO option and meta array names
@@ -1354,7 +1389,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				if ( file_exists( $filepath ) ) {
 					require_once( $filepath );
 					if ( empty( $classname ) )
-						return SucomUtil::sanitize_classname( 'wpsso'.$filespec );
+						return SucomUtil::sanitize_classname( 'wpsso'.$filespec, false );	// $underscore = false
 					else return $classname;
 				}
 			}

@@ -247,13 +247,11 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				get_post_types( array( 'public' => true ), $output ), $output );
 		}
 
-		public function clear_all_cache( $clear_ext_cache = true, $run_only_once = false ) {
+		public function clear_all_cache( $clear_external = true, $msg_id = false, $dismiss = false ) {
 
-			if ( $this->cleared_all_cache )
-				return;
-
-			if ( $run_only_once )
-				$this->cleared_all_cache = true;
+			if ( $this->cleared_all_cache )	// already run once
+				return 0;
+			else $this->cleared_all_cache = true;
 
 			wp_cache_flush();					// clear non-database transients as well
 
@@ -265,7 +263,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			$clear_all_msg = sprintf( __( '%s cached files, transient cache, and the WordPress object cache have been cleared.',
 				'wpsso' ), $short );
 
-			if ( $clear_ext_cache ) {
+			if ( $clear_external ) {
 				if ( function_exists( 'w3tc_pgcache_flush' ) ) {	// w3 total cache
 					w3tc_pgcache_flush();
 					w3tc_objectcache_flush();
@@ -286,67 +284,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				}
 			}
 
-			$this->p->notice->inf( $clear_all_msg, true );
+			$this->p->notice->inf( $clear_all_msg, true, true, $msg_id, $dismiss );
 
 			return $del_files + $del_transients;
-		}
-
-		public function clear_post_cache( $post_id ) {
-			switch ( get_post_status( $post_id ) ) {
-				case 'draft':
-				case 'pending':
-				case 'future':
-				case 'private':
-				case 'publish':
-					$lca = $this->p->cf['lca'];
-					$locale = self::get_locale( $post_id );
-					$permalink = get_permalink( $post_id );
-					$permalink_no_meta = add_query_arg( array( 'WPSSO_META_TAGS_DISABLE' => 1 ), $permalink );
-					$sharing_url = $this->get_sharing_url( $post_id );
-					$locale_salt = 'locale:'.$locale.'_post:'.$post_id;
-
-					// transients persist from one page load to another
-					$transients = array(
-						'SucomCache::get' => array(
-							'url:'.$permalink,
-							'url:'.$permalink_no_meta,
-						),
-						'WpssoHead::get_header_array' => array( 
-							$locale_salt.'_url:'.$sharing_url,
-							$locale_salt.'_url:'.$sharing_url.'_crawler:pinterest',
-						),
-						'WpssoMeta::get_mod_column_content' => array( 
-							$locale_salt.'_column:'.$lca.'_og_img',
-							$locale_salt.'_column:'.$lca.'_og_desc',
-						),
-					);
-					$transients = apply_filters( $lca.'_post_cache_transients', $transients, $post_id, $locale, $sharing_url );
-
-					// wp objects are only available for the duration of a single page load
-					$wp_objects = array(
-						'SucomWebpage::get_content' => array(
-							$locale_salt.'_filtered',
-							$locale_salt.'_unfiltered',
-						),
-						'SucomWebpage::get_hashtags' => array(
-							$locale_salt,
-						),
-					);
-					$wp_objects = apply_filters( $lca.'_post_cache_objects', $wp_objects, $post_id, $locale, $sharing_url );
-
-					$deleted = $this->clear_cache_objects( $transients, $wp_objects );
-
-					if ( ! empty( $this->p->options['plugin_cache_info'] ) && $deleted > 0 )
-						$this->p->notice->inf( $deleted.' items removed from the WordPress object and transient caches.', true );
-
-					if ( function_exists( 'w3tc_pgcache_flush_post' ) )	// w3 total cache
-						w3tc_pgcache_flush_post( $post_id );
-
-					if ( function_exists( 'wp_cache_post_change' ) )	// wp super cache
-						wp_cache_post_change( $post_id );
-
-					break;
-			}
 		}
 
 		public function clear_cache_objects( &$transients = array(), &$wp_objects = array() ) {
@@ -512,8 +452,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					elseif ( ! is_numeric( $val ) || $val < $min_int ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs['pos_num'], $key, $min_int ), true );
 						$val = $def_val;
-					} else $val = (int) $val;	// cast as integer
-
+					}
 					break;
 
 				// must be blank or numeric
@@ -522,7 +461,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 						if ( ! is_numeric( $val ) ) {
 							$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 							$val = $def_val;
-						} else $val = (int) $val;	// cast as integer
+						}
 					}
 					break;
 
@@ -531,16 +470,16 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( ! is_numeric( $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (int) $val;	// cast as integer
+					}
 					break;
 
 				// empty of alpha-numeric uppercase (hyphens are allowed as well)
 				case 'auth_id':
-					$val = trim( $val );
+					$val = preg_replace( array( '/&(shy|ndash|mdash);/', '/(--+)/' ), '-', trim( $val ) );
 					if ( $val !== '' && preg_match( '/[^A-Z0-9\-]/', $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $val, $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;	// cast as string
+					}
 					break;
 
 				// empty or alpha-numeric (upper or lower case), plus underscores
@@ -549,7 +488,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' && preg_match( '/[^a-zA-Z0-9_]/', $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;	// cast as string
+					}
 					break;
 
 				case 'date':
@@ -559,7 +498,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( $val !== '' && ! preg_match( $fmt, $val ) ) {
 						$this->p->notice->err( sprintf( $this->sanitize_error_msgs[$option_type], $key ), true );
 						$val = $def_val;
-					} else $val = (string) $val;	// cast as string
+					}
 					break;
 
 				// text strings that can be blank
@@ -614,22 +553,31 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			if ( empty( $query ) )
 				return false;
 
-			if ( strpos( $request, '<' ) === 0 )	// check for HTML content
+			if ( strpos( $request, '<' ) === 0 ) {	// check for HTML content
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'using html submitted in the request argument' );
 				$html = $request;
-			elseif ( strpos( $request, '://' ) === false )
+			} elseif ( strpos( $request, '://' ) === false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: request argument is not html or valid url' );
 				return false;
-			elseif ( ( $html = $this->p->cache->get( $request, 'raw', 'transient' ) ) === false )
+			} elseif ( ( $html = $this->p->cache->get( $request, 'raw', 'transient' ) ) === false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: error caching '.$request );
 				return false;
+			}
 
+			$ret = array();
 			$cmt = $this->p->cf['lca'].' meta tags ';
+
 			if ( $remove_self === true && strpos( $html, $cmt.'begin' ) !== false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'removing self meta tags' );
 				$pre = '<(!--[\s\n\r]+|meta[\s\n\r]+name="'.$this->p->cf['lca'].':mark"[\s\n\r]+content=")';
 				$post = '([\s\n\r]+--|"[\s\n\r]*\/?)>';	// make space and slash optional for html optimizers
 				$html = preg_replace( '/'.$pre.$cmt.'begin'.$post.'.*'.$pre.$cmt.'end'.$post.'/ms',
 					'<!-- '.$this->p->cf['lca'].' meta tags removed -->', $html );
 			}
-
-			$ret = array();
 
 			if ( class_exists( 'DOMDocument' ) ) {
 				$doc = new DOMDocument();		// since PHP v4.1.0
@@ -652,6 +600,25 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			}
 
 			return empty( $ret ) ? false : $ret;
+		}
+
+		public function get_body_html( $request ) {
+
+			if ( strpos( $request, '<' ) === 0 ) {	// check for HTML content
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'using html submitted in the request argument' );
+				$html = $request;
+			} elseif ( strpos( $request, '://' ) === false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: request argument is not html or valid url' );
+				return false;
+			} elseif ( ( $html = $this->p->cache->get( $request, 'raw', 'transient' ) ) === false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: error caching '.$request );
+				return false;
+			}
+
+			return preg_replace( '/^.*<body[^>]*>(.*)<\/body>.*$/ms', '$1', $html );
 		}
 
 		public function log_is_functions() {
@@ -888,7 +855,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				$keys = array( $keys );
 
 			foreach ( $keys as $prefix ) {
-				$media_url = self::get_mt_media_url( $prefix, $opts );
+				$media_url = self::get_mt_media_url( $opts, $prefix );
 				if ( ! empty( $media_url ) && strpos( $media_url, '://' ) !== false ) {
 					list( $opts[$prefix.':width'], $opts[$prefix.':height'],
 						$image_type, $image_attr ) = @getimagesize( $media_url );
@@ -1425,6 +1392,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		}
 
 		public function get_admin_url( $menu_id = '', $link_text = '', $menu_lib = '' ) {
+
 			$hash = '';
 			$query = '';
 			$admin_url = '';
@@ -1479,11 +1447,50 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			else return '<a href="'.$admin_url.'">'.$link_text.'</a>';
 		}
 
+		public function do_metabox_tabs( $metabox = '', $tabs = array(), $table_rows = array(), $args = array() ) {
+
+			$tab_keys = array_keys( $tabs );
+			$default_tab = '_'.reset( $tab_keys );		// must start with an underscore
+			$class_metabox_tabs = 'sucom-metabox-tabs';
+			$class_link = 'sucom-tablink';
+			$class_tabset = 'sucom-tabset';
+
+			if ( ! empty( $metabox ) ) {
+				$metabox = '_'.$metabox;		// must start with an underscore
+				$class_metabox_tabs .= ' '.$class_metabox_tabs.$metabox;
+				$class_link .= ' '.$class_link.$metabox;
+			}
+
+			// allow a css ID to be passed as a query argument
+			extract( array_merge( array(
+				'scroll_to' => isset( $_GET['scroll_to'] ) ? 
+					'#'.self::sanitize_key( $_GET['scroll_to'] ) : '',
+			), $args ) );
+
+			echo "\n".'<script type="text/javascript">jQuery(document).ready(function(){ '.
+				'sucomTabs(\''.$metabox.'\', \''.$default_tab.'\', \''.$scroll_to.'\'); });</script>'."\n";
+			echo '<div class="'.$class_metabox_tabs.'">'."\n";
+			echo '<ul class="'.$class_metabox_tabs.'">'."\n";
+			foreach ( $tabs as $tab => $title ) {
+				$class_href_key = $class_tabset.$metabox.'-tab_'.$tab;
+				echo '<div class="tab_left">&nbsp;</div><li class="'.
+					$class_href_key.'"><a class="'.$class_link.'" href="#'.
+					$class_href_key.'">'.$title.'</a></li>'."\n";
+			}
+			echo '</ul><!-- .'.$class_metabox_tabs.' -->'."\n";
+
+			foreach ( $tabs as $tab => $title ) {
+				$class_href_key = $class_tabset.$metabox.'-tab_'.$tab;
+				$this->do_table_rows( $table_rows[$tab], $class_href_key, ( empty( $metabox ) ?
+					'' : $class_tabset.$metabox ), $class_tabset );
+			}
+			echo '</div><!-- .'.$class_metabox_tabs.' -->'."\n\n";
+		}
+
 		public function do_table_rows( $table_rows, $class_href_key = '', $class_tabset_mb = '', $class_tabset = '' ) {
-			// just in case
-			if ( empty( $table_rows ) || 
-				! is_array( $table_rows ) )
-					return;
+
+			if ( ! is_array( $table_rows ) )	// just in case
+				return;
 
 			$lca = empty( $this->p->cf['lca'] ) ? 
 				'sucom' : $this->p->cf['lca'];
@@ -1493,7 +1500,8 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			$hidden_rows = 0;
 
 			// use call_user_func() instead of $classname::show_opts() for PHP 5.2
-			$show_opts = class_exists( $lca.'user' ) ? call_user_func( array( $lca.'user', 'show_opts' ) ) : 'basic';
+			$show_opts = class_exists( $lca.'user' ) ? 
+				call_user_func( array( $lca.'user', 'show_opts' ) ) : 'basic';
 
 			foreach ( $table_rows as $key => $row ) {
 				if ( empty( $row ) )	// just in case
@@ -1544,6 +1552,12 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				$count_rows++;
 			}
 
+			if ( $count_rows === 0 ) {
+				$table_rows[] = '<tr><td align="center"><p><em>'.__( 'No options available.',
+					'wpsso' ).'</em></p></td></tr>';
+				$count_rows++;
+			}
+
 			echo '<div class="'.
 				( empty( $show_opts ) ? '' : 'sucom-show_'.$show_opts ).
 				( empty( $class_tabset ) ? '' : ' '.$class_tabset ).
@@ -1553,8 +1567,8 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 			echo '<table class="sucom-setting '.$lca.
 				( empty( $class_href_key ) ? '' : ' '.$class_href_key ).
-				( $hidden_rows === $count_rows ? ' hide_in_'.$show_opts : '' ).	// if all rows hidden, then hide the whole table
-			'">'."\n";
+				( $hidden_rows > 0 && $hidden_rows === $count_rows ?	// if all rows hidden, then hide the whole table
+					' hide_in_'.$show_opts : '' ).'">'."\n";
 
 			foreach ( $table_rows as $row )
 				echo $row;
@@ -1563,63 +1577,21 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			echo '</div>'."\n";
 
 			$show_opts_label = $this->p->cf['form']['show_options'][$show_opts];
-
 			if ( $hidden_opts > 0 ) {
 				echo '<div class="hidden_opts_msg '.$class_tabset.'-msg '.$class_tabset_mb.'-msg '.$class_href_key.'-msg">'.
 					sprintf( _x( '%1$d additional options not shown in %2$s view', 'option comment', 'wpsso' ), 
 						$hidden_opts, _x( $show_opts_label, 'option value', 'wpsso' ) ).
-					' (<a href="javascript:void(0);" onClick="sucomViewUnhideRows( \''.$class_href_key.'\', \''.$show_opts.'\' );">'.
+					' (<a href="javascript:void(0);"'.
+					' onClick="sucomViewUnhideRows( \''.$class_href_key.'\', \''.$show_opts.'\' );">'.
 					_x( 'unhide these options', 'option comment', 'wpsso' ).'</a>)</div>'."\n";
 			} elseif ( $hidden_rows > 0 ) {
 				echo '<div class="hidden_opts_msg '.$class_tabset.'-msg '.$class_tabset_mb.'-msg '.$class_href_key.'-msg">'.
 					sprintf( _x( '%1$d additional rows not shown in %2$s view', 'option comment', 'wpsso' ), 
 						$hidden_rows, _x( $show_opts_label, 'option value', 'wpsso' ) ).
-					' (<a href="javascript:void(0);" onClick="sucomViewUnhideRows( \''.$class_href_key.'\', \''.$show_opts.'\', \'hide_row_in\' );">'.
+					' (<a href="javascript:void(0);"'.
+					' onClick="sucomViewUnhideRows( \''.$class_href_key.'\', \''.$show_opts.'\', \'hide_row_in\' );">'.
 					_x( 'unhide these rows', 'option comment', 'wpsso' ).'</a>)</div>'."\n";
 			}
-		}
-
-		public function do_metabox_tabs( $metabox = '', $tabs = array(), $table_rows = array(), $args = array() ) {
-			$tab_keys = array_keys( $tabs );
-			$default_tab = '_'.reset( $tab_keys );		// must start with an underscore
-			$class_metabox_tabs = 'sucom-metabox-tabs';
-			$class_link = 'sucom-tablink';
-			$class_tabset = 'sucom-tabset';
-
-			if ( ! empty( $metabox ) ) {
-				$metabox = '_'.$metabox;		// must start with an underscore
-				$class_metabox_tabs .= ' '.$class_metabox_tabs.$metabox;
-				$class_link .= ' '.$class_link.$metabox;
-			}
-
-			// allow a css ID to be passed as a query argument
-			extract( array_merge( array(
-				'scroll_to' => isset( $_GET['scroll_to'] ) ? 
-					'#'.self::sanitize_key( $_GET['scroll_to'] ) : '',
-			), $args ) );
-
-			echo "\n".'<script type="text/javascript">jQuery(document).ready(function(){ '.
-				'sucomTabs(\''.$metabox.'\', \''.$default_tab.'\', \''.$scroll_to.'\'); });</script>'."\n";
-			echo '<div class="'.$class_metabox_tabs.'">'."\n";
-			echo '<ul class="'.$class_metabox_tabs.'">'."\n";
-			foreach ( $tabs as $tab => $title ) {
-				$class_href_key = $class_tabset.$metabox.'-tab_'.$tab;
-				echo '<div class="tab_left">&nbsp;</div><li class="'.
-					$class_href_key.'"><a class="'.$class_link.'" href="#'.
-					$class_href_key.'">'.$title.'</a></li>'."\n";
-			}
-			echo '</ul><!-- .'.$class_metabox_tabs.' -->'."\n";
-
-			foreach ( $tabs as $tab => $title ) {
-				$class_href_key = $class_tabset.$metabox.'-tab_'.$tab;
-				$this->do_table_rows( 
-					$table_rows[$tab], 
-					$class_href_key,
-					( empty( $metabox ) ? '' : $class_tabset.$metabox ),
-					$class_tabset
-				);
-			}
-			echo '</div><!-- .'.$class_metabox_tabs.' -->'."\n\n";
 		}
 	}
 }

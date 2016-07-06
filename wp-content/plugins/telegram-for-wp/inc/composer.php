@@ -18,6 +18,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	.toolbar select {margin: 5px 0 !important;}
 	#twp_metabox td, #twp_metabox th {padding-top: 0 !important;}
 	#twp_box_container * {margin-top: 0 !important;}
+	.twp-file-container {margin-top: 10px;}
+	#twp-file-details, #twp-file-icon {display: inline-block;vertical-align: top;}
+	#twp-file-details {margin: 0 12px;}
+	#twp-file-details span {color:royalblue;}
 	span#cheatsheet-link {padding: 5px; }
 	@media screen and (max-width: 782px) {
 		#profile-page .form-table textarea, .form-table span.description, .form-table td input[type=email], .form-table td input[type=password], .form-table td input[type=text], .form-table td select, .form-table td textarea {
@@ -54,6 +58,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			<select id="patterns-select">
 			<option selected="true" style="display:none;"><?php echo __("Select a tag...", "twp-plugin"); ?></option>
 				<optgroup label="WordPress Tags">
+					<option title='<?php echo __("The ID of this post", "twp-plugin"); ?>'>{ID}</option>
 					<option title='<?php echo __("The title of this post", "twp-plugin"); ?>'>{title}</option>
 					<option title='<?php echo __("The first 55 words of this post", "twp-plugin"); ?>'>{excerpt}</option>
 					<option title='<?php echo __("The whole content of this post", "twp-plugin"); ?>'>{content}</option>
@@ -290,7 +295,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				<textarea id="twp_channel_pattern" name="twp_channel_pattern" dir="auto"><?php echo $cp ?></textarea>
 				<div id="output" dir="auto"><?php echo $cp ?></div>
 			</div>
-			<div id="send-thumb-select">
+			<div class="twp-radio-group">
 				<input type="radio" name="twp_send_thumb" id="twp-send-thumb-0" <?php echo ($s==0)?'checked=checked':'' ?> value="0">
 				<label for="twp-send-thumb-0"><?php echo __("Don't send featured image", "twp-plugin"); ?></label>
 				<br>
@@ -304,8 +309,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				?>
 				<input type="radio" name="twp_send_thumb" id="twp-send-thumb-2" <?php echo ($s==2)?'checked=checked':'' ?> value="2">
 				<label for="twp-send-thumb-2"><?php echo __("Send custom image", "twp-plugin"); ?></label>
-				<input name="frame_title" type="hidden" value="<?php echo __("Select or Upload the custom photo") ?>" />
-				<input name="button_text" type="hidden" value="<?php echo __("Use this image") ?>" />
 				<div class="twp-img-container">
 					<?php if ( $twp_have_img ) : ?>
 						<img src="<?php echo $twp_img_src[0] ?>" alt="" style="max-width:100%;" />
@@ -314,7 +317,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				<!-- twp add & remove image links -->
 				<p id="twp-upload-link" class="hide-if-no-js <?php if ($s != 2) { echo 'hidden'; } ?>">
 					<a class="upload-custom-img <?php if ( $twp_have_img  ) { echo 'hidden'; } ?>" 
-						href="<?php echo $upload_link ?>">
+						href="<?php echo $twp_img_upload_link ?>">
 						<?php _e('Set custom image') ?>
 					</a>
 					<a class="delete-custom-img <?php if ( ! $twp_have_img  ) { echo 'hidden'; } ?>" 
@@ -328,3 +331,47 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			</div>
 		</td>
 	</tr>
+	<?php 
+	// if we are in post pages, then show the custom image option.
+	if ($hook->base == 'post'){
+	?>
+	<tr>
+		<th scope="row">
+			<h3><?php echo __("Send file", "twp-plugin"); ?></h3>
+		</th>
+		<td>
+			<p class="howto">
+				<?php 
+				echo __("Select the file that you want to send with this post.", "twp-plugin");
+				?>
+			</p>
+			<div class="twp-file-container">
+				<div id="twp-file-icon">
+					<?php if ( $twp_have_file ) : ?>
+						<a href="#" title="<?php echo __("Edit file", "twp-plugin") ?>"><img src="<?php echo $attachment['icon'] ?>" alt="" style="max-width:100%;" /></a>
+					<?php endif; ?>
+				</div>
+				<div id="twp-file-details">
+					<?php if ( $twp_have_file ) : ?>
+						<p> Title: <span><?php echo $attachment['filename'] ?></span></p>
+						<p> Caption: <span><?php echo $attachment['caption'] ?></span></p>
+						<p> Size: <span id="filesize-span"><?php echo $attachment['filesizeHumanReadable'] ?></span></p>
+					<?php endif; ?>
+				</div>
+			</div>
+			<!-- twp add & remove image links -->
+			<p id="twp-upload-link" class="hide-if-no-js">
+				<a class="upload-custom-file <?php if ( $twp_have_file  ) { echo 'hidden'; } ?>" 
+					href="<?php echo $twp_file_upload_link ?>">
+					<?php echo __('Set custom file', 'twp-plugin') ?>
+				</a>
+				<a class="delete-custom-file <?php if ( ! $twp_have_file  ) { echo 'hidden'; } ?>" 
+					href="#">
+					<?php echo __('Remove this file', 'twp-plugin') ?>
+				</a>
+			</p>
+			<!-- A hidden input to set and post the chosen file id -->
+			<input class="twp-file-id" name="twp_file_id" type="hidden" value="<?php echo esc_attr( $twp_file_id ); ?>" />
+		</td>
+	</tr>
+	<?php } #end if ?>

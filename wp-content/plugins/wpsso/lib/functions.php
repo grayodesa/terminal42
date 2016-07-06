@@ -32,16 +32,17 @@ if ( ! function_exists( 'wpsso_schema_attributes' ) ) {
 }
 
 if ( ! function_exists( 'wpsso_clear_all_cache' ) ) {
-	function wpsso_clear_all_cache() {
+	function wpsso_clear_all_cache( $clear_external = false ) {
 		$wpsso =& Wpsso::get_instance();
-		return $wpsso->util->clear_all_cache( false );	// $ext_cache = false
+		return $wpsso->util->clear_all_cache( $clear_external, __FUNCTION__, true );
 	}
 }
 
 if ( ! function_exists( 'wpsso_clear_post_cache' ) ) {
 	function wpsso_clear_post_cache( $post_id ) {
 		$wpsso =& Wpsso::get_instance();
-		return $wpsso->util->clear_post_cache( $post_id );
+		if ( is_object( $wpsso->m['util']['post'] ) )
+			$wpsso->m['util']['post']->clear_cache( $post_id );
 	}
 }
 

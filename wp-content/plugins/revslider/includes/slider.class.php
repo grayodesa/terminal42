@@ -1327,9 +1327,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 			
 			$alreadyImported = array();
 			
-			//$content_url = content_url();
-			$upload_dir = wp_upload_dir();
-			$content_url = $upload_dir['baseurl'].'/revslider/assets/svg/';
+			$content_url = content_url();
 			
 			//wpml compatibility
 			$slider_map = array();
@@ -1422,11 +1420,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 						
 						if(isset($layer['type']) && $layer['type'] == 'svg'){
 							if(isset($layer['svg']) && isset($layer['svg']->src)){
-								if(strpos($layer['svg']->src, 'revslider-whiteboard-addon') !== false){
-									$layer['svg']->src = content_url().$layer['svg']->src;
-								}else{
-									$layer['svg']->src = str_replace('/plugins/revslider/public/assets/assets/svg/', '', $content_url.$layer['svg']->src);
-								}
+								$layer['svg']->src = $content_url.$layer['svg']->src;
 							}
 						}
 						
@@ -1668,7 +1662,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 						
 						if(isset($layer['type']) && $layer['type'] == 'svg'){
 							if(isset($layer['svg']) && isset($layer['svg']->src)){
-								$layer['svg']->src = str_replace('/plugins/revslider/public/assets/assets/svg/', '', $content_url.$layer['svg']->src);
+								$layer['svg']->src = $content_url.$layer['svg']->src;
 							}
 						}
 						
@@ -1764,7 +1758,7 @@ class RevSliderSlider extends RevSliderElementsBase{
 			RevSliderPluginUpdate::change_settings_on_layers($c_slider); //set to version 5
 			RevSliderPluginUpdate::add_general_settings($c_slider); //set to version 5
 			RevSliderPluginUpdate::change_general_settings_5_0_7($c_slider); //set to version 5.0.7
-			RevSliderPluginUpdate::change_layers_svg_5_2_5_4($c_slider); //set to version 5.2.5.4
+			RevSliderPluginUpdate::change_layers_svg_5_2_5_5($c_slider); //set to version 5.2.5.5
 			
 			$cus_js = $c_slider->getParam('custom_javascript', '');
 			

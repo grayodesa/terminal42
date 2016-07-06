@@ -1169,6 +1169,7 @@ include( SEMICOLON_FUNCTIONS . '/posttypes.php' ); // Theme PostTypes
 
 include( SEMICOLON_FUNCTIONS . '/metaboxes.php' ); // Theme MetaBoxes
 
+
 /**
 * Move RSVP Tickets form in events template
 */

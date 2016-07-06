@@ -24,13 +24,12 @@ if ( ! class_exists( 'WpssoGplAdminPost' ) ) {
 				$this->p->debug->mark();
 
 			$is_og_article = isset( $head['og:type'] ) && 
-				$head['og:type'] === 'article' ? false : true;
+				$head['og:type'] === 'article' ? true : false;
 
 			$table_rows[] = '<td colspan="2" align="center">'.
-				$this->p->msgs->get( 'pro-about-msg-post' ).'</td>';
-
-			$table_rows[] = '<td colspan="2" align="center">'.
-				$this->p->msgs->get( 'pro-feature-msg' ).'</td>';
+				$this->p->msgs->get( 'pro-about-msg-post' ).
+				$this->p->msgs->get( 'pro-feature-msg' ).
+				'</td>';
 
 			$form_rows = array(
 				'og_art_section' => array(

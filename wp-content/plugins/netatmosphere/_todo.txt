@@ -1,0 +1,23 @@
+ToDo:
+- admin: 
+    - fix overview (split device overview, measure overview)
+- options for caching (instead of full cache)
+- option for show/hide menu in admin bar at top
+- dashboard
+- charts including:
+    + include charts lib to plugin
+
+think of:    
+- send mail with csv of data? every week? every month?
+- consolidate data to hours average?
+
+done:
+
+- admin: 
+    - show last module id, count of devices only active
+- option for disable/enable wp_cron (at least for device refresh)
+- blacklist module id's for measure synch
+- charts:
+    + done: WP Business Intelligence Lite
+    + show helpful queries in admin
+    

@@ -1,0 +1,104 @@
+@media print{
+	body, html {
+	  	min-width: 100% !important;
+	    width: 100% !important;
+	    margin: 0 !important;
+	}
+	html.wp-toolbar{
+		padding: 0;
+	}
+
+	#wpadminbar {
+	  display: none;
+	}
+	body #wpwrap, .toast {
+	  display: none !important;
+	}
+	body.print_receipt #sale_report_popup_inner{
+		padding: 20px;
+	}
+	body.print_receipt #wpwrap{
+		display: none !important;
+	}
+	.barcode_border{border: solid 1px #000; padding: 8px;}
+	#printable_barcode{background: #fff}
+	#printable_barcode .barcode_border{
+	  margin: 15px;
+	  text-align: center;
+	}
+	#printable_barcode .barcode_border img{
+	    width: 100%;
+	  }
+	#printable_barcode .barcode_border{
+	  width: 180px;
+	}	
+	  
+	#printable_barcode, #printable { display: block !important; overflow: hidden; }
+	.blockUI{display: none;}
+	#printable_barcode.continuous_feed .barcode_border{
+		width: auto;
+		border: none;
+		margin: 0 auto;
+		page-break-after:always;
+		overflow: hidden;
+	}
+	#printable_barcode.a4 .barcode_border{
+		width: 145px;
+		float: left;
+		border: none;
+		margin: 10px;
+		overflow: hidden;
+	}
+	#printable_barcode.letter .barcode_border{
+		width: 145px;
+		float: left;
+		border: none;
+		margin: 10px;
+		overflow: hidden;
+	} 
+	#printable_barcode.per_sheet_30{
+		text-align: center;
+	}
+	#printable_barcode.per_sheet_30 .barcode_border{
+		display: inline-block;
+		margin-bottom: 0;
+		margin-left: 3.5px;
+		margin-right: 3.5px;
+		border-radius: 7px;
+		border: none;
+		background: #fff;
+		margin-top: -1px;
+		float: left;
+		height: 90px;
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+		width: 33%;
+	}
+
+	#printable_barcode.per_sheet_30 .barcode_border:nth-child(30n+1),
+	#printable_barcode.per_sheet_30 .barcode_border:nth-child(30n+2),
+	#printable_barcode.per_sheet_30 .barcode_border:nth-child(30n+3){	
+		margin-top: 0;
+	}
+	#printable_barcode.per_sheet_30 .barcode_border img{
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 50%;
+	}
+	#printable_barcode {
+	    font-family: Consolas, Monaco, monospace;
+	    font-weight: bold;
+	    font-size: 12px;		
+	}
+
+	.md-modal.md-show{
+		visibility:hidden;
+		display: none;
+	}
+	.md-modal.md-show ~ .md-overlay{
+		visibility:hidden;
+		display: none;	
+	}
+}

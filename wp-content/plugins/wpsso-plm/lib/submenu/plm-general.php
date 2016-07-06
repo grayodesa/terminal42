@@ -95,18 +95,13 @@ if ( ! class_exists( 'WpssoPlmSubmenuPlmGeneral' ) && class_exists( 'WpssoAdmin'
 
 				case 'contact-address':
 
-					$half_hours = SucomUtil::get_hours_range( 0, 86400, 60 * 30, '' );	// $format = ''
-					$business_types = $this->p->schema->get_schema_types_select(
-						$this->p->cf['head']['schema_type']['place']['local.business'],
-						false	// $add_none = false
-					);
-
-					$address_names = SucomUtil::get_multi_key_locale( 'plm_addr_name', $this->p->options, false );	// $add_none = false
+					$address_names = SucomUtil::get_multi_key_locale( 'plm_addr_name', $this->p->options, false );
 					list( $first_num, $last_num, $next_num ) = SucomUtil::get_first_last_next_nums( $address_names );
 					$address_names[$next_num] = WpssoPlmConfig::$cf['form']['plm_addr_select']['new'];
 
-					// check to make sure the selected id exists
-					// if not, then unset to use the default
+					$business_types = $this->p->schema->get_schema_types_select( $this->p->cf['head']['schema_type']['place']['local.business'], false );
+					$half_hours = SucomUtil::get_hours_range( 0, 86400, 60 * 30, '' );
+
 					if ( isset( $this->form->options['plm_addr_id'] ) ) {
 						$def_id = $this->form->options['plm_addr_id'];
 						if ( ! isset( $this->p->options['plm_addr_name_'.$def_id] ) ||

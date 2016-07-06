@@ -48,7 +48,6 @@ if ( ! class_exists( 'WpssoJsonProHeadArticle' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 
 			/*
@@ -68,12 +67,14 @@ if ( ! class_exists( 'WpssoJsonProHeadArticle' ) ) {
 			 *
 			 * Uses the 'org_banner_url' image instead of 'org_logo_url' for Google's Article markup.
 			 * See https://developers.google.com/structured-data/rich-snippets/articles for more info.
+			 *
+			 * $org_id can be null, false, 'none', 'site', or number (including 0) -- null and false are the same as 'site'
 			 */
 			$org_id = is_object( $mod['obj'] ) ?
-				$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : false;	// null, false, 'none', 'site', or number (including 0)
+				$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : 'site';
 
 			if ( $this->p->debug->enabled )
-				$this->p->debug->log( 'custom publisher / organization id is '.
+				$this->p->debug->log( 'publisher id is '.
 					( empty( $org_id ) ? 'empty' : $org_id ) );
 
 			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, $org_id, 'org_banner_url', false );	// $list_element = false

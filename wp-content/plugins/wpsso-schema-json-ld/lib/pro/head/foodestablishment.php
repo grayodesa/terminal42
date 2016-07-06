@@ -51,7 +51,6 @@ if ( ! class_exists( 'WpssoJsonProHeadFoodEstablishment' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 
 			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array( 

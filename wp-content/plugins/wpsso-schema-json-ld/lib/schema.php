@@ -40,7 +40,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 				foreach ( $mt_og['og:video'] as $num => $og_video ) {
 					if ( isset( $og_video['og:video:type'] ) &&
 						$og_video['og:video:type'] !== 'text/html' ) {
-						if ( SucomUtil::get_mt_media_url( 'og:image', $og_video ) )
+						if ( SucomUtil::get_mt_media_url( $og_video, 'og:image' ) )
 							$prev_count++;
 						$og_image[] = SucomUtil::preg_grep_keys( '/^og:image/', $og_video );
 					}
@@ -120,7 +120,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 				return 0;	// return count of videos added
 			}
 
-			$media_url = SucomUtil::get_mt_media_url( $prefix, $opts );
+			$media_url = SucomUtil::get_mt_media_url( $opts, $prefix );
 
 			if ( empty( $media_url ) ) {
 				if ( $ngfb->debug->enabled )

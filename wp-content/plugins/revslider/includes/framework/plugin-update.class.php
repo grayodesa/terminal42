@@ -77,10 +77,17 @@ class RevSliderPluginUpdate {
 			self::set_version($version);
 		}
 		
-		if(version_compare($version, '5.2.5.4', '<')){
+		/*if(version_compare($version, '5.2.5.4', '<')){
 			$version = '5.2.5.4';
 			
 			self::change_layers_svg_5_2_5_4();
+			self::set_version($version);
+		}*/
+		
+		if(version_compare($version, '5.2.5.5', '<')){
+			$version = '5.2.5.5';
+			
+			self::change_layers_svg_5_2_5_5();
 			self::set_version($version);
 		}
 	}
@@ -1020,10 +1027,10 @@ class RevSliderPluginUpdate {
 	
 	
 	/**
-	 * change svg path of all layers to the upload folder
-	 * @since 5.2.5.4
+	 * change svg path of all layers from the upload folder if 5.2.5.3+ was installed
+	 * @since 5.2.5.5
 	 */
-	public static function change_layers_svg_5_2_5_4($sliders = false){
+	public static function change_layers_svg_5_2_5_5($sliders = false){
 		$sr = new RevSlider();
 		$sl = new RevSliderSlide();
 		$upload_dir = wp_upload_dir();
@@ -1058,10 +1065,10 @@ class RevSliderPluginUpdate {
 							foreach($layers as $lk => $layer){
 								if(isset($layer['type']) && $layer['type'] == 'svg'){
 									if(isset($layer['svg']) && isset($layer['svg']->src)){
-										//change older path to new path
-										if(strpos($layers[$lk]['svg']->src, RS_PLUGIN_URL . 'public/assets/assets/svg/') !== false){
+										//change newer path to older path
+										if(strpos($layers[$lk]['svg']->src, $path) !== false){
 											
-											$layers[$lk]['svg']->src = str_replace(RS_PLUGIN_URL . 'public/assets/assets/svg/', $path, $layers[$lk]['svg']->src);
+											$layers[$lk]['svg']->src = str_replace($path, RS_PLUGIN_URL . 'public/assets/assets/svg/', $layers[$lk]['svg']->src);
 										}
 									}
 								}

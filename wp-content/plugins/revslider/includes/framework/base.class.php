@@ -638,49 +638,6 @@ class RevSliderBase {
 		}
 	}
 	
-	
-	
-	public static function public_folder_unzip(){
-		$opt = get_option('rs_public_version', '1');
-		
-		$do_update = false;
-		
-		
-		//on revslider update, unzip it
-		if(version_compare($opt, RevSliderGlobals::SLIDER_REVISION, '<')){
-			$do_update = true;
-		}
-		
-		$upload_dir = wp_upload_dir();
-		$path = $upload_dir['basedir'].'/revslider/assets/svg/';
-		
-		//if both are not existing, update
-		if(!file_exists($path.'action/ic_3d_rotation_24px.svg')){ //!file_exists(RS_PLUGIN_PATH . 'public/assets/assets/svg/action/ic_3d_rotation_24px.svg') && 
-			$do_update = true;
-		}
-		
-		if($do_update){
-			require_once(ABSPATH . 'wp-admin/includes/file.php');
-		
-			WP_Filesystem();
-			
-			//$unzipfile = unzip_file( RS_PLUGIN_PATH . 'public/assets/assets/svg/svg.zip', RS_PLUGIN_PATH . 'public/assets/assets/svg/');
-			$unzipfile = unzip_file(RS_PLUGIN_PATH . 'public/assets/assets/svg/svg.zip', $path);
-			if($unzipfile === true){
-				update_option('rs_public_version', RevSliderGlobals::SLIDER_REVISION);
-			}else{
-				add_action('admin_notices', array('RevSliderBase', 'copy_notice'));
-			}
-		}
-	}
-	
-	public static function copy_notice(){
-		?>
-		<div class="error below-h2 rs-update-notice-wrap" id="message" style="clear:both;display: block;position:relative;margin:35px 20px 25px 0px"><div style="display:table;width:100%;"><div style="vertical-align:middle;display:table-cell;min-width:100%;padding-right:15px;">
-			<p><?php _e('Slider Revolution error: could not unzip revslider/public/assets/svg/svg.zip into the uploads/revslider/assets/svg/ folder, please make sure that the uploads folders is writable', 'revslider'); ?></p>
-		</div></div></div>
-		<?php
-	}
 }
 
 /**

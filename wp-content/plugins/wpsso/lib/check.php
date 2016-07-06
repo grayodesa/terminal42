@@ -53,7 +53,7 @@ if ( ! class_exists( 'WpssoCheck' ) ) {
 
 		// cleanup incorrect Yoast SEO notifications
 		public function cleanup_wpseo_notifications() {
-			if ( class_exists( 'Yoast_Notification_Center' ) ) {	// just in case
+			if ( method_exists( 'Yoast_Notification_Center', 'remove_notification' ) ) {	// since wpseo v3.3
 				$lca = $this->p->cf['lca'];
 				$base = $this->p->cf['plugin'][$lca]['base'];
 				$notif_center = Yoast_Notification_Center::get();
@@ -149,6 +149,9 @@ if ( ! class_exists( 'WpssoCheck' ) ) {
 							break;
 						case 'ecom-yotpowc':	// yotpo-social-reviews-for-woocommerce
 							$chk['function'] = 'wc_yotpo_init';
+							break;
+						case 'event-tribe_events':
+							$chk['plugin'] = 'the-events-calendar/the-events-calendar.php';
 							break;
 						case 'forum-bbpress':
 							$chk['class'] = 'bbPress';

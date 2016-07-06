@@ -117,7 +117,7 @@ class Appointments_Google_Calendar {
 
 	public function remove_appointments_hooks() {
 		remove_action( 'wpmudev_appointments_insert_appointment', array( $this, 'on_insert_appointment' ), 200 );
-		remove_action( 'wpmudev_appointments_update_appointment', array( $this, 'on_update_appointment' ), 200, 3 );
+		remove_action( 'wpmudev_appointments_update_appointment', array( $this, 'on_update_appointment' ), 200 );
 		remove_action( 'appointments_delete_appointment', array( $this, 'on_delete_appointment' ) );
 	}
 
@@ -180,7 +180,6 @@ class Appointments_Google_Calendar {
 		$appointments = appointments();
 
 		include_once( 'gcal/class-app-gcal-importer.php' );
-		$importer = new Appointments_Google_Calendar_Importer( $this );
 
 		$processed_event_ids = array();
 
@@ -874,6 +873,19 @@ class Appointments_Google_Calendar {
 
 		$event = $this->appointment_to_gcal_event( $app );
 
+		/**
+		 * Allow filtering a Google_Service_Calendar_Event object before being updated
+		 * on GCal
+		 *
+		 * Google_Service_Calendar_Event $event
+		 * Appointments_Appointment $app The related appointment to this event
+		 */
+		$event = apply_filters( 'appointments_gcal_insert_event', $event, $app );
+
+		if ( ! $event ) {
+			return false;
+		}
+
 		$result = $this->api_manager->insert_event( $event );
 
 		if ( is_wp_error( $result ) ) {
@@ -963,6 +975,19 @@ class Appointments_Google_Calendar {
 		$end->setDateTime( $app->get_end_gmt_date( "Y-m-d\TH:i:s\Z" ) );
 		$event->setStart( $start );
 		$event->setEnd( $end );
+
+		/**
+		 * Allow filtering a Google_Service_Calendar_Event object before being updated
+		 * on GCal
+		 *
+		 * Google_Service_Calendar_Event $event
+		 * Appointments_Appointment $app The related appointment to this event
+		 */
+		$event = apply_filters( 'appointments_gcal_update_event', $event, $app );
+
+		if ( ! $event ) {
+			return false;
+		}
 
 		$result = $this->api_manager->update_event( $event_id, $event );
 

@@ -40,7 +40,6 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 			$address = array();
 			$geo = array();

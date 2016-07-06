@@ -45,7 +45,6 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 
 			/*
@@ -58,7 +57,7 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 				'category' => 'product:category',
 			) );
 
-			WpssoSchema::add_data_quantitative_from_og( $ret, $mt_og, array( 
+			WpssoSchema::add_data_quant_from_assoc( $ret, $mt_og, array( 
 				'width' => 'product:width',
 				'height' => 'product:height',
 				'length' => 'product:length',
@@ -78,14 +77,15 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 				) ) ) !== false )
 					$ret['offers'][] = WpssoSchema::get_item_type_context( 'http://schema.org/Offer', $offer );
 
-			} else {
+			} elseif ( is_array( $mt_og['product:offer'] ) ) {	// just in case
 				foreach ( $mt_og['product:offer'] as $mt_offer ) {
 
 					// setup the offer with basic itemprops
-					if ( ( $offer = WpssoSchema::get_data_itemprop_from_assoc( $mt_offer, array( 
-						'price' => 'product:offer:price:amount',
-						'priceCurrency' => 'product:offer:price:currency',
-						'availability' => 'product:offer:availability',
+					if ( is_array( $mt_offer ) &&	// just in case
+						( $offer = WpssoSchema::get_data_itemprop_from_assoc( $mt_offer, array( 
+							'price' => 'product:offer:price:amount',
+							'priceCurrency' => 'product:offer:price:currency',
+							'availability' => 'product:offer:availability',
 					) ) ) !== false ) {
 
 						// add additional product information to the offer
@@ -98,7 +98,7 @@ if ( ! class_exists( 'WpssoJsonProHeadProduct' ) ) {
 							'description' => 'product:offer:description',
 						) ) ) !== false ) {
 
-							WpssoSchema::add_data_quantitative_from_og( $product, $mt_offer, array( 
+							WpssoSchema::add_data_quant_from_assoc( $product, $mt_offer, array( 
 								'width' => 'product:offer:width',
 								'height' => 'product:offer:height',
 								'length' => 'product:offer:length',

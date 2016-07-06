@@ -40,7 +40,6 @@ if ( ! class_exists( 'WpssoJsonProHeadLocalBusiness' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 			$opening_hours = array();
 

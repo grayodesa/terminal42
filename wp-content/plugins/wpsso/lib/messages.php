@@ -57,20 +57,8 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						case 'tooltip-meta-sharing_url':
 							$text = __( 'A custom sharing URL used for the Facebook / Open Graph / Pinterest Rich Pin meta tags, Schema markup, and (optional) social sharing buttons.', 'wpsso' ).' '.__( 'Please make sure any custom URL you enter here is functional and redirects correctly.', 'wpsso' );
 						 	break;
-						case 'tooltip-meta-schema_is_main':
-							$text = __( 'Check this option if the Schema markup describes the main content (aka "main entity") of this webpage.', 'wpsso' );
-						 	break;
-						case 'tooltip-meta-schema_type':
-							$text = __( 'The Schema item type that defines the Schema markup and/or the meta tags of this webpage.', 'wpsso' );
-						 	break;
 						case 'tooltip-meta-schema_title':
 							$text = __( 'A custom name / title for the Schema item type\'s name property.', 'wpsso' );
-						 	break;
-						case 'tooltip-meta-schema_headline':
-							$text = __( 'A custom headline for the Schema Article item type and its sub-types (NewsArticle, TechArticle, etc). The headline property is not used for non-Article item types.', 'wpsso' );
-						 	break;
-						case 'tooltip-meta-schema_pub_org_id':
-							$text = __( 'Select a publisher for the Schema Article item type and its sub-types (NewsArticle, TechArticle, etc). The publisher property is not used for non-Article item types.', 'wpsso' );
 						 	break;
 						case 'tooltip-meta-schema_desc':
 							$text = __( 'A custom description for the Schema item type\'s description property.', 'wpsso' );
@@ -128,7 +116,7 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 							$text = __( 'The maximum number of images to include in the Google / Schema meta tags and JSON-LD markup.', 'wpsso' );
 						 	break;
 						default:
-							$text = apply_filters( $lca.'_messages_tooltip_user', $text, $idx, $info );
+							$text = apply_filters( $lca.'_messages_tooltip_meta', $text, $idx, $info );
 							break;
 					}	// end of tooltip-user switch
 				/*
@@ -265,17 +253,20 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						/*
 						 * 'Plugin Settings' settings
 						 */
+						case 'tooltip-plugin_clear_on_save':	// Clear All Cache(s) on Save Settings
+							$text = 'Automatically clear all cache(s) when saving the plugin settings (default is checked).';
+							break;
 						case 'tooltip-plugin_preserve':	// Preserve Settings on Uninstall
 							$text = 'Check this option if you would like to preserve all '.$info['short'].' settings when you <em>uninstall</em> the plugin (default is unchecked).';
 							break;
 						case 'tooltip-plugin_debug':	// Add Hidden Debug Messages
 							$text = 'Add hidden debug messages to the HTML of webpages (default is unchecked).';
 							break;
-						case 'tooltip-plugin_clear_on_save':	// Clear All Cache(s) on Save Settings
-							$text = 'Automatically clear all cache(s) when saving the plugin settings (default is checked).';
+						case 'tooltip-plugin_hide_pro':	// Hide All Pro Settings
+							$text = 'Hide all Pro version settings, tabs, and options (default is unchecked).';
 							break;
 						case 'tooltip-plugin_show_opts':	// Options to Show by Default
-							$text = 'Select the default number of options to display on the '.$info['short'].' settings pages by default. The basic view shows only the essential options that are most commonly used.';
+							$text = 'Select the default number of options to display in the '.$info['short'].' settings pages. The basic view shows only the most commonly used options.';
 							break;
 						/*
 						 * 'Content and Filters' settings
@@ -300,6 +291,12 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 							break;
 						case 'tooltip-plugin_p_cap_prefix':
 							$text = $info['short'].' can add a custom text prefix to paragraphs assigned the "wp-caption-text" class. Leave this option empty to prevent caption paragraphs from being prefixed.';
+							break;
+						case 'tooltip-plugin_content_img_max':
+							$text = 'The maximum number of images that '.$info['short'].' will consider using from your content.';
+							break;
+						case 'tooltip-plugin_content_vid_max':
+							$text = 'The maximum number of embedded videos that '.$info['short'].' will consider using from your content.';
 							break;
 						case 'tooltip-plugin_embedded_media':
 							$text = 'Check the Post and Page content, along with the custom Social Settings, for embedded media URLs from supported media providers (Youtube, Wistia, etc.). If a supported URL is found, an API connection to the provider will be made to retrieve information about the media (preview image, flash player url, oembed player url, video width / height, etc.).';
@@ -634,7 +631,7 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 			} elseif ( strpos( $idx, 'info-' ) === 0 ) {
 				switch ( $idx ) {
 					case 'info-meta-social-preview':
-					 	$text = '<p style="text-align:right;">'.__( 'The Open Graph social preview shows an <em>example</em> of a typical share on a social website. Images are displayed using Facebooks suggested minimum image dimensions of 600x315px. Actual shares on Facebook and other social websites may look significantly different than this example (depending on the client platform, resolution, orientation, etc.).', 'wpsso' ).'</p>';
+					 	$text = '<p style="text-align:right;">'.__( 'The social preview shows an <em>example</em> link share on Facebook. Images are displayed using Facebooks suggested minimum image dimensions of 600x315px. Actual shares on Facebook and other social websites may look significantly different than this example (depending on the client platform, resolution, orientation, etc.).', 'wpsso' ).'</p>';
 					 	break;
 					case 'info-plugin-tid':
 						$um_info = $this->p->cf['plugin']['wpssoum'];
@@ -669,30 +666,33 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						if ( $lca !== $this->p->cf['lca'] &&
 							! $this->p->check->aop( $this->p->cf['lca'], true, $this->p->is_avail['aop'] ) ) {
 								$req_short = $this->p->cf['plugin'][$this->p->cf['lca']]['short'].' Pro';
-								$req_msg = '<br>'.sprintf( __( '(note that all %1$s extensions also require a licensed and active %1$s plugin)',
+								$req_msg = '<br>'.sprintf( __( '(note that all %1$s extensions also require a licensed %1$s plugin)',
 									'wpsso' ), $req_short );
 						} else $req_msg = '';
+
+						$purchase_url = add_query_arg( 'utm_source', $idx, $url['purchase'] );
 						if ( $this->p->check->aop( $lca, false ) )
-							$text = '<p class="pro-feature-msg"><a href="'.$url['purchase'].'" target="_blank">'.
+							$text = '<p class="pro-feature-msg"><a href="'.$purchase_url.'" target="_blank">'.
 								sprintf( __( 'Purchase %s licence(s) to install its Pro modules and use the following features / options.',
 									'wpsso' ), $info['short_pro'] ).'</a>'.$req_msg.'</p>';
-						else $text = '<p class="pro-feature-msg"><a href="'.$url['purchase'].'" target="_blank">'.
+						else $text = '<p class="pro-feature-msg"><a href="'.$purchase_url.'" target="_blank">'.
 							sprintf( __( 'Purchase the %s plugin to install its Pro modules and use the following features / options.',
 								'wpsso' ), $info['short_pro'] ).'</a>'.$req_msg.'</p>';
 						break;
 					case 'pro-option-msg':
-						$text = '<p class="pro-option-msg"><a href="'.$url['purchase'].'" target="_blank">'.
+						$purchase_url = add_query_arg( 'utm_source', $idx, $url['purchase'] );
+						$text = '<p class="pro-option-msg"><a href="'.$purchase_url.'" target="_blank">'.
 							sprintf( _x( '%s required to use this option', 'option comment', 'wpsso' ),
 								$info['short_pro'] ).'</a></p>';
 						break;
 					case 'pro-about-msg-post':
-						$text = '<p class="pro-about-msg">'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'Update the content or excerpt text to change the default values shown here.', 'wpsso' ).'</p>';
+						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'Update the content or excerpt text to change the default values shown here.', 'wpsso' ).'</p>';
 						break;
 					case 'pro-about-msg-media':
-						$text = '<p class="pro-about-msg">'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'You can change the social image by selecting a featured image or including images in the content.', 'wpsso' ).' '.sprintf( __( 'The video service modules &mdash; required to detect embedded videos &mdash; are available in the %s Pro version.', 'wpsso' ),  $info['short'] ).'</p>';
+						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'You can change the social image by selecting a featured image or including images in the content.', 'wpsso' ).' '.sprintf( __( 'The video service modules &mdash; required to detect embedded videos &mdash; are available in the %s Pro version.', 'wpsso' ),  $info['short'] ).'</p>';
 						break;
 					case 'pro-about-msg':
-						$text = '<p class="pro-about-msg">'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).( empty( $info['text'] ) ? '' : ' '.$info['text'] ).'</p>';
+						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).( empty( $info['text'] ) ? '' : ' '.$info['text'] ).'</p>';
 						break;
 					default:
 						$text = apply_filters( $lca.'_messages_pro', $text, $idx, $info );
@@ -705,16 +705,19 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 				switch ( $idx ) {
 					case 'notice-image-rejected':
 						$hide_const_name = strtoupper( $lca ).'_HIDE_ALL_WARNINGS';
-						$hide_warnings = SucomUtil::get_const( $hide_const_name );
+						$hidden_warnings = SucomUtil::get_const( $hide_const_name );
 
-						$text = __( 'The <em>Select Media</em> tab in the Social Settings metabox can be used to select a larger image specifically for social / SEO purposes.', 'wpsso' );
-						if ( current_user_can( 'manage_options' ) ) {
+						if ( empty( $this->p->options['plugin_hide_pro'] ) )
+							$text = __( 'A larger and/or different custom image &mdash; specifically for social meta tags and markup &mdash; can be selected in the Social Settings metabox under the <em>Select Media</em> tab.', 'wpsso' );
+						else $text = '';
+
+						if ( empty( $info['hard_limit'] ) && current_user_can( 'manage_options' ) ) {
 							$text .= '<p><em>'.__( 'Additional information shown only to users with Administrative privileges:', 'wpsso' ).'</em></p>';
 							$text .= '<ul>';
 							$text .= '<li>'.sprintf( __( 'You can also adjust the <b>%2$s</b> option in the <a href="%1$s">Social and SEO Image Dimensions</a> settings.', 'wpsso' ), $this->p->util->get_admin_url( 'image-dimensions' ), $info['size_label'] ).'</li>';
 							$text .= '<li>'.sprintf( __( 'Enable or increase the <a href="%1$s">WP / Theme Integration</a> <em>image upscaling percentage</em> feature.', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_integration' ) ).'</li>';
 							$text .= '<li>'.sprintf( __( 'Disable the <a href="%1$s">WP / Theme Integration</a> <em>image dimensions check</em> option (not recommended).', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_integration' ) ).'</li>';
-							if ( ! $hide_warnings )
+							if ( empty( $hidden_warnings ) )
 								$text .= '<li>'.sprintf( __( 'Define the %1$s constant as <em>true</em> to auto-hide all dismissable warnings.', 'wpsso' ), $hide_const_name ).'</li>';
 							$text .= '</ul>';
 						}
@@ -729,7 +732,7 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						$text = sprintf( __( 'Please note that the <a href="%1$s">%2$s</a> advanced option is currently set at %3$d seconds &mdash; this is lower than the recommended default value of %4$d seconds.', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_cache' ), _x( 'Object Cache Expiry', 'option label', 'wpsso' ), $this->p->options['plugin_object_cache_exp'], $this->p->opt->get_defaults( 'plugin_object_cache_exp' ) );
 						break;
 					case 'notice-content-filters-disabled':
-						$text = '<p><b>'.sprintf( __( 'The <a href="%1$s">%2$s</a> advanced option is currently disabled.', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_content' ), _x( 'Apply WordPress Content Filters', 'option label', 'wpsso' ) ).'</b> '.sprintf( __( 'The use of WordPress content filters allows %s to fully render your content text for meta tag descriptions, and detect additional images / embedded videos provided by shortcodes.', 'wpsso' ), $info['short'] ).'</p><p><b>'.__( 'Some theme / plugins have badly coded content filters, so this option is disabled by default.', 'wpsso' ).'</b> '.sprintf( __( '<a href="%s">If you use any shortcodes in your content text, this option should be enabled</a> (Pro version required) &mdash; if you experience display issues after enabling this option, determine which theme / plugin content filter is at fault, and report the problem to its author(s).', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_content' ) ).'</p>';
+						$text = '<p><b>'.sprintf( __( 'The <a href="%1$s">%2$s</a> advanced option is currently disabled.', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_content' ), _x( 'Apply WordPress Content Filters', 'option label', 'wpsso' ) ).'</b> '.sprintf( __( 'The use of WordPress content filters allows %s to fully render your content text for meta tag descriptions, and detect additional images / embedded videos provided by shortcodes.', 'wpsso' ), $info['short'] ).'</p><p><b>'.__( 'Some theme / plugins have badly coded content filters, so this option is disabled by default.', 'wpsso' ).'</b> '.sprintf( __( '<a href="%s">If you use any shortcodes in your content text, this option should be enabled</a> &mdash; if you experience display issues after enabling this option, determine which theme / plugin content filter is at fault, and report the problem to its author(s).', 'wpsso' ), $this->p->util->get_admin_url( 'advanced#sucom-tabset_plugin-tab_content' ) ).'</p>';
 						break;
 					case 'notice-header-tmpl-no-head-attr':
 						$action_url = wp_nonce_url( $this->p->util->get_admin_url( '?'.$this->p->cf['lca'].'-action=modify_tmpl_head_elements' ),

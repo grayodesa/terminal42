@@ -1,0 +1,463 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Teni Weather\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: Mon Sep 07 2015 14:19:29 GMT+0200 (W. Europe Daylight "
+"Time)\n"
+"PO-Revision-Date: Wed May 04 2016 13:21:59 GMT+0200\n"
+"Last-Translator: root <martin.teni@gmail.com>\n"
+"Language-Team: \n"
+"Language: German\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Generator: Loco - https://localise.biz/\n"
+"X-Loco-Target-Locale: de_DE"
+
+#. Name of the plugin
+msgid "NetAtmoSphere"
+msgstr ""
+
+#. URI of the plugin
+msgid "http://www.teni.at"
+msgstr ""
+
+#. Author of the plugin
+msgid "Martin Teni"
+msgstr ""
+
+#: ../inc/class-netatmo-client-wrapper.php:167
+msgid "NetAtmo Login"
+msgstr ""
+
+#: ../inc/Widgets/class-widget.php:117 ../inc/Widgets/class-widget.php:118
+msgid "Its disabled due to database performance issues!"
+msgstr "Aufgrund von Datenbank Performance Problemen vorerst deaktiviert!"
+
+#. Description of the plugin
+msgid "Fetch periodically and display weather data coming from www.netatmo.com"
+msgstr "Holt und zeigt Wetterdaten von www.netatmo.com an"
+
+#: ../admin/class-admin-nas-plugin.php:121
+msgid "Clear of device data failed"
+msgstr "Löschen der Gerätedaten schlug fehl!"
+
+#: ../admin/class-admin-nas-plugin.php:138
+msgid "Clear of measurement data failed"
+msgstr "Löschen der Messwerte schlug fehl!"
+
+#: ../admin/class-admin-nas-plugin.php:157
+msgid "Disconnect from NetAtmo account failed"
+msgstr "Trennen der Verbindung vom NetAtmo Konto schlug fehl"
+
+#: ../admin/class-admin-options.php:39
+msgid "Caching Options"
+msgstr "Cache Optionen"
+
+#: ../admin/class-admin-options.php:53
+msgid "Auto merge measurements periodically?"
+msgstr "Automatisches Synchronisieren der Messwerte?"
+
+#: ../admin/class-admin-options.php:61
+msgid "Data merge interval"
+msgstr "Synchronisierungsintervall der Messwerte"
+
+#: ../admin/class-admin-options.php:69
+msgid "Auto refresh device list periodically?"
+msgstr "Automatisches Aktualisieren der Gerätedaten?"
+
+#: ../admin/class-admin-options.php:77
+msgid "Refresh device interval"
+msgstr "Aktualisierungsintervall der Geräte"
+
+#: ../admin/class-admin-options.php:86
+msgid "List of module IDs to ignore on synchronization (separat by comma)"
+msgstr ""
+"Liste von Modul-IDs welche nicht synchronisiert werden sollen (Beistrich "
+"getrennt)"
+
+#: ../admin/class-admin-options.php:98
+msgid "Display Options"
+msgstr "Anzeigeoptionen"
+
+#: ../admin/class-admin-options.php:104
+msgid "Temperature unit"
+msgstr "Temperatur Einheit"
+
+#: ../admin/class-admin-options.php:112
+msgid "Pressure unit"
+msgstr "Druck Einheit"
+
+#: ../admin/class-admin-options.php:131
+msgid "Uninstall Options"
+msgstr "Deinstallationsoptionen"
+
+#: ../admin/class-admin-options.php:137
+msgid "Drop Views"
+msgstr "Views löschen"
+
+#: ../admin/class-admin-options.php:145
+msgid "Drop Device Table"
+msgstr "Gerätetabelle löschen"
+
+#: ../admin/class-admin-options.php:153
+msgid "Drop Table with measurements"
+msgstr "Messwerttabelle löschen"
+
+#: ../admin/class-admin-options.php:167
+msgid "Be careful! This takes affect when you uninstall the plugin!"
+msgstr "Achtung! Das wird beim Deinstallieren ausgeführt!"
+
+#: ../admin/tpl/admin.settings.tpl.php:4
+msgid "NetAtmoSphere Plugin"
+msgstr "NetAtmoSphere Plugin"
+
+#: ../admin/tpl/admin.settings.tpl.php:21 ../inc/class-nas-plugin.php:74
+msgid "Administration"
+msgstr "Administration"
+
+#: ../admin/tpl/admin.settings.tpl.php:22
+msgid "Overview"
+msgstr "Überblick"
+
+#: ../admin/tpl/admin.settings.tpl.php:23
+msgid "Examples"
+msgstr "Beispiele"
+
+#: ../admin/tpl/admin.settings.tpl.php:24
+msgid "Charts"
+msgstr "Diagramme"
+
+#: ../admin/tpl/admin.settings.tpl.php:25 ../inc/class-nas-plugin.php:81
+msgid "Options"
+msgstr "Optionen"
+
+#: ../admin/tpl/admin.settings.tpl.php:26
+msgid "About"
+msgstr "Über"
+
+#: ../admin/tpl/admin.settings.tpl.php:57 ../inc/Shortcodes/class-shortcode-
+#: schedules.php:23
+msgid "Devices"
+msgstr "Geräte"
+
+#: ../admin/tpl/admin.settings.tpl.php:58
+msgid "Measure data"
+msgstr "Messwerte"
+
+#: ../admin/tpl/admin.settings.tpl.php:63
+msgid "Records"
+msgstr "Datensätze"
+
+#: ../admin/tpl/admin.settings.tpl.php:65
+#, php-format
+msgid "Active devices in Cache: %d<br/>Measure types: %d"
+msgstr "Aktive Geräte im Cache: %d<br/>Unterschdl. Messwerte: %d"
+
+#: ../admin/tpl/admin.settings.tpl.php:70
+#, php-format
+msgid "Measure records in Cache: %s"
+msgstr "Messwerte im Cache: %s"
+
+#: ../admin/tpl/admin.settings.tpl.php:76
+msgid "Refresh data"
+msgstr "Aktualiseren"
+
+#: ../admin/tpl/admin.settings.tpl.php:77
+msgid "Last refresh"
+msgstr "Letzte Aktualisierung"
+
+#: ../admin/tpl/admin.settings.tpl.php:78
+msgid "Newest measure time"
+msgstr "Aktuellster Messwert"
+
+#: ../admin/tpl/admin.settings.tpl.php:81
+msgid "Next run"
+msgstr "Nächste Aktualisierung"
+
+#: ../admin/tpl/admin.settings.tpl.php:83
+#, php-format
+msgid "Next run:<br/>%s<br/>Start with module:<br/>%s"
+msgstr "Nächste Aktualisierung: <br/>%s<br/>Beginne mit Modul:<br/>%s"
+
+#: ../admin/tpl/admin.settings.tpl.php:97 ../admin/tpl/admin.settings.tpl.php:112
+msgid "Run now"
+msgstr "Jetzt aktualisieren"
+
+#: ../admin/tpl/admin.settings.tpl.php:101 ../admin/tpl/admin.settings.tpl.php:116
+#, php-format
+msgid "Wait min. %dmin after last refresh <br/>before you can start the next!"
+msgstr ""
+"Warte min. %dmin nach einem Aktualisieren, <br/>bevor das nächste gestartet "
+"werden kann!"
+
+#: ../admin/tpl/admin.settings.tpl.php:121 ../admin/tpl/admin.settings.tpl.php:122
+msgid "Be careful, you can not undo this operation!"
+msgstr "Achtung, das kann man nicht mehr rückgängig machen!"
+
+#: ../admin/tpl/admin.settings.tpl.php:121
+msgid "Clear data"
+msgstr "Daten löschen"
+
+#: ../admin/tpl/admin.settings.tpl.php:130
+msgid "Sure to delete all device data from cache?"
+msgstr "Bist du sicher alle Gerätedaten löschen zu wollen?"
+
+#: ../admin/tpl/admin.settings.tpl.php:132
+msgid "Clear devices now"
+msgstr "Gerätedaten jetzt löschen"
+
+#: ../admin/tpl/admin.settings.tpl.php:141
+msgid "Sure to delete all measurement data from cache?"
+msgstr "Bist du sicher alle Messwerte löschen zu wollen?"
+
+#: ../admin/tpl/admin.settings.tpl.php:143
+msgid "Clear data now"
+msgstr "Messwerte jetzt löschen"
+
+#: ../admin/tpl/admin.settings.tpl.php:149
+msgid "NetAtmo Account"
+msgstr "NetAtmo Konto"
+
+#: ../admin/tpl/admin.settings.tpl.php:150
+msgid "Already connected successfully to your NetAtmo account!"
+msgstr "Bereits erfolgreich mit NetAtmo Konto verbunden!"
+
+#: ../admin/tpl/admin.settings.tpl.php:153
+msgid "Refresh token:"
+msgstr "Aktualisierungstoken:"
+
+#: ../admin/tpl/admin.settings.tpl.php:159
+msgid "Sure to disconnect this plugin from your NetAtmo account?"
+msgstr "Bist du sicher die Verbindung zum NetAtmo Konto trennen zu wollen?"
+
+#: ../admin/tpl/admin.settings.tpl.php:161
+msgid "Disconnect from NetAtmo?"
+msgstr "Trennen von NetAtmo?"
+
+#: ../admin/tpl/admin.settings.tpl.php:173
+msgid "Data overview of each module for the current year"
+msgstr "Überblick über Geräte und Messwerte vom aktuellen Jahr"
+
+#: ../admin/tpl/admin.settings.tpl.php:184
+msgid "Schedules Overview"
+msgstr "Überblick der Jobs"
+
+#: ../admin/tpl/admin.settings.tpl.php:185
+msgid ""
+"for displaying all schedules (wordpress cron) to refresh / cache data "
+"connect to the account. Example:"
+msgstr ""
+"zum Darstellen der Synchronisierungszeitpunkte (von Wordpress Cron) zum "
+"aktualisieren / cachen der Daten. Beispiel:"
+
+#: ../admin/tpl/admin.settings.tpl.php:189 ../admin/tpl/admin.settings.tpl.php:
+#: 198 ../admin/tpl/admin.settings.tpl.php:207
+msgid "Additional configuration possibilities are:"
+msgstr "Zusätzliche Konfigurationsmöglichkeiten sind:"
+
+#: ../admin/tpl/admin.settings.tpl.php:193 ../inc/Shortcodes/class-shortcode-
+#: devices.php:66 ../tpl/front.devices.overview.tpl.php:3
+msgid "Devices Overview"
+msgstr "Übersicht über Gerätedaten"
+
+#: ../admin/tpl/admin.settings.tpl.php:194
+msgid "for displaying all devices connect to the account. Example:"
+msgstr ""
+"zum Darstellen aller Geräte, welche mit diesem Account verknüpft sind. "
+"Beispiel:"
+
+#: ../admin/tpl/admin.settings.tpl.php:202
+msgid "Data Overview"
+msgstr "Überblick für Messwerte"
+
+#: ../admin/tpl/admin.settings.tpl.php:203
+msgid "for displaying the latest measures retrieved from the server. Example:"
+msgstr ""
+"zum Darstellen der aktuellsten Messwerte, welche im Cache gespeichert sind. "
+"Beispiel:"
+
+#: ../admin/tpl/admin.settings.tpl.php:214
+msgid "Version info:"
+msgstr "Versionsinfo:"
+
+#: ../admin/tpl/admin.settings.tpl.php:215
+#, php-format
+msgid "Plugin: %s"
+msgstr "Plugin: %s"
+
+#: ../admin/tpl/admin.settings.tpl.php:217
+#, php-format
+msgid "Database: %s"
+msgstr "Datenbank: %s"
+
+#: ../admin/tpl/admin.settings.tpl.php:222
+msgid "OPTIONAL: Helpful SQLs for Charts"
+msgstr "OPTIONAL: Hilfreiche SQLs für Diagramme"
+
+#: ../admin/tpl/admin.settings.tpl.php:223
+msgid ""
+"You can use this SQLs below to create charts based on that SQL with the "
+"Plugin \"WP Business Intelligence Lite\"!"
+msgstr ""
+"Die SQLs unten können verwendet werden, um leicht Diagramme mit dem Plugin "
+"\"WP Business Intelligence Lite\" zu erstellen!"
+
+#: ../admin/tpl/admin.settings.tpl.php:229
+#, php-format
+msgid ""
+"Goto <a href=\"%s\">WP Business Intelligence Lite Admin section</a> and start "
+"creating the <a href=\"%s\">Queries</a> and then the <a href=\"%s\">Charts</a>"
+msgstr ""
+"Gehe zu <a href=\"%s\">WP Business Intelligence Lite Adminbereich</a> und "
+"beginne mit dem Erstellen der <a href=\"%s\">Abfragen</a> und den <a "
+"href=\"%s\">Diagrammen</a>"
+
+#: ../admin/tpl/admin.settings.tpl.php:240
+#, php-format
+msgid "Goto <a href=\"%s\">Plugin Install and install the plugin</a>"
+msgstr "Gehe zur Plugin Seite und installiere das Plugin"
+
+#: ../admin/tpl/admin.settings.tpl.php:246
+msgid "Widget: Last hours"
+msgstr "Widget: Letzten Stunden"
+
+#: ../admin/tpl/admin.settings.tpl.php:249
+msgid "Post or page: Actual Weather"
+msgstr "Beitrag oder Seite: Aktuelles Wetter"
+
+#: ../admin/tpl/admin.settings.tpl.php:252
+msgid "Post or page: Weather of last days"
+msgstr "Beitrag oder Seite: Wetter der letzten Tage"
+
+#: ../admin/tpl/admin.settings.tpl.php:254
+msgid "You only need to adjust the filter to get what you want"
+msgstr "Einfach den Filter anpassen, damit du bekommst, was du brauchst"
+
+#: ../admin/tpl/admin.settings.tpl.php:256
+msgid "And then use in your posts/pages like this:"
+msgstr "Und dann Einzubinden in Posts/Pages wie folgt:"
+
+#: ../admin/tpl/admin.settings.tpl.php:258
+msgid "Description"
+msgstr "Beschreibung"
+
+#: ../inc/class-nas-cron.php:60
+msgid "Recreate of crons failed"
+msgstr "Neuerstellung der Crons fehlgeschlagen"
+
+#: ../inc/class-nas-plugin.php:88 ../inc/Widgets/class-widget.php:60
+msgid "Latest"
+msgstr "Letzter"
+
+#: ../inc/Commons/dropdown-time-units.php:15
+msgid "Every 10 minutes"
+msgstr "Alle 10 Minuten"
+
+#: ../inc/Commons/dropdown-time-units.php:16
+msgid "Every 15 minutes"
+msgstr "Alle 15 Minuten"
+
+#: ../inc/Commons/dropdown-time-units.php:17
+msgid "Once in a week"
+msgstr "Einmal pro Woche"
+
+#: ../inc/Shortcodes/class-shortcode-base.php:18
+msgid "Shortcode (or its parameter) not implemented!"
+msgstr "ShortCode (oder Parameter) nicht implementiert!"
+
+#: ../inc/Shortcodes/class-shortcode-data.php:62 ../tpl/front.data.latest.tpl.php:3
+msgid "Latest measurements"
+msgstr "Letzte Messwerte"
+
+#: ../inc/Shortcodes/class-shortcode-data.php:72 ../tpl/front.data.latest.tpl.php:
+#: 26
+msgid "No data records cached!"
+msgstr "Keine Messwerte im Cache!"
+
+#: ../inc/Shortcodes/class-shortcode-devices.php:47
+msgid "... (seperated by semicolon \";\" )"
+msgstr "... (mit Strichpunkt \";\" getrennt)"
+
+#: ../inc/Shortcodes/class-shortcode-devices.php:91 ../tpl/front.devices.overview.
+#: tpl.php:29
+msgid "No devices in cache!"
+msgstr "Keine Gerätedaten im Cache!"
+
+#: ../inc/Shortcodes/class-shortcode-schedules.php:23
+msgid "Data"
+msgstr "Daten"
+
+#: ../inc/Shortcodes/class-shortcode-schedules.php:30
+#, php-format
+msgid "Next schedule is at %s to refresh device list."
+msgstr "Nächste Aktualisierung der Geräte ist um %s."
+
+#: ../inc/Shortcodes/class-shortcode-schedules.php:34
+#, php-format
+msgid "Next schedule is at %s to get and cache new measure sets."
+msgstr "Nächster Abgleich und Start des cachen der Messwerte ist um %s."
+
+#: ../inc/Tools/class-synch-data.php:161
+msgid "ERROR"
+msgstr "FEHLER"
+
+#: ../inc/Tools/class-synch-data.php:163
+msgid "Something happend during retrieving the data from netatmo.com!"
+msgstr "Irgendwas schlug fehl, während dem Datentransfer von netatmo.com!"
+
+#: ../inc/Widgets/class-widget.php:17
+msgid "Widget to display actual weather data"
+msgstr "Widget zum Anzeigen der aktuellen Wetterdaten"
+
+#: ../inc/Widgets/class-widget.php:60 ../inc/Widgets/class-widget.php:62
+msgid "Today"
+msgstr "Heute"
+
+#: ../inc/Widgets/class-widget.php:62
+msgid "Avg."
+msgstr "Schnitt"
+
+#: ../inc/Widgets/class-widget.php:89
+#, php-format
+msgid "To display a chart, please install \"%s\" plugin"
+msgstr "Um Diagramme anzeigen zu können, bitte installiere das \"%s\" plugin"
+
+#: ../inc/Widgets/class-widget.php:105
+msgid "Weather @ home"
+msgstr "Wetter @ home"
+
+#: ../inc/Widgets/class-widget.php:112
+msgid "Title:"
+msgstr "Titel:"
+
+#: ../inc/Widgets/class-widget.php:118
+msgid "Show latest measures"
+msgstr "Aktuellste Messwerte anzeigen"
+
+#: ../inc/Widgets/class-widget.php:122
+msgid "Show daily avg. measures"
+msgstr "Mittel des Tages anzeigen"
+
+#: ../inc/Widgets/class-widget.php:126
+msgid "Show location on map"
+msgstr "Wetterstation auf Karte anzeigen"
+
+#: ../inc/Widgets/class-widget.php:129
+msgid "Show chart with that ID(s) on the widget:"
+msgstr "Zeige Diagramm(e) mit diesen ID(s) im Widgetbereich:"
+
+#: ../inc/Widgets/class-widget.php:130
+msgid "Zero or empty means no chart to display, seperate multiple with comma!"
+msgstr ""
+"Null oder leer bedeutet, dass kein Diagramm angezeigt wird, mehrere mit "
+"Komma (Beistrich) trennen!"

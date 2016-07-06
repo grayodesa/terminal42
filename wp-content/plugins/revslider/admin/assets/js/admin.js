@@ -1704,6 +1704,12 @@ var UniteAdminRev = new function(){
 			UniteAdminRev.ajaxRequest("activate_purchase_code",data,function(response){
 				if(response.success == false){
 					jQuery('#register-wrong-purchase-code').click();
+				}else{
+					if(response.error !== undefined){
+						if(response.error == 'exist'){
+							t.showErrorMessage(response.msg);
+						}
+					}
 				}
 			},undefined,true);
 		});

@@ -1469,79 +1469,79 @@ class RevSliderSlide extends RevSliderElementsBase{
 		
 		if(RevSliderWooCommerce::isWooCommerceExists()){
 			$product = get_product($post_id);
-			
-			$wc_full_price = $product->get_price_html();
-			$wc_price = wc_price($product->get_price());
-			$wc_price_no_cur = $product->get_price();
-			$wc_stock = $product->get_total_stock();
-			$wc_rating = $product->get_rating_html();
-			$wc_star_rating = '<div class="rs-starring">';
-			preg_match_all('#<strong class="rating">.*?</span>#', $wc_rating, $match);
-			if(!empty($match) && isset($match[0]) && isset($match[0][0])){
-				$wc_star_rating .= str_replace($match[0][0], '', $wc_rating);
-			}
-			$wc_star_rating .= '</div>';
-			$wc_categories = $product->get_categories(',');
-			$wc_add_to_cart = $product->add_to_cart_url();
-			$wc_add_to_cart_button = '';
-			
-			
-			$wc_sku = $product->get_sku();
-			$wc_stock_quantity = $product->get_stock_quantity();
-			$wc_rating_count = $product->get_rating_count();
-			$wc_review_count = $product->get_review_count();
-			$wc_tags = $product->get_tags();
-			
-			
-			if(strpos($text, 'wc_add_to_cart_button') !== false){
-				$suffix               	= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-				$ajax_cart_en			= get_option( 'woocommerce_enable_ajax_add_to_cart' ) == 'yes' ? true : false;
-				$assets_path          	= str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/';
-				$frontend_script_path 	= $assets_path . 'js/frontend/';
-				
-				if ( $ajax_cart_en ){
-					wp_enqueue_script( 'wc-add-to-cart', $frontend_script_path . 'add-to-cart' . $suffix . '.js', array( 'jquery' ), WC_VERSION, true );
-					
-					global $wc_is_localized;
-					if($wc_is_localized === false){ //load it only one time
-						wp_localize_script( 'wc-add-to-cart', 'wc_add_to_cart_params', apply_filters( 'wc_add_to_cart_params', array(
-							'ajax_url'                => WC()->ajax_url(),
-							'ajax_loader_url'         => apply_filters( 'woocommerce_ajax_loader_url', $assets_path . 'images/ajax-loader@2x.gif' ),
-							'i18n_view_cart'          => esc_attr__( 'View Cart', 'woocommerce' ),
-							'cart_url'                => get_permalink( wc_get_page_id( 'cart' ) ),
-							'is_cart'                 => is_cart(),
-							'cart_redirect_after_add' => get_option( 'woocommerce_cart_redirect_after_add' )
-						) ) );
-						$wc_is_localized = true;
-					}
+			if($product !== false){
+				$wc_full_price = $product->get_price_html();
+				$wc_price = wc_price($product->get_price());
+				$wc_price_no_cur = $product->get_price();
+				$wc_stock = $product->get_total_stock();
+				$wc_rating = $product->get_rating_html();
+				$wc_star_rating = '<div class="rs-starring">';
+				preg_match_all('#<strong class="rating">.*?</span>#', $wc_rating, $match);
+				if(!empty($match) && isset($match[0]) && isset($match[0][0])){
+					$wc_star_rating .= str_replace($match[0][0], '', $wc_rating);
 				}
-				$wc_add_to_cart_button = apply_filters( 'woocommerce_loop_add_to_cart_link',
-									sprintf( '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" class="button %s product_type_%s">%s</a>',
-										esc_url( $product->add_to_cart_url() ),
-										esc_attr( $product->id ),
-										esc_attr( $product->get_sku() ),
-										$product->is_purchasable() ? 'add_to_cart_button' : '',
-										esc_attr( $product->product_type ),
-										esc_html( $product->add_to_cart_text() )
-									),
-								$product );
+				$wc_star_rating .= '</div>';
+				$wc_categories = $product->get_categories(',');
+				$wc_add_to_cart = $product->add_to_cart_url();
+				$wc_add_to_cart_button = '';
+				
+				
+				$wc_sku = $product->get_sku();
+				$wc_stock_quantity = $product->get_stock_quantity();
+				$wc_rating_count = $product->get_rating_count();
+				$wc_review_count = $product->get_review_count();
+				$wc_tags = $product->get_tags();
+				
+				
+				if(strpos($text, 'wc_add_to_cart_button') !== false){
+					$suffix               	= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+					$ajax_cart_en			= get_option( 'woocommerce_enable_ajax_add_to_cart' ) == 'yes' ? true : false;
+					$assets_path          	= str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/';
+					$frontend_script_path 	= $assets_path . 'js/frontend/';
+					
+					if ( $ajax_cart_en ){
+						wp_enqueue_script( 'wc-add-to-cart', $frontend_script_path . 'add-to-cart' . $suffix . '.js', array( 'jquery' ), WC_VERSION, true );
+						
+						global $wc_is_localized;
+						if($wc_is_localized === false){ //load it only one time
+							wp_localize_script( 'wc-add-to-cart', 'wc_add_to_cart_params', apply_filters( 'wc_add_to_cart_params', array(
+								'ajax_url'                => WC()->ajax_url(),
+								'ajax_loader_url'         => apply_filters( 'woocommerce_ajax_loader_url', $assets_path . 'images/ajax-loader@2x.gif' ),
+								'i18n_view_cart'          => esc_attr__( 'View Cart', 'woocommerce' ),
+								'cart_url'                => get_permalink( wc_get_page_id( 'cart' ) ),
+								'is_cart'                 => is_cart(),
+								'cart_redirect_after_add' => get_option( 'woocommerce_cart_redirect_after_add' )
+							) ) );
+							$wc_is_localized = true;
+						}
+					}
+					$wc_add_to_cart_button = apply_filters( 'woocommerce_loop_add_to_cart_link',
+										sprintf( '<a href="%s" rel="nofollow" data-product_id="%s" data-product_sku="%s" class="button %s product_type_%s">%s</a>',
+											esc_url( $product->add_to_cart_url() ),
+											esc_attr( $product->id ),
+											esc_attr( $product->get_sku() ),
+											$product->is_purchasable() ? 'add_to_cart_button' : '',
+											esc_attr( $product->product_type ),
+											esc_html( $product->add_to_cart_text() )
+										),
+									$product );
+				}
+				
+				$text = str_replace(array('%wc_full_price%', '{{wc_full_price}}'), $wc_full_price, $text);
+				$text = str_replace(array('%wc_price%', '{{wc_price}}'), $wc_price, $text);
+				$text = str_replace(array('%wc_price_no_cur%', '{{wc_price_no_cur}}'), $wc_price_no_cur, $text);
+				$text = str_replace(array('%wc_stock%', '{{wc_stock}}'), $wc_stock, $text);
+				$text = str_replace(array('%wc_rating%', '{{wc_rating}}'), $wc_rating, $text);
+				$text = str_replace(array('%wc_star_rating%', '{{wc_star_rating}}'), $wc_star_rating, $text);
+				$text = str_replace(array('%wc_categories%', '{{wc_categories}}'), $wc_categories, $text);
+				$text = str_replace(array('%wc_add_to_cart%', '{{wc_add_to_cart}}'), $wc_add_to_cart, $text);
+				$text = str_replace(array('%wc_add_to_cart_button%', '{{wc_add_to_cart_button}}'), $wc_add_to_cart_button, $text);
+				$text = str_replace(array('%wc_sku%', '{{wc_sku}}'), $wc_sku, $text);
+				$text = str_replace(array('%wc_stock_quantity%', '{{wc_stock_quantity}}'), $wc_stock_quantity, $text);
+				$text = str_replace(array('%wc_rating_count%', '{{wc_rating_count}}'), $wc_rating_count, $text);
+				$text = str_replace(array('%wc_review_count%', '{{wc_review_count}}'), $wc_review_count, $text);
+				$text = str_replace(array('%wc_tags%', '{{wc_tags}}'), $wc_tags, $text);
 			}
-			
-			$text = str_replace(array('%wc_full_price%', '{{wc_full_price}}'), $wc_full_price, $text);
-			$text = str_replace(array('%wc_price%', '{{wc_price}}'), $wc_price, $text);
-			$text = str_replace(array('%wc_price_no_cur%', '{{wc_price_no_cur}}'), $wc_price_no_cur, $text);
-			$text = str_replace(array('%wc_stock%', '{{wc_stock}}'), $wc_stock, $text);
-			$text = str_replace(array('%wc_rating%', '{{wc_rating}}'), $wc_rating, $text);
-			$text = str_replace(array('%wc_star_rating%', '{{wc_star_rating}}'), $wc_star_rating, $text);
-			$text = str_replace(array('%wc_categories%', '{{wc_categories}}'), $wc_categories, $text);
-			$text = str_replace(array('%wc_add_to_cart%', '{{wc_add_to_cart}}'), $wc_add_to_cart, $text);
-			$text = str_replace(array('%wc_add_to_cart_button%', '{{wc_add_to_cart_button}}'), $wc_add_to_cart_button, $text);
-			$text = str_replace(array('%wc_sku%', '{{wc_sku}}'), $wc_sku, $text);
-			$text = str_replace(array('%wc_stock_quantity%', '{{wc_stock_quantity}}'), $wc_stock_quantity, $text);
-			$text = str_replace(array('%wc_rating_count%', '{{wc_rating_count}}'), $wc_rating_count, $text);
-			$text = str_replace(array('%wc_review_count%', '{{wc_review_count}}'), $wc_review_count, $text);
-			$text = str_replace(array('%wc_tags%', '{{wc_tags}}'), $wc_tags, $text);
-			
 		}
 		
 		return $text;

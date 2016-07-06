@@ -84,3 +84,4 @@ define('DB_PASSWORD', 'iYFGOf3RzH');
 require_once(ABSPATH . 'wp-settings.php');
 define ('WPLANG', 'ru_RU');
 define('FORCE_SSL_ADMIN', true);
+define('DISALLOW_FILE_EDIT', true);

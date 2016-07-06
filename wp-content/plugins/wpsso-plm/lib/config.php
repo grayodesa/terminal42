@@ -15,7 +15,7 @@ if ( ! class_exists( 'WpssoPlmConfig' ) ) {
 		public static $cf = array(
 			'plugin' => array(
 				'wpssoplm' => array(
-					'version' => '2.0.6-1',		// plugin version
+					'version' => '2.0.7-1',		// plugin version
 					'opt_version' => '11',		// increment when changing default options
 					'short' => 'WPSSO PLM',		// short plugin name
 					'name' => 'WPSSO Place / Location and Local Business Meta (WPSSO PLM)',
@@ -142,7 +142,7 @@ if ( ! class_exists( 'WpssoPlmConfig' ) ) {
 				if ( file_exists( $filepath ) ) {
 					require_once( $filepath );
 					if ( empty( $classname ) )
-						return SucomUtil::sanitize_classname( 'wpssoplm'.$filespec );
+						return SucomUtil::sanitize_classname( 'wpssoplm'.$filespec, false );	// $underscore = false
 					else return $classname;
 				}
 			}

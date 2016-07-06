@@ -12,6 +12,8 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 
 	class WpssoGplAdminAdvanced {
 
+		private $taglist_opts = array();
+
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
 			$this->p->util->add_plugin_filters( $this, array( 
@@ -22,7 +24,10 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 				'plugin_apikeys_rows' => 2,	// $table_rows, $form
 				'cm_custom_rows' => 2,		// $table_rows, $form
 				'cm_builtin_rows' => 2,		// $table_rows, $form
-				'taglist_tags_rows' => 4,	// $table_rows, $form, $network, $tag
+				'taglist_og_rows' => 3,		// $table_rows, $form, $network
+				'taglist_schema_rows' => 3,	// $table_rows, $form, $network
+				'taglist_twitter_rows' => 3,	// $table_rows, $form, $network
+				'taglist_other_rows' => 3,	// $table_rows, $form, $network
 			), 20 );
 		}
 
@@ -58,12 +63,22 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 				'option label', 'wpsso' ), null, 'plugin_img_alt_prefix', array( 'is_locale' => true ) ).
 			'<td class="blank">'.SucomUtil::get_locale_opt( 'plugin_img_alt_prefix', $this->p->options ).'</td>';
 
-			$table_rows['plugin_p_cap_prefix'] = $form->get_th_html( _x( 'WP Caption Paragraph Prefix',
+			$table_rows['plugin_p_cap_prefix'] = $form->get_th_html( _x( 'WP Caption Prefix',
 				'option label', 'wpsso' ), null, 'plugin_p_cap_prefix', array( 'is_locale' => true ) ).
 			'<td class="blank">'.SucomUtil::get_locale_opt( 'plugin_p_cap_prefix', $this->p->options ).'</td>';
 
 			$table_rows[] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Check for Embedded Media',
+			$form->get_th_html( _x( 'Maximum Images from Content',
+				'option label', 'wpsso' ), null, 'plugin_content_img_max' ).
+			'<td class="blank">'.$this->p->options['plugin_content_img_max'].'</td>';
+
+			$table_rows[] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( 'Maximum Videos from Content',
+				'option label', 'wpsso' ), null, 'plugin_content_vid_max' ).
+			'<td class="blank">'.$this->p->options['plugin_content_vid_max'].'</td>';
+
+			$table_rows[] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( 'Check for Embedded Media from',
 				'option label', 'wpsso' ), null, 'plugin_embedded_media' ).
 			'<td class="blank">'.
 			'<p>'.$this->get_nocb( 'plugin_slideshare_api' ).' Slideshare Presentations</p>'.
@@ -416,17 +431,39 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 			return $table_rows;
 		}
 
-		public function filter_taglist_tags_rows( $table_rows, $form, $network = false, $tag = '[^_]+' ) {
-			$og_cols = 2;
-			$cells = array();
+		public function filter_taglist_og_rows( $table_rows, $form, $network = false ) {
+			return $this->get_taglist_rows( $table_rows, $form, $network,
+				array( '/^add_(meta)_(property)_(.+)$/' ) );
+		}
 
-			foreach ( $this->p->opt->get_defaults() as $opt => $val ) {
+		public function filter_taglist_schema_rows( $table_rows, $form, $network = false ) {
+			return $this->get_taglist_rows( $table_rows, $form, $network,
+				array( '/^add_(meta)_(itemprop)_(.+)$/' ) );
+		}
 
-				if ( strpos( $opt, 'add_' ) === 0 &&
-					preg_match( '/^add_('.$tag.')_([^_]+)_(.+)$/', $opt, $match ) ) {
+		public function filter_taglist_twitter_rows( $table_rows, $form, $network = false ) {
+			return $this->get_taglist_rows( $table_rows, $form, $network,
+				array( '/^add_(meta)_(name)_(twitter:.+)$/' ) );
+		}
 
+		public function filter_taglist_other_rows( $table_rows, $form, $network = false ) {
+			return $this->get_taglist_rows( $table_rows, $form, $network,
+				array( '/^add_(link)_([^_]+)_(.+)$/', '/^add_(meta)_(name)_(.+)$/' ) );
+		}
+
+		private function get_taglist_rows( &$table_rows, &$form, &$network, array $opt_preg ) {
+			$table_cells = array();
+			$opt_defs = $this->p->opt->get_defaults();
+			foreach ( $opt_preg as $preg ) {
+				foreach ( $opt_defs as $opt => $val ) {
+					if ( strpos( $opt, 'add_' ) !== 0 ||			// optimize
+						isset( $this->taglist_opts[$opt] ) ||		// check cache for tags already shown
+							! preg_match( $preg, $opt, $match ) )	// check option name for a match
+								continue;
+					$highlight = '';
+					$this->taglist_opts[$opt] = $val;
 					switch ( $opt ) {
-						// disabled with a constant instead
+						// disable with a constant instead
 						case 'add_meta_name_generator':
 							continue 2;
 						// highlight important meta tags
@@ -434,38 +471,15 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 						case 'add_meta_name_description':
 							$highlight = ' highlight';
 							break;
-						/*
-						// internal / non-standard meta tags
-						case 'add_meta_property_og:image:cropped':
-						case 'add_meta_property_og:image:id':
-						case 'add_meta_property_og:video:embed_url':
-						case 'add_meta_property_product:review:count':
-						case 'add_meta_property_product:sku':
-						case ( strpos( $opt, 'add_meta_property_pinterest:' ) === 0 ? true : false ):
-						case ( strpos( $opt, 'add_meta_property_product:rating:' ) === 0 ? true : false ):
-							$highlight = ' is_disabled';
-							break;
-						*/
-						default:
-							$highlight = '';
-							break;
 					}
-					$cells[] = '<!-- '.( implode( ' ', $match ) ).' -->'.	// required for sorting
+					$table_cells[] = '<!-- '.( implode( ' ', $match ) ).' -->'.	// required for sorting
 						'<td class="checkbox blank">'.$this->get_nocb( $opt ).'</td>'.
 						'<td class="xshort'.$highlight.'">'.$match[1].'</td>'.
 						'<td class="taglist'.$highlight.'">'.$match[2].'</td>'.
 						'<th class="taglist'.$highlight.'">'.$match[3].'</th>';
 				}
 			}
-			sort( $cells );
-			$col_rows = array();
-			$per_col = ceil( count( $cells ) / $og_cols );
-			foreach ( $cells as $num => $cell ) {
-				if ( empty( $col_rows[ $num % $per_col ] ) )
-					$col_rows[ $num % $per_col ] = '<tr class="hide_in_basic">';	// initialize the array
-				$col_rows[ $num % $per_col ] .= $cell;					// create the html for each row
-			}
-			return array_merge( $table_rows, $col_rows );
+			return array_merge( $table_rows, SucomUtil::get_column_rows( $table_cells, 2 ) );
 		}
 
 		private function get_nocb( $name, $text = '' ) {

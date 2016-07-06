@@ -1996,7 +1996,7 @@ ob_end_clean();
 		if ( $response_code != 200 || is_wp_error( $version_info ) ) {
 			return false;
 		}
-
+		
 		if($version_info == 'valid'){
 			update_option('revslider-valid', 'true');
 			update_option('revslider-code', $data['code']);
@@ -2004,7 +2004,8 @@ ob_end_clean();
 			update_option('revslider-temp-active-notice', 'false');
 			return true;
 		}elseif($version_info == 'exist'){
-			RevSliderFunctions::throwError(__('Purchase Code already registered!', 'revslider'));
+			return 'exist';
+			//RevSliderFunctions::throwError(__('Purchase Code already registered!', 'revslider'));
 		}elseif($version_info == 'temp_valid'){ //only temporary active, rechecking needs to be done soon on the themepunch servers (envato API may be down)
 			update_option('revslider-valid', 'true');
 			update_option('revslider-code', $data['code']);
@@ -2046,6 +2047,7 @@ ob_end_clean();
 		if($version_info == 'valid'){
 			update_option('revslider-valid', 'false');
 			update_option('revslider-temp-active', 'false');
+			update_option('revslider-code', '');
 			return true;
 		}else{
 			return false;

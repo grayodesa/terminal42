@@ -134,19 +134,26 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 
 				// adjust some options based on external factors
 				if ( ! $network ) {
-					if ( ! $this->p->check->aop( $this->p->cf['lca'], 
-						false, $this->p->is_avail['aop'] ) ) {
+					if ( $this->p->check->aop( $this->p->cf['lca'], false, $this->p->is_avail['aop'] ) ) {
+						foreach ( array( 'plugin_hide_pro' ) as $idx ) {
+							$def_val = $this->get_defaults( $idx );
+							if ( $opts[$idx] != $def_val ) {	// numeric options could strings
+								$opts[$idx] = $def_val;
+								$has_diff_options = true;	// save the options
+							}
+						}
+					} else {
 						foreach ( array(
 							'plugin_filter_content',
 							'plugin_check_head',
 							'plugin_upscale_images',
 							'plugin_object_cache_exp',
+							'plugin_file_cache_exp',
 						) as $idx ) {
 							$def_val = $this->get_defaults( $idx );
-							// numeric options from forms are strings, so don't do a strict test
-							if ( $opts[$idx] != $def_val ) {
+							if ( $opts[$idx] != $def_val ) {	// numeric options could strings
 								if ( is_admin() )
-									$this->p->notice->err( sprintf( __( 'Non-standard value found for the Free version \'%s\' option - resetting the option to its default value.', 'wpsso' ), $idx ), true );
+									$this->p->notice->warn( sprintf( __( 'Free version non-standard value found for the \'%s\' option - resetting to its default value.', 'wpsso' ), $idx ), true );
 								$opts[$idx] = $def_val;
 								$has_diff_options = true;	// save the options
 							}
@@ -172,13 +179,14 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 					if ( is_admin() ) {
 						if ( empty( $opts['plugin_object_cache_exp'] ) ||
 							$opts['plugin_object_cache_exp'] < $this->get_defaults( 'plugin_object_cache_exp' ) ) {
+
 							if ( $this->p->check->aop( $this->p->cf['lca'], true, $this->p->is_avail['aop'] ) )
-								$this->p->notice->inf( $this->p->msgs->get( 'notice-object-cache-exp' ), true );
+								$this->p->notice->warn( $this->p->msgs->get( 'notice-object-cache-exp' ), true );
 							else $opts['plugin_object_cache_exp'] = $this->get_defaults( 'plugin_object_cache_exp' );
 						}
 
 						if ( empty( $opts['plugin_filter_content'] ) )
-							$this->p->notice->inf( $this->p->msgs->get( 'notice-content-filters-disabled' ), 
+							$this->p->notice->warn( $this->p->msgs->get( 'notice-content-filters-disabled' ), 
 								true, true, 'notice-content-filters-disabled', true );
 
 						if ( ! empty( $this->p->options['plugin_head_attr_filter_name'] ) &&
@@ -365,7 +373,7 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 						$this->p->debug->log( 'upgraded '.$options_name.' settings have been saved' );
 					if ( is_admin() )
 						$this->p->notice->inf( sprintf( __( 'Plugin settings (%s) have been upgraded and saved.',
-							'wpsso' ), $options_name ), true );
+							'wpsso' ), $options_name ), true, true, __FUNCTION__.'_upgraded', true );
 				}
 			} else {
 				if ( $this->p->debug->enabled )
@@ -432,6 +440,8 @@ if ( ! class_exists( 'WpssoOptions' ) ) {
 				case 'og_vid_max':
 				case 'og_desc_hashtags': 
 				case 'plugin_file_cache_exp':
+				case 'plugin_content_img_max':
+				case 'plugin_content_vid_max':
 				case ( strpos( $key, '_filter_prio' ) === false ? false : true ):
 					return 'numeric';	// cast as integer
 					break;

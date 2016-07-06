@@ -40,7 +40,6 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = array();
 
 			/*
@@ -67,7 +66,8 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 				$this->p->schema->schema_type_child_of( $mt_og['schema:type:id'], 'article' ) ) {
 
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'skipping publisher: schema type '.$mt_og['schema:type:id'].' is child of article (publisher added by article filter)' );
+					$this->p->debug->log( 'skipping publisher: schema type '.$mt_og['schema:type:id'].
+						' is article type (publisher added by article filter)' );
 
 			} else {
 				$org_id = is_object( $mod['obj'] ) ?

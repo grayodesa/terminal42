@@ -41,7 +41,6 @@ if ( ! class_exists( 'WpssoJsonProHeadOrganization' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$lca = $this->p->cf['lca'];
 			$ret = $this->p->schema->filter_json_data_http_schema_org_organization( $json_data,
 				$use_post, $mod, $mt_og, $user_id, $is_main );
 

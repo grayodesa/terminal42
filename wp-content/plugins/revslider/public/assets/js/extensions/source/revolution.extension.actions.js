@@ -1,5 +1,5 @@
 /********************************************
- * REVOLUTION 5.2 EXTENSION - ACTIONS
+ * REVOLUTION 5.3 EXTENSION - ACTIONS
  * @version: 1.3.2 (12.04.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
@@ -23,8 +23,10 @@ jQuery.extend(true,_R, {
 //	-	INITIALISATION OF ACTIONS 	-	//
 //////////////////////////////////////////
 var checkActions_intern = function(_nc,opt,as) {
+
 if (as)				
 	jQuery.each(as,function(i,a) {		
+
 		a.delay = parseInt(a.delay,0)/1000;
 		_nc.addClass("noSwipe");
 
@@ -45,6 +47,7 @@ if (as)
 		if (jQuery.inArray(a.action,["toggleslider","toggle_mute_video","toggle_global_mute_video","togglefullscreen"])!=-1) {
 			_nc.data('togglelisteners',true);
 		}
+
 		// COLLECT ALL TOGGLE TRIGGER TO CONNECT THEM WITH TRIGGERED LAYER
 		switch (a.action) {
 			case "togglevideo":
@@ -98,7 +101,8 @@ if (as)
 
 		}
 		
-		_nc.on(a.event,function() {			
+		_nc.on(a.event,function() {		
+
 			var tnc = a.layer == "backgroundvideo" ? jQuery(".active-revslide .slotholder .rs-background-video-layer") : a.layer == "firstvideo" ? jQuery(".active-revslide .tp-videolayer").first() : jQuery("#"+a.layer);
 
 			if (a.action=="stoplayer" || a.action=="togglelayer" || a.action=="startlayer") {
@@ -149,7 +153,7 @@ if (as)
 					}	
 			break;
 		}
-	})		
+	})				
 }
 
 
@@ -313,6 +317,12 @@ var actionSwitches = function(tnc,opt,a,_nc) {
 				_R.toggleState(opt.fullscreentoggledby);						
 			}	
 			
+		break;
+		default:
+			var obj = {};
+			obj.event = a;
+			obj.layer = _nc;			
+			opt.c.trigger('layeraction',[obj]);
 		break;
 	}
 }

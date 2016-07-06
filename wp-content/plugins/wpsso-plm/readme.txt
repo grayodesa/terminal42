@@ -9,8 +9,8 @@ Tags: wpsso, place, location, venue, longitude, latitude, address, local, busine
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.1
-Tested Up To: 4.5.2
-Stable Tag: 2.0.6-1
+Tested Up To: 4.5.3
+Stable Tag: 2.0.7-1
 
 WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
 
@@ -117,8 +117,8 @@ Purchase the [WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro](ht
 
 == Screenshots ==
 
-01. The WPSSO PLM settings page &mdash; manage a selection of addresses, geo location, business hours, the food establishment menu URL, and if reservation are accepted.
-02. The Place / Location tab in the Social Settings metabox on individual posts, pages, and custom post types &mdash; manage custom addresses, geo location, business hours, the food establishment menu URL, and if reservation are accepted.
+01. Place / Location settings page &mdash; manage a selection of addresses, geo location, business hours, the food establishment menu URL, and if reservation are accepted.
+02. Place / Location tab in the Social Settings metabox on individual posts, pages, and custom post types &mdash; manage custom addresses, geo location, business hours, the food establishment menu URL, and if reservation are accepted.
 03. Google's Structured Data Testing Tool &mdash; Results for an example Restaurant webpage showing the WPSSO PLM meta tags.
 
 == Changelog ==
@@ -129,6 +129,19 @@ Purchase the [WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro](ht
 * [WordPress.org](https://wordpress.org/plugins/wpsso-plm/developers/)
 
 = Changelog / Release Notes =
+
+**Version 2.0.7-1 (2016/06/21)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* None
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* Renamed the 'wpsso_place_options' filter to 'wpsso_get_place_options'.
 
 **Version 2.0.6-1 (2016/06/14)**
 
@@ -146,26 +159,13 @@ Official announcement: N/A
 	* Replaced the `WpssoPlmAddress::get_first_next_ids()` method by `SucomUtil::get_first_last_next_nums()`.
 	* Added a new hook for the 'wpsso_place_options' filter.
 
-**Version 2.0.5-1 (2016/06/05)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* None
-* *Bugfixes*
-	* Fixed missing comment string argument to `get_single_mt()` when creating container meta tags.
-* *Developer Notes*
-	* None
-
 == Upgrade Notice ==
+
+= 2.0.7-1 =
+
+(2016/06/21) Renamed the 'wpsso_place_options' filter to 'wpsso_get_place_options'.
 
 = 2.0.6-1 =
 
 (2016/06/14) Added a new checkbox to delete addresses. Replaced two methods in WpssoPlmAddress for SucomUtil methods. Added a new hook for the 'wpsso_place_options' filter.
-
-= 2.0.5-1 =
-
-(2016/06/05) Fixed missing comment string argument to `get_single_mt()` when creating container meta tags.
 

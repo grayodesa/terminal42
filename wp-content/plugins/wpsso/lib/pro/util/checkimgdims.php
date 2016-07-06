@@ -35,17 +35,18 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 
 		public function filter_attached_accept_img_dims( $bool, $img_url, $img_width, $img_height, $size_name, $pid ) {
 
-			$media_lib = __( 'Media Library', 'wpsso' );
-			$img_meta = wp_get_attachment_metadata( $pid );
+			if ( ! $bool )	// don't recheck already rejected images
+				return false;
+
 			$size_info = $this->p->media->get_size_info( $size_name );
-			$size_label = $this->p->util->get_image_size_label( $size_name );
-			$is_cropped = $size_info['crop'] === false ? 0 : 1;	// get_size_info() returns false, true, or an array
+			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
 			$is_sufficient_h = $img_height >= $size_info['height'] ? true : false;
-			$dismiss_id = 'wp_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
 
-			if ( ( empty( $size_info['crop'] ) && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
-				( ! empty( $size_info['crop'] ) && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
+			if ( ( ! $is_cropped && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
+				( $is_cropped && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
+
+				$img_meta = wp_get_attachment_metadata( $pid );
 
 				if ( isset( $img_meta['width'] ) && isset( $img_meta['height'] ) &&
 					$img_meta['width'] < $size_info['width'] && $img_meta['height'] < $size_info['height'] )
@@ -54,59 +55,62 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 				else $size_text = $img_width.'x'.$img_height;
 
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$size_text.' too small for the '.
-						$size_name.' ('.$size_info['width'].'x'.$size_info['height'].
-							( $is_cropped === 0 ? '' : ' cropped' ).') image size' );
+					$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$size_text.' too small for the '.$size_name.
+						' ('.$size_info['width'].'x'.$size_info['height'].( $is_cropped ? ' cropped' : '' ).') image size' );
 
 				if ( is_admin() ) {
+					$media_lib = __( 'Media Library', 'wpsso' );
+					$size_label = $this->p->util->get_image_size_label( $size_name );
+					$dismiss_id = 'wp_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
 					$required_text = '<b>'.$size_label.'</b> ('.$size_info['width'].'x'.$size_info['height'].
-						( $is_cropped === 0 ? '' : ' <i>'.__( 'cropped', 'wpsso' ).'</i>' ).')';
+						( $is_cropped ? ' <i>'.__( 'cropped', 'wpsso' ).'</i>' : '' ).')';
 					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', array( 'size_label' => $size_label ) );
-					$this->p->notice->err( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $size_text, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
+					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $size_text, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
 				}
 
-				return false;
+				return false;	// exit early
+			}
 
-			} elseif ( ! $this->p->media->check_image_id_min_max( $pid, $size_name, $img_width, $img_height, $media_lib, $dismiss_id ) ) {
-				return false;
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'image ID '.$pid.' dimensions ('.$img_width.'x'.$img_height.') are sufficient' );
 
-			} elseif ( $this->p->debug->enabled )
-				$this->p->debug->log( 'returned image dimensions ('.$img_width.'x'.$img_height.') are sufficient' );
-
-			return $bool;
+			return true;	// image dimensions are good
 		}
 
 		public function filter_content_accept_img_dims( $bool, $og_image, $size_name, $attr_name, $content_passed ) {
 
+			if ( ! $bool )	// don't recheck already rejected images
+				return false;
+
 			$size_info = $this->p->media->get_size_info( $size_name );
-			$size_label = $this->p->util->get_image_size_label( $size_name );
+			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $og_image['og:image:width'] >= $size_info['width'] ? true : false;
 			$is_sufficient_h = $og_image['og:image:height'] >= $size_info['height'] ? true : false;
-			$dismiss_id = 'content_'.$og_image['og:image'].'_'.$size_name.'_rejected';
+			$og_image_url = SucomUtil::get_mt_media_url( $og_image, 'og:image' );
 
-			if ( ( $attr_name == 'src' && $size_info['crop'] && ( $is_sufficient_w && $is_sufficient_h ) ) ||
-				( $attr_name == 'src' && ! $size_info['crop'] && ( $is_sufficient_w || $is_sufficient_h ) ) ||
+			if ( ( $attr_name == 'src' && $is_cropped && ( $is_sufficient_w && $is_sufficient_h ) ) ||
+				( $attr_name == 'src' && ! $is_cropped && ( $is_sufficient_w || $is_sufficient_h ) ) ||
 					$attr_name == 'data-share-src' ) {
 
-				return $bool;	// image dimensions are good
-
-			} else {
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'content image rejected: width / height missing or too small for '.$size_name );
+					$this->p->debug->log( $og_image_url.' dimensions ('.$og_image['og:image:width'].'x'.
+						$og_image['og:image:height'].') are sufficient' );
 
-				if ( is_admin() ) {
-					if ( ! $content_passed )
-						$data_wp_pid_msg = ' '.sprintf( __( '%1$s includes an additional \'data-wp-pid\' attribute for Media Library images &mdash; if this image was selected from the Media Library before %1$s was activated, try removing and adding the image back to your content.', 'wpsso' ), $this->p->cf['plugin'][$this->p->cf['lca']]['short'] );
-					else $data_wp_pid_msg = '';
-
-					$required_text = '<b>'.$size_label.'</b> ('.$size_name.')';
-					$this->p->notice->err( sprintf( __( 'Image %1$s in content ignored &mdash; the image width / height is too small for the required %2$s image dimensions.', 'wpsso' ), $og_image['og:image'], $required_text ).$data_wp_pid_msg, false, true, $dismiss_id, true );
-				}
-
-				return false;
+				return true;	// image dimensions are good
 			}
 
-			return $bool;
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'content image rejected: width / height missing or too small for '.$size_name );
+
+			if ( is_admin() ) {
+				$size_label = $this->p->util->get_image_size_label( $size_name );
+				$dismiss_id = 'content_'.$og_image_url.'_'.$size_name.'_rejected';
+				$required_text = '<b>'.$size_label.'</b> ('.$size_name.')';
+				$data_wp_pid_msg = $content_passed ? '' : ' '.sprintf( __( '%1$s includes an additional \'data-wp-pid\' attribute for Media Library images &mdash; if this image was selected from the Media Library before %1$s was activated, try removing and adding the image back to your content.', 'wpsso' ), $this->p->cf['plugin'][$this->p->cf['lca']]['short'] );
+				$this->p->notice->warn( sprintf( __( 'Image %1$s in content ignored &mdash; the image width / height is too small for the required %2$s image dimensions.', 'wpsso' ), $og_image_url, $required_text ).$data_wp_pid_msg, false, true, $dismiss_id, true );
+			}
+
+			return false;
 		}
 	}
 }

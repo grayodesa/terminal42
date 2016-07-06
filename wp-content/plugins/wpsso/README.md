@@ -2,33 +2,32 @@
 
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WordPress Social Sharing Optimization (WPSSO)</td></tr>
-<tr><th align="right" valign="top" nowrap>Summary</th><td>Fast, light-weight, full-featured plugin for great looking shares on all social sites - no matter how your content is shared or re-shared!</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.32.4-2</td></tr>
+<tr><th align="right" valign="top" nowrap>Summary</th><td>A fast, light-weight, comprehensive plugin to manage all aspects of social meta tags &amp; Schema markup for Google + all social websites.</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.33.2-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
-<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.2</td></tr>
+<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
-<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/">https://wpsso.com/</a></td></tr>
+<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpsso-readme-donate">https://wpsso.com/?utm_source=wpsso-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
-<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>amp, bbPress, buddypress, e-commerce, easy digital downloads, edd, Facebook, g+, gallery, google, google plus, hashtags, imagebrowser, JSON-LD, knowledge graph, linkedin, marketpress, meta-tags, multilingual, multisite, nextgen gallery, nggalbum, nggallery, open graph, pinterest, player card, polylang, rich pins, schema, seo, singlepic, slideshare, social, Summary Card, twitter, twitter cards, vimeo, wistia, woocommerce, wpsso, wp_cache, youtube, yotpo, yourls, co-authors, co-authors plus</td></tr>
+<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>amp, bbPress, buddypress, e-commerce, easy digital downloads, edd, facebook, g+, gallery, google, google plus, hashtags, JSON-LD, knowledge graph, linkedin, marketpress, meta tags, multilingual, multisite, nextgen gallery, open graph, pinterest, player card, polylang, rich pins, schema, seo, singlepic, slideshare, social, summary card, twitter, twitter cards, vimeo, wistia, woocommerce, wpsso, youtube, yotpo, yourls, co-authors, co-authors plus, the events calendar</td></tr>
 </table>
 
 <h2>Description</h2>
 
-<p align="center"><img src="https://surniaulula.github.io/wpsso/assets/icon-256x256.png" /></p><p><strong>Make sure social websites present your content in the best possible way, no matter <em>how</em> your webpage is shared</strong> &mdash; from sharing buttons on the webpage, browser add-ons / extensions, or URLs pasted directly on timelines and private messages (PM) &mdash; the WordPress Social Sharing Optimization (WPSSO) covers all the bases in one fast, light-weight, and full-featured plugin.</p>
+<p align="center"><img src="https://surniaulula.github.io/wpsso/assets/icon-256x256.png" /></p><p>
+<strong>A solid social markup plugin is the foundation of any good social strategy</strong> &mdash; WordPress Social Sharing Optimization (WPSSO) allows you to manage the information social websites need, improving <em>Google Search ranking</em>, <em>social engagement</em>, and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more.</p>
 
-<p><strong>A solid social meta tag plugin is the foundation of any good social strategy</strong> &mdash; WordPress Social Sharing Optimization (WPSSO) gives you total control over all the information social website crawlers need, improving <em>Google Search ranking</em>, <em>social engagement</em>, and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more &mdash; independently of any social sharing buttons you may or may not already use (sharing buttons are not required).</p>
+<p><strong>Complete <a href="http://ogp.me/">Facebook / Open Graph</a>, <a href="https://business.pinterest.com/en/rich-pins">Pinterest Rich Pin</a>, <a href="https://dev.twitter.com/cards/overview">Twitter Card</a>, <em>SEO</em> meta tags and <a href="http://schema.org/">Schema</a> markup</strong> &mdash; meta tags and Schema markup are read by Google Search and <em>all</em> social websites, to describe and display your content correctly (title, description, hashtags, images, videos, ecommerce product details, author profile / authorship, publisher name, etc.). WPSSO uses the existing content of your webpages to generate complete meta tags and Schema markup &mdash; there's no need to manually enter / configure any additional values or settings.</p>
 
-<p><strong>Tired of sub-standard social meta tags from other SEO plugins?</strong> &mdash; WPSSO Pro <em>automatically</em> retrieves and uses information from a wide range or sources, including All in One SEO Pack, bbPress, BuddyPress, Co-Authors Plus, Easy Digital Downloads, HeadSpace2 SEO, NextGEN Gallery, MarketPress - WordPress eCommerce, Polylang, rtMedia for WordPress (BuddyPress and bbPress), The SEO Framework, WooCommerce, WP e-Commerce, WordPress REST API, Yoast SEO (aka WordPress SEO), Yotpo Social Reviews for WooCommerce, along with service APIs like Bitly, Google URL Shortener, Gravatar, Ow.ly, Slideshare, TinyURL, Vimeo, Wistia, Your Own URL Shortener (YOURLS), and YouTube.</p>
-
-<p><strong>Optional Free and Pro extensions</strong> &mdash; <a href="https://wordpress.org/plugins/wpsso-am/">WPSSO Mobile App Meta</a> for Apple Store / iTunes and Google Play App meta tags, <a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO Place / Location and Local Business Meta</a> for Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags, <a href="https://wordpress.org/plugins/wpsso-schema-json-ld/">WPSSO Schema JSON-LD Markup</a> for Google and Pinterest Schema.org markup (BlogPosting, Article, Place, Product, etc.), <a href="https://wordpress.org/plugins/wpsso-rrssb/">WPSSO Ridiculously Responsive Social Sharing Buttons</a>, and others.</p>
+<p><strong>Easy and comprehensive social meta tags and Schema markup</strong> &mdash; WPSSO Pro <em>automatically</em> retrieves and uses information from a wide range or sources, including All in One SEO Pack, bbPress, BuddyPress, Co-Authors Plus, Easy Digital Downloads, HeadSpace2 SEO, NextGEN Gallery, MarketPress - WordPress eCommerce, Polylang, rtMedia for WordPress (BuddyPress and bbPress), The Events Calendar, The SEO Framework, WooCommerce, WP e-Commerce, WordPress REST API, Yoast SEO (aka WordPress SEO), Yotpo Social Reviews for WooCommerce, along with service APIs like Bitly, Google URL Shortener, Gravatar, Ow.ly, Slideshare, TinyURL, Vimeo, Wistia, Your Own URL Shortener (YOURLS), and YouTube.</p>
 
 <h4>Quick List of Features</h4>
 
 <p><strong>WPSSO Free / Basic Features</strong></p>
 
 <ul>
-<li>Adds Open Graph / Rich Pin meta tags (Facebook, Google+, Pinterest, LinkedIn, etc.).</li>
-<li>Twitter Card meta tags:
+<li>Adds Open Graph meta tags (Facebook, Google+, Pinterest, LinkedIn, etc.).</li>
+<li>Adds all available Twitter Card meta tags:
 
 <ul>
 <li><a href="https://dev.twitter.com/cards/types/app">App Card</a> (requires the <a href="https://wordpress.org/plugins/wpsso-am/">WPSSO Mobile App Meta</a> extension)</li>
@@ -36,21 +35,21 @@
 <li><a href="https://dev.twitter.com/cards/types/summary">Summary Card</a></li>
 <li><a href="https://dev.twitter.com/cards/types/player">Player Card</a> is available in the Pro version (requires video discovery modules, provided with the Pro version).</li>
 </ul></li>
+<li>Adds Pinterest Rich Pin meta tags and Schema markup.</li>
+<li>Adds author (Person), publisher (Organization) and WebSite markup for Google Search and Google's <em>Knowledge Graph</em>.</li>
+<li>Customizable image dimensions for Facebook / Open Graph, Pinterest, Schema and all Twitter Card types.</li>
+<li>Validation of minimum / maximum image dimensions and aspect ratios.</li>
+<li>Auto-regeneration of inaccurate / missing WordPress image sizes.</li>
 <li>Support for Automattic's <a href="https://wordpress.org/plugins/amp/">Accelerated Mobile Pages (AMP)</a> plugin.</li>
 <li>Support for featured, attached, gallery shortcode, and/or image HTML tags in content.</li>
-<li>Customizable image dimensions for Facebook / Open Graph, Pinterest, Schema and each Twitter Card type.</li>
-<li>Fallback to image alt values if the content and except do not include any text.</li>
+<li>Fallback to image alt values if the content and excerpt does not include any text.</li>
 <li>Optional fallback to a default image and video for index and search webpages.</li>
-<li>Validates image dimensions and aspect ratios for reliable sharing results.</li>
-<li>Auto-regeneration of inaccurate / missing WordPress image sizes.</li>
-<li>Fully renders content (including shortcodes) for accurate description texts.</li>
 <li>Configurable title separator character (hyphen by default).</li>
 <li>Configurable title and description lengths (Open Graph, Twitter Card, SEO).</li>
 <li>Includes author, co-author / contributor and publisher markup for Facebook, Pinterest and Google.</li>
 <li>Includes WordPress tags as hashtags (including a configurable maximum).</li>
 <li>Includes a Google / SEO description meta tag (if an SEO plugin is not detected).</li>
-<li>Includes <a href="https://developers.google.com/structured-data/customize/social-profiles">author (Person) and publisher (Organization) social profiles</a>, <a href="https://developers.google.com/structured-data/customize/logos">publisher (Organization) logo</a>, and <a href="https://developers.google.com/structured-data/site-name">WebSite Site Name</a> in schema.org JSON-LD format for Google Search and their <em>Knowledge Graph</em></a>.</li>
-<li>Configurable website / business social accounts for JSON-LD markup:
+<li>Configurable website / business social accounts for Schema markup:
 
 <ul>
 <li>Facebook Business Page URL</li>
@@ -61,7 +60,7 @@
 <li>LinkedIn Company Page URL</li>
 <li>MySpace Business (Brand) URL</li>
 </ul></li>
-<li>User profile contact fields for Open Graph, Twitter Card, and JSON-LD markup:
+<li>User profile contact fields for Open Graph, Twitter Card, and Schema markup:
 
 <ul>
 <li>Facebook URL</li>
@@ -75,7 +74,6 @@
 <li>Twitter @username</li>
 <li>YouTube Channel URL</li>
 </ul></li>
-<li>Validation tools, social preview, and meta tag value tabs on admin editing pages.</li>
 <li>Customizable <strong>multilingual</strong> / multi-language Site Title and Site Description texts.</li>
 <li>Contextual help for <em>every</em> plugin option and <a href="http://wpsso.com/codex/plugins/wpsso/">comprehensive online documentation</a>.</li>
 <li>Uses object and transient caches to provide incredibly fast execution speeds.</li>
@@ -90,52 +88,6 @@
 <li><a href="https://wordpress.org/plugins/wpsso-ssb/">WPSSO Social Sharing Buttons</a> (Free version)</li>
 </ul></li>
 </ul>
-
-<p><strong>WPSSO Free / Basic Example Meta Tags</strong></p>
-
-<p>Example meta tags from the <em>Tiled Gallery</em> post provided by the <a href="http://wptest.io/">WP Test</a> data.</p>
-
-<pre>
-&lt;link rel="author" href="https://plus.google.com/u/1/+JSMorisset"/&gt;
-&lt;link rel="publisher" href="https://plus.google.com/+SurniaUlula"/&gt;
-&lt;meta property="fb:app_id" content="525239184171769"/&gt;
-&lt;meta property="og:url" content="http://test.surniaulula.com/2013/03/15/tiled-gallery/"/&gt;
-&lt;meta property="og:type" content="article"/&gt;
-&lt;!-- article:author:1 --&gt;&lt;meta property="article:author" content="https://www.facebook.com/jsmoriss"/&gt;
-&lt;meta property="article:section" content="Social Networking"/&gt;
-&lt;meta property="article:published_time" content="2013-03-15T17:23:27+00:00"/&gt;
-&lt;meta property="article:modified_time" content="2016-05-13T11:02:32+00:00"/&gt;
-&lt;meta property="og:locale" content="en_US"/&gt;
-&lt;meta property="og:site_name" content="Test Site"/&gt;
-&lt;meta property="og:title" content="Tiled Gallery"/&gt;
-&lt;meta property="og:description" content="This is a test for Jetpack&amp;#039;s Tiled Gallery. You can install Jetpack or Slim Jetpack to test it out. This is some text after the Tiled Gallery just to make sure that everything spaces nicely."/&gt;
-&lt;meta property="article:publisher" content="https://www.facebook.com/SurniaUlulaCom/"/&gt;
-&lt;!-- og:image:1 --&gt;&lt;meta property="og:image" content="http://test.surniaulula.com/wp-content/uploads/2013/03/captain-america-600x315.jpg"/&gt;
-&lt;!-- og:image:1 --&gt;&lt;meta property="og:image:width" content="600"/&gt;
-&lt;!-- og:image:1 --&gt;&lt;meta property="og:image:height" content="315"/&gt;
-&lt;meta name="twitter:domain" content="test.surniaulula.com"/&gt;
-&lt;meta name="twitter:site" content="@surniaululacom"/&gt;
-&lt;meta name="twitter:title" content="Tiled Gallery"/&gt;
-&lt;meta name="twitter:description" content="This is a test for Jetpack&amp;#039;s Tiled Gallery. You can install Jetpack or Slim Jetpack to test it out. This is some text after the Tiled Gallery just to make sure that everything spaces nicely."/&gt;
-&lt;meta name="twitter:card" content="summary_large_image"/&gt;
-&lt;meta name="twitter:image" content="http://test.surniaulula.com/wp-content/uploads/2013/03/captain-america-800x1212.jpg"/&gt;
-&lt;meta itemprop="url" content="http://test.surniaulula.com/2013/03/15/tiled-gallery/"/&gt;
-&lt;meta itemprop="name" content="Tiled Gallery"/&gt;
-&lt;meta itemprop="description" content="This is a test for Jetpack&amp;#039;s Tiled Gallery. You can install Jetpack or Slim Jetpack to test it out. This is some text after the Tiled Gallery just to make sure that everything spaces nicely."/&gt;
-&lt;meta itemprop="datepublished" content="2013-03-15T17:23:27+00:00"/&gt;
-&lt;meta itemprop="datemodified" content="2016-05-13T11:02:32+00:00"/&gt;
-&lt;meta name="description" content="This is a test for Jetpack&amp;#039;s Tiled Gallery. You can install Jetpack or Slim Jetpack to test it out. This is some text after the Tiled Gallery just to..."/&gt;
-&lt;noscript itemprop="image" itemscope itemtype="http://schema.org/ImageObject"&gt;
-    &lt;meta itemprop="url" content="http://test.surniaulula.com/wp-content/uploads/2013/03/captain-america-800x1212.jpg"/&gt;
-    &lt;meta itemprop="width" content="800"/&gt;
-    &lt;meta itemprop="height" content="1212"/&gt;
-&lt;/noscript&gt;
-&lt;noscript itemprop="author" itemscope itemtype="http://schema.org/Person"&gt;
-    &lt;meta itemprop="url" content="http://surniaulula.com/"/&gt;
-    &lt;meta itemprop="name" content="JS Morisset"/&gt;
-    &lt;meta itemprop="description" content="PHP developer and author of several Pro / Freemium plugins for WordPress."/&gt;
-&lt;/noscript&gt;
-</pre>
 
 <blockquote>
 <p>Download the Free version from <a href="http://surniaulula.github.io/wpsso/">GitHub</a> or <a href="https://wordpress.org/plugins/wpsso/">WordPress.org</a>.</p>
@@ -152,14 +104,15 @@
 <p><strong>WPSSO Pro / Power-User Features</strong></p>
 
 <ul>
-<li>A "Social Settings" metabox for Post, Page, custom post type, user profile, and term / taxonomy (category and tag) editing pages &mdash; the "Social Settings" metbox allows you to customize the article topic, the shared title, the Open Graph / Facebook / Rich Pin, Google Search, and Twitter Card descriptions, along with the shared image and/or video.</li>
-<li>Support for embedded videos in content text ("iframe" and "object" HTML markup).</li>
-<li>Additional Open Graph / Rich Pin meta tags for videos and e-commerce products.</li>
+<li>A Social Settings metabox for Post, Page, custom post type, user profile, and term / taxonomy (category and tag) editing pages &mdash; the Social Settings metbox allows you to customize the article topic, the shared title, the Open Graph / Facebook / Rich Pin, Google Search, and Twitter Card descriptions, along with the shared image and/or video.</li>
+<li>Fully renders content (including shortcodes) for accurate description texts.</li>
+<li>Support for embedded videos in content text (iframe and object HTML markup).</li>
+<li>Additional Open Graph / Rich Pin meta tags for videos and ecommerce products.</li>
 <li>Twitter <a href="https://dev.twitter.com/cards/types/player">Player Card</a> markup for embedded videos from Slideshare, Vimeo, Wistia, and/or Youtube.</li>
-<li>Configurable user profile contact field names and labels for customized theme / SEO plugin integration.</li>
 <li>Include or exclude individual Google / SEO, Open Graph, Twitter Card, and Schema meta tags from webpage headers.</li>
+<li>Configurable user profile contact field names and labels.</li>
 <li>Optional URL shortening with Bitly, Google, Ow.ly, TinyURL, or YOURLS.</li>
-<li>Integrates with 3rd party plugins and services for additional image, video, product, and content information (see <a href="http://wpsso.com/codex/plugins/wpsso/notes/modules/">About Pro Modules</a> and <a href="http://wpsso.com/codex/plugins/wpsso/installation/integration/">Integration Notes</a> for details). The following modules are included with the Pro version, and are automatically loaded if/when the supported plugins and/or services are detected.
+<li>Integrates with 3rd party plugins and services for additional image, video, ecommerce product details, SEO settings, etc. The following modules are included with the Pro version, and are automatically loaded if/when the supported plugins and/or services are required.
 
 <ul>
 <li><strong>Supported 3rd Party Plugins</strong>
@@ -175,6 +128,7 @@
 <li><a href="https://wordpress.org/plugins/wordpress-ecommerce/">MarketPress - WordPress eCommerce</a></li>
 <li><a href="https://wordpress.org/plugins/polylang/">Polylang</a></li>
 <li><a href="https://wordpress.org/plugins/buddypress-media/">rtMedia for WordPress, BuddyPress and bbPress</a></li>
+<li><a href="https://wordpress.org/plugins/the-events-calendar/">The Events Calendar</a></li>
 <li><a href="https://wordpress.org/plugins/autodescription/">The SEO Framework</a></li>
 <li><a href="https://wordpress.org/plugins/woocommerce/">WooCommerce</a> (version 1 and 2)</li>
 <li><a href="https://wordpress.org/plugins/wp-e-commerce/">WP eCommerce</a></li>
@@ -210,7 +164,7 @@
 </ul>
 
 <blockquote>
-<p><a href="http://wpsso.com/">Purchase the Pro version</a> (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
+<p><a href="http://wpsso.com/extend/plugins/wpsso/?utm_source=wpsso-readme-purchase">Purchase the Pro version</a> (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
 </blockquote>
 
 <div style="clear:both;"></div>
@@ -247,7 +201,7 @@
 
 <h4>Complete Social Meta Tags</h4>
 
-<p>WPSSO adds Facebook / <a href="http://ogp.me/">Open Graph</a>, <a href="http://developers.pinterest.com/rich_pins/">Pinterest Rich Pins</a>, <a href="https://dev.twitter.com/docs/cards">Twitter Cards</a>, and <a href="http://en.wikipedia.org/wiki/Search_engine_optimization">Search Engine Optimization</a> meta tags to the head section of webpages. These meta tags are used by Google Search and all social websites to describe and display your content correctly (title, description, hashtags, images, videos, product, author profile / authorship, publisher, etc.). WPSSO uses the <em>existing</em> content of your webpages to build HTML meta tags &mdash; There's no need to manually enter / configure any additional values or settings (although many settings and options <em>are</em> available in the Pro version). <a href="http://wpsso.com/extend/plugins/wpsso/screenshots/">See examples from Google Search, Google+, Facebook, Twitter, Pinterest, StumbleUpon, Tumblr, etc.</a> &mdash; along with screenshots of the WPSSO settings pages.</p>
+<p>WPSSO adds Facebook / <a href="http://ogp.me/">Open Graph</a>, <a href="http://developers.pinterest.com/rich_pins/">Pinterest Rich Pins</a>, <a href="https://dev.twitter.com/docs/cards">Twitter Cards</a>, and <a href="http://en.wikipedia.org/wiki/Search_engine_optimization">Search Engine Optimization</a> meta tags to the head section of webpages. These meta tags are used by Google Search and all social websites to describe and display your content correctly (title, description, hashtags, images, videos, ecommerce product details, author profile / authorship, publisher, etc.). WPSSO uses the <em>existing</em> content of your webpages to build HTML meta tags &mdash; There's no need to manually enter / configure any additional values or settings (although many settings and options <em>are</em> available in the Pro version). <a href="http://wpsso.com/extend/plugins/wpsso/screenshots/">See examples from Google Search, Google+, Facebook, Twitter, Pinterest, StumbleUpon, Tumblr, etc.</a> &mdash; along with screenshots of the WPSSO settings pages.</p>
 
 <p>WPSSO provides the <a href="https://dev.twitter.com/cards/types/summary">Summary</a>, <a href="https://dev.twitter.com/cards/types/summary-large-image">Summary with Large Image</a>, <a href="https://dev.twitter.com/cards/types/app">App</a> (requires the <a href="https://wordpress.org/plugins/wpsso-am/">WPSSO Mobile App Meta</a> extension), and <a href="https://dev.twitter.com/cards/types/player">Player</a> Twitter Cards &mdash; <em>including configurable image sizes for each card type</em>. The <a href="https://dev.twitter.com/cards/types/photo">Photo</a>, <a href="https://dev.twitter.com/cards/types/gallery">Gallery</a>, and <a href="https://dev.twitter.com/cards/types/product">Product</a> Twitter Cards were deprecated by Twitter on July 3rd, 2015.</p>
 
