@@ -29,6 +29,8 @@ endif;
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
+<script src="/wp-content/themes/coworker/js/fontloader.js"></script>
+<script type="text/javascript">loadFont('firasans', '/wp-content/themes/coworker/css/fira-sans.css')</script>
 <script src="//use.typekit.net/mqr5uxn.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
 
