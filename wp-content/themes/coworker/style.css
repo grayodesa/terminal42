@@ -251,7 +251,7 @@ blockquote {
 	border-left: 3px solid #777;
     font-size: 17px;
     line-height: 1.4;
-	font-family: 'Droid Serif', Georgia, 'Times New Roman', Times, serif;
+	font-family: 'droid_serifregular', Georgia, 'Times New Roman', Times, serif;
     font-style: italic;
 	padding: 5px 0 5px 20px;
     text-shadow: 1px 1px 1px #FFF;
@@ -470,7 +470,7 @@ span.page-divider span {
     color: #444;
     list-style-type: disc;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 .entry_content ol {
@@ -478,7 +478,7 @@ span.page-divider span {
     color: #444;
     list-style-type: decimal;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 label {
@@ -1739,7 +1739,7 @@ html[xmlns] .slider-wrap { display: block; }
     line-height: 24px;
     padding: 6px 15px;
     font-size: 14px;
-    font-family: 'Droid Serif', sans-serif;
+    font-family: 'droid_serifregular', sans-serif;
     width: auto !important;
     max-width: 500px;
     background-color: #111;
@@ -1996,7 +1996,7 @@ ul.landing-features li:hover { font-weight: bold; }
 .countdown_amount {
 	font-size: 96px;
     line-height: 100px;
-    font-family: "Droid Serif", sans-serif;
+    font-family: "droid_serifregular", sans-serif;
     color: #444;
 }
 
@@ -2820,7 +2820,7 @@ ul.landing-features li:hover { font-weight: bold; }
     font-size: 13px;
     line-height: 20px;
     color: #999;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 .product-title div.product-cats a { color: #999; }
@@ -3899,7 +3899,7 @@ div.alignright {
 .wp-caption {
 	text-align: center;
 	margin: 10px 20px 13px 20px;
-	font-family: 'Droid Serif', Georgia, "Times New Roman", Times, serif;
+	font-family: 'droid_serifregular', Georgia, "Times New Roman", Times, serif;
 	font-style: italic;
     max-width: 100%;
 }
@@ -4175,7 +4175,7 @@ p.wp-caption-text {
 
 .sitemap ul {
     list-style-type: circle;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     font-size: 13px;
     font-weight: normal;
     margin: 5px 0 5px 20px;
@@ -4270,7 +4270,7 @@ p.wp-caption-text {
 
 .well.callout p {
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
     color: #999;
 }
 
@@ -4989,7 +4989,7 @@ transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 	font-size: 15px;
     font-style: italic;
     color: #777;
-    font-family: 'Droid Serif', Georgia, serif;
+    font-family: 'droid_serifregular', Georgia, serif;
     text-shadow: 1px 1px 1px #FFF;
     border: 0;
 }
@@ -5768,7 +5768,7 @@ button.button span {
 
 .pricing-title h4 span {
     display: block;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     font-size: 13px;
     font-weight: normal;
     color: #BBB;
@@ -5778,7 +5778,7 @@ button.button span {
 	padding: 15px 0;
 	font-size: 36px;
 	line-height: 40px;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     background-color: #EEE;
     color: #444;
     text-shadow: 1px 1px 1px #FFF;
@@ -5837,7 +5837,7 @@ button.button span {
     padding: 15px 0;
     font-size: 36px;
     line-height: 40px;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     background-color: #444;
     margin: 0 -1px;
     color: #FFF;
@@ -6154,7 +6154,7 @@ body > iframe { display: none !important; }
 	border: 1px solid #E5E5E5;
     padding: 15px;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
     text-shadow: 1px 1px 1px #FFF;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -6220,7 +6220,7 @@ body > iframe { display: none !important; }
     line-height: 16px;
     font-style: italic;
     font-weight: normal;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 #footer.footer-dark .testimonial-item .testi-author {

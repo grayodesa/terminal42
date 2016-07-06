@@ -31,6 +31,7 @@ endif;
 <meta name="theme-color" content="#ffffff">
 <script src="/wp-content/themes/coworker/js/fontloader.js"></script>
 <script type="text/javascript">loadFont('firasans', '/wp-content/themes/coworker/css/fira-sans.css')</script>
+<script type="text/javascript">loadFont('droidserif', '/wp-content/themes/coworker/css/droidserif.css')</script>
 
     <!-- ============================================
         Document Title
