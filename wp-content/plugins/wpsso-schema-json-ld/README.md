@@ -3,29 +3,26 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Schema JSON-LD Markup (WPSSO JSON)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.7.5-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.8.1-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
-<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.2</td></tr>
+<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
-<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/">https://wpsso.com/</a></td></tr>
+<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpssojson-readme-donate">https://wpsso.com/?utm_source=wpssojson-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
 <tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, pinterest, google, seo, news, amp, co-authors, co-authors plus</td></tr>
 </table>
 
 <h2>Description</h2>
 
-<p align="center"><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" /></p><p>
-<ul>
-<li><strong>Offers complete Schema, Structured Data and Rich Snippet markup.</strong></li>
-<li><strong>Corrects incomplete / innacurate Schema markup in theme templates.</strong></li>
-<li><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for your <a href="https://wordpress.org/plugins/amp/">Accelerated Mobile Pages (AMP)</a> webpages.</strong></li>
-<li><strong>WooCommerce support available &mdash; adds all variations in your Product markup!</strong></li>
-</ul>
-</p>
+<p align="center"><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" /></p><p><strong>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup.</strong></p>
 
-<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, publisher, place, product, etc.) for Google Search, Pinterest, and others.</p>
+<p><strong>Corrects incomplete and innacurate Schema markup in theme templates.</strong></p>
 
-<p>WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
+<p><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</strong></p>
+
+<p><strong>Include all WooCommerce product variations in the Schema markup!</strong> (Pro version)</p>
+
+<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, ratings, publisher, place, product, etc.) for Google Search, Pinterest, and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
 
 <h4>Quick List of Features</h4>
 
@@ -127,7 +124,7 @@
 
 <p><strong>WPSSO JSON Pro / Power-User Features</strong></p>
 
-<p>Extends the features of WPSSO Pro (requires a licensed and active WPSSO Pro plugin).</p>
+<p>Extends the features of WPSSO Pro (requires a licensed WPSSO Pro plugin).</p>
 
 <p>Adds additional custom options in the Social Settings metabox:</p>
 
@@ -234,6 +231,114 @@
   <li>Image Height</li>
   </ul></li>
   <li>CreativeWork Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
+  
+  <ul>
+  <li>Video URL</li>
+  <li>Video Name (Title)</li>
+  <li>Video Description</li>
+  <li>Video FileFormat</li>
+  <li>Video Width</li>
+  <li>Video Height</li>
+  <li>Video Duration</li>
+  <li>Video UploadDate</li>
+  <li>Video ThumbnailUrl</li>
+  <li>Video EmbedUrl</li>
+  <li>Video Thumbnail as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  
+  <ul>
+  <li>Thumbnail URL</li>
+  <li>Thumbnail Width</li>
+  <li>Thumbnail Height</li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</blockquote>
+
+<ul>
+<li>Schema Type <a href="http://schema.org/Event">schema.org/Event</a> (<strong>supported Event / Calendar plugin required</strong>)
+
+<ul>
+<li>Schema Type <a href="http://schema.org/BusinessEvent">schema.org/BusinessEvent</a></li>
+<li>Schema Type <a href="http://schema.org/ChildrensEvent">schema.org/ChildrensEvent</a></li>
+<li>Schema Type <a href="http://schema.org/DanceEvent">schema.org/DanceEvent</a></li>
+<li>Schema Type <a href="http://schema.org/DeliveryEvent">schema.org/DeliveryEvent</a></li>
+<li>Schema Type <a href="http://schema.org/EducationEvent">schema.org/EducationEvent</a></li>
+<li>Schema Type <a href="http://schema.org/ExhibitionEvent">schema.org/ExhibitionEvent</a></li>
+<li>Schema Type <a href="http://schema.org/Festival">schema.org/Festival</a></li>
+<li>Schema Type <a href="http://schema.org/FoodEvent">schema.org/FoodEvent</a></li>
+<li>Schema Type <a href="http://schema.org/LiteraryEvent">schema.org/LiteraryEvent</a></li>
+<li>Schema Type <a href="http://schema.org/MusicEvent">schema.org/MusicEvent</a></li>
+<li>Schema Type <a href="http://schema.org/PublicationEvent">schema.org/PublicationEvent</a></li>
+<li>Schema Type <a href="http://schema.org/SaleEvent">schema.org/SaleEvent</a></li>
+<li>Schema Type <a href="http://schema.org/ScreeningEvent">schema.org/ScreeningEvent</a></li>
+<li>Schema Type <a href="http://schema.org/SocialEvent">schema.org/SocialEvent</a></li>
+<li>Schema Type <a href="http://schema.org/SportsEvent">schema.org/SportsEvent</a></li>
+<li>Schema Type <a href="http://schema.org/TheaterEvent">schema.org/TheaterEvent</a></li>
+<li>Schema Type <a href="http://schema.org/VisualArtsEvent">schema.org/VisualArtsEvent</a></li>
+</ul></li>
+</ul>
+
+<blockquote>
+  <ul>
+  <li>URL</li>
+  <li>Name (Title)</li>
+  <li>Description</li>
+  <li>StartDate</li>
+  <li>EndDate</li>
+  <li>Organizer as <a href="http://schema.org/Person">schema.org/Person</a> or <a href="http://schema.org/Organization">schema.org/Organization</a>
+  
+  <ul>
+  <li>URL</li>
+  <li>Name</li>
+  <li>Description</li>
+  <li>Organization Logo Image as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  
+  <ul>
+  <li>Image URL</li>
+  <li>Image Width</li>
+  <li>Image Height</li>
+  </ul></li>
+  <li>Organization SameAs
+  
+  <ul>
+  <li>Facebook Business Page URL</li>
+  <li>Google+ Business Page URL</li>
+  <li>Instagram Business URL</li>
+  <li>LinkedIn Company Page URL</li>
+  <li>MySpace Business Page URL</li>
+  <li>Pinterest Company Page URL</li>
+  <li>Twitter Business Page URL</li>
+  </ul></li>
+  </ul></li>
+  <li>Event Location as <a href="http://schema.org/Place">schema.org/Place</a>
+  
+  <ul>
+  <li>Address as <a href="http://schema.org/PostalAddress">schema.org/PostalAddress</a>
+  
+  <ul>
+  <li>streetAddress</li>
+  <li>postOfficeBoxNumber</li>
+  <li>addressLocality</li>
+  <li>addressRegion</li>
+  <li>postalCode</li>
+  <li>addressCountry</li>
+  </ul></li>
+  <li>Geo Location as <a href="http://schema.org/GeoCoordinates">schema.org/GeoCoordinates</a>
+  
+  <ul>
+  <li>elevation</li>
+  <li>latitude</li>
+  <li>longitude</li>
+  </ul></li>
+  </ul></li>
+  <li>Event Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  
+  <ul>
+  <li>Image URL</li>
+  <li>Image Width</li>
+  <li>Image Height</li>
+  </ul></li>
+  <li>Event Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
   
   <ul>
   <li>Video URL</li>
@@ -386,7 +491,7 @@
 </blockquote>
 
 <ul>
-<li>Schema Type <a href="http://schema.org/Place">schema.org/Place</a> (<strong><a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO PLM</a> extension required to manage Place / Business information</strong>)
+<li>Schema Type <a href="http://schema.org/Place">schema.org/Place</a> (<strong><a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO PLM</a> extension required to manage Place / Location information</strong>)
 
 <ul>
 <li>Schema Type <a href="http://schema.org/AdministrativeArea">schema.org/AdministrativeArea</a></li>
@@ -481,14 +586,7 @@
   <li>Description</li>
   <li>AcceptsReservations for <a href="http://schema.org/FoodEstablishment">schema.org/FoodEstablishment</a></li>
   <li>Menu (URL) for <a href="http://schema.org/FoodEstablishment">schema.org/FoodEstablishment</a></li>
-  <li>Geo Location as <a href="http://schema.org/GeoCoordinates">schema.org/GeoCoordinates</a>
-  
-  <ul>
-  <li>elevation</li>
-  <li>latitude</li>
-  <li>longitude</li>
-  </ul></li>
-  <li>Place Address as <a href="http://schema.org/PostalAddress">schema.org/PostalAddress</a>
+  <li>Address as <a href="http://schema.org/PostalAddress">schema.org/PostalAddress</a>
   
   <ul>
   <li>streetAddress</li>
@@ -497,6 +595,13 @@
   <li>addressRegion</li>
   <li>postalCode</li>
   <li>addressCountry</li>
+  </ul></li>
+  <li>Geo Location as <a href="http://schema.org/GeoCoordinates">schema.org/GeoCoordinates</a>
+  
+  <ul>
+  <li>elevation</li>
+  <li>latitude</li>
+  <li>longitude</li>
   </ul></li>
   <li>Opening Hours Specification as <a href="http://schema.org/openingHoursSpecification">schema.org/openingHoursSpecification</a>
   
@@ -538,7 +643,7 @@
 </blockquote>
 
 <ul>
-<li>Schema Type <a href="http://schema.org/Product">schema.org/Product</a> (<strong>supported eCommerce plugin required</strong>)</li>
+<li>Schema Type <a href="http://schema.org/Product">schema.org/Product</a> (<strong>supported e-Commerce plugin required</strong>)</li>
 </ul>
 
 <blockquote>
@@ -670,9 +775,7 @@
 
 <h4>Examples</h4>
 
-<ul>
-<li>Example WPSSO JSON Pro markup for a Tech Article published on surniaulula.com.</li>
-</ul>
+<p>Example WPSSO JSON Pro markup for a Tech Article published on surniaulula.com.</p>
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -726,9 +829,7 @@
 }&lt;/script&gt;
 </pre>
 
-<ul>
-<li>Example WPSSO JSON Pro markup for a WooCommerce product, including all its variations.</li>
-</ul>
+<p>Example WPSSO JSON Pro markup for a WooCommerce product, including its name, description, images, videos, sku, price, availability, ratings, colors, category, width, height, weight, all product variations, and much more.</p>
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -958,9 +1059,7 @@
 }&lt;/script&gt;
 </pre>
 
-<ul>
-<li>Example WPSSO JSON Pro markup for a Restaurant using the <a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO PLM</a> extension to manage the Place / Business information (address, geo coordinates, business hours (daily and seasonal), restaurant menu URL, and accepts reservation values).</li>
-</ul>
+<p>Example WPSSO JSON Pro markup for a Restaurant using the <a href="https://wordpress.org/plugins/wpsso-plm/">WPSSO PLM</a> extension to manage the Place / Location information (address, geo coordinates, business hours (daily and seasonal), restaurant menu URL, and accepts reservation values).</p>
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -1062,9 +1161,9 @@
 
 <p>The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the WPSSO JSON extension.</p>
 
-<p>Use the Free version of WPSSO JSON with <em>both</em> the Free and Pro versions of WPSSO. The <a href="http://wpsso.com/extend/plugins/wpsso-schema-json-ld/">WPSSO JSON Pro</a> extension (along with all WPSSO Pro extensions) requires the <a href="http://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> plugin as well.</p>
+<p>Use the Free version of WPSSO JSON with <em>both</em> the Free and Pro versions of WPSSO. The <a href="http://wpsso.com/extend/plugins/wpsso-schema-json-ld/?utm_source=wpssojson-readme-extends">WPSSO JSON Pro</a> extension (along with all WPSSO Pro extensions) requires the <a href="http://wpsso.com/extend/plugins/wpsso/?utm_source=wpssojson-readme-extends">WPSSO Pro</a> plugin as well.</p>
 
-<p>Purchase the <a href="http://wpsso.com/extend/plugins/wpsso-schema-json-ld/">WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro</a> extension (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
+<p><a href="http://wpsso.com/extend/plugins/wpsso-schema-json-ld/?utm_source=wpssojson-readme-purchase">Purchase the WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro extension</a> (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
 
 
 <h2>Installation</h2>

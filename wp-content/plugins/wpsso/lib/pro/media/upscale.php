@@ -190,24 +190,9 @@ if ( ! class_exists( 'WpssoProMediaUpscale' ) ) {
 					$msg_id = 'wp_'.$img_info['pid'].'_'.$orig_w.'x'.$orig_h.'_'.
 						$img_info['size_name'].'_'.$dst_w.'x'.$dst_h.'_upscaled';
 
-					$this->p->notice->err( sprintf( __( 'Image ID %1$s of %2$s cannot be upscaled by %3$s from %4$s to %5$s for the %6$s image size (exceeds %7$s maximum).', 'wpsso' ),
-						$img_info['pid'],
-						$orig_w.'x'.$orig_h,
-						$size_diff.'%',
-						$src_w.'x'.$src_h,
-						$dst_w.'x'.$dst_h,
-						'<b>'.$size_label.'</b>',
-						$max_diff.'%'
-					), false, true, $msg_id, true );
+					$this->p->notice->warn( sprintf( __( 'Image ID %1$s of %2$s cannot be upscaled by %3$s from %4$s to %5$s for the %6$s image size (exceeds %7$s maximum).', 'wpsso' ), $img_info['pid'], $orig_w.'x'.$orig_h, $size_diff.'%', $src_w.'x'.$src_h, $dst_w.'x'.$dst_h, '<b>'.$size_label.'</b>', $max_diff.'%' ), false, true, $msg_id, true );
 
-				} else $this->p->notice->inf( sprintf( __( 'Image ID %1$s of %2$s has been upscaled by %3$s from %4$s to %5$s for the %6$s image size.', 'wpsso' ),
-					$img_info['pid'],
-					$orig_w.'x'.$orig_h,
-					$size_diff.'%',
-					$src_w.'x'.$src_h,
-					$dst_w.'x'.$dst_h,
-					'<b>'.$size_label.'</b>'
-				) );
+				} else $this->p->notice->inf( sprintf( __( 'Image ID %1$s of %2$s has been upscaled by %3$s from %4$s to %5$s for the %6$s image size.', 'wpsso' ), $img_info['pid'], $orig_w.'x'.$orig_h, $size_diff.'%', $src_w.'x'.$src_h, $dst_w.'x'.$dst_h, '<b>'.$size_label.'</b>' ) );
 			}
 
 			if ( $size_diff > $max_diff ) {

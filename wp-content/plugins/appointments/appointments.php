@@ -3,7 +3,7 @@
 Plugin Name: Appointments+
 Description: Lets you accept appointments from front end and manage or create them from admin side
 Plugin URI: http://premium.wpmudev.org/project/appointments-plus/
-Version: 1.9
+Version: 1.9.1
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Textdomain: appointments
@@ -32,7 +32,7 @@ if ( !class_exists( 'Appointments' ) ) {
 
 class Appointments {
 
-	public $version = "1.9";
+	public $version = "1.9.1";
 	public $db_version;
 
 	public $timetables = array();
@@ -434,22 +434,17 @@ class Appointments {
 	 * @return object
 	 */
 	function get_work_break( $l, $w, $stat ) {
-		$work_break = null;
-		$cache_key = 'appointments_work_breaks-' . $l . '-' . $w;
-		$work_breaks = wp_cache_get( $cache_key );
-		if ( false === $work_breaks ) {
-			$work_breaks = $this->db->get_results( $this->db->prepare("SELECT * FROM {$this->wh_table} WHERE worker=%d AND location=%d", $w, $l) );
-			wp_cache_set( $cache_key, $work_breaks );
+		_deprecated_function( __FUNCTION__, '2.0', 'appointments_get_worker_working_hours()' );
+
+		$work_break = appointments_get_worker_working_hours( $stat, $w, $l );
+
+		if ( false === $work_break ) {
+			return null;
 		}
 
-		if ( $work_breaks ) {
-			foreach ( $work_breaks as $wb ) {
-				if ( $wb->status == $stat ) {
-					$work_break = $wb;
-					break;
-				}
-			}
-		}
+		// Backward compatibility
+		$work_break->hours = maybe_serialize( $work_break->hours );
+
 		return $work_break;
 	}
 
@@ -1663,14 +1658,18 @@ class Appointments {
 			$step = (!empty($service->duration) ? $service->duration : $min_step_time) * 60; // Timestamp increase interval to one cell ahead
 		}
 
-		if (!(defined('APP_USE_LEGACY_DURATION_CALCULUS') && APP_USE_LEGACY_DURATION_CALCULUS)) {
-			$start_result = $this->get_work_break( $this->location, $this->worker, 'open' );
-			if (!empty($start_result->hours)) $start_unpacked_days = maybe_unserialize($start_result->hours);
-		} else $start_unpacked_days = array();
-		if (defined('APP_BREAK_TIMES_PADDING_CALCULUS') && APP_BREAK_TIMES_PADDING_CALCULUS) {
-			$break_result = $this->get_work_break($this->location, $this->worker, 'closed');
-			if (!empty($break_result->hours)) $break_times = maybe_unserialize($break_result->hours);
-		} else $break_times = array();
+		if ( ! ( defined( 'APP_USE_LEGACY_DURATION_CALCULUS' ) && APP_USE_LEGACY_DURATION_CALCULUS ) ) {
+			$start_result = appointments_get_worker_working_hours( 'open', $this->worker, $this->location );
+			$start_unpacked_days = $start_result->hours;
+		} else {
+			$start_unpacked_days = array();
+		}
+		if ( defined( 'APP_BREAK_TIMES_PADDING_CALCULUS' ) && APP_BREAK_TIMES_PADDING_CALCULUS ) {
+			$break_result = appointments_get_worker_working_hours( 'closed', $this->worker, $this->location );
+			$break_times = $break_result->hours;
+		} else {
+			$break_times = array();
+		}
 
 		// Allow direct step increment manipulation,
 		// mainly for service duration based calculus start/stop times
@@ -2076,11 +2075,10 @@ class Appointments {
 	 * @return array (may be empty)
 	 */
 	function get_working_days( $worker=0, $location=0 ) {
-		global $wpdb;
 		$working_days = array();
-		$result = $this->get_work_break( $location, $worker, 'open' );
+		$result = appointments_get_worker_working_hours( 'open', $worker,  $location );
 		if ( $result !== null ) {
-			$days = maybe_unserialize( $result->hours );
+			$days = $result->hours;
 			if ( is_array( $days ) ) {
 				foreach ( $days as $day_name=>$day ) {
 					if ( isset( $day["active"] ) && 'yes' == $day["active"] ) {
@@ -2141,9 +2139,13 @@ class Appointments {
 		if (!$days) {
 			// Preprocess and cache workhours
 			// Look where our working hour ends
-			$result_days = $this->get_work_break($this->location, $w, 'closed');
-			if ($result_days && is_object($result_days) && !empty($result_days->hours)) $days = maybe_unserialize($result_days->hours);
-			if ($days) wp_cache_set('app-break_times-for-' . $w, $days);
+			$result_days = appointments_get_worker_working_hours( 'closed', $w, $this->location );
+			if ( $result_days && is_object( $result_days ) && ! empty( $result_days->hours ) ) {
+				$days = $result_days->hours;
+			}
+			if ( $days ) {
+				wp_cache_set( 'app-break_times-for-' . $w, $days );
+			}
 		}
 		if (!is_array($days) || empty($days)) return false;
 
@@ -2258,9 +2260,13 @@ class Appointments {
 			if (!$days) {
 				// Preprocess and cache workhours
 				// Look where our working hour ends
-				$result_days = $this->get_work_break($this->location, $this->worker, 'open');
-				if ($result_days && is_object($result_days) && !empty($result_days->hours)) $days = maybe_unserialize($result_days->hours);
-				if ($days) wp_cache_set('app-open_times-for-' . $this->worker, $days);
+				$result_days = appointments_get_worker_working_hours( 'open', $this->worker, $this->location );
+				if ( $result_days && is_object( $result_days ) && ! empty( $result_days->hours ) ) {
+					$days = $result_days->hours;
+				}
+				if ( $days ) {
+					wp_cache_set( 'app-open_times-for-' . $this->worker, $days );
+				}
 			}
 			if (!is_array($days) || empty($days)) return true;
 
@@ -2334,9 +2340,13 @@ class Appointments {
 			if (!$days) {
 				// Preprocess and cache workhours
 				// Look where our working hour ends
-				$result_days = $this->get_work_break($this->location, $worker->ID, 'open');
-				if ($result_days && is_object($result_days) && !empty($result_days->hours)) $days = maybe_unserialize($result_days->hours);
-				if ($days) wp_cache_set('app-open_times-for-' . $worker->ID, $days);
+				$result_days = appointments_get_worker_working_hours( 'open', $worker->ID, $this->location );
+				if ( $result_days && is_object( $result_days ) && ! empty( $result_days->hours ) ) {
+					$days = $result_days->hours;
+				}
+				if ( $days ) {
+					wp_cache_set( 'app-open_times-for-' . $worker->ID, $days );
+				}
 			}
 			if (!is_array($days) || empty($days)) continue;
 
@@ -2495,9 +2505,10 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 	 */
 	function min_max_wh( $worker=0, $location=0 ) {
 		$this->get_lsw();
-		$result = $this->get_work_break( $this->location, $this->worker, 'open' );
+
+		$result = appointments_get_worker_working_hours( 'open', $this->worker, $this->location );
 		if ( $result !== null ) {
-			$days = maybe_unserialize( $result->hours );
+			$days = $result->hours;
 			$days = array_filter($days);
 			if ( is_array( $days ) ) {
 				$min = 24; $max = 0;
@@ -3080,11 +3091,14 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		do_action( 'appointments_init', $this );
 
 		//  Run this code not before 10 mins
+
 		if ( ( time() - get_option( "app_last_update" ) ) < apply_filters( 'app_update_time', 600 ) ) {
 			return;
 		}
 
 		$this->remove_appointments();
+
+		update_option( "app_last_update", time() );
 
 	}
 
@@ -3237,11 +3251,11 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		if ( $expireds && $process_expired ) {
 			foreach ( $expireds as $expired ) {
 				if ( 'pending' == $expired->status || 'reserved' == $expired->status ) {
-					if ('reserved' == $expired->status && strtotime($expired->end) > $this->local_time) {
+					if ('reserved' == $expired->status && strtotime($expired->end) > current_time( 'timestamp' ) ) {
 						$new_status = $expired->status; // Don't shift the GCal apps until they actually expire (end time in past)
 					}
 					else {
-						$new_status = 'removed';
+						$new_status = 'completed';
 					}
 				} else if ( 'confirmed' == $expired->status || 'paid' == $expired->status ) {
 					$new_status = 'completed';
@@ -3665,11 +3679,14 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 
 		$min_secs = 60 * apply_filters( 'app_admin_min_time', $min_time );
 
-		$wb = $this->get_work_break( $this->location, $this->worker, $status );
-		if ( $wb )
-			$whours = maybe_unserialize( $wb->hours );
-		else
+		$wb = appointments_get_worker_working_hours( $status, $this->worker, $this->location );
+		if ( ! $wb ) {
 			$whours = array();
+		}
+		else {
+			$whours = $wb->hours;
+		}
+
 
 		$form = '';
 		$form .= '<table class="app-working_hours-workhour_form">';

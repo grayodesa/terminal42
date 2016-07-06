@@ -40,7 +40,7 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 				'schema_head_type' => 3,		// $type_id, $mod
 				'schema_meta_itemprop' => 3,		// $mt_schema, $use_post, $mod
 				'schema_noscript_array' => 3,		// $ret, $mod, $mt_og
-				'place_options' => 3,			// $place_opts, $mod, $place_id
+				'get_place_options' => 3,		// $opts, $mod, $place_id
 			) );
 
 			if ( is_admin() ) {
@@ -227,11 +227,9 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 					'plm_addr_menu_url' => 'menu',
 					'plm_addr_accept_res' => 'acceptsreservations',
 				) as $key => $mt_name ) {
-					if ( $key == 'plm_addr_accept_res' )
-						$mt_schema[$mt_name] = empty( $addr_opts[$key] ) ?
-							'false' : 'true';
-					else $mt_schema[$mt_name] = isset( $addr_opts[$key] ) ?
-						$addr_opts[$key] : '';
+					if ( $key === 'plm_addr_accept_res' )
+						$mt_schema[$mt_name] = empty( $addr_opts[$key] ) ? 'false' : 'true';
+					else $mt_schema[$mt_name] = isset( $addr_opts[$key] ) ? $addr_opts[$key] : '';
 				}
 			}
 
@@ -281,12 +279,13 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			return $ret;
 		}
 
-		public function filter_place_options( $place_opts, $mod, $place_id ) {
-			if ( $place_id === 'custom' || is_numeric( $place_id ) ) {	// just in case
+		public function filter_get_place_options( $opts, $mod, $place_id ) {
+			if ( $opts !== false )    // first come, first served
+				return $opts;
+			elseif ( $place_id === 'custom' || is_numeric( $place_id ) ) {	// just in case
 				$addr_opts = WpssoPlmAddress::get_addr_id( $place_id, $mod );
-				return SucomUtil::preg_grep_keys( '/^plm_addr_/',	// rename plm_addr to place
-					$addr_opts, false, 'place_' );
-			} else return $place_opts;
+				return SucomUtil::preg_grep_keys( '/^plm_addr_/', $addr_opts, false, 'place_' );	// rename plm_addr to place
+			} else return $opts;
 		}
 
 		public function filter_option_type( $type, $key ) {

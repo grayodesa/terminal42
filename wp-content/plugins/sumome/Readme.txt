@@ -1,9 +1,9 @@
 ===  Free Tools to grow your Email List, Social Sharing and Analytics ===
 Contributors: SumoMe
-Tags: MailChimp, Aweber, Infusionsoft, Mad Mimi, Campaign Monitor, constant contact,  GetResponse, Eloqua,  ActiveCampaign, MyEmma, Infusionsoft, Feedblitz, HubSpot, Sailthru, Vero, Zapier, Ontraport, Pardot, Klaviyo, popup, exit intent, growth, subscribers, twitter, facebook share, social plugin,  social sharing, subscription, email form, share,  sharing, social , social media buttons , links, click to tweet ,  analytics , newsletter,  widget,lightbox, analytics, newsletter, newsletter, Facebook, floating social buttons, google plus, Image sharing,  pinterest plugin, pintrest, share image,   sharebar, sharing, social bookmarking, social plugin, sms, tweet button,  heat map, heatmaps, twitter share, contact form, scroll box, content analytics, inbound marketing, mailing list, share buttons, welcome mat, landing page
+Tags: MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, Maropost, popup, exit intent, growth, subscribers, twitter, facebook share, social plugin,  social sharing, subscription, email form, share,  sharing, social , social media buttons , links, click to tweet ,  analytics , newsletter,  widget,lightbox, analytics, newsletter, newsletter, Facebook, floating social buttons, google plus, Image sharing,  pinterest plugin, pintrest, share image,   sharebar, sharing, social bookmarking, social plugin, sms, tweet button,  heat map, heatmaps, twitter share, contact form, scroll box, content analytics, inbound marketing, mailing list, share buttons, welcome mat, landing page
 Requires at least: 3.0.1
 Tested up to: 4.2.1
-Stable tag: 1.13
+Stable tag: 1.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Most blogs are designed for hit-and-run readers. People find your blog, read you
 
 >SumoMe provides free tools you need to grow your WordPress site. This plugin will make it easy for your readers to join your email list, share your articles and optimize with analytics. The free tools include:
 >
->`List Builder` will let you create a fancy lightbox pop up to [build email subscriptions](http://sumome.com/?src=wordpress) (for MailChimp, Aweber, GetResponse, MyEmma, ActiveCampaign, Infusionsoft, HubSpot, Feedblitz, Ontraport, Klaviyo, Constant Contact, Mad Mimi, Vero, Zapier, Pardot, or others).
+>`List Builder` will let you create a fancy lightbox pop up to [build email subscriptions](http://sumome.com/?src=wordpress) (for MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, Maropost, or others).
 >
 >`Share` makes it insanely easy for people to share on mobile or web all of your great content.
 >
@@ -38,7 +38,7 @@ Now, people will find your blog, read your article, share your article on Twitte
 = Features =
 
 * Free and Easy integration with any WordPress theme
-* Simple email integration with MailChimp, Aweber, Constant Contact, and Campaign Monitor
+* Simple email integration with MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, and Maropost
 * 100% mobile optimized. A lot of your traffic is mobile, make sure your tools are too
 * Asynchronous loading that won't affect page load speed
 * Total control over which growth features to enable
@@ -95,7 +95,7 @@ The optional smart timing will automatically load the Aweber email subscription 
 
 = Automatically Connect with major email providers =
 
-Our email list builder easily connects with all major email providers including Aweber, MailChimp, Constant Contact, GetResponse and Campaign Monitor. This means that if you use an email manager like MailChimp, your new subscribers can automatically subscribe to your list instantly.
+Our email list builder easily connects with all major email providers including MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, and Maropost. This means that if you use an email manager like MailChimp, your new subscribers can automatically subscribe to your list instantly.
 
 Alternately, you can simply set List Builder to collect email addresses that you can export in CSV format.
 
@@ -182,7 +182,7 @@ Once you install the plugin and activate it. Go to any page on your site and you
 
 = How can I install an app? =
 
-Once you've logged into SumoMe, click on Sumo Store and click Install for whichever app you'd like to install. Once you have installed the List Builder app, you can integrate with MailChimp.
+Once you've logged into SumoMe, click on Sumo Store and click Install for whichever app you'd like to install. Once you have installed the List Builder app, you can integrate with MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, or Maropost.
 
 = How does Highlighter work? =
 
@@ -206,7 +206,7 @@ You can use our default options or fully control the CSS in the advanced section
 
 = Do you provide instant connections to any email providers? =
 
-Yes, we provide instant integration with Mailchimp, Aweber, GetResponse, Constant Contact, Klaviyo, Pardot, Vero, Zapier, Ontraport, Mad Mimi, MyEmma and Campaign Monitor.  When a user joins, their email is automatically subscribed to your MailChimp, Aweber, or other newsletter list. Alternately, you can simply download a CSV list of your newsletter subscribers.
+Yes, we provide instant integration with MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, and Maropost.  When a user joins, their email is automatically subscribed to your MailChimp, Aweber, or other newsletter list. Alternately, you can simply download a CSV list of your newsletter subscribers.
 
 == Other Notes ==
 
@@ -219,6 +219,28 @@ Email newsletter integration options
 * Constant Contact newsletter integration
 * Campaign Monitor newsletter integration
 * GetResponse newsletter integration
+* ActiveCampaign newsletter integration
+* MyEmma newsletter integration
+* Mad Mimi newsletter integration
+* Infusionsoft newsletter integration
+* Feedblitz newsletter integration
+* HubSpot newsletter integration
+* MyNewsletterBuilder newsletter integration
+* Inbox First newsletter integration
+* Sailthru newsletter integration
+* Klaviyo newsletter integration
+* Vero newsletter integration
+* Pardot newsletter integration
+* Zapier newsletter integration
+* Ontraport newsletter integration
+* ExactTarget newsletter integration
+* Vertical Response newsletter integration
+* Drip newsletter integration
+* MailerLite newsletter integration
+* WhatCounts newsletter integration
+* ConvertKit newsletter integration
+* MailJet newsletter integration
+* Maropost newsletter integration
 
 Why people use MailChimp
 
@@ -255,7 +277,7 @@ Why you should encourage Twitter sharing
 2. This is the screen to choose which apps to install.
 3. Fully customizable email pop ups (List Builder app)
 4. Total control of the design and feel of the pop ups
-5. Connect with all major email providers (MailChimp, Aweber, HubSpot, ActiveCampaign)
+5. Connect with all major email providers (MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, Maropost)
 6. A/B testing to maximize your conversion rate
 7. Advanced display rules to control which visitors see your pop ups
 8. Detailed stats page to track your email growth
@@ -305,6 +327,9 @@ Why you should encourage Twitter sharing
 = 1.13 =
 * images, updated instructions
 
+= 1.14 =
+* Added new integrations (MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, Maropost)
+
 == Upgrade Notice ==
 
 = 1.04 =
@@ -342,3 +367,6 @@ Why you should encourage Twitter sharing
 
 = 1.13 =
 * images, updated instructions
+
+= 1.14 =
+* Added new integrations (MailChimp, Aweber, Constant Contact, Campaign Monitor, GetResponse, ActiveCampaign, MyEmma, Mad Mimi, Infusionsoft, Feedblitz, HubSpot, MyNewsletterBuilder, Inbox First, Sailthru, Klaviyo, Vero, Pardot, Zapier, Ontraport, ExactTarget, Vertical Response, Drip, MailerLite, WhatCounts, ConvertKit, MailJet, Maropost)

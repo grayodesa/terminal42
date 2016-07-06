@@ -15,11 +15,11 @@ if ( ! class_exists( 'WpssoJsonConfig' ) ) {
 		public static $cf = array(
 			'plugin' => array(
 				'wpssojson' => array(
-					'version' => '1.7.5-1',		// plugin version
-					'opt_version' => '4',		// increment when changing default options
+					'version' => '1.8.1-1',		// plugin version
+					'opt_version' => '5',		// increment when changing default options
 					'short' => 'WPSSO JSON',	// short plugin name
 					'name' => 'WPSSO Schema JSON-LD Markup (WPSSO JSON)',
-					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest.',
+					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.',
 					'slug' => 'wpsso-schema-json-ld',
 					'base' => 'wpsso-schema-json-ld/wpsso-schema-json-ld.php',
 					'update_auth' => 'tid',
@@ -66,6 +66,7 @@ if ( ! class_exists( 'WpssoJsonConfig' ) ) {
 							'head' => array(
 								'article' => '(code) Schema Type Article (article)',
 								'creativework' => '(code) Schema Type Creative Work (creative.work)',
+								'event' => '(code) Schema Type Event (event)',
 								'foodestablishment' => '(code) Schema Type Food Establishment (food.establishment)',
 								'localbusiness' => '(code) Schema Type Local Business (local.business)',
 								'organization' => '(code) Schema Type Organization (organization)',
@@ -117,7 +118,7 @@ if ( ! class_exists( 'WpssoJsonConfig' ) ) {
 				if ( file_exists( $filepath ) ) {
 					require_once( $filepath );
 					if ( empty( $classname ) )
-						return SucomUtil::sanitize_classname( 'wpssojson'.$filespec );
+						return SucomUtil::sanitize_classname( 'wpssojson'.$filespec, false );	// $underscore = false
 					else return $classname;
 				}
 			}

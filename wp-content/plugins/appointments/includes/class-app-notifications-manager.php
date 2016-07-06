@@ -65,6 +65,7 @@ class Appointments_Notifications_Manager {
 		}
 	}
 
+
 	public function insert_appointment( $app_id ) {
 		$app = appointments_get_appointment( $app_id );
 		if ( ! $app ) {

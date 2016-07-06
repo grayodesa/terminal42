@@ -1,286 +1,365 @@
-#facebook-pixel-panel-2, #facebook-pixel-panel-3, #facebook-pixel-panel-4, #facebook-pixel-panel-5, #facebook-pixel-panel-6{
-  display: none;
+.wrap {
+    margin-top: 25px;
 }
 
+.disabled {
+    pointer-events: none;
+}
 
+.pys-btn.disabled,
+table.disabled {
+    opacity: 0.6;
+}
 
+tr.disabled,
+form.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
 
-.facebook-pixel-content {
+.aligncenter {
+    display: block !important;
+    margin: 0 auto;
+}
+
+.pys-logo {
+    background: url('../img/logo.png') no-repeat;
+    width: 261px;
+    height: 58px;
+}
+
+a {
+    color: #F4524D;
+}
+
+a:hover {
+    color: #F4524D;
+}
+
+a.big {
+    font-size: 24px;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+hr {
+    margin: 25px 0;
+}
+
+code {
+    padding: 1px 4px;
+}
+
+.pys-list pre {
+    margin-top: 0;
+
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;
+}
+
+.pys-rating {
+    text-align: center;
+}
+
+.pys-content {
+    margin: -1px 0 15px;
+}
+
+ul.dashed {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1.5em;
+}
+
+ul.dashed > li:before {
+    display: inline-block;
+    content: "\2014\a0";
+    width: 1.5em;
+    margin-left: -1.5em;
+}
+
+/* nav menu */
+
+.pys-menu {
     overflow: hidden;
     clear: both;
-    width: auto;
-    border: 1px solid #d3d3d3;
-    padding: 0 10px;
+    margin-bottom: 0;
 }
 
-.facebook-pixel-panel .form-table td p{
-
-    font-size: 11px;
-}
-
-.woofp-input-value, .woofp-input-currency{
-    width: 130px;
-}
-
-.woofp-input-desc{
-    font-size: 10px;
-}
-
-.woofp-input-pageurl{
-    width: 300px;
-}
-
-.facebook-pixel-panel .woofp-pageurl-tr .woofp-remove-event {
-  font-size: 10px;
-  font-weight: normal;
-  margin-top: 2px;
-  padding: 1px 6px;
-  display: block;
-}
-
-.facebook-pixel-panel .form-table th {
-  font-weight: 600;
-  line-height: 1.3;
-  padding: 10px 0px 10px 0;
-  text-align: left;
-  vertical-align: top;
-  width: 170px;
-}
-
-#facebook-pixel-panel-3 .form-table th {
-    width: auto;
-}
-
-
-.woofp-events-help {
-  display: inline-block;
-  position: relative;
-}
-
-
-.woofp-events-help b.woofp-help-icon {
-  background-color: #00a0d2;
-  border-radius: 50%;
-  color: #fff;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: bold;
-  height: 16px;
-  line-height: 16px;
-  margin-right: 10px;
-  padding: 4px 2px;
-  position: relative;
-  text-align: center;
-  width: 20px;
-}
-
-.woofp-events-help ul {
-  background: #fff none repeat scroll 0 0;
-  border: 1px solid #333;
-  color: #333;
-  display: none;
-  font-size: 11px;
-  height: 200px;
-  margin: 8px 5px 0 10px;
-  overflow-y: scroll;
-  padding: 5px 0;
-  position: absolute;
-  top: 0;
-  width: 300px;
-  z-index: 99;
-  font-weight: normal;
-}
-.woofp-events-help ul li {
-  margin: 4px;
-  padding: 3px 2px;
-}
-
-.woofp-events-help:hover ul{
+.pys-menu .nav-tab {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
     display: block;
+    margin-bottom: 0;
 }
 
-
-.woofp-events-help:hover ul li b {
-  clear: both;
-  color: #00a0d2;
-  float: left;
-  font-size: 12px;
-  width: 100%;
-}
-
-.facebook-pixel-panel td p b.woofpimportant {
-    font-size: 16px;
-    color: #00a0d2;
-}
-
-.facebook-pixel-panel .standarevent-value, .facebook-pixel-panel .standarevent-currency{
-  display: none;
-}
-
-.facebook-pixel-panel td p b.event_param, .facebook-pixel-panel td .event_param_wrap b.event_param {
-  color: #333;
-  display: inline-block;
-  font-size: 12px;
-  width: 120px;
-}
-
-
-.facebook-pixel-panel td .event_param_wrap input, .facebook-pixel-panel td .woofp-input-pageurl{
-  width: 30em;
-}
-
-.facebook-pixel-panel a {
-    color: #DD4E4E;
-    font-size: 14px;
-}
-
-tr.hide-standardevent{
-  /*display: none;*/
-}
-
-tr.show-standardevent{
-  
-}
-
-
-.woofp-sub-option{
-}
-
-tr th input.woofp-reset-event{
-  display: block !important;
-  margin-top: 10px !important;
-
-}
-
-.event_param_wrap {
-    padding: 4px 0;
-}
-
-tr.woofp-pageurl-tr {
-    border-bottom: 1px solid #ddd;
-}
-
-.woofp-asterik{
-  color: #dd4e4e;
-}
-
-/* menu css */
-
-#facebook-pixel-wrap .facebook-pixel-menu{
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 0;
-  padding-left: 10px;
-  font-size: 23px;
-  font-weight: 400;
-  line-height: 29px;
-  color: #23282d;
-  margin-bottom: -1px;
-}
-
-
-
-#facebook-pixel-wrap .facebook-pixel-menu li {
-
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 24px;
-  padding: 6px 10px;
-  cursor: pointer;
-    
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-top-color: none;
-  border-bottom-color: none;
-  border-left-color: none;
-  border-right-color: none;
-
-  background: #e4e4e4 none repeat scroll 0 0;
-  border-color: #ccc #ccc -moz-use-text-color;
-  border-image: none;
-  border-style: solid solid none;
-  border-width: 1px 1px medium;
-  color: #555;
-  margin: -4px 4px -1px 0;
-
-}
-
-
-#facebook-pixel-wrap .facebook-pixel-menu li:hover {
-  background-color: #fff;
-  color: #464646;
-}
-
-#facebook-pixel-wrap .facebook-pixel-menu li.selected{
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 24px;
-  padding: 6px 10px;
-  display: inline-block;
-  cursor: pointer;
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  border-top-color: none;
-  border-bottom-color: none;
-  border-left-color: none;
-  border-right-color: none;
-  border-image: none;
-  margin: -4px 4px -1px 0;
-
-}
-
-#facebook-pixel-wrap .facebook-pixel-menu li.selected, #facebook-pixel-wrap .facebook-pixel-menu li.selected:hover {
-  background: #f1f1f1 none repeat scroll 0 0;
-  border-bottom: 1px solid #f1f1f1;
-  color: #000;
-}
-
-
-span.woofpbold{
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.affiliate_row td p label {
-    width: 132px;
-    display: inline-block;
-    font-weight: bold;
-    font-size: 11px;
-}
-
-.woofp-or{
-  display: inline-block;
-  text-align: center;
-  width: 300px;
-  padding: 10px 0;
-}
-
-#pysf_notice_tab {
-    padding-right: 38px;
-    position: relative;
-    margin: 5px 0 15px;
-    display: inline-block;
-    line-height: 19px;
-    padding: 0px 15px;
-    font-size: 14px;
-    text-align: left;
-    background-color: #fff;
-    border-left: 4px solid #ffba00;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+.pys-menu .nav-tab-active {
     background: #fff;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-left-width: 10px;
+    border-bottom: 1px solid #fff;
 }
 
-#pysf_notice_tab p, #pysf_notice p{
-  margin: .5em 0;
-  padding: 2px;
-  width: 98%;
+/* panels */
+
+.pys-panel {
+    display: none;
 }
 
-#pysf_notice_tab p { font-size:14px;}
+/* boxes */
+
+.pys-box {
+    overflow: hidden;
+    clear: both;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 25px 0;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+.pys-box-red {
+    background: #F4524D;
+    color: #fff;
+}
+
+.pys-box-red h1,
+.pys-box-red h2,
+.pys-box-red p,
+.pys-box-red u,
+.pys-box-red i,
+.pys-box-red ul {
+    color: #fff;
+}
+
+.pys-box-middle {
+    color: #fff;
+    text-align: center;
+    background: #516F9F;
+}
+
+.pys-box-middle h2,
+.pys-box-middle h3,
+.pys-box-middle p,
+.pys-box-middle u,
+.pys-box-middle i {
+    color: #fff;
+}
+
+/* grid */
+
+.pys-col {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 25px;
+}
+
+.pys-col-full {
+    width: 100%;
+}
+
+.pys-col-one-half {
+    width: 50%;
+}
+
+.pys-col-narrow {
+    float: none;
+    width: 70%;
+    margin: 25px auto;
+}
+
+.pys-col-border-left {
+    border-left: 1px solid #ccc;
+}
+
+.pys-col-border-right {
+    border-right: 1px solid #ccc;
+}
+
+/* aligns */
+
+h3.align-one-third {
+    margin-left: 30%;
+    padding: 0 18px;
+}
+
+/* @todo: verify me */
+
+tr.align-one-third td:first-child {
+    width: 30%;
+}
+
+tr.align-one-third td:last-child {
+    width: 70%;
+}
+
+/* buttons */
+
+.pys-btn,
+.pys-btn:hover,
+a.pys-btn,
+a.pys-btn:hover {
+    line-height: normal;
+    display: inline-block;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px 25px;
+    border: none;
+}
+
+.pys-btn:hover.pys-btn-big,
+a.pys-btn:hover.pys-btn-big {
+    line-height: normal;
+    padding: 12px 35px;
+}
+
+.pys-btn-red,
+a.pys-btn-red {
+    background: #F4524D;
+}
+
+.pys-btn-blue,
+a.pys-btn-blue {
+    background: #516F9F;
+}
+
+.pys-btn.pys-btn-big {
+    font-size: 20px;
+    padding: 12px 35px;
+}
+
+/* tables */
+
+table.layout {
+    width: 100%;
+    margin: 25px 0;
+    table-layout: fixed;
+}
+
+table.layout tr {
+    margin-bottom: 5px;
+}
+
+table.layout tr.tall td {
+    padding-bottom: 25px;
+}
+
+table.layout td {
+    padding: 5px 15px;
+}
+
+table.layout td.legend {
+    vertical-align: top;
+}
+
+table.layout td.narrow {
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+table.pys-list .button {
+    margin-right: 5px;
+}
+
+table.layout.search {
+    background-color: transparent; /* default styles bug fix */
+}
+
+/* forms */
+
+.label {
+    text-align: right;
+    margin: 0;
+    line-height: 27px;
+    font-weight: bold;
+}
+
+.label.big {
+    font-size: 16.9px;
+}
+
+.legend > .label {
+    line-height: inherit;
+}
+
+.help {
+    display: block;
+    color: #666;
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+input[type="text"] {
+    width: 300px;
+    max-width: 100%;
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+input[type="checkbox"].big {
+    margin-top: -3px;
+}
+
+/* tickbox */
+
+#TB_window h2 {
+    margin: 1em 0;
+}
+
+#TB_window table tr td:last-child {
+    width: 70%;
+}
+
+#TB_window .actions-row {
+    text-align: right;
+    padding: 5px 15px;
+}
+
+/* event fields show/hide classes */
+
+.ViewContent-visible,
+.Search-visible,
+.AddToCart-visible,
+.AddToWishlist-visible,
+.InitiateCheckout-visible,
+.AddPaymentInfo-visible,
+.Purchase-visible,
+.Lead-visible,
+.CompleteRegistration-visible,
+.CustomCode-visible,
+.CustomEvent-visible{
+    display: none;
+}
+
+.ViewContent .ViewContent-visible,
+.AddToCart .AddToCart-visible,
+.AddToWishlist .AddToWishlist-visible,
+.InitiateCheckout .InitiateCheckout-visible,
+.AddPaymentInfo .AddPaymentInfo-visible,
+.Purchase .Purchase-visible,
+.Lead .Lead-visible,
+.CompleteRegistration .CompleteRegistration-visible,
+.Search .Search-visible,
+.CustomCode .CustomCode-visible,
+.CustomEvent .CustomEvent-visible {
+    display: table-row;
+}
+
+.URL-visible,
+.CSS-visible {
+    display: none;
+}
+
+.URL .URL-visible,
+.CSS .CSS-visible {
+    display: table-row;
+}

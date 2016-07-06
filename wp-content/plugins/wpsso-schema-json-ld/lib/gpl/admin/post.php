@@ -25,6 +25,8 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 			$title_max_len = $this->p->options['og_title_len'];
 			$desc_max_len = $this->p->options['schema_desc_len'];
 			$headline_max_len = WpssoJsonConfig::$cf['schema']['article']['headline']['max_len'];
+			$org_names = array( 'none' => '[None]', 'site' => _x( 'Website', 'option value', 'wpsso-schema-json-ld' ) );
+			$perf_names = array( 'none' => '[None]' );
 			$auto_draft_msg = sprintf( __( 'Save a draft version or publish the %s to update this value.',
 				'wpsso-schema-json-ld' ), ucfirst( $mod['post_type'] ) );
 
@@ -37,11 +39,10 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 						$info['short'] ).'</a></em>';
 			} else $org_req_msg = '';
 
-			$org_names = array( 'site' => _x( 'Website', 'option value', 'wpsso-schema-json-ld' ) );
-
 			// javascript hide/show classes for schema type rows
 			$tr_class = array(
 				'article' => $this->p->schema->get_schema_type_css_classes( 'article' ),
+				'event' => $this->p->schema->get_schema_type_css_classes( 'event' ),
 			);
 
 			foreach ( array( 'schema_desc', 'subsection_schema' ) as $key )
@@ -66,12 +67,15 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 					'content' => $form->get_no_select( 'schema_type', $schema_types,
 						'long_name', '', true, $form->defaults['schema_type'], 'unhide_rows' ),
 				),
-				'schema_title' => array(
-					'label' => _x( 'Schema Item Name', 'option label', 'wpsso-schema-json-ld' ),
-					'th_class' => 'medium', 'tooltip' => 'meta-schema_title', 'td_class' => 'blank',
+				/*
+				 * Schema Article
+				 */
+				'schema_pub_org_id' => array(
+					'tr_class' => 'schema_type '.$tr_class['article'],
+					'label' => _x( 'Article Publisher', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_pub_org_id', 'td_class' => 'blank',
 					'no_auto_draft' => true,
-					'content' => $form->get_no_input_value( $this->p->webpage->get_title( $title_max_len,
-						'...', $mod ), 'wide' ),
+					'content' => $form->get_no_select( 'schema_pub_org_id', $org_names, 'long_name' ).$org_req_msg,
 				),
 				'schema_headline' => array(
 					'tr_class' => 'schema_type '.$tr_class['article'],
@@ -80,12 +84,32 @@ if ( ! class_exists( 'WpssoJsonGplAdminPost' ) ) {
 					'no_auto_draft' => true,
 					'content' => $form->get_no_input_value( $this->p->webpage->get_title( $headline_max_len, '...', $mod ), 'wide' ),
 				),
-				'schema_pub_org_id' => array(
-					'tr_class' => 'schema_type '.$tr_class['article'],
-					'label' => _x( 'Article Publisher', 'option label', 'wpsso-schema-json-ld' ),
-					'th_class' => 'medium', 'tooltip' => 'meta-schema_pub_org_id', 'td_class' => 'blank',
+				/*
+				 * Schema Event
+				 */
+				'schema_event_org_id' => array(
+					'tr_class' => 'schema_type '.$tr_class['event'],
+					'label' => _x( 'Event Organizer', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_event_org_id', 'td_class' => 'blank',
 					'no_auto_draft' => true,
-					'content' => $form->get_no_select( 'schema_pub_org_id', $org_names, 'long_name' ).$org_req_msg,
+					'content' => $form->get_no_select( 'schema_event_org_id', $org_names, 'long_name' ).$org_req_msg,
+				),
+				'schema_event_perf_id' => array(
+					'tr_class' => 'schema_type '.$tr_class['event'],
+					'label' => _x( 'Event Performer', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_event_perf_id', 'td_class' => 'blank',
+					'no_auto_draft' => true,
+					'content' => $form->get_no_select( 'schema_event_perf_id', $perf_names, 'long_name' ).$org_req_msg,
+				),
+				/*
+				 * All other Schema types
+				 */
+				'schema_title' => array(
+					'label' => _x( 'Schema Item Name', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_title', 'td_class' => 'blank',
+					'no_auto_draft' => true,
+					'content' => $form->get_no_input_value( $this->p->webpage->get_title( $title_max_len,
+						'...', $mod ), 'wide' ),
 				),
 				'schema_desc' => array(
 					'label' => _x( 'Schema Description', 'option label', 'wpsso-schema-json-ld' ),

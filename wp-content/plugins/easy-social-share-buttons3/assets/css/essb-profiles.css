@@ -1,0 +1,450 @@
+@font-face {
+	font-family: 'essb-socicon';
+	src: url('../fonts/essb-socicon-webfont.eot');
+	src: url('../fonts/essb-socicon-webfont.eot?#iefix')
+		format('embedded-opentype'), url('../fonts/essb-socicon-webfont.woff')
+		format('woff'), url('../fonts/essb-socicon-webfont.ttf')
+		format('truetype'),
+		url('../fonts/essb-socicon-webfont.svg#sociconregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	text-transform: initial;
+}
+
+.essb-profile {
+	position: relative;
+	top: 1px;
+	display: inline-block;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	z-index: 1000;
+}
+
+.essb-profile .essb-profile-icon {
+	font-family: 'essb-socicon';	
+}
+
+.essb-profile:empty {
+	width: 1em;
+}
+
+.essb-profile {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.essb-profile .essb-single-profile {
+	display: inline-block;
+	margin: 0px;
+	padding: 0px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+.essb-profile .essb-single-profile a {
+	display: block;
+}
+
+.essb-profile .essb-single-profile a:hover {
+	opacity: 0.8;
+}
+
+
+.essb-profiles-nospace .essb-profile .essb-single-profile {
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+.essb-profile-all, .essb-profile-all:hover, .essb-profile-all:visited, .essb-profile-all:active {
+	color: #fff !important;
+	text-decoration: none;
+	line-height: 1em;
+}
+
+/*positions*/
+.essb-profiles-left {
+	left: 0px;
+	position: fixed;
+	top: 30%;
+}
+
+.essb-profiles-right {
+	right: 0px;
+	position: fixed;
+	top: 30%;
+}
+
+.essb-profiles-topleft {
+	left: 10px;
+	position: fixed;
+	top: 10px;
+}
+
+.essb-profiles-topright {
+	right: 10px;
+	position: fixed;
+	top: 10px;
+}
+
+.essb-profiles-bottomleft {
+	left: 10px;
+	position: fixed;
+	bottom: 10px;
+}
+
+.essb-profiles-bottomright {
+	right: 10px;
+	position: fixed;
+	bottom: 10px;
+}
+
+.essb-profiles-bottomleft .essb-profile .essb-single-profile, .essb-profiles-bottomright .essb-profile .essb-single-profile { margin-bottom: 0px; }
+
+.essb-profiles-left .essb-profile .essb-single-profile, .essb-profiles-right .essb-profile .essb-single-profile {
+	display: block;
+}
+
+.essb-profiles .essb-profile-text {
+	padding-left: 5px;
+}
+
+/* Sizes */
+.essb-profiles-size-small .essb-single-profile a {
+	padding: 8px;
+
+
+}
+.essb-profiles-size-small .essb-profile-all {
+	font-size: 11pt;
+	
+}
+.essb-profiles-size-medium .essb-single-profile a {
+	padding: 10px;
+
+}
+.essb-profiles-size-medium .essb-profile-all {
+	font-size: 13pt;
+}
+
+.essb-profiles-size-large .essb-single-profile a {
+	padding: 12px;
+
+}
+.essb-profiles-size-large .essb-profile-all {
+	font-size: 16pt;
+}
+
+.essb-profiles-round .essb-profile-all {
+	-webkit-border-radius: 50%;
+-moz-border-radius:50%;
+border-radius: 50%;
+}
+
+.essb-profiles-edge .essb-profile-all {
+	-webkit-border-radius: 4px;
+-moz-border-radius:4px;
+border-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-nospace .essb-profile-all {
+	-webkit-border-radius: 0px;
+-moz-border-radius:0px;
+border-radius: 0px;
+}
+
+
+.essb-profiles-edge.essb-profiles-horizontal.essb-profiles-nospace li:first-child .essb-profile-all {
+
+-webkit-border-top-left-radius: 4px;
+-moz-border-radius-topleft: 4px;
+border-top-left-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-left-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-horizontal.essb-profiles-nospace li:last-child .essb-profile-all {
+-webkit-border-bottom-right-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+border-bottom-right-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topright: 4px;
+border-top-right-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-left.essb-profiles-nospace .essb-profile-all {
+	-webkit-border-radius: 0px;
+-moz-border-radius:0px;
+border-radius: 0px;
+}
+
+.essb-profiles-edge.essb-profiles-right.essb-profiles-nospace .essb-profile-all {
+	-webkit-border-radius: 0px;
+-moz-border-radius:0px;
+border-radius: 0px;
+}
+
+.essb-profiles-edge.essb-profiles-left.essb-profiles-nospace li:first-child .essb-profile-all {
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topright: 4px;
+border-top-right-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-left.essb-profiles-nospace li:last-child .essb-profile-all {
+-webkit-border-bottom-right-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+border-bottom-right-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-right.essb-profiles-nospace li:first-child .essb-profile-all {
+-webkit-border-top-left-radius: 4px;
+-moz-border-radius-topleft: 4px;
+border-top-left-radius: 4px;
+}
+
+.essb-profiles-edge.essb-profiles-right.essb-profiles-nospace li:last-child .essb-profile-all {
+-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-left-radius: 4px;
+}
+
+/* profiles */
+.essb-profile-twitter:before { content: "a";}
+.essb-profile-twitter-colored, .essb-profile-twitter-colored:hover, .essb-profile-twitter-colored:active, .essb-profile-twitter-colored:visited   { color: #4da7de !important;}
+.essb-profile-twitter-fill { background-color: #4da7de;}
+.essb-profile-facebook:before { content: "b";}
+.essb-profile-facebook-colored, .essb-profile-facebook-colored:hover, .essb-profile-facebook-colored:active, .essb-profile-facebook-colored:visited   { color: #3e5b98 !important;}
+.essb-profile-facebook-fill { background-color: #3e5b98;}
+.essb-profile-google:before { content: "c";}
+.essb-profile-google-colored, .essb-profile-google-colored:hover, .essb-profile-google-colored:active, .essb-profile-google-colored:visited   { color: #d93e2d !important;}
+.essb-profile-google-fill { background-color: #d93e2d;}
+.essb-profile-pinterest:before { content: "d";}
+.essb-profile-pinterest-colored, .essb-profile-pinterest-colored:hover, .essb-profile-pinterest-colored:active, .essb-profile-pinterest-colored:visited   { color: #c92619 !important;}
+.essb-profile-pinterest-fill { background-color: #c92619;}
+.essb-profile-foursquare:before { content: "e";}
+.essb-profile-foursquare-colored, .essb-profile-foursquare-colored:hover, .essb-profile-foursquare-colored:active, .essb-profile-foursquare-colored:visited   { color: #F94877 !important;}
+.essb-profile-foursquare-fill { background-color: #F94877;}
+.essb-profile-yahoo:before { content: "f";}
+.essb-profile-yahoo-colored, .essb-profile-yahoo-colored:hover, .essb-profile-yahoo-colored:active, .essb-profile-yahoo-colored:visited   { color: #6E2A85 !important;}
+.essb-profile-yahoo-fill { background-color: #6E2A85;}
+.essb-profile-skype:before { content: "g";}
+.essb-profile-skype-colored, .essb-profile-skype-colored:hover, .essb-profile-skype-colored:active, .essb-profile-skype-colored:visited   { color: #28abe3 !important;}
+.essb-profile-skype-fill { background-color: #28abe3;}
+.essb-profile-yelp:before { content: "h";}
+.essb-profile-yelp-colored, .essb-profile-yelp-colored:hover, .essb-profile-yelp-colored:active, .essb-profile-yelp-colored:visited   { color: #c83218 !important;}
+.essb-profile-yelp-fill { background-color: #c83218;}
+.essb-profile-feedburner:before { content: "i";}
+.essb-profile-feedburner-colored, .essb-profile-feedburner-colored:hover, .essb-profile-feedburner-colored:active, .essb-profile-feedburner-colored:visited   { color: #FFCC00 !important;}
+.essb-profile-feedburner-fill { background-color: #FFCC00;}
+.essb-profile-linkedin:before { content: "j";}
+.essb-profile-linkedin-colored, .essb-profile-linkedin-colored:hover, .essb-profile-linkedin-colored:active, .essb-profile-linkedin-colored:visited   { color: #3371b7 !important;}
+.essb-profile-linkedin-fill { background-color: #3371b7;}
+.essb-profile-viadeo:before { content: "k";}
+.essb-profile-viadeo-colored, .essb-profile-viadeo-colored:hover, .essb-profile-viadeo-colored:active, .essb-profile-viadeo-colored:visited   { color: #e4a000 !important;}
+.essb-profile-viadeo-fill { background-color: #e4a000;}
+.essb-profile-xing:before { content: "l";}
+.essb-profile-xing-colored, .essb-profile-xing-colored:hover, .essb-profile-xing-colored:active, .essb-profile-xing-colored:visited   { color: #005a60 !important;}
+.essb-profile-xing-fill { background-color: #005a60;}
+.essb-profile-myspace:before { content: "m";}
+.essb-profile-myspace-colored, .essb-profile-myspace-colored:hover, .essb-profile-myspace-colored:active, .essb-profile-myspace-colored:visited   { color: #323232 !important;}
+.essb-profile-myspace-fill { background-color: #323232;}
+.essb-profile-soundcloud:before { content: "n";}
+.essb-profile-soundcloud-colored, .essb-profile-soundcloud-colored:hover, .essb-profile-soundcloud-colored:active, .essb-profile-soundcloud-colored:visited   { color: #fe3801 !important;}
+.essb-profile-soundcloud-fill { background-color: #fe3801;}
+.essb-profile-spotify:before { content: "o";}
+.essb-profile-spotify-colored, .essb-profile-spotify-colored:hover, .essb-profile-spotify-colored:active, .essb-profile-spotify-colored:visited   { color: #7bb342 !important;}
+.essb-profile-spotify-fill { background-color: #7bb342;}
+.essb-profile-grooveshark:before { content: "p";}
+.essb-profile-grooveshark-colored, .essb-profile-grooveshark-colored:hover, .essb-profile-grooveshark-colored:active, .essb-profile-grooveshark-colored:visited   { color: #000000 !important;}
+.essb-profile-grooveshark-fill { background-color: #000000;}
+.essb-profile-lastfm:before { content: "q";}
+.essb-profile-lastfm-colored, .essb-profile-lastfm-colored:hover, .essb-profile-lastfm-colored:active, .essb-profile-lastfm-colored:visited   { color: #d41316 !important;}
+.essb-profile-lastfm-fill { background-color: #d41316;}
+.essb-profile-youtube:before { content: "r";}
+.essb-profile-youtube-colored, .essb-profile-youtube-colored:hover, .essb-profile-youtube-colored:active, .essb-profile-youtube-colored:visited   { color: #e02a20 !important;}
+.essb-profile-youtube-fill { background-color: #e02a20;}
+.essb-profile-vimeo:before { content: "s";}
+.essb-profile-vimeo-colored, .essb-profile-vimeo-colored:hover, .essb-profile-vimeo-colored:active, .essb-profile-vimeo-colored:visited   { color: #51b5e7 !important;}
+.essb-profile-vimeo-fill { background-color: #51b5e7;}
+.essb-profile-dailymotion:before { content: "t";}
+.essb-profile-dailymotion-colored, .essb-profile-dailymotion-colored:hover, .essb-profile-dailymotion-colored:active, .essb-profile-dailymotion-colored:visited   { color: #004e72 !important;}
+.essb-profile-dailymotion-fill { background-color: #004e72;}
+.essb-profile-vine:before { content: "u";}
+.essb-profile-vine-colored, .essb-profile-vine-colored:hover, .essb-profile-vine-colored:active, .essb-profile-vine-colored:visited   { color: #00b389 !important;}
+.essb-profile-vine-fill { background-color: #00b389;}
+.essb-profile-flickr:before { content: "v";}
+.essb-profile-flickr-colored, .essb-profile-flickr-colored:hover, .essb-profile-flickr-colored:active, .essb-profile-flickr-colored:visited   { color: #1e1e1b !important;}
+.essb-profile-flickr-fill { background-color: #1e1e1b;}
+.essb-profile-500px:before { content: "w";}
+.essb-profile-500px-colored, .essb-profile-500px-colored:hover, .essb-profile-500px-colored:active, .essb-profile-500px-colored:visited   { color: #58a9de !important;}
+.essb-profile-500px-fill { background-color: #58a9de;}
+.essb-profile-instagram:before { content: "x";}
+.essb-profile-instagram-colored, .essb-profile-instagram-colored:hover, .essb-profile-instagram-colored:active, .essb-profile-instagram-colored:visited   { color: #9c7c6e !important;}
+.essb-profile-instagram-fill { background-color: #9c7c6e;}
+.essb-profile-wordpress:before { content: "y";}
+.essb-profile-wordpress-colored, .essb-profile-wordpress-colored:hover, .essb-profile-wordpress-colored:active, .essb-profile-wordpress-colored:visited   { color: #464646 !important;}
+.essb-profile-wordpress-fill { background-color: #464646;}
+.essb-profile-tumblr:before { content: "z";}
+.essb-profile-tumblr-colored, .essb-profile-tumblr-colored:hover, .essb-profile-tumblr-colored:active, .essb-profile-tumblr-colored:visited   { color: #45556c !important;}
+.essb-profile-tumblr-fill { background-color: #45556c;}
+.essb-profile-blogger:before { content: "A";}
+.essb-profile-blogger-colored, .essb-profile-blogger-colored:hover, .essb-profile-blogger-colored:active, .essb-profile-blogger-colored:visited   { color: #ec661c !important;}
+.essb-profile-blogger-fill { background-color: #ec661c;}
+.essb-profile-technorati:before { content: "B";}
+.essb-profile-technorati-colored, .essb-profile-technorati-colored:hover, .essb-profile-technorati-colored:active, .essb-profile-technorati-colored:visited   { color: #5cb030 !important;}
+.essb-profile-technorati-fill { background-color: #5cb030;}
+.essb-profile-reddit:before { content: "C";}
+.essb-profile-reddit-colored, .essb-profile-reddit-colored:hover, .essb-profile-reddit-colored:active, .essb-profile-reddit-colored:visited   { color: #e74a1e !important;}
+.essb-profile-reddit-fill { background-color: #e74a1e;}
+.essb-profile-dribbble:before { content: "D";}
+.essb-profile-dribbble-colored, .essb-profile-dribbble-colored:hover, .essb-profile-dribbble-colored:active, .essb-profile-dribbble-colored:visited   { color: #e84d88 !important;}
+.essb-profile-dribbble-fill { background-color: #e84d88;}
+.essb-profile-stumbleupon:before { content: "E";}
+.essb-profile-stumbleupon-colored, .essb-profile-stumbleupon-colored:hover, .essb-profile-stumbleupon-colored:active, .essb-profile-stumbleupon-colored:visited   { color: #e64011 !important;}
+.essb-profile-stumbleupon-fill { background-color: #e64011;}
+.essb-profile-digg:before { content: "F";}
+.essb-profile-digg-colored, .essb-profile-digg-colored:hover, .essb-profile-digg-colored:active, .essb-profile-digg-colored:visited   { color: #1d1d1b !important;}
+.essb-profile-digg-fill { background-color: #1d1d1b;}
+.essb-profile-envato:before { content: "G";}
+.essb-profile-envato-colored, .essb-profile-envato-colored:hover, .essb-profile-envato-colored:active, .essb-profile-envato-colored:visited   { color: #597c3a !important;}
+.essb-profile-envato-fill { background-color: #597c3a;}
+.essb-profile-behance:before { content: "H";}
+.essb-profile-behance-colored, .essb-profile-behance-colored:hover, .essb-profile-behance-colored:active, .essb-profile-behance-colored:visited   { color: #000000 !important;}
+.essb-profile-behance-fill { background-color: #000000;}
+.essb-profile-delicious:before { content: "I";}
+.essb-profile-delicious-colored, .essb-profile-delicious-colored:hover, .essb-profile-delicious-colored:active, .essb-profile-delicious-colored:visited   { color: #020202 !important;}
+.essb-profile-delicious-fill { background-color: #020202;}
+.essb-profile-deviantart:before { content: "J";}
+.essb-profile-deviantart-colored, .essb-profile-deviantart-colored:hover, .essb-profile-deviantart-colored:active, .essb-profile-deviantart-colored:visited   { color: #c5d200 !important;}
+.essb-profile-deviantart-fill { background-color: #c5d200;}
+.essb-profile-forrst:before { content: "K";}
+.essb-profile-forrst-colored, .essb-profile-forrst-colored:hover, .essb-profile-forrst-colored:active, .essb-profile-forrst-colored:visited   { color: #5B9A68 !important;}
+.essb-profile-forrst-fill { background-color: #5B9A68;}
+.essb-profile-play:before { content: "L";}
+.essb-profile-play-colored, .essb-profile-play-colored:hover, .essb-profile-play-colored:active, .essb-profile-play-colored:visited   { color: #000000 !important;}
+.essb-profile-play-fill { background-color: #000000;}
+.essb-profile-zerply:before { content: "M";}
+.essb-profile-zerply-colored, .essb-profile-zerply-colored:hover, .essb-profile-zerply-colored:active, .essb-profile-zerply-colored:visited   { color: #9DBC7A !important;}
+.essb-profile-zerply-fill { background-color: #9DBC7A;}
+.essb-profile-wikipedia:before { content: "N";}
+.essb-profile-wikipedia-colored, .essb-profile-wikipedia-colored:hover, .essb-profile-wikipedia-colored:active, .essb-profile-wikipedia-colored:visited   { color: #000000 !important;}
+.essb-profile-wikipedia-fill { background-color: #000000;}
+.essb-profile-apple:before { content: "O";}
+.essb-profile-apple-colored, .essb-profile-apple-colored:hover, .essb-profile-apple-colored:active, .essb-profile-apple-colored:visited   { color: #B9BFC1 !important;}
+.essb-profile-apple-fill { background-color: #B9BFC1;}
+.essb-profile-flattr:before { content: "P";}
+.essb-profile-flattr-colored, .essb-profile-flattr-colored:hover, .essb-profile-flattr-colored:active, .essb-profile-flattr-colored:visited   { color: #F67C1A !important;}
+.essb-profile-flattr-fill { background-color: #F67C1A;}
+.essb-profile-github:before { content: "Q";}
+.essb-profile-github-colored, .essb-profile-github-colored:hover, .essb-profile-github-colored:active, .essb-profile-github-colored:visited   { color: #221e1b !important;}
+.essb-profile-github-fill { background-color: #221e1b;}
+.essb-profile-chimein:before { content: "R";}
+.essb-profile-chimein-colored, .essb-profile-chimein-colored:hover, .essb-profile-chimein-colored:active, .essb-profile-chimein-colored:visited   { color: #888688 !important;}
+.essb-profile-chimein-fill { background-color: #888688;}
+.essb-profile-friendfeed:before { content: "S";}
+.essb-profile-friendfeed-colored, .essb-profile-friendfeed-colored:hover, .essb-profile-friendfeed-colored:active, .essb-profile-friendfeed-colored:visited   { color: #2F72C4 !important;}
+.essb-profile-friendfeed-fill { background-color: #2F72C4;}
+.essb-profile-newsvine:before { content: "T";}
+.essb-profile-newsvine-colored, .essb-profile-newsvine-colored:hover, .essb-profile-newsvine-colored:active, .essb-profile-newsvine-colored:visited   { color: #075B2F !important;}
+.essb-profile-newsvine-fill { background-color: #075B2F;}
+.essb-profile-identica:before { content: "U";}
+.essb-profile-identica-colored, .essb-profile-identica-colored:hover, .essb-profile-identica-colored:active, .essb-profile-identica-colored:visited   { color: #000000 !important;}
+.essb-profile-identica-fill { background-color: #000000;}
+.essb-profile-bebo:before { content: "V";}
+.essb-profile-bebo-colored, .essb-profile-bebo-colored:hover, .essb-profile-bebo-colored:active, .essb-profile-bebo-colored:visited   { color: #EF1011 !important;}
+.essb-profile-bebo-fill { background-color: #EF1011;}
+.essb-profile-zynga:before { content: "W";}
+.essb-profile-zynga-colored, .essb-profile-zynga-colored:hover, .essb-profile-zynga-colored:active, .essb-profile-zynga-colored:visited   { color: #DC0606 !important;}
+.essb-profile-zynga-fill { background-color: #DC0606;}
+.essb-profile-steam:before { content: "X";}
+.essb-profile-steam-colored, .essb-profile-steam-colored:hover, .essb-profile-steam-colored:active, .essb-profile-steam-colored:visited   { color: #8F8D8A !important;}
+.essb-profile-steam-fill { background-color: #8F8D8A;}
+.essb-profile-xbox:before { content: "Y";}
+.essb-profile-xbox-colored, .essb-profile-xbox-colored:hover, .essb-profile-xbox-colored:active, .essb-profile-xbox-colored:visited   { color: #92C83E !important;}
+.essb-profile-xbox-fill { background-color: #92C83E;}
+.essb-profile-windows:before { content: "Z";}
+.essb-profile-windows-colored, .essb-profile-windows-colored:hover, .essb-profile-windows-colored:active, .essb-profile-windows-colored:visited   { color: #00BDF6 !important;}
+.essb-profile-windows-fill { background-color: #00BDF6;}
+.essb-profile-outlook:before { content: "1";}
+.essb-profile-outlook-colored, .essb-profile-outlook-colored:hover, .essb-profile-outlook-colored:active, .essb-profile-outlook-colored:visited   { color: #0072C6 !important;}
+.essb-profile-outlook-fill { background-color: #0072C6;}
+.essb-profile-coderwall:before { content: "2";}
+.essb-profile-coderwall-colored, .essb-profile-coderwall-colored:hover, .essb-profile-coderwall-colored:active, .essb-profile-coderwall-colored:visited   { color: #3E8DCC !important;}
+.essb-profile-coderwall-fill { background-color: #3E8DCC;}
+.essb-profile-tripadvisor:before { content: "3";}
+.essb-profile-tripadvisor-colored, .essb-profile-tripadvisor-colored:hover, .essb-profile-tripadvisor-colored:active, .essb-profile-tripadvisor-colored:visited   { color: #000000 !important;}
+.essb-profile-tripadvisor-fill { background-color: #000000;}
+.essb-profile-appnet:before { content: "4";}
+.essb-profile-appnet-colored, .essb-profile-appnet-colored:hover, .essb-profile-appnet-colored:active, .essb-profile-appnet-colored:visited   { color: #494949 !important;}
+.essb-profile-appnet-fill { background-color: #494949;}
+.essb-profile-goodreads:before { content: "5";}
+.essb-profile-goodreads-colored, .essb-profile-goodreads-colored:hover, .essb-profile-goodreads-colored:active, .essb-profile-goodreads-colored:visited   { color: #463020 !important;}
+.essb-profile-goodreads-fill { background-color: #463020;}
+.essb-profile-tripit:before { content: "6";}
+.essb-profile-tripit-colored, .essb-profile-tripit-colored:hover, .essb-profile-tripit-colored:active, .essb-profile-tripit-colored:visited   { color: #1982C3 !important;}
+.essb-profile-tripit-fill { background-color: #1982C3;}
+.essb-profile-lanyrd:before { content: "7";}
+.essb-profile-lanyrd-colored, .essb-profile-lanyrd-colored:hover, .essb-profile-lanyrd-colored:active, .essb-profile-lanyrd-colored:visited   { color: #3c80c9 !important;}
+.essb-profile-lanyrd-fill { background-color: #3c80c9;}
+.essb-profile-slideshare:before { content: "8";}
+.essb-profile-slideshare-colored, .essb-profile-slideshare-colored:hover, .essb-profile-slideshare-colored:active, .essb-profile-slideshare-colored:visited   { color: #4ba3a6 !important;}
+.essb-profile-slideshare-fill { background-color: #4ba3a6;}
+.essb-profile-buffer:before { content: "9";}
+.essb-profile-buffer-colored, .essb-profile-buffer-colored:hover, .essb-profile-buffer-colored:active, .essb-profile-buffer-colored:visited   { color: #000000 !important;}
+.essb-profile-buffer-fill { background-color: #000000;}
+.essb-profile-rss:before { content: ",";}
+.essb-profile-rss-colored, .essb-profile-rss-colored:hover, .essb-profile-rss-colored:active, .essb-profile-rss-colored:visited   { color: #f26109 !important;}
+.essb-profile-rss-fill { background-color: #f26109;}
+.essb-profile-vkontakte:before { content: ";";}
+.essb-profile-vkontakte-colored, .essb-profile-vkontakte-colored:hover, .essb-profile-vkontakte-colored:active, .essb-profile-vkontakte-colored:visited   { color: #5a7fa6 !important;}
+.essb-profile-vkontakte-fill { background-color: #5a7fa6;}
+.essb-profile-disqus:before { content: ":";}
+.essb-profile-disqus-colored, .essb-profile-disqus-colored:hover, .essb-profile-disqus-colored:active, .essb-profile-disqus-colored:visited   { color: #2e9fff !important;}
+.essb-profile-disqus-fill { background-color: #2e9fff;}
+.essb-profile-houzz:before { content: "+";}
+.essb-profile-houzz-colored, .essb-profile-houzz-colored:hover, .essb-profile-houzz-colored:active, .essb-profile-houzz-colored:visited   { color: #7CC04B !important;}
+.essb-profile-houzz-fill { background-color: #7CC04B;}
+.essb-profile-mail:before { content: "@";}
+.essb-profile-mail-colored, .essb-profile-mail-colored:hover, .essb-profile-mail-colored:active, .essb-profile-mail-colored:visited   { color: #000000 !important;}
+.essb-profile-mail-fill { background-color: #000000;}
+.essb-profile-patreon:before { content: "=";}
+.essb-profile-patreon-colored, .essb-profile-patreon-colored:hover, .essb-profile-patreon-colored:active, .essb-profile-patreon-colored:visited   { color: #E44727 !important;}
+.essb-profile-patreon-fill { background-color: #E44727;}
+.essb-profile-paypal:before { content: "-";}
+.essb-profile-paypal-colored, .essb-profile-paypal-colored:hover, .essb-profile-paypal-colored:active, .essb-profile-paypal-colored:visited   { color: #009cde !important;}
+.essb-profile-paypal-fill { background-color: #009cde;}
+.essb-profile-playstation:before { content: "^";}
+.essb-profile-playstation-colored, .essb-profile-playstation-colored:hover, .essb-profile-playstation-colored:active, .essb-profile-playstation-colored:visited   { color: #000000 !important;}
+.essb-profile-playstation-fill { background-color: #000000;}
+.essb-profile-smugmug:before { content: "¨";}
+.essb-profile-smugmug-colored, .essb-profile-smugmug-colored:hover, .essb-profile-smugmug-colored:active, .essb-profile-smugmug-colored:visited   { color: #ACFD32 !important;}
+.essb-profile-smugmug-fill { background-color: #ACFD32;}
+.essb-profile-swarm:before { content: "$";}
+.essb-profile-swarm-colored, .essb-profile-swarm-colored:hover, .essb-profile-swarm-colored:active, .essb-profile-swarm-colored:visited   { color: #FC9D3C !important;}
+.essb-profile-swarm-fill { background-color: #FC9D3C;}
+.essb-profile-triplej:before { content: "*";}
+.essb-profile-triplej-colored, .essb-profile-triplej-colored:hover, .essb-profile-triplej-colored:active, .essb-profile-triplej-colored:visited   { color: #E53531 !important;}
+.essb-profile-triplej-fill { background-color: #E53531;}
+.essb-profile-yammer:before { content: "&";}
+.essb-profile-yammer-colored, .essb-profile-yammer-colored:hover, .essb-profile-yammer-colored:active, .essb-profile-yammer-colored:visited   { color: #1175C4 !important;}
+.essb-profile-yammer-fill { background-color: #1175C4;}
+.essb-profile-stackoverflow:before { content: "(";}
+.essb-profile-stackoverflow-colored, .essb-profile-stackoverflow-colored:hover, .essb-profile-stackoverflow-colored:active, .essb-profile-stackoverflow-colored:visited   { color: #FD9827 !important;}
+.essb-profile-stackoverflow-fill { background-color: #FD9827;}
+.essb-profile-drupal:before { content: "#";}
+.essb-profile-drupal-colored, .essb-profile-drupal-colored:hover, .essb-profile-drupal-colored:active, .essb-profile-drupal-colored:visited   { color: #00598e !important;}
+.essb-profile-drupal-fill { background-color: #00598e;}
+.essb-profile-odnoklassniki:before { content: ".";}
+.essb-profile-odnoklassniki-colored, .essb-profile-odnoklassniki-colored:hover, .essb-profile-odnoklassniki-colored:active, .essb-profile-odnoklassniki-colored:visited   { color: #f48420 !important;}
+.essb-profile-odnoklassniki-fill { background-color: #f48420;}
+.essb-profile-android:before { content: "_";}
+.essb-profile-android-colored, .essb-profile-android-colored:hover, .essb-profile-android-colored:active, .essb-profile-android-colored:visited   { color: #8ec047 !important;}
+.essb-profile-android-fill { background-color: #8ec047;}
+.essb-profile-meetup:before { content: "]";}
+.essb-profile-meetup-colored, .essb-profile-meetup-colored:hover, .essb-profile-meetup-colored:active, .essb-profile-meetup-colored:visited   { color: #e2373c !important;}
+.essb-profile-meetup-fill { background-color: #e2373c;}
+.essb-profile-persona:before { content: ")";}
+.essb-profile-persona-colored, .essb-profile-persona-colored:hover, .essb-profile-persona-colored:active, .essb-profile-persona-colored:visited   { color: #e6753d !important;}
+.essb-profile-persona-fill { background-color: #e6753d;}

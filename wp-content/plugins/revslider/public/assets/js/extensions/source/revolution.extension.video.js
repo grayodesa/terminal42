@@ -582,9 +582,9 @@ function getStartSec(st) {
 // 	-	VIMEO ADD EVENT /////
 var addEvent = function(element, eventName, callback) {
 	if (element.addEventListener)
-		element.addEventListener(eventName, callback, false);
+		element.addEventListener(eventName, callback, {capture:false,passive:true});
 	else
-		element.attachEvent(eventName, callback, false);
+		element.attachEvent(eventName, callback, {capture:false,passive:true});
 };
 
 var getVideoDatas = function(p,t,d) {

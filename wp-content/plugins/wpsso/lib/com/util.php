@@ -333,8 +333,8 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return self::sanitize_key( $name );
 		}
 
-		public static function sanitize_classname( $name ) {
-			$name = preg_replace( '/[:\/\-\.]+/', '', $name );
+		public static function sanitize_classname( $name, $underscore = true ) {
+			$name = preg_replace( '/[:\/\-\.'.( $underscore ? '' : '_' ).']+/', '', $name );
 			return self::sanitize_key( $name );
 		}
 
@@ -592,10 +592,10 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		}
 
 		// return the preferred URL (og:image:secure_url, og:image:url, og:image)
-		public static function get_mt_media_url( $prefix, &$arr ) {
-			foreach ( array( ':secure_url', ':url', '' ) as $suffix )
-				if ( ! empty( $arr[$prefix.$suffix] ) )
-					return $media_url = $arr[$prefix.$suffix];
+		public static function get_mt_media_url( &$assoc, $mt_pre = 'og:image' ) {
+			foreach ( array( ':secure_url', ':url', '' ) as $key )
+				if ( ! empty( $assoc[$mt_pre.$key] ) )
+					return $media_url = $assoc[$mt_pre.$key];
 			return '';
 		}
 
@@ -703,11 +703,13 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 					$results[$num] = $opts[$prefix.'_'.$num];
 				else $results[$num] = $value;					// use value (could be empty)
 			}
+
 			asort( $results );	// sort values for display
 
 			if ( $add_none )
-				return array_merge( array( 'none' => '[None]' ), $results );
-			else return $results;
+				$results = array( 'none' => '[None]' ) + $results;	// maintain numeric index
+
+			return $results;
 		}
 
 		public static function get_first_last_next_nums( array &$input ) {
@@ -1374,6 +1376,24 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 				else $times[$hour_mins] = $hour_mins;
 			} 
 			return $times;
+		}
+
+		public static function get_column_rows( array $table_cells, $row_cols = 2, $hide_in_basic = false ) {
+			sort( $table_cells );
+			$table_rows = array();
+			$per_col = ceil( count( $table_cells ) / $row_cols );
+			foreach ( $table_cells as $num => $cell ) {
+				if ( empty( $table_rows[ $num % $per_col ] ) )	// initialize the array element
+					$table_rows[ $num % $per_col ] = $hide_in_basic ?
+						'<tr class="hide_in_basic">' : '';
+				$table_rows[ $num % $per_col ] .= $cell;	// create the html for each row
+			}
+			return $table_rows;
+		}
+
+		public static function get_theme_slug_version( $stylesheet = null, $theme_root = null ) {
+			$theme = wp_get_theme( $stylesheet, $theme_root );
+			return $theme->get_template().'-'.$theme->Version;
 		}
 	}
 }

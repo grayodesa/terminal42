@@ -8,10 +8,10 @@ $version = get_option('pysf_plugin_version', '');
 
 $current_time = time();
 
-if( empty($activation_time) || version_compare($version, FBPMP_VERSION, '<') ){
+if( empty($activation_time) || version_compare($version, PYS_FREE_VERSION, '<') ){
 	$activation_time = $current_time;
 	update_option( 'pysf_activation_date', $activation_time);
-	update_option( 'pysf_plugin_version', FBPMP_VERSION);
+	update_option( 'pysf_plugin_version', PYS_FREE_VERSION);
 	update_option( 'pysf_notice_dismiss', '');
 	update_option( 'woo_pysf_notice_dismiss', '');
 }
@@ -28,30 +28,28 @@ $days_passed = woofp_days_passed($current_time, $activation_time);
 $expiration_date = date('l jS \of F Y', $expiration_time);
 
 $link_1 = 'http://www.pixelyoursite.com/limited-offer?utm_source=wadmin&utm_medium=wordpress&utm_campaign=limited-offer';
-$link_2 = 'http://www.pixelyoursite.com/super-offer?utm_source=wadmin&utm_medium=wordpress&utm_campaign=super-offer';
+$link_2 = 'http://www.pixelyoursite.com/facebook-pixel-plugin?utm_source=wadmin&utm_medium=wordpress&utm_campaign=last-message';
 
 
 
 //Message for day 1
-$day_1_text  = '<span class="pysf_note"><b>Limited Offer, ends on “'.$expiration_date.'”:</b></span> If you are not using Dynamic Events - ';
-$day_1_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-dynamic-events" target="_blank">see guide</a>';
-$day_1_text .= ' - you are leaving money on the table. Optimize your ads for actions on your website, create better Custom Audiences, and get better conversion reports. ';
-$day_1_text .= '<a href="'.$link_1.'" target="_blank">Enable Dynamic Events with PixelYourSite PRO</a>';
+$day_1_text = '<span class="pysf_note"><b>Update to PixelYourSite Pro </b></span> and optimize your FB ads for clicks on links or buttons with Dynamic Events: ';
+$day_1_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-plugin?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click to download PixelYourSite Pro for a big discount</a>';
 
 //Message for day 2
-$day_2_text = '<span class="pysf_note"><b>Limited Offer, ending in 1 day:</b></span> Enable Dynamic Events and optimize your campaigns for site actions (newsletter sign up, contact forms, pop-ups). ';
-$day_2_text .= '<a href="'.$link_1.'" target="_blank">Download now for a big discount</a>';
+$day_2_text = '<span class="pysf_note"><b>Use Dynamic Events: </b></span> and optimize your ads for actions on site (clicks on links or buttons):  ';
+$day_2_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-plugin?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Download PixelYourSite Pro for a limited discount</a>';
 
 //Message for day 3
-$day_3_text  = '<span class="pysf_note"><b>Limited Offer Ends Today, “'.$expiration_date.'”:</b></span> Last chance to get your big discount for PixelYourSite PRO and start to use <b>Dynamic Events.</b> ';
-$day_3_text .= 'Don’t lose this opportunity, because you might need the plugin later: <a href="'.$link_1.'" target="_blank">Click here for your big discount</a>';
+$day_3_text = '<span class="pysf_note"><b>Last Chance Now</b></span> With Dynamic Events you can improve List Generation or Affiliate Campaigns. Optimize your FB Ads for actions on your site with PixelYourSite Pro: ';
+$day_3_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-plugin?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Download Now (offer ending soon)</a>';
 
 //Message for day 4 to 7;
-$day_4_to_7_text = '';
+$day_4_to_7_text = '<span class="pysf_note"><b>Thank You for Using PixelYourSite!</b></span> We put many hours into developing and mantaining this plugin, but having you on board makes us proud and happy. If you like PixelYourSite <a href="https://wordpress.org/support/view/plugin-reviews/pixelyoursite?rate=5#postform" target="_blank">click here to give us a 5 stars rating</a>, because it will mean a lot for our team';
+
 
 //Message for day 7 to 12
-$day_7_to_12_text = '<span class="pysf_note"><b>Special Offer:</b></span> Update to PixelYourSite PRO and enable Facebook Dynamic Events: optimize your ads for website actions, create better Custom Audiences, get better conversion reports. <a href="'.$link_2.'">Click here for your discount</a>';
-
+$day_7_to_12_text = '<span class="pysf_note"><b>Grab Your Free Guide Now: </b></span> The new Generarl Event option can be used to create powerful Custom Audiences. Since it is a very useful tool, we made a free guide about how to use it: <a href="http://www.pixelyoursite.com/general-event?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click here for your Guide</a>';
 
 $options = array(
 
@@ -117,28 +115,31 @@ $options = array(
 //Messages when WooCommerce is installed and activated
 
 //WooCommerce Message for day 1
-$woo_day_1_text  = 'WooCommerce Day 1 Message';
-$woo_day_1_text  = '<span class="pysf_note"><b>Limited Offer, ends on “'.$expiration_date.'”:</b></span> Track Facebook Ads conversion value and enable Facebook Dynamic Ads for WooCommerce: ';
-$woo_day_1_text .= '<a href="'.$link_1.'" target="_blank">Download PixelYourSite PRO for a big discount</a>';
+$woo_day_1_text = 'WooCommerce Day 2 Message.';
+$woo_day_1_text = '<span class="pysf_note"><b>PixelYourSite PRO + Product Catalog Feed Plugin Bundle:</b></span> Track Conversion Value and start with Facebook Dynamic Ads for WooCommerce in minutes. Get both plugins for a fantastic price: ';
+$woo_day_1_text .= '<a href="http://www.pixelyoursite.com/bundle-offer?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click to DOWNLOAD the bundle now (best deal)</a>';
+
 
 
 //WooCommerce Message for day 2
 $woo_day_2_text = 'WooCommerce Day 2 Message.';
-$woo_day_2_text = '<span class="pysf_note"><b>Limited Offer, ending in 1 day:</b></span> Enable Facebook Dynamic Ads for WooCommerce and automatically retarget your visitors. ';
-$woo_day_2_text .= '<a href="'.$link_1.'" target="_blank">Update now for a big discount</a>';
+$woo_day_2_text = '<span class="pysf_note"><b>Customize and Track WooCommerce Conversion Value</b></span>  With PixelYourSite Pro you can fine tune each Event value and improve conversion tracking. ';
+$woo_day_2_text .= '<a href="http://www.pixelyoursite.com/facebook-pixel-plugin?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click to download PixelYourSite Pro for a serious discount</a>';
+
 
 //WooCommerce Message for day 3
 $woo_day_3_text  = 'WooCommerce Day 3 Message.';
-$woo_day_3_text  = '<span class="pysf_note"><b>Limited Offer Ends Today, “'.$expiration_date.'”:</b></span> With PixelYourSite PRO you can enable WooCommerce Dynamic Ads and you can use Dynamic Events for your campaings. ';
-$woo_day_3_text .= 'Don’t lose this opportunity, because you might need the plugin later: <a href="'.$link_1.'" target="_blank">Click here for your big discount</a>';
+$woo_day_3_text = '<span class="pysf_note"><b>Product Catalog Feed Plugin</b></span> Create unlimited WooCommerce XML feeds for Facebook Dynamic Ads with just a few clicks. ';
+$woo_day_3_text .= '<a href="http://www.pixelyoursite.com/product-catalog-facebook?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click to download Product Catalog Feed</a>';
 
 
 //WooCommerce Message for day 4 to 7;
 $woo_day_4_to_7_text = 'WooCommerce Day 4 to 7 Message.';
+$woo_day_4_to_7_text = '<span class="pysf_note"><b>Get Your Free Guide</b></span> We have a new General Event Option that you can use to create Custom Audiences. Since this is a powerful feature, we made a <a href="http://www.pixelyoursite.com/general-event?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Special Guide on how to use it - click here to download</a>';
 
 //WooCommerce Message for day 7 to 12
 $woo_day_7_to_12_text = 'WooCommerce Day 7 to 12 Message.';
-$woo_day_7_to_12_text = '<span class="pysf_note"><b>Special Offer:</b></span> Update to PixelYourSite PRO and enable Facebook Dynamic Events: optimize your ads for website actions, create better Custom Audiences, get better conversion reports. WooCommerce Facebook Dynamic Ads fully suported. <a href="'.$link_2.'">Click here for your discount</a>';
+$woo_day_7_to_12_text = '<span class="pysf_note"><b>Download Free Guide:</b></span> Find out powerful strategies for your WooCommerce website in the free guide about the General Event option <a href="http://www.pixelyoursite.com/general-event?utm_source=wpadmin-update&utm_medium=update&utm_campaign=update" target="_blank">Click here for your own copy</a>';
 
 
 
@@ -329,16 +330,6 @@ if( isset($_GET['page']) && $_GET['page'] == 'woo-facebookpixel' ){
 	add_action( 'admin_notices', 'woofp_admin_notices_action' );
 }
 
-
-//add jquery if not already included;
-function woofp_admin_notices_script(){
-
-	wp_enqueue_script('jquery');
-
-}
-add_action('wp_enqueue_scripts', 'woofp_admin_notices_script');
-
-
 function ajax_pysf_notice_dismiss(){
 
 	if ( class_exists( 'WooCommerce' ) ) {
@@ -356,23 +347,6 @@ function ajax_pysf_notice_dismiss(){
 	die();
 }
 add_action('wp_ajax_pysf_notice_dismiss', 'ajax_pysf_notice_dismiss');
-
-//save activated time on plugin activation
-function pysf_plugin_activated(){
-
-	$activation_date = get_option('pysf_activation_date', '');
-	$version = get_option('pysf_plugin_version', '');
-
-	if( empty($activation_date) || version_compare($version, FBPMP_VERSION, '<') ){
-		update_option( 'pysf_activation_date', time());
-		update_option( 'pysf_plugin_version', FBPMP_VERSION);
-		update_option( 'pysf_notice_dismiss', '');
-		update_option( 'woo_pysf_notice_dismiss', '');
-	}
-}
-register_activation_hook(__FILE__, 'pysf_plugin_activated');
-
-
 
 //get number of days passed since activation
 function woofp_days_passed($current_time, $activation_time){

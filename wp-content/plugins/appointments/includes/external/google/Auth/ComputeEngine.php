@@ -118,7 +118,7 @@ class Google_Auth_ComputeEngine extends Google_Auth_Abstract
       $this->acquireAccessToken();
     }
 
-    $this->client->getLogger()->debug('Compute engine service account authentication');
+    $this->client->getLogger()->debug('Compute engine service account authentication');	       	 	   							
 
     $request->setRequestHeaders(
         array('Authorization' => 'Bearer ' . $this->token['access_token'])

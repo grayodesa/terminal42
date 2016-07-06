@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the WPSSO Schema JSON-LD (WPSSO JSON) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPSSO Schema JSON-LD (WPSSO JSON) 1.7.5-1\n"
+"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.8.1-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-schema-json-ld\n"
-"POT-Creation-Date: 2016-06-14 15:57-0400\n"
-"PO-Revision-Date: 2016-06-14 15:57-0400\n"
+"POT-Creation-Date: 2016-06-29 10:26-0400\n"
+"PO-Revision-Date: 2016-06-29 10:26-0400\n"
 "Last-Translator: JS Morisset <jsm@surniaulula.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -25,68 +25,89 @@ msgctxt "plugin description"
 msgid "WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest."
 msgstr "Une extension WPSSO pour ajouter des balises de Schéma JSON-LD (BlogPosting, Article, Place, Produit, etc.) pour Google et Pinterest."
 
-#: lib/filters.php:111
+#: lib/filters.php:112
 msgid "The Free / Basic version of WPSSO JSON does not include support for the Schema type <a href=\"%1$s\">%1$s</a> &mdash; only the basic Schema properties <em>url</em>, <em>name</em>, and <em>description</em> will be included in the Schema JSON-LD markup."
 msgstr "La version gratuite / de base WPSSO JSON n'inclut pas de support spécifique / personnalisé pour le type de Schéma <a href=\"%1$s\">%1$s</a> &mdash; seulement les propriétés de Schéma de base <em>url</em>, <em>name</em>, et <em>description</em> seront inclues dans les balises de Schéma JSON-LD."
 
-#: lib/filters.php:111
+#: lib/filters.php:112
 msgid "The <a href=\"%1$s\">Pro version of WPSSO JSON</a> includes a wide selection of supported Schema types, including the Schema type <a href=\"%2$s\">%2$s</a>."
 msgstr "La <a href=\"%1$s\">version Pro de WPSSO JSON</a> comprend une grande sélection de types de Schéma, y compris le type de Schéma <a href=\"%2$s\">%2$s</a>."
 
-#: lib/filters.php:111
+#: lib/filters.php:112
 msgid "If this Schema is an important classification for your content, you should consider purchasing the Pro version."
 msgstr "Si ce Schéma est une classification importante pour votre contenu, vous devriez considérer l'achat de la version Pro."
 
-#: lib/filters.php:115
+#: lib/filters.php:116
 msgid "This notice is only shown to users with Administrative privileges."
 msgstr "Cet avis apparaît uniquement aux utilisateurs avec privilèges administratifs."
 
+#: lib/filters.php:168
+msgid "Select a publisher for the Schema Article item type and its sub-types (NewsArticle, TechArticle, etc)."
+msgstr ""
+
+#: lib/filters.php:171
+msgid "Select an organizer for the Schema Event item type and its sub-types (Festival, MusicEvent, etc)."
+msgstr ""
+
+#: lib/filters.php:174
+msgid "Select a performer for the Schema Event item type and its sub-types (Festival, MusicEvent, etc)."
+msgstr ""
+
 #: lib/gpl/admin/post.php:28 lib/pro/admin/post.php:39
-msgid "Save a draft version or publish the %s to update this value."
-msgstr "Enregistrer un brouillon ou publiez pour mettre à jour cette valeur."
-
-#: lib/gpl/admin/post.php:36 lib/pro/admin/post.php:48
-msgctxt "option comment"
-msgid "%s extension required"
-msgstr "%s extension requise"
-
-#: lib/gpl/admin/post.php:40 lib/pro/admin/post.php:46
-#: lib/pro/admin/post.php:52
 msgctxt "option value"
 msgid "Website"
 msgstr "Site Web"
 
-#: lib/gpl/admin/post.php:55 lib/pro/admin/post.php:70
+#: lib/gpl/admin/post.php:30 lib/pro/admin/post.php:41
+msgid "Save a draft version or publish the %s to update this value."
+msgstr "Enregistrer un brouillon ou publiez pour mettre à jour cette valeur."
+
+#: lib/gpl/admin/post.php:38 lib/pro/admin/post.php:49
+msgctxt "option comment"
+msgid "%s extension required"
+msgstr "%s extension requise"
+
+#: lib/gpl/admin/post.php:56 lib/pro/admin/post.php:72
 msgctxt "metabox title"
 msgid "Google Structured Data / Schema Markup"
 msgstr "Données Structurées Google / Balises de Schéma"
 
-#: lib/gpl/admin/post.php:58 lib/pro/admin/post.php:73
+#: lib/gpl/admin/post.php:59 lib/pro/admin/post.php:75
 msgctxt "option label"
 msgid "Main Entity of Page"
 msgstr "Entité principale de page"
 
-#: lib/gpl/admin/post.php:63 lib/pro/admin/post.php:78
+#: lib/gpl/admin/post.php:64 lib/pro/admin/post.php:80
 msgctxt "option label"
 msgid "Schema Item Type"
 msgstr "Type de Schéma"
 
-#: lib/gpl/admin/post.php:70 lib/pro/admin/post.php:85
-msgctxt "option label"
-msgid "Schema Item Name"
-msgstr "Nom / titre de l'item"
-
-#: lib/gpl/admin/post.php:78 lib/pro/admin/post.php:93
-msgctxt "option label"
-msgid "Article Headline"
-msgstr "Manchette d'article"
-
-#: lib/gpl/admin/post.php:85 lib/pro/admin/post.php:101
+#: lib/gpl/admin/post.php:75 lib/pro/admin/post.php:91
 msgctxt "option label"
 msgid "Article Publisher"
 msgstr "Éditeur de l'article"
 
-#: lib/gpl/admin/post.php:91 lib/pro/admin/post.php:108
+#: lib/gpl/admin/post.php:82 lib/pro/admin/post.php:99
+msgctxt "option label"
+msgid "Article Headline"
+msgstr "Manchette d'article"
+
+#: lib/gpl/admin/post.php:92 lib/pro/admin/post.php:110
+msgctxt "option label"
+msgid "Event Organizer"
+msgstr "Organisateur de l’événement"
+
+#: lib/gpl/admin/post.php:99 lib/pro/admin/post.php:118
+msgctxt "option label"
+msgid "Event Performer"
+msgstr "Interprète de l’événement"
+
+#: lib/gpl/admin/post.php:108 lib/pro/admin/post.php:128
+msgctxt "option label"
+msgid "Schema Item Name"
+msgstr "Nom / titre de l'item"
+
+#: lib/gpl/admin/post.php:115 lib/pro/admin/post.php:135
 msgctxt "option label"
 msgid "Schema Description"
 msgstr "Description de l'item"

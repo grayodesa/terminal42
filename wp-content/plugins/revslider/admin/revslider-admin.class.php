@@ -1505,7 +1505,11 @@ class RevSliderAdmin extends RevSliderBaseAdmin{
 					}else{
 						if($result == 'temp'){
 							self::ajaxResponseSuccessRedirect(__("Purchase Code Temporary Activated",'revslider'), self::getViewUrl(self::VIEW_SLIDERS));
-						} /*elseif($result == 'bad_email'){
+						} 
+						if($result == 'exist'){
+							self::ajaxResponseData(array('error'=>$result,'msg'=> __('Purchase Code already registered!', 'revslider')));
+						}
+						/*elseif($result == 'bad_email'){
 							RevSliderFunctions::throwError(__('Please add an valid E-Mail Address', 'revslider'));
 						}elseif($result == 'email_used'){
 							RevSliderFunctions::throwError(__('E-Mail already in use, please choose a different E-Mail', 'revslider'));

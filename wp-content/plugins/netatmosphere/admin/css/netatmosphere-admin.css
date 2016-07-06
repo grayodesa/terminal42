@@ -1,0 +1,60 @@
+/* admin styles */
+.netatmosphere-admin-example {
+    border: 1px solid #686868;
+    background: #C2C2C2;
+    margin: 0 50px;
+    padding: 0 10px;
+}
+
+/* admin table style */
+.netatmosphere_admin_table {
+	background-color: #f2f2f2;
+	/*width: 100%;*/
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-collapse: collapse;
+	margin: 15px 0 5px 0;
+}
+.netatmosphere_admin_table thead {
+	padding: .2em 0 .2em .5em;
+	color: #4B4B4B;
+	background-color: #C8C8C8;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#e3e3e3), color-stop(.6,#B3B3B3));
+	background-image: -moz-linear-gradient(top, #D6D6D6, #B0B0B0, #B3B3B3 90%);
+	border-bottom: solid 1px #999;
+}
+.netatmosphere_admin_table caption,
+.netatmosphere_admin_table td,
+.netatmosphere_admin_table th {
+	text-align: center;
+	border: 1px solid #e3e3e3;
+	color: #333;
+	padding: 10px;
+}
+.netatmosphere_admin_table th {
+	background: #9CA1A6;
+	color: whitesmoke;
+	font-weight: bold;
+}
+.netatmosphere_admin_table tbody td:hover {
+	background-color: #fff;
+}
+.netatmosphere_admin_table tfoot td {
+	text-align: center;
+	margin: 0 0;
+	padding: 0;
+}
+.netatmosphere_admin_table td form p.submit {
+	text-align: center;
+	margin: 10px;
+	padding: 0;
+}
+.netatmosphere_admin_table td.msg_important {
+	font-weight: bold;
+	color: red;
+}
+.netatmosphere_admin_table td.msg_info {
+    font-weight: bold;
+    color: green;
+}

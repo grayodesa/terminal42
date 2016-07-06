@@ -35,13 +35,14 @@ if ( ! class_exists( 'WpssoJsonProPropRating' ) ) {
 			) );
 		}
 
+		// automatically include an aggregateRating property based on the Open Graph rating meta tags
 		public function filter_json_data_http_schema_org( $json_data, $use_post, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
 			$lca = $this->p->cf['lca'];
-			$og_type = $mt_og['og:type'];
+			$og_type = $mt_og['og:type'];	// product
 			$ret = array();
 
 			// check for at least two essential meta tags

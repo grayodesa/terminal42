@@ -286,7 +286,7 @@ class RevSliderTemplate {
 						if((!file_exists($file) && !file_exists($file_plugin)) || isset($temp['push_image'])){
 							if($curl !== false){
 								$image_data = @$curl->request($this->templates_url.$this->templates_server_path.$temp['img']); // Get image data
-								if(isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
+								if(!is_wp_error($image_data) && isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
 									$image_data = $image_data['body'];
 								}else{
 									$image_data = false;
@@ -322,7 +322,7 @@ class RevSliderTemplate {
 							if((!file_exists($file) && !file_exists($file_plugin)) || isset($reload[$key])){ //update, so load again
 								if($curl !== false){
 									$image_data = @$curl->request($this->templates_url.$this->templates_server_path.$tvalues['img']); // Get image data
-									if(isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
+									if(!is_wp_error($image_data) && isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
 										$image_data = $image_data['body'];
 									}else{
 										$image_data = false;

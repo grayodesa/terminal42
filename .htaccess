@@ -4,6 +4,8 @@
 RewriteEngine On
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
+RewriteRule ^^get-weather\/([^\/]*)\/DB_([^\/]*)\.txt$ /wp-content/plugins/live-weather-station/generator.php?type=$matches[2]&station=$matches[1] [QSA,L]
+RewriteRule ^^get-weather\/([^\/]*)\/([^\/]*)\/$ /wp-content/plugins/live-weather-station/generator.php?type=$matches[2]&station=$matches[1] [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
@@ -89,3 +91,28 @@ RewriteRule . /index.php [END]
 </IfModule>
 # END Cache Enabler
 
+<IfModule mod_expires.c>
+#ExpiresActive On
+#ExpiresByType text/html "access plus 1 day"
+#ExpiresByType image/gif "access plus 1 years"
+#ExpiresByType image/jpeg "access plus 1 years"
+#ExpiresByType image/png "access plus 1 years"
+#ExpiresByType text/css "access plus 1 years"
+#ExpiresByType text/javascript "access plus 1 years"
+#ExpiresByType application/x-javascript "access plus 1 years"
+#ExpiresByType application/javascript "access plus 1 years"
+</IfModule>
+
+Header unset ETag
+FileETag None
+
+# Block wp-includes folder and files
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^wp-admin/includes/ - [F,L]
+RewriteRule !^wp-includes/ - [S=3]
+RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+RewriteRule ^wp-includes/theme-compat/ - [F,L]
+</IfModule>

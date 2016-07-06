@@ -1,0 +1,56 @@
+/* plugin global styles */
+
+/* wrapper div for scrollbar view on table */
+div.table-wrapper {
+    width: 100%;
+	overflow: auto;
+}
+
+.msg_important {
+	font-weight: bold;
+	color: red;
+}
+
+.msg_success {
+	font-weight: bold;
+	color: green;
+}
+
+
+/* frontend styles */
+
+/* Weather Widget */
+.widget_netatmosphere_widget #netatmosphere_widget_table {
+	color: #555;
+	width: 100%;
+	text-align: center;
+    margin: 4px 0px;
+    table-layout: fixed;
+}
+.widget_netatmosphere_widget #netatmosphere_widget_table caption,
+.widget_netatmosphere_widget #netatmosphere_widget_table td,
+.widget_netatmosphere_widget #netatmosphere_widget_table th {
+	text-align: center;
+}
+.widget_netatmosphere_widget #netatmosphere_widget_table caption {
+	font-size: 11px;
+	font-weight: 500;
+	padding: 5px 0 3px 0;
+    margin: 5px 0 3px 0;
+	text-transform: uppercase;
+}
+.widget_netatmosphere_widget #netatmosphere_widget_table th {
+	background: #f4f4f4;
+	font-weight: bold;
+}
+.widget_netatmosphere_widget #netatmosphere_widget_table th,
+.widget_netatmosphere_widget #netatmosphere_widget_table td {
+	border: 1px solid #ccc;
+	padding: 5px 0 3px 0;
+}
+.widget_netatmosphere_widget #netatmosphere_widget_table tfoot td {
+	background: #f4f4f4;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+

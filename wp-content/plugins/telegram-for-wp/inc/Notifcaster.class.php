@@ -1,12 +1,19 @@
 <?php
 /**
- * Notifcaster.com — sending and recieving notifcations using Telegram bot api.
- * @author Ameer Mousavi <ameer.ir>
- * forked from Notifygram by Anton Ilzheev <ilzheev@gmail.com>
+ * Sending messages to Telegram channels and groups using bot API.
+ * Also you can send notifications to your Telegram accounts using Notifcaster API. (Useful for websites notifications)
+ * Forked from Notifygram by Anton Ilzheev <ilzheev@gmail.com>
  * Attention! $method always must be started with slash " / "
+ * @category Telegram Bot API
+ * @package Telegram for WordPress
+ * @author Ameer Mousavi <me@ameer.ir>
+ * @copyright 2015-2016 Ameer Mousavi
+ * @license GPLv3 or later.
+ * @version 1.6
+ * @link http://notifcaster.com
  */
 
-#Remove below line if you want using this file outside of WordPress
+// Remove below line if you want using this file outside of WordPress
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if (!defined('PHP_VERSION_ID')) {
@@ -25,8 +32,8 @@ class Notifcaster_Class
         $api_token  = null,
         $url        = 'https://tg-notifcaster.rhcloud.com/api/v1',
         $api_method = null,
-        $excluded_tags = null,
-        $parse_mode = null,
+        $parse_mode = null;
+    public
         $web_preview = 0;
     /**
     * Notifcaster API constructor
@@ -50,9 +57,6 @@ class Notifcaster_Class
         $this->url = 'https://api.telegram.org/bot'.$bot_token;
         $this->parse_mode = $parse_mode;
         $this->web_preview = $web_preview;
-        if(strtolower($parse_mode) == "html"){
-            $this->excluded_tags = "<b><strong><em><i><a><code><pre>";
-        }
     }
     /**
      * Send Notification to user
@@ -63,12 +67,29 @@ class Notifcaster_Class
      */
     public function notify($msg = 'NULL')
     {
-        $params = array(
-            'api_token'  => $this->api_token,
-            'msg'        => $msg
-        );
+        $msg = strip_tags($msg);
+        //The below condition should be go inside make_request
+        if (isset($msg)) {
+            if(mb_strlen($msg) > 4096){
+              $splitted_text = $this->str_split_unicode($msg, 4096);  
+          }
+        }
         $this->api_method = "/selfMessage";
-        $response = $this->make_request($params);
+        if (isset($splitted_text)) {
+            foreach ($splitted_text as $text_part) {
+                $params = array(
+                    'api_token'  => $this->api_token,
+                    'msg'        => $text_part
+                    );
+                $response = $this->make_request($params);
+            }
+        } else {
+            $params = array(
+                'api_token'  => $this->api_token,
+                'msg'        => $msg
+                );
+           $response = $this->make_request($params); 
+        }
         return $response;
     }
     /**
@@ -84,26 +105,20 @@ class Notifcaster_Class
         return $response;
     }
     /**
-     * Send text message to channel
+     *  Get the number of members in a chat.
+     *  @param  string $chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
      *
-     * @param string $chat_id
-     * @param string $msg
-     *
-     * @return string
+     *  @return JSON
      */
-    public function channel_text($chat_id , $msg)
+    public function get_members_count($chat_id)
     {
-        if(strtolower($this->parse_mode) == "markdown"){
-            $msg = $this->markdown($msg, 1, 1, 1);
+        if($chat_id == null || $chat_id == ''){
+            return;
         }
         $params = array(
-            'chat_id'  => $chat_id,
-            'text'        => strip_tags($msg, $this->excluded_tags),
-            'parse_mode' => $this->parse_mode,
-            'disable_web_page_preview' => $this->web_preview
-        );
-
-        $this->api_method = "/sendMessage";
+            'chat_id' => $chat_id
+            );
+        $this->api_method = "/getChatMembersCount";
         $response = $this->make_request($params);
         return $response;
     }
@@ -114,6 +129,22 @@ class Notifcaster_Class
      * @param string $msg
      *
      * @return string
+     */
+    public function channel_text($chat_id , $msg)
+    {
+        $params = array(
+            'chat_id'  => $chat_id,
+            'text'        => $this->prepare_text($msg),
+            'parse_mode' => $this->parse_mode,
+            'disable_web_page_preview' => $this->web_preview
+        );
+        $this->api_method = "/sendMessage";
+        $response = $this->make_request($params);
+        return $response;
+    }
+    /**
+     * Send photo message to channel
+     * @deprecated deprecated since version 1.6
      */
     public function channel_photo($chat_id , $caption , $photo)
     {
@@ -127,6 +158,42 @@ class Notifcaster_Class
         $response = $this->make_request($params, $file_upload);
         return $response;
     }
+    /**
+     * Send file to channel based on its format
+     *
+     * @param string $chat_id
+     * @param string $caption
+     * @param string $file relative path to file
+     *
+     * @return string
+     */
+    public function channel_file($chat_id , $caption , $file, $file_format)
+    {
+        switch ($file_format) {
+            case 'image':
+                $method = 'photo';
+                break;
+            case 'mp3':
+                $method = 'audio';
+                break;
+            case 'mp4':
+                $method = 'video';
+                break;
+            default:
+                $method = 'document';
+                break;
+        }
+        $params = array(
+            'chat_id'  => $chat_id,
+            'caption'  => $caption,
+            $method    => $file
+        );
+        $this->api_method = "/send".$method;
+        $file_upload = true;
+        $file_param = $method;
+        $response = $this->make_request($params, $file_upload, $file_param);
+        return $response;
+    }
 
     /**
      * Request Function
@@ -136,14 +203,14 @@ class Notifcaster_Class
      *
      * @return string "success" || error message
      */    
-    protected function make_request(array $params = array(), $file_upload = false)
+    protected function make_request(array $params = array(), $file_upload = false, $file_param = '')
     {
         $default_params = $params;
         if (!empty($params)) {
             if (isset($params['caption'])) {
-                if (mb_strlen($params['caption']) > 140){
-                  $splitted_text = $this->str_split_unicode($params['caption'], 4096);
-                  $params['caption'] = '';  
+                if (mb_strlen($params['caption']) > 200){
+                    $params['caption'] = $this->str_split_unicode($params['caption'], 200);
+                    $params['caption'] = $params['caption'][0];
                 }
             }
             if (isset($params['text'])) {
@@ -159,9 +226,9 @@ class Notifcaster_Class
             }
             if ($file_upload) {
                 if (class_exists('CURLFile')) {
-                    $params['photo'] = new CURLFile($params['photo']);
+                    $params[$file_param] = new CURLFile($params[$file_param]);
                 } else {
-                    $params = $this->curl_custom_postfields($curl, array('chat_id'  => $params['chat_id'], 'caption' => $params['caption']), array('photo' => $params['photo']));
+                    $params = $this->curl_custom_postfields($curl, array('chat_id'  => $params['chat_id'], 'caption' => $params['caption']), array($file_param => $params[$file_param]));
                 }
             } else {
                 $params = http_build_query($params);
@@ -174,23 +241,30 @@ class Notifcaster_Class
                 CURLOPT_POSTFIELDS => $params
             ));
             $response = curl_exec($curl);
+            curl_close($curl);
             // if text
             if (isset($splitted_text)) {
+                $curl = curl_init($this->url."/sendMessage");
+                curl_setopt_array($curl, array(
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_POST => 1
+                    ));
                 foreach ($splitted_text as $text_part) {
                     $params = array(
                         'chat_id'  => $default_params['chat_id'],
-                        'text'     => $text_part,
-                        'parse_mode' => $this->parse_mode
+                        'text'     => $this->prepare_text($text_part),
+                        'parse_mode' => $this->parse_mode,
+                        'disable_web_page_preview' => $this->web_preview
                         );
                     $params = http_build_query($params);
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => $this->url."/sendMessage",
-                        CURLOPT_POSTFIELDS => $params
-                        ));
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
                     $response = curl_exec($curl);
                 }
+                curl_close($curl);
             }
-            curl_close($curl);                     
+                              
         } else {
             $context = stream_context_create(array(
                 'http' => array(
@@ -291,30 +365,32 @@ class Notifcaster_Class
         $subst = array();
         if ($b){
             $allowed_tags .= "<strong>";
-            array_push($re, "/<strong>(.+?)<\\/strong>/is");
+            array_push($re, "/<strong>(.+?)<\\/strong>/uis");
             array_push($subst, "*$1*");
-
         }
         if ($i){
             $allowed_tags .= "<em>";
-            array_push($re, "/<em>(.+?)<\\/em>/is");
+            array_push($re, "/<em>(.+?)<\\/em>/uis");
             array_push($subst, "_$1_");
         }
         if ($u){
             $allowed_tags .= "<a>";
-            array_push($re, "/<a\\s+(?:[^>]*?\\s+)?href=[\"']?([^'\"]*)[\"']?.*?>(.*?)<\\/a>/is");
+            array_push($re, "/<a\\s+(?:[^>]*?\\s+)?href=[\"']?([^'\"]*)[\"']?.*?>(.*?)<\\/a>/uis");
             array_push($subst, "[$2]($1)");
         }
-        strip_tags($html, $allowed_tags);
+        array_push($re, "/[\*](.+)?(\[.+\]\(.+\))(.+)?[\*]/ui", "/[_](.+)?(\[.+\]\(.+\))(.+)?[_]/ui");
+        array_push($subst, "$2", "$2");
+        $html = strip_tags($html, $allowed_tags);
         $result = preg_replace($re, $subst, $html);
         return $result;
     }
     /**
-    * @param str - string - The input string
-    * @param l - integer - Maximum length of the chunk
+    * Split the Unicode string into characters
+    * @param string $str  The input string
+    * @param integer $l Maximum length of the chunk
     * @author http://nl1.php.net/manual/en/function.str-split.php#107658
     */
-    function str_split_unicode($str, $l = 0) {
+    public function str_split_unicode($str, $l = 0) {
         if ($l > 0) {
             $ret = array();
             $len = mb_strlen($str, "UTF-8");
@@ -325,5 +401,30 @@ class Notifcaster_Class
         }
         return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
     }
+    /**
+     * Prepare text to compatible with Telegram format.
+     * @param string $str
+     * @return string
+     */
+    public function prepare_text($str){
+            $str = stripslashes($str);
+        if (strtolower($this->parse_mode) == "markdown") {
+            $str = $this->markdown($str, 1, 1, 1);
+        } elseif (strtolower($this->parse_mode) == "html") {
+            $excluded_tags = "<b><strong><em><i><a><code><pre>";
+            // Remove nested tags. The priority is <a> tags. For example if a link nested is between <strong> or <em> tags, then these tags will removed.
+            $re = array();
+            $subst = array();
+            array_push($re, "/(<em>)(.+)?(<a\s+(?:[^>]*?\s+)?href=[\"']?([^'\"]*)[\"']?.*?>(.*?)<\/a>)(.+)?(<\/em>)/ui", "/(<strong>)(.+)?(<a\s+(?:[^>]*?\s+)?href=[\"']?([^'\"]*)[\"']?.*?>(.*?)<\/a>)(.+)?(<\/strong>)/ui");
+            array_push($subst, "$3", "$3");
+            $str = preg_replace($re, $subst, $str);
+            $str = strip_tags($str, $excluded_tags);
+        }
+        return $str;
+    }
+
+    /**
+     * Get file info and send it to Telegram using the correct method
+     */
 }
 ?>

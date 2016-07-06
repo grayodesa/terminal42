@@ -943,14 +943,15 @@ var getNeededScripts = function(o,c) {
 		// LAYERANIM, VIDEOS, ACTIONS EXTENSIONS
 		c.find('.tp-caption, .tp-static-layer, .rs-background-video-layer').each(function(){
 			var _nc = jQuery(this);
-			if ((_nc.data('ytid')!=undefined  || _nc.find('iframe').length>0 && _nc.find('iframe').attr('src').toLowerCase().indexOf('youtube')>0))
-				n.videos = true;
+			if ((_nc.data('ytid')!=undefined  || _nc.find('iframe').length>0 && _nc.find('iframe').attr('src').toLowerCase().indexOf('youtube')>0))			
+				n.videos = true;			
 			if ((_nc.data('vimeoid')!=undefined || _nc.find('iframe').length>0 && _nc.find('iframe').attr('src').toLowerCase().indexOf('vimeo')>0))
 				n.videos = true;		
 			if (_nc.data('actions')!==undefined) 
 				n.actions = true;
 			n.layeranim = true;
 		});
+
 
 		c.find('li').each(function() {
 			if (jQuery(this).data('link') && jQuery(this).data('link')!=undefined) {
@@ -960,8 +961,9 @@ var getNeededScripts = function(o,c) {
 		})
 
 		// VIDEO EXTENSION
-		if (!n.videos && (c.find('.rs-background-video-layer').length>0 || c.find(".tp-videolayer").length>0 || c.find(".tp-audiolayer") || c.find('iframe').length>0 || c.find('video').length>0))
+		if (!n.videos && (c.find('.rs-background-video-layer').length>0 || c.find(".tp-videolayer").length>0 || c.find(".tp-audiolayer").length>0 || c.find('iframe').length>0 || c.find('video').length>0))						
 			n.videos = true;
+		
 
 		// VIDEO EXTENSION
 		if (o.sliderType =="carousel")
@@ -1180,6 +1182,15 @@ var initSlider = function (container,opt) {
     }
 
  }
+
+ var onFullScreenChange = function() {
+			 jQuery("body").data('rs-fullScreenMode',!jQuery("body").data('rs-fullScreenMode'));
+		     if (jQuery("body").data('rs-fullScreenMode')) {
+			     setTimeout(function() {
+			     	jQuery(window).trigger("resize");
+			     },200);
+		     }
+		}
 
  var runSlider = function(container,opt) {
 
@@ -1473,22 +1484,21 @@ var initSlider = function (container,opt) {
 				
 				
 		});
+		
+		container[0].addEventListener('mouseenter',function() {				
+			container.trigger('tp-mouseenter');										
+			opt.overcontainer=true;
+		},{passive:true});
 
-		container.hover(
-			function() {				
-					container.trigger('tp-mouseenter');		
-					opt.overcontainer=true;			
-			},
-			function() {
-					container.trigger('tp-mouseleft');												
-					opt.overcontainer=false;
-			});
-
-
-		container.on('mouseover',function() {
+		container[0].addEventListener('mouseover',function() {												
 			container.trigger('tp-mouseover');
 			opt.overcontainer=true;
-		})
+		},{passive:true});
+
+		container[0].addEventListener('mouseleave',function() {				
+			container.trigger('tp-mouseleft');												
+			opt.overcontainer=false;
+		},{passive:true});
 
 		// REMOVE ANY VIDEO JS SETTINGS OF THE VIDEO  IF NEEDED  (OLD FALL BACK, AND HELP FOR 3THD PARTY PLUGIN CONFLICTS)
 		container.find('.tp-caption video').each(function(i) {
@@ -1619,19 +1629,19 @@ var initSlider = function (container,opt) {
 		********************************/
 		// FULLSCREEN MODE TESTING
 		jQuery("body").data('rs-fullScreenMode',false);
-		jQuery(window).on ('mozfullscreenchange webkitfullscreenchange fullscreenchange',function(){
-		     jQuery("body").data('rs-fullScreenMode',!jQuery("body").data('rs-fullScreenMode'));
-		     if (jQuery("body").data('rs-fullScreenMode')) {
-			     setTimeout(function() {
-			     	jQuery(window).trigger("resize");
-			     },200);
-		     }
-		});
+
+		
+		window.addEventListener('fullscreenchange',onFullScreenChange,{passive:true});
+		window.addEventListener('mozfullscreenchange',onFullScreenChange,{passive:true});
+		window.addEventListener('webkitfullscreenchange',onFullScreenChange,{passive:true});
+
+		
 
 		var resizid = "resize.revslider-"+container.attr('id');
 
 		// IF RESIZED, NEED TO STOP ACTUAL TRANSITION AND RESIZE ACTUAL IMAGES
 		jQuery(window).on(resizid,function() {
+			console.log("happening")
 			if (container==undefined) return false;
 			
 			if (jQuery('body').find(container)!=0) 				
@@ -2794,7 +2804,7 @@ var vis = (function(){
 	        }
 	    }
 	    return function(c) {
-	        if (c) document.addEventListener(eventKey, c);
+	        if (c) document.addEventListener(eventKey, c,{pasive:true});
 	        return !document[stateKey];
 	    }
 	})();
@@ -2846,11 +2856,11 @@ var tabBlurringCheck = function(container,opt) {
 	        // bind focus event
 	        window.addEventListener("focus", function (event) {
 				restartOnFocus(opt);
-	        }, false);
+	        }, {capture:false,passive:true});
 	        // bind blur event
 	        window.addEventListener("blur", function (event) {
 				lastStatBlur(opt);	  
-	        }, false);
+	        }, {capture:false,passive:true});
 
 	    } else {
 	        // bind focus event

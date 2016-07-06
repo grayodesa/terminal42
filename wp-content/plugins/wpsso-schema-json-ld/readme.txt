@@ -4,30 +4,27 @@ Plugin Slug: wpsso-schema-json-ld
 Text Domain: wpsso-schema-json-ld
 Domain Path: /languages
 Contributors: jsmoriss
-Donate Link: https://wpsso.com/
+Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
 Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, pinterest, google, seo, news, amp, co-authors, co-authors plus
 License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
 Requires At Least: 3.1
-Tested Up To: 4.5.2
-Stable Tag: 1.7.5-1
+Tested Up To: 4.5.3
+Stable Tag: 1.8.1-1
 
 WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.
 
 == Description ==
 
-<p><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" />
-<ul>
-<li><strong>Offers complete Schema, Structured Data and Rich Snippet markup.</strong></li>
-<li><strong>Corrects incomplete / innacurate Schema markup in theme templates.</strong></li>
-<li><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for your <a href="https://wordpress.org/plugins/amp/">Accelerated Mobile Pages (AMP)</a> webpages.</strong></li>
-<li><strong>WooCommerce support available &mdash; adds all variations in your Product markup!</strong></li>
-</ul>
-</p>
+<p><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" /><strong>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup.</strong></p>
 
-<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, publisher, place, product, etc.) for Google Search, Pinterest, and others.</p>
+<p><strong>Corrects incomplete and innacurate Schema markup in theme templates.</strong></p>
 
-<p>WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
+<p><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</strong></p>
+
+<p><strong>Include all WooCommerce product variations in the Schema markup!</strong> (Pro version)</p>
+
+<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, ratings, publisher, place, product, etc.) for Google Search, Pinterest, and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
 
 = Quick List of Features =
 
@@ -103,7 +100,7 @@ Adds Google / Schema JSON-LD markup:
 
 **WPSSO JSON Pro / Power-User Features**
 
-Extends the features of WPSSO Pro (requires a licensed and active WPSSO Pro plugin).
+Extends the features of WPSSO Pro (requires a licensed WPSSO Pro plugin).
 
 Adds additional custom options in the Social Settings metabox:
 
@@ -177,6 +174,78 @@ Adds Google / Schema JSON-LD markup:
 > 	* Image Width
 > 	* Image Height
 > * CreativeWork Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
+> 	* Video URL
+> 	* Video Name (Title)
+> 	* Video Description
+> 	* Video FileFormat
+> 	* Video Width
+> 	* Video Height
+> 	* Video Duration
+> 	* Video UploadDate
+> 	* Video ThumbnailUrl
+> 	* Video EmbedUrl
+> 	* Video Thumbnail as [schema.org/ImageObject](http://schema.org/ImageObject)
+> 		* Thumbnail URL
+> 		* Thumbnail Width
+> 		* Thumbnail Height
+
+* Schema Type [schema.org/Event](http://schema.org/Event) (**supported Event / Calendar plugin required**)
+	* Schema Type [schema.org/BusinessEvent](http://schema.org/BusinessEvent)
+	* Schema Type [schema.org/ChildrensEvent](http://schema.org/ChildrensEvent)
+	* Schema Type [schema.org/DanceEvent](http://schema.org/DanceEvent)
+	* Schema Type [schema.org/DeliveryEvent](http://schema.org/DeliveryEvent)
+	* Schema Type [schema.org/EducationEvent](http://schema.org/EducationEvent)
+	* Schema Type [schema.org/ExhibitionEvent](http://schema.org/ExhibitionEvent)
+	* Schema Type [schema.org/Festival](http://schema.org/Festival)
+	* Schema Type [schema.org/FoodEvent](http://schema.org/FoodEvent)
+	* Schema Type [schema.org/LiteraryEvent](http://schema.org/LiteraryEvent)
+	* Schema Type [schema.org/MusicEvent](http://schema.org/MusicEvent)
+	* Schema Type [schema.org/PublicationEvent](http://schema.org/PublicationEvent)
+	* Schema Type [schema.org/SaleEvent](http://schema.org/SaleEvent)
+	* Schema Type [schema.org/ScreeningEvent](http://schema.org/ScreeningEvent)
+	* Schema Type [schema.org/SocialEvent](http://schema.org/SocialEvent)
+	* Schema Type [schema.org/SportsEvent](http://schema.org/SportsEvent)
+	* Schema Type [schema.org/TheaterEvent](http://schema.org/TheaterEvent)
+	* Schema Type [schema.org/VisualArtsEvent](http://schema.org/VisualArtsEvent)
+
+> * URL
+> * Name (Title)
+> * Description
+> * StartDate
+> * EndDate
+> * Organizer as [schema.org/Person](http://schema.org/Person) or [schema.org/Organization](http://schema.org/Organization)
+> 	* URL
+> 	* Name
+> 	* Description
+> 	* Organization Logo Image as [schema.org/ImageObject](http://schema.org/ImageObject)
+> 		* Image URL
+> 		* Image Width
+> 		* Image Height
+> 	* Organization SameAs
+>		* Facebook Business Page URL
+>		* Google+ Business Page URL
+>		* Instagram Business URL
+>		* LinkedIn Company Page URL
+>		* MySpace Business Page URL
+>		* Pinterest Company Page URL
+>		* Twitter Business Page URL
+> * Event Location as [schema.org/Place](http://schema.org/Place)
+> 	* Address as [schema.org/PostalAddress](http://schema.org/PostalAddress)
+> 		* streetAddress
+> 		* postOfficeBoxNumber
+> 		* addressLocality
+> 		* addressRegion
+> 		* postalCode
+> 		* addressCountry
+> 	* Geo Location as [schema.org/GeoCoordinates](http://schema.org/GeoCoordinates)
+> 		* elevation
+> 		* latitude
+> 		* longitude
+> * Event Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> 	* Image URL
+> 	* Image Width
+> 	* Image Height
+> * Event Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
 > 	* Video URL
 > 	* Video Name (Title)
 > 	* Video Description
@@ -272,7 +341,7 @@ Adds Google / Schema JSON-LD markup:
 >	* YouTube URL
 >	* Website URL
 
-* Schema Type [schema.org/Place](http://schema.org/Place) (**[WPSSO PLM](https://wordpress.org/plugins/wpsso-plm/) extension required to manage Place / Business information**)
+* Schema Type [schema.org/Place](http://schema.org/Place) (**[WPSSO PLM](https://wordpress.org/plugins/wpsso-plm/) extension required to manage Place / Location information**)
 	* Schema Type [schema.org/AdministrativeArea](http://schema.org/AdministrativeArea)
 	* Schema Type [schema.org/CivicStructure](http://schema.org/CivicStructure)
 	* Schema Type [schema.org/Landform](http://schema.org/Landform)
@@ -352,17 +421,17 @@ Adds Google / Schema JSON-LD markup:
 > * Description
 > * AcceptsReservations for [schema.org/FoodEstablishment](http://schema.org/FoodEstablishment)
 > * Menu (URL) for [schema.org/FoodEstablishment](http://schema.org/FoodEstablishment)
-> * Geo Location as [schema.org/GeoCoordinates](http://schema.org/GeoCoordinates)
-> 	* elevation
-> 	* latitude
-> 	* longitude
-> * Place Address as [schema.org/PostalAddress](http://schema.org/PostalAddress)
+> * Address as [schema.org/PostalAddress](http://schema.org/PostalAddress)
 > 	* streetAddress
 > 	* postOfficeBoxNumber
 > 	* addressLocality
 > 	* addressRegion
 > 	* postalCode
 > 	* addressCountry
+> * Geo Location as [schema.org/GeoCoordinates](http://schema.org/GeoCoordinates)
+> 	* elevation
+> 	* latitude
+> 	* longitude
 > * Opening Hours Specification as [schema.org/openingHoursSpecification](http://schema.org/openingHoursSpecification)
 > 	* opens
 > 	* closes
@@ -388,8 +457,7 @@ Adds Google / Schema JSON-LD markup:
 > 		* Thumbnail Width
 > 		* Thumbnail Height
 
-
-* Schema Type [schema.org/Product](http://schema.org/Product) (**supported eCommerce plugin required**)
+* Schema Type [schema.org/Product](http://schema.org/Product) (**supported e-Commerce plugin required**)
  
 > * Product URL
 > * Product Name
@@ -468,7 +536,7 @@ Adds Google / Schema JSON-LD markup:
 
 = Examples =
 
-* Example WPSSO JSON Pro markup for a Tech Article published on surniaulula.com.
+Example WPSSO JSON Pro markup for a Tech Article published on surniaulula.com.
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -522,7 +590,7 @@ Adds Google / Schema JSON-LD markup:
 }&lt;/script&gt;
 </pre>
 
-* Example WPSSO JSON Pro markup for a WooCommerce product, including all its variations.
+Example WPSSO JSON Pro markup for a WooCommerce product, including its name, description, images, videos, sku, price, availability, ratings, colors, category, width, height, weight, all product variations, and much more.
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -752,7 +820,7 @@ Adds Google / Schema JSON-LD markup:
 }&lt;/script&gt;
 </pre>
 
-* Example WPSSO JSON Pro markup for a Restaurant using the [WPSSO PLM](https://wordpress.org/plugins/wpsso-plm/) extension to manage the Place / Business information (address, geo coordinates, business hours (daily and seasonal), restaurant menu URL, and accepts reservation values).
+Example WPSSO JSON Pro markup for a Restaurant using the [WPSSO PLM](https://wordpress.org/plugins/wpsso-plm/) extension to manage the Place / Location information (address, geo coordinates, business hours (daily and seasonal), restaurant menu URL, and accepts reservation values).
 
 <pre>
 &lt;script type="application/ld+json"&gt;{
@@ -852,9 +920,9 @@ Adds Google / Schema JSON-LD markup:
 
 The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the WPSSO JSON extension.
 
-Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSSO. The [WPSSO JSON Pro](http://wpsso.com/extend/plugins/wpsso-schema-json-ld/) extension (along with all WPSSO Pro extensions) requires the [WPSSO Pro](http://wpsso.com/extend/plugins/wpsso/) plugin as well.
+Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSSO. The [WPSSO JSON Pro](http://wpsso.com/extend/plugins/wpsso-schema-json-ld/?utm_source=wpssojson-readme-extends) extension (along with all WPSSO Pro extensions) requires the [WPSSO Pro](http://wpsso.com/extend/plugins/wpsso/?utm_source=wpssojson-readme-extends) plugin as well.
 
-Purchase the [WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro](http://wpsso.com/extend/plugins/wpsso-schema-json-ld/) extension (includes a *No Risk 30 Day Refund Policy*).
+[Purchase the WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro extension](http://wpsso.com/extend/plugins/wpsso-schema-json-ld/?utm_source=wpssojson-readme-purchase) (includes a *No Risk 30 Day Refund Policy*).
 
 == Installation ==
 
@@ -877,7 +945,7 @@ Purchase the [WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro](http://wpsso.com/ext
 
 == Screenshots ==
 
-01. WPSSO Social Settings on Posts, Pages, Taxonomy / Terms, and User editing pages &mdash; The Social Settings metabox allows you to modify the default Schema type, title, headline (for Articles), description, image, video, preview an example share, preview the meta tags, and validate the webpage markup with online tools.
+01. Social Settings metabox on Posts, Pages, Taxonomy / Terms, and User editing pages &mdash; Allows you to modify the default Schema type, title, headline (for Articles), description, image, video, preview an example share, preview the meta tags, and validate the webpage markup with online tools.
 02. Google's Structured Data Testing Tool &mdash; Results for an example TechArticle webpage showing WPSSO Schema JSON-LD Markup.
 
 == Changelog ==
@@ -895,40 +963,56 @@ Purchase the [WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro](http://wpsso.com/ext
 
 = Changelog / Release Notes =
 
-**Version 1.7.6-dev2 (2016/06/16)**
+**Version 1.9.0-dev1 (2016/07/02)**
+
+Official announcement: N/A
+
+* *New Features*
+	* Added new options to the Social Settings metabox for the http://schema.org/Review type:
+		* Reviewed Item Type
+		* Reviewed Item URL
+		* Reviewed Item Rating
+* *Improvements*
+	* None
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* None
+
+**Version 1.8.1-1 (2016/06/30)**
 
 Official announcement: N/A
 
 * *New Features*
 	* None
 * *Improvements*
+	* None
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* Adjusted notices for the new notice methods in WPSSO v3.33.2-1.
+
+**Version 1.8.0-1 (2016/06/21)**
+
+Official announcement: N/A
+
+* *New Features*
 	* Added support for the http://schema.org/Event type and its sub-types (including event image and video media).
-	* Added an "Event Organizer" option in the Social Settings metabox (WPSSO ORG extension required).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
-
-**Version 1.7.5-1 (2016/06/14)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
+	* Added the "Event Organizer" and "Event Performer" options in the Social Settings metabox (requires the WPSSO ORG extension).
 * *Improvements*
-	* Added a new "Article Publisher" option in the Social Settings metabox for posts and pages (WPSSO ORG extension required).
+	* None
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Updated the `add_single_organization_data()` method arguments for WPSSO v3.32.4-1.
+	* None
 
 == Upgrade Notice ==
 
-= 1.7.6-dev2 =
+= 1.9.0-dev1 =
 
-(2016/06/16) Added basic support for the http://schema.org/Event type and its sub-types (including event image and video media).
+(2016/07/02) Added new options to the Social Settings metabox for the http://schema.org/Review type.
 
-= 1.7.5-1 =
+= 1.8.1-1 =
 
-(2016/06/14) Added a new "Article Publisher" option in the Social Settings metabox for posts and pages (WPSSO ORG extension required).
+(2016/06/30) Adjusted notices for the new notice methods in WPSSO v3.33.2-1.
 

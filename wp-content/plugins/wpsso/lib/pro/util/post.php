@@ -108,7 +108,9 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'applying filters for post_id '.$post_id.' meta' );
 
-					$this->opts[$post_id] = apply_filters( $this->p->cf['lca'].'_get_post_options', $this->opts[$post_id], $post_id );
+					$this->opts[$post_id] = apply_filters( $this->p->cf['lca'].'_get_post_options',
+						$this->opts[$post_id], $post_id );
+
 					$this->opts[$post_id]['options_filtered'] = true;
 
 					if ( $this->p->debug->enabled )
@@ -155,7 +157,9 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 				return false;
 			}
 
-			$opts = $this->get_submit_opts( $post_id );
+			$mod = $this->get_mod( $post_id );
+			$opts = apply_filters( $this->p->cf['lca'].'_save_post_options',
+				$this->get_submit_opts( $post_id ), $post_id, $rel_id, $mod );
 
 			if ( empty( $opts ) )
 				delete_post_meta( $post_id, WPSSO_META_NAME );

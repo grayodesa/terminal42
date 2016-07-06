@@ -3,7 +3,7 @@
 Plugin Name: SumoMe
 Plugin URI: http://sumome.com
 Description: Free Tools to grow your email list from SumoMe.com
-Version: 1.13
+Version: 1.14
 Author: SumoMe
 Author URI: http://www.SumoMe.com
 */

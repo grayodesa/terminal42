@@ -93,7 +93,7 @@ class App_PostTypes_ServiceProviderNames {
 
 	public function save_settings ($options) {
 		if (!empty($_POST['worker_name_format'])) $options['worker_name_format'] = sanitize_text_field($_POST['worker_name_format']);
-		if (!empty($_POST['worker_fallback_name_format'])) $options['worker_fallback_name_format'] = sanitize_text_field($_POST['worker_fallback_name_format']);	       	 	   							
+		if (!empty($_POST['worker_fallback_name_format'])) $options['worker_fallback_name_format'] = sanitize_text_field($_POST['worker_fallback_name_format']);
 		return $options;
 	}
 

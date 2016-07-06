@@ -41,6 +41,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 				'content_image_preg_pid_attr' => 1,	// add the 'data-image-pid' attribute
 				'get_content_a_data_image_id' => 4,	// hook the <a data-image-id="#"> value
 				'get_content_img_data_image_id' => 4,	// hook the <img data-image-id="#"> value
+				'ngg_accept_img_dims' => 6,
 			) );
 		}
 
@@ -79,7 +80,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 			$img_url = '';
 			$img_width = -1;
 			$img_height = -1;
-			$img_cropped = $size_info['crop'] === false ? 0 : 1;	// get_size_info() returns false, true, or an array
+			$img_cropped = empty( $size_info['crop'] ) ? 0 : 1;	// get_size_info() returns false, true, or an array
 			$ret_empty = array( null, null, null, null, null );
 
 			if ( version_compare( $this->ngg_version, '2.0.0', '<' ) ) {
@@ -88,7 +89,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 				$image = $nggdb->find_image( $pid );	// returns an nggImage object
 
 				if ( ! empty( $image ) ) {
-					$crop_arg = $size_info['crop'] == 1 ? 'crop' : '';
+					$crop_arg = $img_cropped ? 'crop' : '';
 					$img_url = $image->cached_singlepic_file( $size_info['width'], $size_info['height'], $crop_arg ); 
 					// if the image file doesn't exist, use the dynamic image url
 					if ( empty( $img_url ) ) {
@@ -114,7 +115,9 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 							$this->p->debug->log( $cached_file.' not found' );
 					}
 				}
-			} else {
+
+			} else {	// NGG version 2.0.0+
+
 				$mapper = C_Image_Mapper::get_instance();
 				$image = $mapper->find( $pid );
 				$storage = C_Gallery_Storage::get_instance();
@@ -134,33 +137,36 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 						$this->p->debug->log( 'ngg image meta_data missing full width and/or height elements' );
 
 				// if the full size is too small, get the full size image URL instead
-				} elseif ( ( empty( $size_info['crop'] ) && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
-					( ! empty( $size_info['crop'] ) && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
+				} elseif ( ( ! $img_cropped && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
+					( $img_cropped && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
 
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'full meta sizes '.$full_width.'x'.$full_height.' smaller than '.
 							$size_name.' ('.$size_info['width'].'x'.$size_info['height'].
-							( $img_cropped === 0 ? '' : ' cropped' ).') - fetching full size image url instead' );
+							( $img_cropped ? ' cropped' : '' ).') - fetching full size image url instead' );
 
 					$img_url = $storage->get_image_url( $image, 'full' );
 					$img_width = $full_width;
 					$img_height = $full_height;
+
 				} else {
+
 					$named_size = $dynthumbs->get_image_name( $image, array(
 						'width' => $size_info['width'], 
 						'height' => $size_info['height'], 
-						'crop' => $size_info['crop'] ) );
+						'crop' => $size_info['crop']
+					) );
 
 					$img_url = $storage->get_image_url( $image, $named_size );
 
 					// determine "accurate" sizes using a ratio
-					if ( empty( $size_info['crop'] ) ) {
+					if ( $img_cropped ) {
+						$img_width = $size_info['width'];
+						$img_height = $size_info['height'];
+					} else {
 						$ratio = $full_width / $size_info['width'];
 						$img_width = $size_info['width'];
 						$img_height = (int) round( $full_height / $ratio );
-					} else {
-						$img_width = $size_info['width'];
-						$img_height = $size_info['height'];
 					}
 				}
 			}
@@ -171,46 +177,62 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 				return $ret_empty;
 			}
 
-			$accept_img_size = apply_filters( $this->p->cf['lca'].'_ngg_accept_img_dims', 
-				( empty( $this->p->options['plugin_check_img_dims'] ) ? true : false ),
-					$img_url, $img_width, $img_height, $size_name, $pid );
+			$img_size_within_limits = $this->p->media->img_size_within_limits( $pid, $size_name, $img_width, $img_height, 
+				__( 'NextGEN Gallery', 'wpsso' ) );
 
-			if ( empty( $accept_img_size ) ) {
+			if ( apply_filters( $this->p->cf['lca'].'_ngg_accept_img_dims', $img_size_within_limits,
+				$img_url, $img_width, $img_height, $size_name, $pid ) ) {
 
-				$media_lib = __( 'NextGEN Gallery', 'wpsso' );
-				$size_label = $this->p->util->get_image_size_label( $size_name );
-				$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
-				$is_sufficient_h = $img_height >= $size_info['height'] ? true : false;
-				$dismiss_id = 'ngg_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
-
-				if ( ( empty( $size_info['crop'] ) && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
-					( ! empty( $size_info['crop'] ) && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
+				if ( ! $check_dupes || $this->p->util->is_uniq_url( $img_url, $size_name ) ) {
 
 					if ( $this->p->debug->enabled )
-						$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$img_width.'x'.$img_height.' too small for the '.
-							$size_name.' ('.$size_info['width'].'x'.$size_info['height'].( $img_cropped === 0 ? '' : ' cropped' ).') image size' );
+						$this->p->debug->log( 'applying rewrite_url filter for '.$img_url );
 
-					if ( is_admin() ) {
-						$required_text = '<b>'.$size_label.'</b> ('.$size_info['width'].'x'.$size_info['height'].
-							( $img_cropped === 0 ? '' : ' <i>'.__( 'cropped', 'wpsso' ).'</i>' ).')';
-						$reject_notice = $this->p->msgs->get( 'notice-image-rejected', array( 'size_label' => $size_label ) );
-						$this->p->notice->err( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $img_width.'x'.$img_height, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
-					}
-
-					return $ret_empty;
-
-				} elseif ( ! $this->p->media->check_image_id_min_max( $pid, $size_name, $img_width, $img_height, $media_lib, $dismiss_id ) ) {
-					return $ret_empty;
-
-				} elseif ( $this->p->debug->enabled )
-					$this->p->debug->log( 'returned image dimensions ('.$img_width.'x'.$img_height.') are sufficient' );
+					return array( apply_filters( $this->p->cf['lca'].'_rewrite_url', $img_url ), 
+						$img_width, $img_height, $img_cropped, 'ngg-'.$pid );
+				}
 			}
 
-			if ( $check_dupes == false || $this->p->util->is_uniq_url( $img_url, $size_name ) )
-				return array( apply_filters( $this->p->cf['lca'].'_rewrite_url', $img_url ), 
-					$img_width, $img_height, $img_cropped, 'ngg-'.$pid );
-
 			return $ret_empty;
+		}
+
+		public function filter_ngg_accept_img_dims( $bool, $img_url, $img_width, $img_height, $size_name, $pid ) {
+
+			if ( empty( $this->p->options['plugin_check_img_dims'] ) )
+				return $bool;
+
+			if ( ! $bool )	// don't recheck already rejected images
+				return false;
+
+			$size_info = $this->p->media->get_size_info( $size_name );
+			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
+			$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
+			$is_sufficient_h = $img_height >= $size_info['height'] ? true : false;
+
+			if ( ( ! $is_cropped && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
+				( $is_cropped && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) ) {
+
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$img_width.'x'.$img_height.' too small for the '.
+						$size_name.' ('.$size_info['width'].'x'.$size_info['height'].( $img_cropped ? ' cropped' : '' ).') image size' );
+
+				if ( is_admin() ) {
+					$media_lib = __( 'NextGEN Gallery', 'wpsso' );
+					$size_label = $this->p->util->get_image_size_label( $size_name );
+					$dismiss_id = 'ngg_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
+					$required_text = '<b>'.$size_label.'</b> ('.$size_info['width'].'x'.$size_info['height'].
+						( $img_cropped ? ' <i>'.__( 'cropped', 'wpsso' ).'</i>' : '' ).')';
+					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', array( 'size_label' => $size_label ) );
+					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $img_width.'x'.$img_height, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
+				}
+
+				return  false;	// exit early
+			}
+
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'image ID '.$pid.' dimensions ('.$img_width.'x'.$img_height.') are sufficient' );
+
+			return true;	// image dimensions are good
 		}
 
 		// parse ngg pre-v2 query arguments

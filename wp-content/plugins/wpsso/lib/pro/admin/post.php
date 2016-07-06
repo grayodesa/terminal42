@@ -35,7 +35,7 @@ if ( ! class_exists( 'WpssoProAdminPost' ) ) {
 				$this->p->debug->mark();
 
 			$is_og_article = isset( $head['og:type'] ) && 
-				$head['og:type'] === 'article' ? false : true;
+				$head['og:type'] === 'article' ? true : false;
 
 			$seo_desc_msg = empty( $this->p->options['add_meta_name_description'] ) ? 
 				'<p class="status-msg smaller">'.
