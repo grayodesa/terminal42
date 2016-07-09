@@ -58,23 +58,7 @@ endif;
         WP Head
     ============================================= -->
     <?php wp_head(); ?>
-
-<script>(function() {
-var _fbq = window._fbq || (window._fbq = []);
-if (!_fbq.loaded) {
-var fbds = document.createElement('script');
-fbds.async = true;
-fbds.src = '//connect.facebook.net/en_US/fbds.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(fbds, s);
-_fbq.loaded = true;
-}
-_fbq.push(['addPixelId', '303301413200788']);
-})();
-window._fbq = window._fbq || [];
-window._fbq.push(['track', 'PixelInitialized', {}]);
-</script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=303301413200788&amp;ev=PixelInitialized" /></noscript>
+<script type="text/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=UTCm1EcAlvhte1fQtyusiPSaaG5*/PDO/DiK04hdNNlTt6YoVKpdUuEmVX1bP7kAKFSJyuVUFaB/NpeRXP5J030eUskpREFUq2ponWC0it97JWneB85vjIPgqwhMVVb5TpakWopjcXmgMCLh2/fnli5Dqo5MlG1enCd/0t1PIJY-';</script>
 </head>
 
 <!-- ============================================
