@@ -114,13 +114,13 @@ input[type="reset"] { -webkit-appearance: none; }
 body {
 	line-height: 1;
 	color: #777;
-	font: 12px/20px "Open Sans", Helvetica, Arial, sans-serif;
+	font: 12px/20px "fira_sansbook", Helvetica, Arial, sans-serif;
 	background: #EEE url("images/patterns/light/pattern10.png") repeat fixed;
 }
 
 input,
 select,
-textarea { font: 12px/20px "Open Sans", Helvetica, Arial, sans-serif; }
+textarea { font: 12px/20px "fira_sansbook", Helvetica, Arial, sans-serif; }
 
 .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
 .clearfix { display: inline-block; *zoom:1;}
@@ -188,7 +188,7 @@ h6 {
 	font-weight: normal;
 	padding: 0 0 20px 0;
 	color: #444;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
 }
 
 h1 span,
@@ -251,7 +251,7 @@ blockquote {
 	border-left: 3px solid #777;
     font-size: 17px;
     line-height: 1.4;
-	font-family: 'Droid Serif', Georgia, 'Times New Roman', Times, serif;
+	font-family: 'droid_serifregular', Georgia, 'Times New Roman', Times, serif;
     font-style: italic;
 	padding: 5px 0 5px 20px;
     text-shadow: 1px 1px 1px #FFF;
@@ -470,7 +470,7 @@ span.page-divider span {
     color: #444;
     list-style-type: disc;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 .entry_content ol {
@@ -478,7 +478,7 @@ span.page-divider span {
     color: #444;
     list-style-type: decimal;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 label {
@@ -880,7 +880,7 @@ form small {
     height: 120px;
     max-width: 230px;
     margin-right: 20px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     font-size: 36px;
     line-height: 120px;
 }
@@ -949,7 +949,7 @@ form small {
     font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     color: #444;
 }
 
@@ -958,7 +958,7 @@ form small {
     margin-top: 2px;
     top: 0;
     color: #777;
-    font-family: "Open Sans", serif;
+    font-family: "fira_sansbook", serif;
     font-size: 11px;
     font-weight: 400 !important;
     text-transform: capitalize;
@@ -1739,7 +1739,7 @@ html[xmlns] .slider-wrap { display: block; }
     line-height: 24px;
     padding: 6px 15px;
     font-size: 14px;
-    font-family: 'Droid Serif', sans-serif;
+    font-family: 'droid_serifregular', sans-serif;
     width: auto !important;
     max-width: 500px;
     background-color: #111;
@@ -1754,7 +1754,7 @@ html[xmlns] .slider-wrap { display: block; }
     line-height: 20px;
     padding: 15px;
     font-size: 12px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     max-width: 200px;
     background-color: #111;
     background-color: rgba(11,11,11,0.8);
@@ -1875,7 +1875,7 @@ html[xmlns] .slider-wrap { display: block; }
     overflow: hidden;
     margin: 40px 0 0 40px;
     padding-left: 48px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     font-weight: 600;
     font-size: 17px;
     line-height: 22px;
@@ -1996,7 +1996,7 @@ ul.landing-features li:hover { font-weight: bold; }
 .countdown_amount {
 	font-size: 96px;
     line-height: 100px;
-    font-family: "Droid Serif", sans-serif;
+    font-family: "droid_serifregular", sans-serif;
     color: #444;
 }
 
@@ -2092,7 +2092,7 @@ ul.landing-features li:hover { font-weight: bold; }
     padding: 0 15px;
     font-size: 13px;
     line-height: 15px;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
     color: #888;
     border-left: 1px solid #EEE;
 }
@@ -2801,7 +2801,7 @@ ul.landing-features li:hover { font-weight: bold; }
     letter-spacing: 0;
     font-size: 15px;
     font-weight: bold;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
 }
 
 .shop-3 .product-title h3,
@@ -2820,7 +2820,7 @@ ul.landing-features li:hover { font-weight: bold; }
     font-size: 13px;
     line-height: 20px;
     color: #999;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 .product-title div.product-cats a { color: #999; }
@@ -2841,7 +2841,7 @@ ul.landing-features li:hover { font-weight: bold; }
 .product-price,
 .price {
     color: #57B3DF;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     font-size: 18px;
     font-weight: bold;
 }
@@ -2861,7 +2861,7 @@ ul.landing-features li:hover { font-weight: bold; }
     right: -10px;
     color: #FFF;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     text-align: center;
     line-height: 48px;
     font-size: 12px;
@@ -2902,7 +2902,7 @@ ul.landing-features li:hover { font-weight: bold; }
     font-size: 14px;
     color: #FFF;
     background-color: #333;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     transition: background-color .2s linear;
     -moz-transition: background-color .2s linear;
     -webkit-transition: background-color .2s linear;
@@ -2950,7 +2950,7 @@ ul.landing-features li:hover { font-weight: bold; }
     top: 0;
     left: 0;
     color: #57B3DF;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     font-size: 32px;
     line-height: 1;
     font-weight: bold;
@@ -3003,7 +3003,7 @@ ul.landing-features li:hover { font-weight: bold; }
     background-color: #333;
     text-align: center;
     margin-bottom: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
 }
 
 .quantity .plus,
@@ -3011,7 +3011,7 @@ ul.landing-features li:hover { font-weight: bold; }
     display: block;
     cursor: pointer;
     border: 0px transparent;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     padding: 0;
     float: left;
     width: 32px;
@@ -3427,7 +3427,7 @@ td.actions {
 .order_details li {
     float: left;
     width: 25%;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     list-style-type: none;
     font-size: 11px;
     text-transform: uppercase;
@@ -3680,7 +3680,7 @@ div.post-icon i {
 
 .entry_meta li a {
     color: #999;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
 }
 
 .entry_meta li a:hover { color: #57B3DF; }
@@ -3899,7 +3899,7 @@ div.alignright {
 .wp-caption {
 	text-align: center;
 	margin: 10px 20px 13px 20px;
-	font-family: 'Droid Serif', Georgia, "Times New Roman", Times, serif;
+	font-family: 'droid_serifregular', Georgia, "Times New Roman", Times, serif;
 	font-style: italic;
     max-width: 100%;
 }
@@ -4000,7 +4000,7 @@ p.wp-caption-text {
 }
 
 .comment-content .comment-author {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     margin-bottom: -10px;
     font-size: 14px;
     font-weight: bold;
@@ -4167,7 +4167,7 @@ p.wp-caption-text {
 .sitemap {
     position: relative;
     list-style-type: square;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 0;
@@ -4175,7 +4175,7 @@ p.wp-caption-text {
 
 .sitemap ul {
     list-style-type: circle;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     font-size: 13px;
     font-weight: normal;
     margin: 5px 0 5px 20px;
@@ -4230,7 +4230,7 @@ p.wp-caption-text {
     font-size: 15px;
     line-height: 22px;
     color: #777;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
 }
 
 .promo-action {
@@ -4245,7 +4245,7 @@ p.wp-caption-text {
     display: block;
     color: #FFF;
     font-size: 14px;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
     padding: 0 15px;
     font-weight: bold;
     line-height: 40px;
@@ -4270,7 +4270,7 @@ p.wp-caption-text {
 
 .well.callout p {
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
     color: #999;
 }
 
@@ -4286,7 +4286,7 @@ p.wp-caption-text {
     font-size: 216px;
     line-height: 1;
     color: #57B3DF;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
 }
 
 .error-404 span {
@@ -4430,7 +4430,7 @@ p.wp-caption-text {
 	padding: 0 13px;
 	outline: none;
 	font-weight: bold;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
 	text-shadow: 1px 1px 1px #FFF;
     border: none;
     border-left: 1px solid #F9F9F9;
@@ -4544,7 +4544,7 @@ p.wp-caption-text {
 	cursor: pointer;
 	margin: 0;
     font-size: 15px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
 	color: #333;
 	background: url("images/icons/toggle-plus.png") no-repeat left;
 }
@@ -4648,7 +4648,7 @@ p.wp-caption-text {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'fira_sansbook', sans-serif;
   margin-bottom: 20px;
 }
 
@@ -4989,7 +4989,7 @@ transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 	font-size: 15px;
     font-style: italic;
     color: #777;
-    font-family: 'Droid Serif', Georgia, serif;
+    font-family: 'droid_serifregular', Georgia, serif;
     text-shadow: 1px 1px 1px #FFF;
     border: 0;
 }
@@ -5279,7 +5279,7 @@ blockquote.quote-right {
     line-height: 22px;
     font-size: 12px;
     text-transform: uppercase;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
 }
 
 .team-rounded .team-image span {
@@ -5348,7 +5348,7 @@ blockquote.quote-right {
     line-height: 22px;
     font-size: 12px;
     text-transform: uppercase;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
 }
 
 .team-skills li span {
@@ -5425,7 +5425,7 @@ ul.skills { margin: 0; }
     padding-left: 10px;
     height: 30px;
     line-height: 30px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     font-size: 13px;
     color: #FFF;
 }
@@ -5630,7 +5630,7 @@ button.button span {
 	margin: 5px;
     color: #FFF;
     font-size: 14px;
-    font-family: "Open Sans";
+    font-family: "fira_sansbook";
     padding: 0 15px;
     font-weight: bold;
     line-height: 36px;
@@ -5685,7 +5685,7 @@ button.button span {
     white-space: nowrap;
     margin: 5px;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     font-weight: bold;
     font-size: 14px;
     border: 2px solid #444;
@@ -5768,7 +5768,7 @@ button.button span {
 
 .pricing-title h4 span {
     display: block;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     font-size: 13px;
     font-weight: normal;
     color: #BBB;
@@ -5778,7 +5778,7 @@ button.button span {
 	padding: 15px 0;
 	font-size: 36px;
 	line-height: 40px;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     background-color: #EEE;
     color: #444;
     text-shadow: 1px 1px 1px #FFF;
@@ -5801,7 +5801,7 @@ button.button span {
     display: block;
 	font-size: 13px;
     line-height: 20px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     color: #AAA;
 }
 
@@ -5837,7 +5837,7 @@ button.button span {
     padding: 15px 0;
     font-size: 36px;
     line-height: 40px;
-    font-family: "Droid Serif", serif;
+    font-family: "droid_serifregular", serif;
     background-color: #444;
     margin: 0 -1px;
     color: #FFF;
@@ -5905,7 +5905,7 @@ button.button span {
     padding: 12px 0 12px 32px;
 	margin: 0;
     font-size: 16px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
 	color: #333;
 	background: url("images/icons/toggle-plus.png") no-repeat left;
 }
@@ -6154,7 +6154,7 @@ body > iframe { display: none !important; }
 	border: 1px solid #E5E5E5;
     padding: 15px;
     font-size: 13px;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
     text-shadow: 1px 1px 1px #FFF;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -6208,7 +6208,7 @@ body > iframe { display: none !important; }
 .testimonial-item .testi-author {
     text-align: center;
     color: #222;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'fira_sansbook', sans-serif;
     font-size: 13px;
     font-weight: bold;
 }
@@ -6220,7 +6220,7 @@ body > iframe { display: none !important; }
     line-height: 16px;
     font-style: italic;
     font-weight: normal;
-    font-family: 'Droid Serif', serif;
+    font-family: 'droid_serifregular', serif;
 }
 
 #footer.footer-dark .testimonial-item .testi-author {
@@ -6605,7 +6605,7 @@ a.twitter-follow-me:hover,
 .widget_product_categories li,
 .widget_layered_nav li,
 .widget_layered_nav_filters li {
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
     padding: 0 4px;
 }
 
@@ -7275,5 +7275,5 @@ ul.pager,
 ul.dropdown-menu,
 ul.nav {
     font-size: 12px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "fira_sansbook", sans-serif;
 }
