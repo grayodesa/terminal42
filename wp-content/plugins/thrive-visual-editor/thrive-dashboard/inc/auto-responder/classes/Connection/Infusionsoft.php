@@ -22,6 +22,10 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 		return 'Infusionsoft';
 	}
 
+	public function getListSubtitle() {
+		return __( 'Choose your Tag Name List', TVE_DASH_TRANSLATE_DOMAIN );
+	}
+
 	/**
 	 * output the setup form html
 	 *

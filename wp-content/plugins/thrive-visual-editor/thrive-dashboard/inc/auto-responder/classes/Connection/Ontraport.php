@@ -9,6 +9,7 @@
 class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
 	public static function getType() {
@@ -152,6 +153,10 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 		}
 
 		return true;
+	}
+
+	public static function getEmailMergeTag() {
+		return '[Email]';
 	}
 
 }

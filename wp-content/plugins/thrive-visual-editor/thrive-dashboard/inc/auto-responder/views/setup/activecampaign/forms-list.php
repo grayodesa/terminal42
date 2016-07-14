@@ -22,7 +22,11 @@
 		</p>
 	</div>
 <?php elseif ( ! empty( $this->_error ) ): ?>
-	<?php echo $this->_error ?>
+	<div class="tve_activecampaign_error">
+		<p>
+			<?php echo __( 'No forms available!', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		</p>
+	</div>
 <?php endif; ?>
 <div class="tve-sp"></div>
 <div class="tvd-v-spacer vs-2"></div>
@@ -38,12 +42,14 @@
 				var list_id = $( '#thrive-api-list-select' ).find( ':selected' ).val(),
 					select = $( '.tve_activecampaign_select' ),
 					no_forms = $( '.tve_activecampaign_no_forms' ),
+					no_form_def = $( '.tve_activecampaign_error' ),
 					$forms = $( 'select.tve-api-extra[data-list-id="' + list_id + '"]' );
 				select.show();
 				no_forms.hide();
 				$( 'select.tve-api-extra[name="activecampaign_form"]' ).addClass( 'tve_disabled' ).hide().parents( '.tve-custom-select' ).hide();
 				if ( $forms.length > 0 ) {
 					$forms.removeClass( 'tve_disabled' ).show().parents( '.tve-custom-select' ).show();
+					no_form_def.hide();
 				} else {
 					select.hide();
 					no_forms.show();

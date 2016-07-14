@@ -453,6 +453,54 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			}
 		}
 
+		public function ensure_external_assets() {
+
+			$lightbox_ids = array();
+
+			/**
+			 * look for page events
+			 */
+			foreach ( $this->page_events as $event ) {
+				if ( isset( $event['a'] ) && $event['a'] === 'thrive_lightbox' && ! empty( $event['config'] ) && ! empty( $event['config']['l_id'] ) ) {
+					$lightbox_ids[] = $event['config']['l_id'];
+				}
+			}
+
+			/**
+			 * look for page invents in content
+			 */
+			$post_content = tve_get_post_meta( $this->id, 'tve_updated_post' );
+			if ( preg_match_all( '#&quot;l_id&quot;:(null|&quot;(.*?)&quot;)#', $post_content, $matches ) ) {
+				$lightbox_ids = array_merge( $lightbox_ids, $matches[2] );
+			}
+
+			$lightbox_ids = array_unique( $lightbox_ids );
+
+			global $post;
+			$old_post = $post;
+
+			/**
+			 * This code is executed really early in the request - and sometimes it generates output ( before the <html> tag )
+			 * we need to catch and ignore this output
+			 */
+			ob_start();
+
+			/**
+			 * let the others do their content and add their scripts
+			 */
+			foreach ( $lightbox_ids as $id ) {
+				$post = get_post( $id );
+				apply_filters( 'the_content', '' );
+			}
+
+			/**
+			 * get rid of any undesired output.
+			 */
+			ob_end_clean();
+
+			$post = $old_post;
+		}
+
 		/**
 		 * check if this landing page has a "Exit Intent" event setup to display a lightbox
 		 */

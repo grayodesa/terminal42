@@ -10,7 +10,7 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	private $apiKey;
 
 	/**
-	 * @var sting
+	 * @var string
 	 */
 	protected $url;
 
@@ -32,10 +32,10 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 *
 	 * @return \stdClass
 	 *
-	 * @throws GenericHTTPError
-	 * @throws InvalidCredentials
+	 * @throws Thrive_Dash_Api_Mailgun_GenericHTTPError
+	 * @throws Thrive_Dash_Api_Mailgun_InvalidCredentials
 	 * @throws Thrive_Dash_Api_Mailgun_MissingEndpoint
-	 * @throws MissingRequiredParameters
+	 * @throws Thrive_Dash_Api_Mailgun_MissingRequiredParameters
 	 */
 	public function post( $endpointUrl, $postData = array(), $files = array() ) {
 

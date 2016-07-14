@@ -2691,6 +2691,9 @@ table.tvd-collection {
 .tvd-margin-top-big {
   margin-top: 5rem; }
 
+.tvd-margin-top-normal {
+  margin-top: 1rem; }
+
 .tvd-margin-top-small {
   margin-top: .5rem; }
 
@@ -2778,6 +2781,9 @@ table.tvd-collection {
   @media only screen and (min-width: 1511px) {
     .tvd-icon-large {
       font-size: 72px; } }
+
+.tvd-icon-fix.tvd-icon-large {
+  font-size: 72px; }
 
 .tvd-icon-big {
   line-height: 1em; }
@@ -3115,6 +3121,9 @@ table.tvd-collection {
 
 .tvd-icon-repeat:before {
   content: '\f01e'; }
+
+.tvd-icon-archive:before {
+  content: '\e90b'; }
 
 .tvd-container {
   max-width: 1400px;
@@ -3732,6 +3741,15 @@ html body #wpbody, html body .tvd-modal {
 #wpbody .tvd-no-margin, .tvd-modal .tvd-no-margin {
   margin: 0 !important; }
 
+#wpbody .tvd-break-word, .tvd-modal .tvd-break-word {
+  word-break: break-all; }
+
+.tvd-margin-left {
+  margin-left: 1.5em; }
+
+.tvd-margin-right-small {
+  margin-right: 1em; }
+
 .tvd-card-panel {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
   transition: box-shadow .25s;
@@ -4123,7 +4141,6 @@ html body #wpbody, html body .tvd-modal {
   height: auto;
   min-height: 48px;
   line-height: 1.5em;
-  word-break: break-all;
   background-color: #323232;
   padding: 10px 25px;
   font-size: 1.1rem;
@@ -4950,6 +4967,21 @@ a.tvd-waves-effect .tvd-waves-ripple {
     border: 1px solid #dce0e0; }
   .tvo-comments-modal .tvd-btn, .tvo-comments-modal .tvd-btn-large, .tvo-comments-modal .tvd-btn-small {
     color: #fff; }
+
+/*this is for thrive ovation comments view*/
+.tvo-preview-email-wrapper {
+  background: #f7f7f7;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+  font-size: 1rem;
+  margin: 20px 0;
+  padding: 20px;
+  word-wrap: break-word; }
+  .tvo-preview-email-wrapper p {
+    font-size: 1rem;
+    margin-bottom: 20px; }
+  .tvo-preview-email-wrapper a {
+    pointer-events: none; }
 
 .tvd-collapsible {
   border-top: 1px solid #ddd;
@@ -8086,6 +8118,9 @@ time picker styles
 
 .select2-container--default .select2-results__option[aria-disabled=true] {
   color: #999; }
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  background-color: #f6f6f6; }
 
 .select2-container--default .select2-results__option .select2-results__option {
   padding-left: 1em; }

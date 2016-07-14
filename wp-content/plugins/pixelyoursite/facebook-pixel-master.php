@@ -5,7 +5,7 @@
 	Plugin URI: http://www.pixelyoursite.com/facebook-pixel-plugin-help
 	Author: PixelYourSite
 	Author URI: http://www.pixelyoursite.com
-	Version: 3.0.2
+	Version: 3.0.3
 	License: GPLv3
 */
 
@@ -16,7 +16,7 @@ if( defined( 'WP_DEBUG' ) && WP_DEBUG == true ) {
 	error_reporting( E_ALL );
 }
 
-define( 'PYS_FREE_VERSION', '3.0.1');
+define( 'PYS_FREE_VERSION', '3.0.2');
 
 require_once( 'inc/common.php' );
 require_once( 'inc/admin_notices.php' );
@@ -26,15 +26,13 @@ require_once( 'inc/ajax-standard.php' );
 add_action( 'plugins_loaded', 'pys_free_init' );
 function pys_free_init() {
 
-	if( !is_admin() ){
-			
-		// display Facebook Pixel Code
-		//add_action( 'login_enqueue_scripts', 'pys_pixel_code', 1 );
-		add_action( 'wp_head', 'pys_pixel_code', 1 );
+	if( !is_admin() && pys_get_option( 'general', 'enabled' ) == true && ! pys_is_disabled_for_role() ){
+
+		add_action( 'wp_head', 'pys_pixel_code', 1 ); // display Facebook Pixel Code
+		add_action( 'wp_enqueue_scripts', 'pys_public_scripts' );
 		
-		// add addtocart ajax support only if woocommerce installed
-		if( pys_is_woocommerce_active() ){
-			add_action( 'wp_enqueue_scripts', 'pys_public_scripts' );
+		// add addtocart ajax support only if woocommerce installed and event is enabled
+		if( pys_is_woocommerce_active() && pys_get_option( 'woo', 'enabled' ) && pys_get_option( 'woo', 'on_add_to_cart_btn' ) ){
 			add_filter( 'woocommerce_loop_add_to_cart_link', 'pys_add_code_to_woo_cart_link', 10, 2 );
 		}
 		
@@ -105,11 +103,7 @@ if( !function_exists( 'pys_public_scripts' ) ) {
 
 	function pys_public_scripts() {
 
-		if( pys_is_woocommerce_active() && pys_get_option( 'woo', 'enabled' ) && pys_get_option( 'woo', 'on_add_to_cart_btn' ) ) {
-
-			wp_enqueue_script( 'pys', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), PYS_FREE_VERSION );
-
-		}
+		wp_enqueue_script( 'pys', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery' ), PYS_FREE_VERSION );
 
 	}
 

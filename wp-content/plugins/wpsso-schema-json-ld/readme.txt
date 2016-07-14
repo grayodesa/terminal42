@@ -5,12 +5,12 @@ Text Domain: wpsso-schema-json-ld
 Domain Path: /languages
 Contributors: jsmoriss
 Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
-Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, pinterest, google, seo, news, amp, co-authors, co-authors plus
+Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, event, review, rating, pinterest, google, seo, news, amp, co-authors, co-authors plus
 License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
 Requires At Least: 3.1
 Tested Up To: 4.5.3
-Stable Tag: 1.8.1-1
+Stable Tag: 1.9.1-1
 
 WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.
 
@@ -188,6 +188,12 @@ Adds Google / Schema JSON-LD markup:
 > 		* Thumbnail URL
 > 		* Thumbnail Width
 > 		* Thumbnail Height
+> * CreativeWork ItemReviewed as Any Schema Type
+> 	* Item URL
+> * CreativeWork ReviewRating as [schema.org/Rating](http://schema.org/Rating)
+> 	* RatingValue
+> 	* WorstRating
+> 	* BestRating
 
 * Schema Type [schema.org/Event](http://schema.org/Event) (**supported Event / Calendar plugin required**)
 	* Schema Type [schema.org/BusinessEvent](http://schema.org/BusinessEvent)
@@ -946,7 +952,8 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 == Screenshots ==
 
 01. Social Settings metabox on Posts, Pages, Taxonomy / Terms, and User editing pages &mdash; Allows you to modify the default Schema type, title, headline (for Articles), description, image, video, preview an example share, preview the meta tags, and validate the webpage markup with online tools.
-02. Google's Structured Data Testing Tool &mdash; Results for an example TechArticle webpage showing WPSSO Schema JSON-LD Markup.
+02. A selection of Google Structured Data / Schema Markup options are shown based on the Schema Item Type. This example shows the Schema Item Type http://schema.org/Review, along with its reviewed item type (product, restaurant, book, etc.), the item URL, and the item rating.
+03. Google's Structured Data Testing Tool showing results for an example of the Schema Item Type http://schema.org/TechArticle.
 
 == Changelog ==
 
@@ -963,7 +970,20 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 
 = Changelog / Release Notes =
 
-**Version 1.9.0-dev1 (2016/07/02)**
+**Version 1.9.1-1 (2016/07/06)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* Added a "headline" attribute for the Schema BlogPosting type (Free version).
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* Renamed the `WpssoSchema::add_author_and_coauthor_data()` method to `add_author_coauthor_data()`.
+
+**Version 1.9.0-1 (2016/07/03)**
 
 Official announcement: N/A
 
@@ -973,7 +993,7 @@ Official announcement: N/A
 		* Reviewed Item URL
 		* Reviewed Item Rating
 * *Improvements*
-	* None
+	* Added the 'wpsso-schema-article' image size for Schema Article sub-types (including BlogPosting).
 * *Bugfixes*
 	* None
 * *Developer Notes*
@@ -1008,9 +1028,13 @@ Official announcement: N/A
 
 == Upgrade Notice ==
 
-= 1.9.0-dev1 =
+= 1.9.1-1 =
 
-(2016/07/02) Added new options to the Social Settings metabox for the http://schema.org/Review type.
+(2016/07/06) Renamed the WpssoSchema::add_author_and_coauthor_data() method.
+
+= 1.9.0-1 =
+
+(2016/07/03) Added new options to the Social Settings metabox for the http://schema.org/Review type. Added support for the 'wpsso-schema-article' image size.
 
 = 1.8.1-1 =
 

@@ -83,6 +83,12 @@ Once you installed and activated WooCommerce, you may install and activate Bitco
 
 == Changelog ==
 
+= 4.11 =
+* Fixed: Bug - missing '$' sign in variable.
+
+= 4.09 =
+* Fixed: Regex validation of new MPK improved.
+
 = 4.08 =
 * Fixed: Added custom replacement for base64_decode/encode to compensate for missing function at certain hosting servers.
 

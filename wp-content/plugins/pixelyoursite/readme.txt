@@ -3,7 +3,7 @@ Contributors: PixelYourSite, c0d3fev3r, themister
 Tags: Facebook Pixel, New Facebook Pixel, Facebook Conversion Pixel, Facebook Pixel Events, Facebook, New Facebook Pixel Events, Dynamic Events, Standard Events, Facebook Events, Facebook Standard Events, Facebook Dynamic Product Ads, WooCommerce, WooCommerce Facebook Pixel, Facebook Custom Events, Facebook Conversion Value, WooCommerce Affiliate Products, Facebook Pixel PayPal
 Requires at least: 3.0.1
 Tested up to: 4.5.2
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -195,6 +195,14 @@ We have an article about how to optimize Facebook Ads Reports:
 9. These are the normal events on a WooCommerce thank you page: the Purchase event has content_ids and content_types (required by Dynamic Ads). The reported error for the GeneralEvent can be ignored (as explained in the help pages)
 
 == Changelog ==
+
+= PixelYourSite 3.0.2 =
+
+* Fixing PHP warnings and errors
+
+* Fixing encoding problems
+
+* Fixing incompatibility with some themes
 
 = PixelYourSite 3.0.2 =
 

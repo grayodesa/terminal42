@@ -6,6 +6,11 @@ if ( class_exists( 'Tribe__Tickets_Plus__Commerce__EDD__Stock_Control' ) ) {
 
 /**
  * Helps to manage ticket stock (as EDD itself has no native concept of inventory).
+ *
+ * Responsibility for stock management involving global stock is mostly delegated to
+ * the Tribe__Tickets_Plus__Commerce__EDD__Global_Stock class.
+ *
+ * @see Tribe__Tickets_Plus__Commerce__EDD__Global_Stock
  */
 class Tribe__Tickets_Plus__Commerce__EDD__Stock_Control {
 	const PURCHASED_TICKETS  = '_edd_tickets_qty_';
@@ -34,6 +39,31 @@ class Tribe__Tickets_Plus__Commerce__EDD__Stock_Control {
 	}
 
 	/**
+	 * Increments the inventory of the specified product by 1 (or by the optional
+	 * $increment_by value if provided).
+	 *
+	 * @param int $product_id
+	 * @param int $increment_by
+	 *
+	 * @return bool true|false according to whether the update was successful or not
+	 */
+	public function increment_units( $product_id, $increment_by = 1 ) {
+		$ticket = Tribe__Tickets_Plus__Commerce__EDD__Main::get_instance()->get_ticket( null, $product_id );
+
+		if ( ! $ticket || ! $ticket->managing_stock() ) {
+			return false;
+		}
+
+		$stock = get_post_meta( $product_id, '_stock', true );
+
+		if ( Tribe__Tickets_Plus__Commerce__EDD__Main::UNLIMITED === $stock  ) {
+			return false;
+		}
+
+		return (bool) update_post_meta( $product_id, '_stock', (int) $stock + $increment_by );
+	}
+
+	/**
 	 * For each payment, generates a record of the ticket stock purchased for any ticket items.
 	 *
 	 * @param int   $payment
@@ -45,15 +75,28 @@ class Tribe__Tickets_Plus__Commerce__EDD__Stock_Control {
 		// Look through the list of purchased downloads: for any that relate to tickets,
 		// determine how much inventory was purchased
 		foreach ( $payment_data['downloads'] as $purchase ) {
-			if ( get_post_meta( $purchase['id'], Tribe__Tickets_Plus__Commerce__EDD__Main::$event_key ) ) {
-				$existing_quantity = isset( $quantity[ $purchase['id'] ] ) ? $quantity[ $purchase['id'] ] : 0;
-				$quantity[ $purchase['id'] ] = $existing_quantity + $purchase['quantity'];
+			if ( ! get_post_meta( $purchase['id'], Tribe__Tickets_Plus__Commerce__EDD__Main::$event_key ) ) {
+				continue;
 			}
+
+			$ticket_payments[] = $purchase;
+			$existing_quantity = isset( $quantity[ $purchase['id'] ] ) ? $quantity[ $purchase['id'] ] : 0;
+			$quantity[ $purchase['id'] ] = $existing_quantity + $purchase['quantity'];
 		}
 
 		// For each purchased ticket, record the level of inventory purchased
 		foreach ( $quantity as $purchase_id => $amount ) {
 			update_post_meta( $payment, self::PURCHASED_TICKETS . $purchase_id, absint( $quantity[ $purchase_id ] ) );
+		}
+
+		if ( ! empty( $quantity ) ) {
+			/**
+			 * Fires once the EDD provider has recorded inventory levels following an
+			 * order that includes ticket products.
+			 *
+			 * @var array $quantities amount of stock bought for each ticket, indexed by the product ID
+			 */
+			do_action( 'event_tickets_edd_tickets_purchased_inventory_recorded', $quantity );
 		}
 	}
 

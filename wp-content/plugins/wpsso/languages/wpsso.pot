@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WordPress Social Sharing Optimization (WPSSO) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WordPress Social Sharing Optimization (WPSSO) 3.33.2-1\n"
+"Project-Id-Version: WordPress Social Sharing Optimization (WPSSO) 3.33.4-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
 "MIME-Version: 1.0\n"
@@ -1239,18 +1239,18 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: lib/media.php:929 lib/pro/util/checkimgdims.php:62
+#: lib/media.php:930 lib/pro/util/checkimgdims.php:62
 msgid "Media Library"
 msgstr ""
 
-#: lib/media.php:977
+#: lib/media.php:985
 msgid ""
 "%1$s image %2$s ignored &mdash; the resulting image of %3$s has an "
 "<strong>aspect ratio equal to/or greater than %4$d:1 allowed by the %5$s "
 "standard</strong>."
 msgstr ""
 
-#: lib/media.php:994
+#: lib/media.php:1002
 msgid ""
 "%1$s image %2$s ignored &mdash; the resulting image of %3$s is "
 "<strong>smaller than the minimum of %4$s allowed by the %5$s standard</"
@@ -2228,13 +2228,19 @@ msgid ""
 "href=\"%s\">please review and save the new settings</a>."
 msgstr ""
 
-#: lib/options.php:326
+#: lib/options.php:285
+msgid ""
+"The values for '%1$s' and  '%2$s' have an aspect ratio that is equal to / or "
+"greater than %3$s:1 &mdash; resetting these options to their default values."
+msgstr ""
+
+#: lib/options.php:331
 msgid ""
 "The Facebook App ID must be numeric and 32 characters or less in length "
 "&mdash; the value of \"%s\" is not valid."
 msgstr ""
 
-#: lib/options.php:375
+#: lib/options.php:380
 msgid "Plugin settings (%s) have been upgraded and saved."
 msgstr ""
 
@@ -2353,18 +2359,18 @@ msgstr ""
 msgid "Invalid user ID."
 msgstr ""
 
-#: lib/schema.php:45
+#: lib/schema.php:45 lib/schema.php:51
 msgctxt "image size label"
-msgid "Google / Schema Markup Image"
+msgid "Google / Schema Image"
 msgstr ""
 
-#: lib/schema.php:666
+#: lib/schema.php:673
 msgid ""
 "The \"%1$s\" Organization Logo Image is missing and required for the Schema "
 "%2$s markup."
 msgstr ""
 
-#: lib/schema.php:669
+#: lib/schema.php:676
 msgid ""
 "The \"%1$s\" Organization Banner (600x60px) is missing and required for the "
 "Schema %2$s markup."
@@ -2382,17 +2388,17 @@ msgstr ""
 
 #: lib/setting/image-dimensions.php:52
 msgctxt "option label"
-msgid "Google / Schema Markup Images"
-msgstr ""
-
-#: lib/setting/image-dimensions.php:56
-msgctxt "option label"
 msgid "Facebook / Open Graph Images"
 msgstr ""
 
-#: lib/setting/image-dimensions.php:61
+#: lib/setting/image-dimensions.php:57
 msgctxt "option label"
 msgid "Pinterest Rich Pin Images"
+msgstr ""
+
+#: lib/setting/image-dimensions.php:62
+msgctxt "option label"
+msgid "Google / Schema Images"
 msgstr ""
 
 #: lib/setting/image-dimensions.php:66
@@ -2969,26 +2975,26 @@ msgid ""
 "class."
 msgstr ""
 
-#: lib/util.php:1556
+#: lib/util.php:1575
 msgid "No options available."
 msgstr ""
 
-#: lib/util.php:1582
+#: lib/util.php:1601
 msgctxt "option comment"
 msgid "%1$d additional options not shown in %2$s view"
 msgstr ""
 
-#: lib/util.php:1586
+#: lib/util.php:1605
 msgctxt "option comment"
 msgid "unhide these options"
 msgstr ""
 
-#: lib/util.php:1589
+#: lib/util.php:1608
 msgctxt "option comment"
 msgid "%1$d additional rows not shown in %2$s view"
 msgstr ""
 
-#: lib/util.php:1593
+#: lib/util.php:1612
 msgctxt "option comment"
 msgid "unhide these rows"
 msgstr ""

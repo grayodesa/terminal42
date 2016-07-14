@@ -59,6 +59,8 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Email extends WPSC_Purchase_Log_Custo
 			$name    = join( $name, ' ' );
 
 			$product = get_post( get_post_meta( $post->ID, $wpectickets->atendee_product_key, true ) );
+			$ticket_unique_id = get_post_meta( $post->ID, '_unique_id', true );
+			$ticket_unique_id = $ticket_unique_id === '' ? $post->ID : $ticket_unique_id;
 
 			$attendees[] = array(
 				'event_id'      => get_post_meta( $post->ID, $wpectickets->atendee_event_key, true ),
@@ -66,7 +68,8 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Email extends WPSC_Purchase_Log_Custo
 				'ticket_name'   => $product->post_title,
 				'holder_name'   => $name,
 				'order_id'      => $order_id,
-				'ticket_id'     => $post->ID,
+				'ticket_id'     => $ticket_unique_id,
+				'qr_ticket_id'  => $post->ID,
 				'security_code' => get_post_meta( $post->ID, $wpectickets->security_code, true ),
 			);
 		}

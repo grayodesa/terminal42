@@ -259,7 +259,6 @@
 	text-align: center;
 }
 /* Font Icons */
-#retrieve-sales-wrapper .load_order_data:before,
 #wc-pos-registers-edit #close_register:before,
 #toast-container .toast-success:before,
 #toast-container .toast-error:before,
@@ -945,10 +944,6 @@ td.dafault_selection #variation{
 }
 .shipping_methods_register{display: none;}
 
-#retrieve-sales-wrapper .load_order_data:before {
-	content: "\e622";
-	margin-right: 5px;
-}
 #retrieve_sales_popup_content .tablenav,
 #retrieve_sales_popup_content table.orders thead,
 #retrieve_sales_popup_content table.orders tfoot{

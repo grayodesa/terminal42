@@ -481,7 +481,7 @@ function BWWC__getreceivedbyaddress_info ($address_request_array, $bwwc_settings
 	//    with POST: btc_address=12fFTMkeu3mcunCtGHtWb7o5BcWA9eFx7R&required_confirmations=6&api_timeout=20
   // https://blockexplorer.com/api/addr/1KWd23GZ4BmTMo9zcsUZXpWP4M8hmxZwRU/totalReceived
   // https://blockchain.info/q/getreceivedbyaddress/1H9uAP3x439YvQDoKNGgSYCg3FmrYRzpD2 [?confirmations=6]
-	if (!bwwc_settings)
+	if (!$bwwc_settings)
   	$bwwc_settings = BWWC__get_settings ();
 
 	$btc_address            = $address_request_array['btc_address'];
@@ -501,7 +501,7 @@ function BWWC__getreceivedbyaddress_info ($address_request_array, $bwwc_settings
 
    $funds_received=false;
 	// Try to get get address balance from aggregated API first to avoid excessive hits to blockchain and other services.
-	if ($bwwc_settings['use_aggregated_api'])
+	if (@$bwwc_settings['use_aggregated_api'] != 'no')
 		$funds_received = BWWC__file_get_contents ('https://blockchain.bitcoinway.com/?q=getreceivedbyaddress', true, $api_timeout, false, true, $address_request_array);
 
   if (!is_numeric($funds_received))
@@ -1095,7 +1095,7 @@ function BWWC__is_gateway_valid_for_use (&$ret_reason_message=NULL)
       $reason_message = __("Please specify Electrum Master Public Key (MPK). <br />To retrieve MPK: launch your electrum wallet, select: Wallet->Master Public Keys, OR: <br />Preferences->Import/Export->Master Public Key->Show)", 'woocommerce');
       $valid = false;
     }
-    else if (!preg_match ('/^[a-f0-9]{128}$/', $mpk) && !preg_match ('/^xpub661[a-zA-Z0-9]{104}$/', $mpk))
+    else if (!preg_match ('/^[a-f0-9]{128}$/', $mpk) && !preg_match ('/^xpub[a-zA-Z0-9]{107}$/', $mpk))
     {
       $reason_message = __("Electrum Master Public Key is invalid. Must be 128 or 111 characters long, consisting of digits and letters.", 'woocommerce');
       $valid = false;

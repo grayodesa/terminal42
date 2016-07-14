@@ -3,8 +3,7 @@ TVE_Dash.API = TVE_Dash.API || {};
 TVE_Dash.API.models = TVE_Dash.API.models || {};
 TVE_Dash.API.collections = TVE_Dash.API.collections || {};
 TVE_Dash.API.views = TVE_Dash.API.views || {};
-(
-	function ( $ ) {
+(function ( $ ) {
 		'use strict';
 
 		_.templateSettings = {
@@ -18,10 +17,14 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 		var appRouter = Backbone.Router.extend( {
 			routes: {
 				"done/:api": 'done',
+				"failed/:api": 'failed',
 				'edit/:api': 'edit'
 			},
 			done: function ( api ) {
 				TVE_Dash.API.ConnectedAPIs.findWhere( {key: api} ).set( 'state', 'done' );
+			},
+			failed: function ( api ) {
+				TVE_Dash.API.ToBeConnected.set( {key: api, state: 'error', response: {message: tve_dash_api_error.message, success: false}} );
 			},
 			edit: function ( api ) {
 				TVE_Dash.API.ConnectedAPIs.findWhere( {key: api} ).set( 'state', 'edit' );
@@ -348,6 +351,7 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 					this.model.set( 'state', 'new' );
 				},
 				'click .tvd-api-connect': 'connect',
+				'click .tvd-api-redirect': 'redirect',
 				'keypress .tvd-api-add-chip': 'addChip',
 				'click .tvd-icon-close2': 'deleteChip'
 			},
@@ -390,10 +394,7 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 				if ( ! $manager.val().length ) {
 					return;
 				}
-				var $input = $( '<input/>' )
-					.attr( 'type', 'hidden' )
-					.attr( 'name', $manager.data( 'name' ) )
-					.val( $manager.val() );
+				var $input = $( '<input/>' ).attr( 'type', 'hidden' ).attr( 'name', $manager.data( 'name' ) ).val( $manager.val() );
 				var $chip = $( '<div class="tvd-chip">' + $manager.val() + '<i class="tvd-icon-close2"></i></div>' );
 
 				$chip.on( 'click', '.tvd-icon-close2', _.bind( this.deleteChip, this ) );
@@ -422,6 +423,7 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 				for ( var index in this.model.get( 'credentials' ) ) {
 					new_credentials[index] = data_array['connection[' + index + ']'];
 				}
+
 				var self = this,
 					request = $.ajax( {
 						url: ajaxurl,
@@ -456,6 +458,52 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 						self.model.set( 'response', response );
 						self.model.set( "state", "success" );
 					}
+				} );
+			},
+			redirect: function () {
+				var data = this.$el.find( 'form' ).serialize(),
+					data_array = {};
+
+				$.each( this.$el.find( 'form' ).serializeArray(), function ( i, field ) {
+					data_array[field.name] = field.value;
+				} );
+				data += "&action=" + TVE_Dash_Const.actions.api_handle_redirect;
+				var new_credentials = {};
+				for ( var index in this.model.get( 'credentials' ) ) {
+					new_credentials[index] = data_array['connection[' + index + ']'];
+				}
+
+				var self = this,
+					request = $.ajax( {
+						url: ajaxurl,
+						type: 'post',
+						dataType: 'json',
+						data: data
+					} );
+				TVE_Dash.cardLoader( this.$el );
+				request.fail( function ( response ) {
+					TVE_Dash.hideCardLoader( self.$el );
+					self.model.set( 'response', {
+						success: false,
+						message: TVE_Dash_Const.translations.UnknownError
+					} );
+					self.model.set( 'state', 'error' );
+				} );
+
+				request.done( function ( response ) {
+					if ( ! response.success ) {
+						self.model.set( 'response', response );
+						self.model.set( "state", "error" );
+					} else if ( response === "0" ) {
+						self.model.set( 'response', {
+							success: false,
+							message: TVE_Dash_Const.translations.UnknownError
+						} );
+						self.model.set( "state", "error" );
+					} else {
+						window.location.href = response.message;
+					}
+					TVE_Dash.hideCardLoader( self.$el );
 				} );
 			}
 		} );
@@ -581,5 +629,4 @@ TVE_Dash.API.views = TVE_Dash.API.views || {};
 			}, 200 );
 		} );
 
-	}
-)( jQuery );
+	})( jQuery );

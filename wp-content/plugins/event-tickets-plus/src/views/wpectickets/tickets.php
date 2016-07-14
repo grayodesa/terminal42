@@ -2,8 +2,9 @@
 /**
  * Renders the WPEC tickets table/form
  *
- * @version 4.1
+ * @version 4.2
  *
+ * @var bool $must_login
  */
 ob_start();
 $is_there_any_product = false;
@@ -28,7 +29,7 @@ foreach ( $tickets as $ticket ) {
 				<fieldset>
 					<legend><?php esc_html_e( 'Quantity', 'event-tickets-plus' ); ?></legend>
 					<div class="wpsc_quantity_update">
-						<input type="number" id="wpec_tickets_quantity_<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_quantity[]" size="2" value="0" min="0"/>
+						<input type="number" id="wpec_tickets_quantity_<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_quantity[]" size="2" value="0" min="0" <?php disabled( $must_login ); ?>/>
 						<input type="hidden" value="<?php echo esc_attr( $ticket->ID ); ?>" name="wpec_tickets_product_id[]" />
 					</div>
 					<!--close wpsc_quantity_update-->
@@ -76,7 +77,7 @@ foreach ( $tickets as $ticket ) {
 				'</td>' .
 			'</tr>';
 
-		include dirname( __FILE__ ) . '/../meta.php';
+		include Tribe__Tickets_Plus__Main::instance()->get_template_hierarchy( 'meta.php' );
 	}
 }
 
@@ -99,9 +100,13 @@ if ( $is_there_any_product ) { ?>
 				<?php if ( $is_there_any_product_to_sell && ( get_option( 'addtocart_or_buynow' ) != 1 ) ) { ?>
 					<tr>
 						<td colspan="4" class="wpeccommerce">
-							<button type="submit" class="button alt">
-								<?php esc_html_e( 'Add to cart', 'event-tickets-plus' ); ?>
-							</button>
+							<?php if ( $must_login ): ?>
+								<?php include Tribe__Tickets_Plus__Main::instance()->get_template_hierarchy( 'login-to-purchase' ); ?>
+							<?php else: ?>
+								<button type="submit" class="button alt">
+									<?php esc_html_e( 'Add to cart', 'event-tickets-plus' ); ?>
+								</button>
+							<?php endif; ?>
 						</td>
 					</tr>
 				<?php } ?>
@@ -115,4 +120,17 @@ if ( $is_there_any_product ) { ?>
 		</div><!-- .cart -->
 		<?php
 	}
+} else {
+	$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
+
+	// if there isn't an unavailability message, bail
+	if ( ! $unavailability_message ) {
+		return;
+	}
+
+	?>
+	<div class="tickets-unavailable">
+		<?php echo esc_html( $unavailability_message ); ?>
+	</div>
+	<?php
 }

@@ -27,13 +27,11 @@ class Tribe__Tickets_Plus__APM {
 	 * Tribe__Tickets_Plus__APM constructor.
 	 */
 	public function __construct() {
-		if ( class_exists( 'Tribe__Events__Pro__APM_Filters__APM_Filters' ) ) {
-			add_action( 'tribe_events_pro_init_apm_filters', array( $this, 'init_apm_filters' ), 9 );
-			add_filter( 'tribe_events_pro_apm_filters_fallback_columns',
-				array( $this, 'fallback_columns' ) );
-			add_filter( 'tribe_events_pro_apm_filters_args', array( $this, 'filter_args' ) );
-			add_filter( 'tribe_apm_column_headers', array( $this, 'column_headers' ) );
-		}
+		add_action( 'tribe_events_pro_init_apm_filters', array( $this, 'init_apm_filters' ), 9 );
+		add_filter( 'tribe_events_pro_apm_filters_fallback_columns',
+			array( $this, 'fallback_columns' ) );
+		add_filter( 'tribe_events_pro_apm_filters_args', array( $this, 'filter_args' ) );
+		add_filter( 'tribe_apm_column_headers', array( $this, 'column_headers' ) );
 	}
 
 	/**

@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Visual Editor
 Plugin URI: http://www.thrivethemes.com
-Version: 1.200.10
+Version: 1.200.12
 Author: <a href="http://www.thrivethemes.com">Thrive Themes</a>
 Description: Live front end editor for your Wordpress content
 */

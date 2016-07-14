@@ -227,16 +227,22 @@ class Tribe__Tickets_Plus__Attendees_List {
 	 * @return array
 	 */
 	public function get_attendees( $event, $limit = 20 ) {
-		$limit = apply_filters( 'tribe_tickets_plus_attendees_list_limit', $limit );
-		$attendees = Tribe__Tickets__Tickets::get_event_attendees( $event );
-		$total = count( $attendees );
+		$limit      = apply_filters( 'tribe_tickets_plus_attendees_list_limit', $limit );
+		$attendees  = Tribe__Tickets__Tickets::get_event_attendees( $event );
+		$total      = count( $attendees );
 		$has_broken = false;
-		$listing = array();
+		$listing    = array();
+		$emails     = array();
 
 		foreach ( $attendees as $key => $attendee ) {
 			$html = '';
 			// Only Check for optout when It's there
 			if ( isset( $attendee['optout'] ) && $attendee['optout'] !== false ) {
+				continue;
+			}
+
+			// Skip when we already have another email like this one
+			if ( in_array( $attendee['purchaser_email'], $emails ) ) {
 				continue;
 			}
 
@@ -249,9 +255,11 @@ class Tribe__Tickets_Plus__Attendees_List {
 			} else {
 				$html .= '<span class="tribe-attendees-list-shown">';
 			}
+
 			$html .= get_avatar( $attendee['purchaser_email'], 40, '', $attendee['purchaser_name'] );
 			$html .= '</span>';
 
+			$emails[] = $attendee['purchaser_email'];
 			$listing[ $attendee['attendee_id'] ] = $html;
 		}
 

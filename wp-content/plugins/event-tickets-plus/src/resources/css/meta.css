@@ -1,21 +1,31 @@
+/**
+ * This CSS file was auto-generated via PostCSS
+ *
+ * Contributors should avoid editing this file, but instead edit the associated
+ * src/resources/postcss/ file. For more information, check out our engineering
+ * docs on how we handle CSS in our engineering docs.
+ *
+ * @see: http://moderntribe.github.io/products-engineering/css/
+ */
+
 .tribe-tickets-show-attendee-info td {
-	padding : 20px 0
+	padding: 20px 0;
 }
 
 .tribe-tickets-show-attendee-info label {
-	font-weight : 700
+	font-weight: 700;
 }
 
 .tribe-attendee-fields-box {
-	vertical-align : top
+	vertical-align: top;
 }
 
 #saved_ticket_attendee_info_chosen {
-	width : 220px !important
+	width: 220px !important;
 }
 
 #tribe-tickets-attendee-sortables {
-	max-width : 850px
+	max-width: 850px;
 }
 
 #tribe-tickets-attendee-sortables .tribe-tickets-attendee-info-active-field .handlediv {
@@ -26,6 +36,7 @@
 	content: '\f142';
 	display: inline-block;
 	font: 400 20px/1 dashicons;
+	margin-top: 8px;
 	margin-top: .5rem;
 }
 
@@ -34,42 +45,42 @@
 }
 
 .tribe-tickets-attendee-info-active-field {
-	background    : #fafafa;
-	border-color  : #dfdfdf;
-	width         : 100%;
-	margin-bottom : 10px
+	background: #fafafa;
+	border-color: #dfdfdf;
+	margin-bottom: 10px;
+	width: 100%;
 }
 
 .tribe-tickets-attendee-info-options {
-	padding-right : 20px
+	padding-right: 20px;
 }
 
 .tribe-tickets-attendee-info-options a {
-	text-decoration : none
+	text-decoration: none;
 }
 
 .tribe-tickets-attendee-info-options li {
-	position : relative
+	position: relative;
 }
 
 .tribe-tickets-attendee-info-options li a {
-	display       : block;
-	padding       : 5px 0;
-	border-bottom : 1px solid #dfdfdf
+	border-bottom: 1px solid #dfdfdf;
+	display: block;
+	padding: 5px 0;
 }
 
 .tribe-tickets-attendee-info-options li span {
-	position  : absolute;
-	right     : 0;
-	font-size : inherit
+	font-size: inherit;
+	position: absolute;
+	right: 0;
 }
 
 .tribe-tickets-attendee-info-form {
-	display : none
+	display: none;
 }
 
 .tribe-tickets-attendee-info-form td {
-	padding-bottom : 10px
+	padding-bottom: 10px;
 }
 
 .event-tickets-plus-fieldset-table {
@@ -85,87 +96,88 @@
 }
 
 .tribe-tickets-attendee-info-active-field h3 span {
-	font-size      : 80%;
-	font-weight    : 700;
-	font-family    : sans-serif;
-	text-transform : uppercase;
-	opacity        : .75
+	font-family: sans-serif;
+	font-size: 80%;
+	font-weight: 700;
+	opacity: .75;
+	text-transform: uppercase;
 }
 
 .tribe-tickets-attendee-saved-fields {
-	margin     : 0;
-	position   : relative;
-	height     : 200px;
-	max-width  : 850px;
-	border     : 4px dashed #b4b9be;
-	display    : table;
-	width      : 100%;
-	text-align : center
-}
-
-.tribe-tickets-saved-fields-select {
-	display        : table-cell;
-	vertical-align : middle
+	border: 4px dashed #b4b9be;
+	display: table;
+	height: 200px;
+	margin: 0;
+	max-width: 850px;
+	position: relative;
+	text-align: center;
+	width: 100%;
 }
 
 .tribe-tickets-attendee-saved-fields p {
-	color      : #999;
-	font-size  : 18px;
-	font-style : normal;
-	margin     : 0 0 10px
+	color: #999;
+	font-size: 18px;
+	font-style: normal;
+	margin: 0 0 10px;
 }
 
 .tribe-tickets-attendee-saved-fields .chosen-container {
-	margin     : 0 auto;
-	text-align : left
+	margin: 0 auto;
+	text-align: left;
+}
+
+.tribe-tickets-saved-fields-select {
+	display: table-cell;
+	vertical-align: middle;
 }
 
 .meta-postbox {
-	min-width: 255px;
 	border: 1px solid #e5e5e5;
 	box-shadow: 0 1px 1px rgba( 0, 0, 0, .04 );
+	min-width: 255px;
 }
 
 .fake-saved-fields {
-	display : none
+	display: none;
 }
 
 .tribe-tickets-input {
-	margin : 10px 0
-}
-
-.tribe-tickets-required {
-	font-size : 11px
+	margin: 10px 0;
 }
 
 .tribe-tickets-input label {
-	display : block
+	display: block;
 }
 
-.tribe-tickets-input input[type=text], .tribe-tickets-input textarea {
-	width : 100%
+.tribe-tickets-input input[type=text],
+	.tribe-tickets-input textarea {
+	width: 100%;
+}
+
+.tribe-tickets-required {
+	font-size: 11px;
 }
 
 .tribe-tickets-delete-field {
-	margin-top : 5px;
-	text-align : right
+	margin-top: 5px;
+	text-align: right;
 }
 
 .tribe-tickets-delete-field a {
-	color : red
+	color: red;
 }
 
 .tribe-tickets-attendee-save-fieldset {
-	margin-top : 30px
+	margin-top: 30px;
 }
 
 .tribe-tickets-attendee-saved-fieldset-name {
-	display   : none;
-	max-width : 300px
+	display: none;
+	max-width: 300px;
 }
 
 #tribe-events-pg-template .cmb-form {
-	padding : 3%
+	padding: 3%;
 }
 
 .event-tickets-meta-row {
@@ -197,21 +209,21 @@
 	padding: 8px 0;
 }
 
-.attendees.striped>tbody>:nth-child(4n),
-.attendees.striped>tbody>:nth-child(4n-1) {
+.attendees.striped > tbody > :nth-child(4n),
+		.attendees.striped > tbody > :nth-child(4n-1) {
 	background-color: #f9f9f9;
 }
 
-.attendees.striped>tbody>.event-tickets-meta-row:nth-child(4n) {
+.attendees.striped > tbody > .event-tickets-meta-row:nth-child(4n) {
 	background-color: #fdfdfd;
 }
 
-.attendees.striped>tbody>:nth-child(4n+2),
-.attendees.striped>tbody>:nth-child(4n-3) {
+.attendees.striped > tbody > :nth-child(4n+2),
+		.attendees.striped > tbody > :nth-child(4n-3) {
 	background-color: #fff;
 }
 
-.attendees.striped>tbody>.event-tickets-meta-row:nth-child(4n+2) {
+.attendees.striped > tbody > .event-tickets-meta-row:nth-child(4n+2) {
 	background-color: #fdfdfd;
 }
 
@@ -250,7 +262,7 @@
 }
 
 #ticket-meta-fieldset-metabox .tribe-tickets-add-new-fields,
-#ticket-meta-fieldset-metabox #saved_ticket-attendee-info {
+	#ticket-meta-fieldset-metabox #saved_ticket-attendee-info {
 	display: none;
 }
 

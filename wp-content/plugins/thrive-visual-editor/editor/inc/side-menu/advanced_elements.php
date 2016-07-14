@@ -172,7 +172,8 @@
 						<input type="hidden" name="wp_timezone" value="<?php echo $_POST['wp_timezone'] ?>"/>
 						<input type="hidden" name="wp_timezone_offset" value="<?php echo $_POST['wp_timezone_offset'] ?>"/>
 					</li>
-					<li class="cp_draggable sc_countdown_timer sc_countdown_timer_evergreen" title="<?php echo __( "Countdown Evergreen", "thrive-cb" ) ?>" data-elem="sc_countdown_timer_evergreen">
+					<li class="cp_draggable sc_countdown_timer sc_countdown_timer_evergreen" title="<?php echo __( "Countdown Evergreen", "thrive-cb" ) ?>"
+					    data-elem="sc_countdown_timer_evergreen">
 						<div class="tve_icm tve-ic-plus"></div><?php echo __( "Countdown Evergreen", "thrive-cb" ) ?>
 						<input type="hidden" name="wp_timezone" value="<?php echo $_POST['wp_timezone'] ?>"/>
 						<input type="hidden" name="wp_timezone_offset" value="<?php echo $_POST['wp_timezone_offset'] ?>"/>
@@ -193,11 +194,6 @@
 		<div class="tve_icm tve-ic-envelope tve_left"></div>
 		<span class="tve_expanded tve_left"><?php echo __( "Lead Generation", "thrive-cb" ) ?></span>
 	</div>
-	<?php /*
-    <div class="cp_draggable tve_option_separator tve_clearfix" title="Widgets" data-elem="sc_widgets">
-        <div class="tve_icm tve-ic-square-o tve_left" title="Widgets"></div>
-        <span class="tve_expanded tve_left">Widgets</span>
-    </div>*/ ?>
 	<div class="cp_draggable tve_option_separator tve_clearfix" title="<?php echo __( "Post Grid", "thrive-cb" ) ?>" data-elem="sc_post_grid" data-overlay="1">
 		<div class="tve_icm tve-ic-th-large tve_left"></div>
 		<span class="tve_expanded tve_left"><?php echo __( "Post Grid", "thrive-cb" ) ?></span>
@@ -208,13 +204,13 @@
 			<div class="tve_icm tve-ic-my-library-books tve_left"></div>
 			<span class="tve_expanded tve_left"><?php echo __( "Thrive Leads Forms", "thrive-cb" ) ?></span>
 			<span class="tve_caret tve_icm tve_sub_btn tve_right tve_expanded"></span>
-
 			<div class="tve_clear"></div>
 			<div class="tve_sub_btn" title="<?php echo __( "Table", "thrive-cb" ) ?>">
 				<div class="tve_sub">
 					<ul>
 						<?php foreach ( $thrive_leads_shortcodes as $thrive_leads_shortcode ): ?>
-							<li class="cp_draggable" title="<?php echo $thrive_leads_shortcode->post_title ?>" data-elem="sc_thrive_leads_shortcode" data-overlay="1" data-wpapi="1">
+							<li class="cp_draggable" title="<?php echo $thrive_leads_shortcode->post_title ?>" data-elem="sc_thrive_leads_shortcode" data-overlay="1"
+							    data-wpapi="1">
 								<input type="hidden" name="thrive_leads_shortcode_id" value="<?php echo $thrive_leads_shortcode->ID ?>"/>
 								<div class="tve_icm tve-ic-plus"></div><?php echo $thrive_leads_shortcode->post_title ?>
 							</li>
@@ -224,7 +220,28 @@
 			</div>
 		</div>
 	<?php endif; ?>
-
+	<?php if ( $is_thrive_ultimatum_active && empty( $_POST['disabled_controls']['tu_shortcodes'] ) ) : ?>
+		<div class="cp_draggable tve_option_separator tve_clearfix" title="<?php echo __( "Thrive Leads Shortcodes", "thrive-cb" ) ?>">
+			<div class="tve_icm tve-ic-my-library-books tve_left"></div>
+			<span class="tve_expanded tve_left"><?php echo __( "Ultimatum Shortcodes", "thrive-cb" ) ?></span>
+			<span class="tve_caret tve_icm tve_sub_btn tve_right tve_expanded"></span>
+			<div class="tve_clear"></div>
+			<div class="tve_sub_btn" title="<?php echo __( "Table", "thrive-cb" ) ?>">
+				<div class="tve_sub">
+					<ul>
+						<?php if ( count( $tu_campaigns ) ) : ?>
+							<li class="cp_draggable" data-elem="sc_thrive_ultimatum_shortcode">
+								<div class="tve_icm tve-ic-plus"></div>
+								Countdown
+							</li>
+						<?php else: ?>
+							<li><?php echo __( 'No countdown available', 'thrive-cb' ) ?></li>
+						<?php endif; ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+	<?php endif; ?>
 	<div class="tve_option_separator tve_clearfix" title="Comments">
 		<div class="tve_icm tve-ic-comment-o tve_left"></div>
 		<span class="tve_expanded tve_left"><?php echo __( "Comments", "thrive-cb" ) ?></span>

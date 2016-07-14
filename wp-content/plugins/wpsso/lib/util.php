@@ -441,9 +441,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				case 'img_height':	// image height, subject to minimum value (typically, at least 200px)
 
 					if ( $option_type == 'img_width' )
-						$min_int = $this->p->cf['head']['min']['og_img_width'];
+						$min_int = $this->p->cf['head']['limit_min']['og_img_width'];
 					elseif ( $option_type == 'img_height' )
-						$min_int = $this->p->cf['head']['min']['og_img_height'];
+						$min_int = $this->p->cf['head']['limit_min']['og_img_height'];
 					else $min_int = 1;
 
 					// custom meta options are allowed to be empty
@@ -603,22 +603,41 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		}
 
 		public function get_body_html( $request ) {
+			$html = '';
+
+			if ( strpos( $request, '//' ) === 0 )
+				$request = SucomUtil::get_prot().':'.$request;
 
 			if ( strpos( $request, '<' ) === 0 ) {	// check for HTML content
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'using html submitted in the request argument' );
 				$html = $request;
+			} elseif ( empty( $request ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: request argument is empty' );
+				return false;
+			} elseif ( strpos( $request, 'data:' ) === 0 ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: request argument is inline data' );
+				return false;
 			} elseif ( strpos( $request, '://' ) === false ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'exiting early: request argument is not html or valid url' );
 				return false;
-			} elseif ( ( $html = $this->p->cache->get( $request, 'raw', 'transient' ) ) === false ) {
+			} else {
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'exiting early: error caching '.$request );
-				return false;
+					$this->p->debug->log( 'fetching body html for '.$request );
+				if ( ( $html = $this->p->cache->get( $request, 'raw', 'transient' ) ) === false ) {
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( 'exiting early: error caching '.$request );
+					return false;
+				}
 			}
 
-			return preg_replace( '/^.*<body[^>]*>(.*)<\/body>.*$/ms', '$1', $html );
+			$html = preg_replace( '/^.*<body[^>]*>(.*)<\/body>.*$/Ums', '$1', $html );
+			$html = preg_replace( '/<script[^>]*>.*<\/script>/Ums', '', $html );
+
+			return $html;
 		}
 
 		public function log_is_functions() {

@@ -564,6 +564,7 @@ function pos_term_relationships()
 
 	$relationships[0] = pos_get_non_cat_products(); 
 	$out_of_stock  = get_option('wc_pos_show_out_of_stock_products');
+	$default_order = get_option('wc_pos_default_tile_orderby');
 	if($terms){
 		foreach ($terms as $term) {
 			$term_id = (int)$term->term_id;
@@ -579,12 +580,29 @@ function pos_term_relationships()
 			if( $parent > 0 )
 				$hierarchy[$parent][] = $term_id;
 
-			$products = new WP_Query(array(
+			// Ordering
+			switch ($default_order) {
+				case 'date':
+				case 'price':
+				case 'popularity':
+				case 'rating':
+					$ordering = WC()->query->get_catalog_ordering_args($default_order);
+					break;
+				case 'price-desc':
+					$ordering = WC()->query->get_catalog_ordering_args('price', 'DESC');
+					break;
+				
+				default:
+					$ordering = WC()->query->get_catalog_ordering_args();
+					break;
+			}
+			#var_dump($ordering);
+			$args       = array(
 				'posts_per_page' => -1,
 				'post_type' => 'product',
 				'fields'    => 'ids',
-				'order'     => 'ASC',
-				'orderby'   => 'title',
+				'order'     => $ordering['order'],
+				'orderby'   => $ordering['orderby'],
 				'tax_query' => array(
 					array(
 						'taxonomy' => 'product_cat',
@@ -592,7 +610,12 @@ function pos_term_relationships()
 						'terms'    => $term->term_id,
 					),
 				),
-			));
+			);
+
+			if ( isset( $ordering['meta_key'] ) ) {
+				$args['meta_key'] = $ordering['meta_key'];
+			}
+			$products = new WP_Query($args);
 			$relationships[$term->term_id] = array();
 			if( $out_of_stock != 'yes' ){
 				foreach ($products->posts as $key => $_id) {

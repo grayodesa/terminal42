@@ -151,44 +151,74 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	public function addSubscriber( $list_identifier, $arguments ) {
 		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 
-		$double_optin = isset( $arguments['drip_optin'] ) && $arguments['drip_optin'] == 's' ? false : true;
-
 		$phone = ! empty( $arguments['phone'] ) ? $arguments['phone'] : '';
+
+		$arguments['drip_optin'] = ! isset( $arguments['drip_optin'] ) ? 's' : $arguments['drip_optin'];
+		$double_optin            = isset( $arguments['drip_optin'] ) && $arguments['drip_optin'] == 's' ? false : true;
+
+		$url = wp_get_referer();
 
 		try {
 			/** @var Thrive_Dash_Api_Drip $api */
-			$api = $this->getApi();
+			$api         = $this->getApi();
+			$proprieties = new stdClass();
+
+			if ( isset( $first_name ) ) {
+				$proprieties->thrive_first_name = $first_name;
+			}
+
+			if ( isset( $last_name ) ) {
+				$proprieties->thrive_last_name = $last_name;
+			}
+
+			if ( isset( $phone ) ) {
+				$proprieties->thrive_phone = $phone;
+			}
+
+			if ( isset( $arguments['drip_type'] ) && $arguments['drip_type'] == 'automation' ) {
+				$proprieties->thrive_referer    = $url;
+				$proprieties->thrive_ip_address = $_SERVER['REMOTE_ADDR'];
+
+				if ( ! empty( $arguments['drip_field'] ) ) {
+					foreach ( $arguments['drip_field'] as $field => $field_value ) {
+						$proprieties->{$field} = $field_value;
+					}
+				}
+			}
 
 			$user = array(
 				'account_id'    => $this->param( 'client_id' ),
 				'campaign_id'   => $list_identifier,
 				'email'         => $arguments['email'],
-				'double_optin'  => $double_optin,
 				'ip_address'    => $_SERVER['REMOTE_ADDR'],
-				'custom_fields' => array(
-					'thrive_first_name' => $first_name,
-					'thrive_last_name'  => $last_name,
-					'thrive_phone'      => $phone
-				)
+				'custom_fields' => $proprieties
 			);
+
+			if ( isset( $arguments['drip_type'] ) && $arguments['drip_type'] == 'list' ) {
+				$user['double_optin'] = $double_optin;
+			}
 
 			$lead = $api->create_or_update_subscriber( $user );
 			if ( empty( $user ) ) {
 				return __( "User could not be subscribed", TVE_DASH_TRANSLATE_DOMAIN );
 			}
 
-			$client = array_shift( $lead['subscribers'] );
+			if ( isset( $arguments['drip_type'] ) && $arguments['drip_type'] == 'list' ) {
+				$client = array_shift( $lead['subscribers'] );
 
-			$api->subscribe_subscriber( array(
-				'account_id'  => $this->param( 'client_id' ),
-				'campaign_id' => $list_identifier,
-				'email'       => $client['email'],
-			) );
+				$api->subscribe_subscriber( array(
+					'account_id'   => $this->param( 'client_id' ),
+					'campaign_id'  => $list_identifier,
+					'email'        => $client['email'],
+					'double_optin' => $double_optin,
+				) );
+			}
 
 			$api->record_event( array(
-				'account_id' => $this->param( 'client_id' ),
-				'action'     => 'Submitted a Thrive Leads form',
-				'email'      => $arguments['email']
+				'account_id'  => $this->param( 'client_id' ),
+				'action'      => 'Submitted a Thrive Leads form',
+				'email'       => $arguments['email'],
+				'proprieties' => $proprieties,
 			) );
 
 			return true;
@@ -210,10 +240,28 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	 * @param array $params
 	 */
 	public function renderExtraEditorSettings( $params = array() ) {
+		$processed_params = array();
+
 		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? $_COOKIE['tve_api_drip_optin'] : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_drip_optin', $params['optin'], strtotime( '+6 months' ), '/' );
 
-		$this->_directFormHtml( 'drip/optin-type', $params );
+		if ( ! empty( $params ) ) {
+			foreach ( $params as $k => $v ) {
+				if ( strpos( $k, 'field[' ) !== false ) {
+					$key                                     = str_replace( 'field[', '', $k );
+					$processed_params['proprieties'][ $key ] = $v;
+				} else {
+					$processed_params[ $k ] = $v;
+				}
+			}
+		}
+		$this->_directFormHtml( 'drip/optin-type', $processed_params );
+		$this->_directFormHtml( 'drip/proprieties', $processed_params );
+	}
+
+	public function renderBeforeListsSettings( $params = array() ) {
+
+		$this->_directFormHtml( 'drip/select-type', $params );
 	}
 
 	/**

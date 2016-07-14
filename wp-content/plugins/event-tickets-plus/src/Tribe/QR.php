@@ -69,15 +69,20 @@ class Tribe__Tickets_Plus__QR {
 			return;
 		}
 
-		$checked_status = get_post_meta( absint( $_GET['qr_checked_in'] ), '_tribe_qr_status', true );
+		//Use Human Readable ID Where Available for QR Check in Message
+		$ticket_id = absint( $_GET['qr_checked_in'] );
+		$checked_status = get_post_meta( $ticket_id, '_tribe_qr_status', true );
+		$ticket_unique_id = get_post_meta( $ticket_id, '_unique_id', true );
+		$ticket_id = $ticket_unique_id === '' ? $ticket_id : $ticket_unique_id;
+
 		//if status is qr then display already checked in warning
 		if ( $checked_status ) {
 			echo '<div class="error"><p>';
-			printf( esc_html__( 'The ticket with ID %d has already been checked in.', 'event-tickets-plus' ), absint( $_GET['qr_checked_in'] ) );
+			printf( esc_html__( 'The ticket with ID %s has already been checked in.', 'event-tickets-plus' ), esc_html( $ticket_id ) );
 			echo '</p></div>';
 		} else {
 			echo '<div class="updated"><p>';
-			printf( esc_html__( 'The ticket with ID %d was checked in.', 'event-tickets-plus' ), absint( $_GET['qr_checked_in'] ) );
+			printf( esc_html__( 'The ticket with ID %s was checked in.', 'event-tickets-plus' ), esc_html( $ticket_id ) );
 			echo '</p></div>';
 			//update the checked in status when using the qr code here
 			update_post_meta( absint( $_GET['qr_checked_in'] ), '_tribe_qr_status', 1 );
@@ -94,7 +99,7 @@ class Tribe__Tickets_Plus__QR {
 	 */
 	public function inject_qr( $ticket ) {
 
-		$link = $this->_get_link( $ticket['ticket_id'], $ticket['event_id'] );
+		$link = $this->_get_link( $ticket['qr_ticket_id'], $ticket['event_id'] );
 		$qr   = $this->_get_image( $link );
 
 		if ( ! $qr ) {
@@ -152,6 +157,10 @@ class Tribe__Tickets_Plus__QR {
 	 * @return string
 	 */
 	private function _get_image( $link ) {
+		if ( ! function_exists( 'ImageCreate' ) ) {
+			// The phpqrcode library requires GD but doesn't actually check if it is available
+			return null;
+		}
 		if ( ! class_exists( 'QRencode' ) ) {
 			include_once( EVENT_TICKETS_PLUS_DIR . '/vendor/phpqrcode/qrlib.php' );
 		}

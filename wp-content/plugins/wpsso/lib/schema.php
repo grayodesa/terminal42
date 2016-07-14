@@ -42,8 +42,15 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 
 			$sizes['schema_img'] = array(		// options prefix
 				'name' => 'schema',		// wpsso-schema
-				'label' => _x( 'Google / Schema Markup Image',
+				'label' => _x( 'Google / Schema Image',
 					'image size label', 'wpsso' ),
+			);
+
+			$sizes['schema_img_article'] = array(		// options prefix
+				'name' => 'schema-article',		// wpsso-schema-article
+				'label' => _x( 'Google / Schema Image',
+					'image size label', 'wpsso' ),
+				'prefix' => 'schema_img',
 			);
 
 			// if the pinterest crawler is detected, use the pinterest image dimensions instead
@@ -864,8 +871,13 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			return 1;
 		}
 
-		// $user_id is optional and takes precedence over the $mod post_author value
+		// deprecated 2016/07/05
 		public static function add_author_and_coauthor_data( &$json_data, $mod, $user_id = false ) {
+			return self::add_author_coauthor_data( $json_data, $mod, $user_id );
+		}
+
+		// $user_id is optional and takes precedence over the $mod post_author value
+		public static function add_author_coauthor_data( &$json_data, $mod, $user_id = false ) {
 
 			$authors_added = 0;
 			$coauthors_added = 0;
@@ -1092,8 +1104,8 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			$mt_schema = array();
 			$lca = $this->p->cf['lca'];
 			$max = $this->p->util->get_max_nums( $mod, 'schema' );
-			$size_name = $this->p->cf['lca'].'-schema';
 			$head_type_url = $this->get_head_item_type( $mod );
+			$size_name = $this->p->cf['lca'].'-schema';
 
 			$this->add_mt_schema_from_og( $mt_schema, $mt_og, array(
 				'url' => 'og:url',
@@ -1106,27 +1118,33 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 
 			switch ( $head_type_url ) {
 				case 'http://schema.org/BlogPosting':
-				case 'http://schema.org/WebPage':
+					$size_name = $this->p->cf['lca'].'-schema-article';
+					// no break
 
+				case 'http://schema.org/WebPage':
 					$this->add_mt_schema_from_og( $mt_schema, $mt_og, array(
 						'datepublished' => 'article:published_time',
 						'datemodified' => 'article:modified_time',
 					) );
-
-					// add single image meta tags (no width or height) if noscript containers are disabled
-					if ( ! $this->is_noscript_enabled() &&
-						! empty( $this->p->options['add_meta_itemprop_image'] ) ) {
-
-						$og_image = $this->p->og->get_all_images( $max['schema_img_max'],
-							$size_name, $mod, true, 'schema' );	// $md_pre = 'schema'
-
-						if ( empty( $og_image ) && $mod['is_post'] ) 
-							$og_image = $this->p->media->get_default_image( 1, $size_name, true );
-	
-						foreach ( $og_image as $image )
-							$mt_schema['image'][] = SucomUtil::get_mt_media_url( $image, 'og:image' );
-					}
 					break;
+			}
+
+
+			// add single image meta tags (no width or height) if noscript containers are disabled
+			if ( ! $this->is_noscript_enabled() &&
+				! empty( $this->p->options['add_meta_itemprop_image'] ) ) {
+
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'getting images for '.$head_type_url );
+
+				$og_image = $this->p->og->get_all_images( $max['schema_img_max'],
+					$size_name, $mod, true, 'schema' );	// $md_pre = 'schema'
+
+				if ( empty( $og_image ) && $mod['is_post'] ) 
+					$og_image = $this->p->media->get_default_image( 1, $size_name, true );
+
+				foreach ( $og_image as $image )
+					$mt_schema['image'][] = SucomUtil::get_mt_media_url( $image, 'og:image' );
 			}
 
 			return apply_filters( $this->p->cf['lca'].'_schema_meta_itemprop', $mt_schema, $use_post, $mod );
@@ -1152,23 +1170,30 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			$ret = array();
 			$lca = $this->p->cf['lca'];
 			$max = $this->p->util->get_max_nums( $mod, 'schema' );
-			$size_name = $this->p->cf['lca'].'-schema';
 			$head_type_url = $this->get_head_item_type( $mod );
+			$size_name = $this->p->cf['lca'].'-schema';
 
-			$og_image = $this->p->og->get_all_images( $max['schema_img_max'], $size_name, $mod, true, 'schema' );	// $md_pre = 'schema'
+			switch ( $head_type_url ) {
+				case 'http://schema.org/BlogPosting':
+					$size_name = $this->p->cf['lca'].'-schema-article';
+					// no break
+
+				case 'http://schema.org/WebPage':
+					$ret = array_merge( $ret, $this->get_author_list_noscript( $mod ) );
+					break;
+			}
+
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'getting images for '.$head_type_url );
+
+			$og_image = $this->p->og->get_all_images( $max['schema_img_max'],
+				$size_name, $mod, true, 'schema' );	// $md_pre = 'schema'
 
 			if ( empty( $og_image ) && $mod['is_post'] ) 
 				$og_image = $this->p->media->get_default_image( 1, $size_name, true );
 
 			foreach ( $og_image as $image )
 				$ret = array_merge( $ret, $this->get_single_image_noscript( $mod, $image ) );
-
-			switch ( $head_type_url ) {
-				case 'http://schema.org/BlogPosting':
-				case 'http://schema.org/WebPage':
-					$ret = array_merge( $ret, $this->get_author_list_noscript( $mod ) );
-					break;
-			}
 
 			return apply_filters( $this->p->cf['lca'].'_schema_noscript_array', $ret, $mod, $mt_og );
 		}
@@ -1261,7 +1286,6 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 
 			if ( $this->p->debug->enabled ) {
 				$this->p->debug->args( array( 
-					'mod' => $mod,
 					'author_id' => $author_id,
 					'itemprop' => $itemprop,
 				) );
@@ -1276,21 +1300,25 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'exiting early: empty user module' );
 				return array();
-			} else $mod = $this->p->m['util']['user']->get_mod( $author_id );
+			} else {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'getting user_mod for author id '.$author_id );
+				$user_mod = $this->p->m['util']['user']->get_mod( $author_id );
+			}
 
-			$url = $mod['obj']->get_author_website( $author_id, 'url' );
-			$name = $mod['obj']->get_author_meta( $author_id, $this->p->options['schema_author_name'] );
-			$desc = $mod['obj']->get_options_multi( $author_id, array( 'schema_desc', 'og_desc' ) );
+			$url = $user_mod['obj']->get_author_website( $author_id, 'url' );
+			$name = $user_mod['obj']->get_author_meta( $author_id, $this->p->options['schema_author_name'] );
+			$desc = $user_mod['obj']->get_options_multi( $author_id, array( 'schema_desc', 'og_desc' ) );
 			if ( empty( $desc ) )
-				$desc = $mod['obj']->get_author_meta( $author_id, 'description' );
+				$desc = $user_mod['obj']->get_author_meta( $author_id, 'description' );
 
 			$mt_author = array_merge(
 				( empty( $url ) ? array() : $this->p->head->get_single_mt( 'meta',
-					'itemprop', $itemprop.'.url', $url, '', $mod ) ),
+					'itemprop', $itemprop.'.url', $url, '', $user_mod ) ),
 				( empty( $name ) ? array() : $this->p->head->get_single_mt( 'meta',
-					'itemprop', $itemprop.'.name', $name, '', $mod ) ),
+					'itemprop', $itemprop.'.name', $name, '', $user_mod ) ),
 				( empty( $desc ) ? array() : $this->p->head->get_single_mt( 'meta',
-					'itemprop', $itemprop.'.description', $desc, '', $mod ) )
+					'itemprop', $itemprop.'.description', $desc, '', $user_mod ) )
 			);
 
 			// optimize by first checking if the meta tag is enabled
@@ -1298,13 +1326,13 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 
 				// get_og_images() also provides filter hooks for additional image ids and urls
 				$size_name = $this->p->cf['lca'].'-schema';
-				$og_image = $mod['obj']->get_og_image( 1, $size_name, $author_id, false );	// $check_dupes = false
+				$og_image = $user_mod['obj']->get_og_image( 1, $size_name, $author_id, false );	// $check_dupes = false
 	
 				foreach ( $og_image as $image ) {
 					$image_url = SucomUtil::get_mt_media_url( $image, 'og:image' );
 					if ( ! empty( $image_url ) ) {
 						$mt_author = array_merge( $mt_author, $this->p->head->get_single_mt( 'meta',
-							'itemprop', $itemprop.'.image', $image_url, '', $mod ) );
+							'itemprop', $itemprop.'.image', $image_url, '', $user_mod ) );
 					}
 				}
 			}

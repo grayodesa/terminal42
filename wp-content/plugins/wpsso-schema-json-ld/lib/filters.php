@@ -35,6 +35,8 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 					'admin_post_header' => 1,			// $mod
 				) );
 				$this->p->util->add_plugin_filters( $this, array(
+					'option_type' => 2,
+					'save_post_options' => 4,			// $opts, $post_id, $rel_id, $mod
 					'get_md_defaults' => 2,				// $def_opts, $mod
 					'pub_google_rows' => 2,				// $table_rows, $form
 					'messages_tooltip_meta' => 2,			// tooltip messages for post social settings
@@ -117,16 +119,70 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 					'wpsso-schema-json-ld' ).'</em><p>'.$message.'</p>', true, true, $dismiss_id, true );
 		}
 
+		public function filter_option_type( $type, $key ) {
+
+			if ( ! empty( $type ) )
+				return $type;
+			elseif ( strpos( $key, 'schema_' ) !== 0 )
+				return $type;
+
+			switch ( $key ) {
+				case 'schema_type':
+				case 'schema_review_item_type':
+					return 'not_blank';
+					break;
+				case 'schema_review_rating':
+				case 'schema_review_rating_from':
+				case 'schema_review_rating_to':
+					return 'blank_num';	// must be numeric (blank or zero is ok)
+					break;
+				case 'schema_review_item_url':
+					return 'url';
+					break;
+			}
+			return $type;
+		}
+
+		public function filter_save_post_options( $opts, $post_id, $rel_id, $mod ) {
+
+			$defs = $this->filter_get_md_defaults( array(), $mod );	// only get the schema event options
+
+			if ( empty( $opts['schema_review_rating'] ) ) {
+				foreach ( array( 
+					'schema_review_rating',
+					'schema_review_rating_from',
+					'schema_review_rating_to',
+				) as $key )
+					unset( $opts[$key] );
+			} else {
+				foreach ( array( 
+					'schema_review_rating_from',
+					'schema_review_rating_to',
+				) as $key )
+					if ( empty( $opts[$key] ) && 
+						isset( $defs[$key] ) )
+							$opts[$key] = $defs[$key];
+			}
+
+			return $opts;
+		}
+
 		public function filter_get_md_defaults( $def_opts, $mod ) {
+
 			return array_merge( $def_opts, array(
 				'schema_is_main' => 1,
 				'schema_type' => $this->p->schema->get_head_item_type( $mod, true, false ),	// $return_id = true, $use_mod_opts = false
 				'schema_title' => '',
-				'schema_headline' => '',
-				'schema_pub_org_id' => 'site',
-				'schema_event_org_id' => 'none',
-				'schema_event_perf_id' => 'none',
 				'schema_desc' => '',
+				'schema_pub_org_id' => 'site',		// Article Publisher
+				'schema_headline' => '',		// Article Headline
+				'schema_event_org_id' => 'none',	// Event Organizer
+				'schema_event_perf_id' => 'none',	// Event Performer
+				'schema_review_item_type' => 'none',	// Reviewed Item Type
+				'schema_review_item_url' => '',		// Reviewed Item URL
+				'schema_review_rating' => '0.0',	// Reviewed Item Rating
+				'schema_review_rating_from' => '1',	// Reviewed Item Rating (from)
+				'schema_review_rating_to' => '5',	// Reviewed Item Rating (to)
 			) );
 		}
 
@@ -164,14 +220,32 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 				return $text;
 
 			switch ( $idx ) {
+				case 'tooltip-meta-schema_is_main':
+					$text = __( 'Check this option if the Schema markup describes the main content (aka "main entity") of this webpage.', 'wpsso-schema-json-ld' );
+				 	break;
+				case 'tooltip-meta-schema_type':
+					$text = __( 'Select a Schema item type that best describes the main content of this webpage.', 'wpsso-schema-json-ld' );
+				 	break;
 				case 'tooltip-meta-schema_pub_org_id':
-					$text = __( 'Select a publisher for the Schema Article item type and its sub-types (NewsArticle, TechArticle, etc).', 'nextgen-facebook' );
+					$text = __( 'Select a publisher for the Schema Article item type and/or its sub-type (NewsArticle, TechArticle, etc).', 'wpsso-schema-json-ld' );
+				 	break;
+				case 'tooltip-meta-schema_headline':
+					$text = __( 'A custom headline for the Schema Article item type and/or its sub-type. The headline Schema property is not added for non-Article item types.', 'wpsso-schema-json-ld' );
 				 	break;
 				case 'tooltip-meta-schema_event_org_id':
-					$text = __( 'Select an organizer for the Schema Event item type and its sub-types (Festival, MusicEvent, etc).', 'nextgen-facebook' );
+					$text = __( 'Select an organizer for the Schema Event item type and/or its sub-type (Festival, MusicEvent, etc).', 'wpsso-schema-json-ld' );
 				 	break;
 				case 'tooltip-meta-schema_event_perf_id':
-					$text = __( 'Select a performer for the Schema Event item type and its sub-types (Festival, MusicEvent, etc).', 'nextgen-facebook' );
+					$text = __( 'Select a performer for the Schema Event item type and/or its sub-type (Festival, MusicEvent, etc).', 'wpsso-schema-json-ld' );
+				 	break;
+				case 'tooltip-meta-schema_review_item_type':
+					$text = __( 'Select a Schema item type that best describes the item being reviewed.', 'wpsso-schema-json-ld' );
+				 	break;
+				case 'tooltip-meta-schema_review_item_url':
+					$text = __( 'A URL for the item being reviewed.', 'wpsso-schema-json-ld' );
+				 	break;
+				case 'tooltip-meta-schema_review_rating':
+					$text = __( 'A rating for the item being reviewed, along with the low / high rating scale (defaults are 1 to 5).', 'wpsso-schema-json-ld' );
 				 	break;
 			}
 			return $text;

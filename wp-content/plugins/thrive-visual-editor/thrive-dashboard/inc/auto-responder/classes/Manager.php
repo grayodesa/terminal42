@@ -1,11 +1,14 @@
 <?php
-
 /**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 14:10
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden
+}
+
 class Thrive_Dash_List_Manager {
 	public static $ADMIN_HAS_ERROR = false;
 
@@ -31,10 +34,13 @@ class Thrive_Dash_List_Manager {
 		'klicktipp'        => 'Thrive_Dash_List_Connection_KlickTipp',
 		'madmimi'          => 'Thrive_Dash_List_Connection_MadMimi',
 		'mailchimp'        => 'Thrive_Dash_List_Connection_Mailchimp',
+		'mailerlite'       => 'Thrive_Dash_List_Connection_MailerLite',
 		'mailpoet'         => 'Thrive_Dash_List_Connection_MailPoet',
+//		'mautic'           => 'Thrive_Dash_List_Connection_Mautic',
 		'ontraport'        => 'Thrive_Dash_List_Connection_Ontraport',
 		'recaptcha'        => 'Thrive_Dash_List_Connection_ReCaptcha',
 		'sendreach'        => 'Thrive_Dash_List_Connection_Sendreach',
+//		'sendgrid'         => 'Thrive_Dash_List_Connection_SendGrid',
 		'sendinblue'       => 'Thrive_Dash_List_Connection_Sendinblue',
 		'sendy'            => 'Thrive_Dash_List_Connection_Sendy',
 		'webinarjamstudio' => 'Thrive_Dash_List_Connection_WebinarJamStudio',
@@ -46,10 +52,11 @@ class Thrive_Dash_List_Manager {
 	/**
 	 * get a list of all available APIs
 	 *
-	 * @param bool $onlyConnected if true, it will return only APIs that are already connected
-	 * @param array $exclude_types exclude connection by their type
+	 * @param bool $onlyConnected
+	 * @param array $exclude_types
+	 * @param bool $onlyNames
 	 *
-	 * @return array Thrive_Dash_List_Connection_Abstract[]
+	 * @return array
 	 */
 	public static function getAvailableAPIs( $onlyConnected = false, $exclude_types = array(), $onlyNames = false ) {
 		$lists = array();

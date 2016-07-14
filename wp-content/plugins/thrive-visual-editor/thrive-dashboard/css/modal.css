@@ -186,3 +186,18 @@
     border: 1px solid #dce0e0; }
   .tvo-comments-modal .tvd-btn {
     color: #fff; }
+
+/*this is for thrive ovation comments view*/
+.tvo-preview-email-wrapper {
+  background: #f7f7f7;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+  font-size: 1rem;
+  margin: 20px 0;
+  padding: 20px;
+  word-wrap: break-word; }
+  .tvo-preview-email-wrapper p {
+    font-size: 1rem;
+    margin-bottom: 20px; }
+  .tvo-preview-email-wrapper a {
+    pointer-events: none; }

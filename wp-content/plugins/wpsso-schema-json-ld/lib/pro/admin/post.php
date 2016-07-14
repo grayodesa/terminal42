@@ -32,7 +32,7 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 
 		public function filter_post_header_rows( $table_rows, $form, $head, $mod ) {
 
-			$schema_types = $this->p->schema->get_schema_types_select();
+			$schema_types = $this->p->schema->get_schema_types_select();	// $add_none = true
 			$title_max_len = $this->p->options['og_title_len'];
 			$desc_max_len = $this->p->options['schema_desc_len'];
 			$headline_max_len = WpssoJsonConfig::$cf['schema']['article']['headline']['max_len'];
@@ -59,6 +59,7 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 			$tr_class = array(
 				'article' => $this->p->schema->get_schema_type_css_classes( 'article' ),
 				'event' => $this->p->schema->get_schema_type_css_classes( 'event' ),
+				'review' => $this->p->schema->get_schema_type_css_classes( 'review' ),
 			);
 
 			foreach ( array( 'schema_desc', 'subsection_schema' ) as $key )
@@ -71,6 +72,23 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 					'header' => 'h4',
 					'label' => _x( 'Google Structured Data / Schema Markup', 'metabox title', 'wpsso-schema-json-ld' )
 				),
+				/*
+				 * All Schema Types
+				 */
+				'schema_title' => array(
+					'label' => _x( 'Schema Item Name', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_title',
+					'no_auto_draft' => true,
+					'content' => $form->get_input( 'schema_title', 'wide', $this->p->cf['lca'].'_schema_title', 
+						$title_max_len, $this->p->webpage->get_title( $title_max_len, '...', $mod ) ),
+				),
+				'schema_desc' => array(
+					'label' => _x( 'Schema Description', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_desc',
+					'no_auto_draft' => true,
+					'content' => $form->get_textarea( 'schema_desc', null, $this->p->cf['lca'].'_schema_desc', 
+						$desc_max_len, $this->p->webpage->get_description( $desc_max_len, '...', $mod ) ),
+				),
 				'schema_is_main' => array(
 					'label' => _x( 'Main Entity of Page', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_is_main',
@@ -79,7 +97,6 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 				'schema_type' => array(
 					'label' => _x( 'Schema Item Type', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_type',
-					'no_auto_draft' => true,
 					'content' => $form->get_select( 'schema_type', $schema_types,
 						'long_name', '', true, false, true, 'unhide_rows' ),
 				),
@@ -90,7 +107,6 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 					'tr_class' => 'schema_type '.$tr_class['article'],
 					'label' => _x( 'Article Publisher', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_pub_org_id',
-					'no_auto_draft' => true,
 					'content' => $form->get_select( 'schema_pub_org_id', $org_names, 'long_name', '', true, 
 						( $org_req_msg ? true : false ) ).$org_req_msg,
 				),
@@ -109,7 +125,6 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 					'tr_class' => 'schema_type '.$tr_class['event'],
 					'label' => _x( 'Event Organizer', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_event_org_id',
-					'no_auto_draft' => true,
 					'content' => $form->get_select( 'schema_event_org_id', $org_names, 'long_name', '', true, 
 						( $org_req_msg ? true : false ) ).$org_req_msg,
 				),
@@ -117,26 +132,36 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 					'tr_class' => 'schema_type '.$tr_class['event'],
 					'label' => _x( 'Event Performer', 'option label', 'wpsso-schema-json-ld' ),
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_event_perf_id',
-					'no_auto_draft' => true,
 					'content' => $form->get_select( 'schema_event_perf_id', $perf_names, 'long_name', '', true, 
 						( $org_req_msg ? true : false ) ).$org_req_msg,
 				),
 				/*
-				 * All other Schema types
+				 * Schema Review
 				 */
-				'schema_title' => array(
-					'label' => _x( 'Schema Item Name', 'option label', 'wpsso-schema-json-ld' ),
-					'th_class' => 'medium', 'tooltip' => 'meta-schema_title',
-					'no_auto_draft' => true,
-					'content' => $form->get_input( 'schema_title', 'wide', $this->p->cf['lca'].'_schema_title', 
-						$title_max_len, $this->p->webpage->get_title( $title_max_len, '...', $mod ) ),
+				'schema_review_item_type' => array(
+					'tr_class' => 'schema_type '.$tr_class['review'],
+					'label' => _x( 'Reviewed Item Type', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_review_item_type',
+					'content' => $form->get_select( 'schema_review_item_type', $schema_types, 'long_name required' ),
 				),
-				'schema_desc' => array(
-					'label' => _x( 'Schema Description', 'option label', 'wpsso-schema-json-ld' ),
-					'th_class' => 'medium', 'tooltip' => 'meta-schema_desc',
-					'no_auto_draft' => true,
-					'content' => $form->get_textarea( 'schema_desc', null, $this->p->cf['lca'].'_schema_desc', 
-						$desc_max_len, $this->p->webpage->get_description( $desc_max_len, '...', $mod ) ),
+				'schema_review_item_url' => array(
+					'tr_class' => 'schema_type '.$tr_class['review'],
+					'label' => _x( 'Reviewed Item URL', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_review_item_url',
+					'content' => $form->get_input( 'schema_review_item_url', 'wide' ),
+				),
+				'schema_review_rating' => array(
+					'tr_class' => 'schema_type '.$tr_class['review'],
+					'label' => _x( 'Reviewed Item Rating', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_review_rating',
+					'content' => $form->get_input( 'schema_review_rating',
+						'short required', '', 0, $form->defaults['schema_review_rating'] ).
+						' '._x( 'from', 'option comment', 'wpsso-schema-json-ld' ).' '.
+							$form->get_input( 'schema_review_rating_from',
+								'short', '', 0, $form->defaults['schema_review_rating_from'] ).
+						' '._x( 'to', 'option comment', 'wpsso-schema-json-ld' ).' '.
+							$form->get_input( 'schema_review_rating_to',
+								'short', '', 0, $form->defaults['schema_review_rating_to'] ),
 				),
 			);
 

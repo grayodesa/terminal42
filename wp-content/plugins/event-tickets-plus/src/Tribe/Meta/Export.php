@@ -32,7 +32,16 @@ class Tribe__Tickets_Plus__Meta__Export {
 			return;
 		}
 
-		add_filter( 'manage_tribe_events_page_tickets-attendees_columns', array( $this, 'add_columns' ), 20 );
+		//Add Handler for Community Tickets to Prevent Notices in Exports
+		if ( ! is_admin() ) {
+			$screen_base = 'tribe_events_page_tickets-attendees';
+		} else {
+			$screen      = get_current_screen();
+			$screen_base = $screen->base;
+		}
+		$filter_name = "manage_{$screen_base}_columns";
+
+		add_filter( $filter_name, array( $this, 'add_columns' ), 20 );
 		add_filter( 'tribe_events_tickets_attendees_table_column', array( $this, 'populate_columns' ), 10, 3 );
 	}
 
@@ -44,6 +53,7 @@ class Tribe__Tickets_Plus__Meta__Export {
 	 * @return array
 	 */
 	public function add_columns( $columns ) {
+
 		foreach ( $this->meta_columns as $meta_field ) {
 			if ( 'checkbox' === $meta_field->type && isset( $meta_field->extra['options'] ) ) {
 				foreach ( $meta_field->extra['options'] as $option ) {

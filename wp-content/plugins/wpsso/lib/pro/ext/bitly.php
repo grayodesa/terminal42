@@ -2,6 +2,8 @@
 /**
  * Bitly class
  *
+ * https://github.com/tijsverkoyen/Bitly
+ *
  * This source file can be used to communicate with Bit.ly (http://bit.ly)
  *
  * The class is documented in the file itself. If you find any bugs help me out

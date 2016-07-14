@@ -653,6 +653,11 @@ if( !function_exists( 'pys_get_noscript_code' ) ) {
 
 	function pys_get_noscript_code( $type, $params ) {
 
+		// skip, because event is works only if js supported
+		if( $type == 'TimeOnPage' ) {
+			return null;
+		}
+
 		$args = array();
 
 		$args['id']       = pys_get_option( 'general', 'pixel_id' );
@@ -660,7 +665,7 @@ if( !function_exists( 'pys_get_noscript_code' ) ) {
 		$args['noscript'] = 1;
 
 		foreach ( $params as $param => $value ) {
-			@$args[ 'cd[' . $param . ']' ] .= urlencode( $value );
+			@$args[ 'cd[' . $param . ']' ] = urlencode( $value );
 		}
 
 		$src = add_query_arg( $args, 'https://www.facebook.com/tr' );
@@ -826,7 +831,16 @@ if( !function_exists( 'pys_get_product_id' ) ) {
  */
 if( !function_exists( 'pys_insert_attribute' ) ) {
 
-	function pys_insert_attribute( $attr_name, $attr_value, $tag, $overwrite = false ) {
+	/**
+	 * @param $attr_name
+	 * @param $attr_value
+	 * @param $tag
+	 * @param bool|false $overwrite
+	 * @param string $tag_name by default function processing only A tags but it can be changed by setting $tag_name parameter. It is used in PayPal button event for example.
+	 *
+	 * @return string tag HTML with inserted attribute and its value
+	 */
+	function pys_insert_attribute( $attr_name, $attr_value, $tag, $overwrite = false, $tag_name = 'a' ) {
 
 		// do not modify js attributes
 		if( $attr_name == 'on' ) {
@@ -835,9 +849,9 @@ if( !function_exists( 'pys_insert_attribute' ) ) {
 
 		$attr_value = trim( $attr_value );
 
-		$dom = new DOMDocument();
-		$dom->loadHTML( $tag );
-		$node = $dom->getElementsByTagName('a')->item(0);
+		$doc = new DOMDocument();
+		$doc->loadHTML( '<?xml encoding="UTF-8">' . $tag, LIBXML_NOEMPTYTAG );
+		$node = $doc->getElementsByTagName( $tag_name )->item(0);
 
 		if( is_null( $node ) ) {
 			return $tag;
@@ -849,7 +863,7 @@ if( !function_exists( 'pys_insert_attribute' ) ) {
 		if( empty( $attribute ) || $overwrite ) {
 
 			$node->setAttribute( $attr_name, $attr_value );
-			return $dom->saveXML( $node );
+			return $doc->saveHTML( $node );
 
 		}
 
@@ -858,7 +872,7 @@ if( !function_exists( 'pys_insert_attribute' ) ) {
 
 			$value = $attribute . ' ' . $attr_value;
 			$node->setAttribute( $attr_name, $value );
-			return $dom->saveXML( $node );
+			return $doc->saveHTML( $node );
 
 		}
 
@@ -908,6 +922,27 @@ if( !function_exists( 'pys_convert_quotes' ) ) {
 
 }
 
+if( !function_exists( 'pys_is_disabled_for_role' ) ) {
+
+	function pys_is_disabled_for_role() {
+
+		// if disabled for current role
+		$disabled_roles = get_option( 'pixel_your_site' );
+		$user           = wp_get_current_user();
+		foreach ( (array) $user->roles as $role ) {
+
+			if ( array_key_exists( "disable_for_$role", $disabled_roles['general'] ) ) {
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
+
+}
+
 /**
  * Output pixel code.
  */
@@ -929,17 +964,6 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 		$pixel_id = pys_get_option( 'general', 'pixel_id' );
 		if ( ! isset( $pixel_id ) || empty( $pixel_id ) ) {
 			return;
-		}
-
-		// if disabled for current role
-		$disabled_roles = get_option( 'pixel_your_site' );
-		$user           = wp_get_current_user();
-		foreach ( (array) $user->roles as $role ) {
-
-			if ( array_key_exists( "disable_for_$role", $disabled_roles['general'] ) ) {
-				return;
-			}
-
 		}
 
 		// build pixel code...
@@ -964,7 +988,7 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 		}
 
 		// search event
-		if ( pys_get_option( 'general', 'search_event_enabled' ) && is_search() ) {
+		if ( pys_get_option( 'general', 'search_event_enabled' ) && is_search() && isset( $_REQUEST['s'] ) ) {
 
 			$pixelcode .= "// Search Event \n";
 			$pixelcode .= "fbq('track', 'Search', { search_string: '" . pys_clean_param_value( $_REQUEST['s'] ) . "'} );";
@@ -978,7 +1002,7 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 		}
 
 		// add standard events
-		$std_events = get_option( 'pixel_your_site_std_events' );
+		$std_events = get_option( 'pixel_your_site_std_events', array() );
 		if ( pys_get_option( 'std', 'enabled' ) && count( $std_events ) > 0 ) {
 
 			foreach ( $std_events as $event ) {

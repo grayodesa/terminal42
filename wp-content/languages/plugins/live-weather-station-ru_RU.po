@@ -1,0 +1,3468 @@
+# Translation of Stable (latest release) in Russian
+# This file is distributed under the same license as the Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-06-30 17:11:22+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.1.0-alpha\n"
+"Project-Id-Version: Stable (latest release)\n"
+
+#: admin/class-live-weather-station-admin.php:117
+#: admin/class-live-weather-station-admin.php:118
+msgid "Dashboard"
+msgstr "Панель инструментов"
+
+#: admin/class-live-weather-station-admin.php:120
+msgid "Stations"
+msgstr "Станции"
+
+#: admin/class-live-weather-station-admin.php:121
+msgid "Log"
+msgstr "Журнал"
+
+#: includes/trait-type-description.php:196
+msgid "Wind direction for the maximal wind strength today"
+msgstr "Направление максимальной силы ветра сегодня"
+
+#: includes/trait-type-description.php:199
+msgid "Maximal wind strength today"
+msgstr "Максимальная сила ветра сегодня"
+
+#: admin/class-live-weather-station-admin.php:121
+#: admin/partials/live-weather-station-admin-config-summary.php:94
+#: admin/partials/live-weather-station-admin-list-logs.php:19
+msgid "Events log"
+msgstr "Журнал событий"
+
+#: admin/partials/live-weather-station-admin-list-logs-bottom.php:11
+msgid "Number of lines to display"
+msgstr "Количество строк для отображения"
+
+#: admin/partials/live-weather-station-admin-list-logs-top.php:11
+msgid "Filter systems to display"
+msgstr "Фильтр систем для отображения"
+
+#: admin/partials/live-weather-station-admin-list-logs-top.php:17
+msgid "Filter services to display"
+msgstr "Фильтр сервисов для отображения"
+
+#: admin/partials/live-weather-station-admin-list-logs-top.php:23
+msgid "Filter stations to display"
+msgstr "Фильтр станций для отображения"
+
+#: admin/partials/live-weather-station-admin-view-log.php:21
+msgid "Timestamp"
+msgstr "Временная метка"
+
+#: admin/partials/live-weather-station-admin-view-log.php:23
+msgid "System"
+msgstr "Система"
+
+#: admin/partials/live-weather-station-admin-view-log.php:25
+#: includes/class-log-list-table.php:95
+msgid "Service"
+msgstr "Сервис"
+
+#: admin/partials/live-weather-station-admin-view-log.php:28
+#: includes/class-log-list-table.php:96
+#: includes/class-netatmo-stations-list-table.php:42
+#: includes/class-owm-stations-list-table.php:44
+msgid "Station"
+msgstr "Станция"
+
+#: admin/partials/live-weather-station-admin-view-log.php:33
+msgid "Error code"
+msgstr "Код ошибки"
+
+#: admin/partials/live-weather-station-admin-view-log.php:35
+msgid "Full message"
+msgstr "Полное сообщение"
+
+#: includes/class-log-list-table.php:48
+msgid "See detail in new window"
+msgstr "Смотреть детали в новом окне"
+
+#: includes/class-log-list-table.php:49
+msgid "code"
+msgstr "код"
+
+#: includes/class-log-list-table.php:93
+msgid "Event"
+msgstr "Событие"
+
+#: includes/class-log-list-table.php:94
+msgid "Time"
+msgstr "Время"
+
+#: includes/class-log-list-table.php:97
+msgid "Message"
+msgstr "Сообщение"
+
+#: includes/class-log-list-table.php:190
+msgid "All"
+msgstr "Все"
+
+#: includes/class-log-list-table.php:192
+msgid "Notices &amp; beyond"
+msgstr "Уведомление &amp; вне"
+
+#: includes/class-log-list-table.php:194
+msgid "Errors &amp; beyond"
+msgstr "Ошибка &amp; вне"
+
+#: includes/class-log-list-table.php:237
+msgid "Show %d lines per page"
+msgstr "Показать %d линий на странице"
+
+#: includes/class-log-list-table.php:248
+msgid "All systems"
+msgstr "Все системы"
+
+#: includes/class-log-list-table.php:265
+msgid "All services"
+msgstr "Все сервисы"
+
+#: includes/class-log-list-table.php:282
+msgid "All stations"
+msgstr "Все станции"
+
+#: includes/class-logger.php:419
+msgid "Emergency"
+msgstr "Авария"
+
+#: includes/class-logger.php:422
+msgid "Alert"
+msgstr "Тревога"
+
+#: includes/class-logger.php:425
+msgid "Critical error"
+msgstr "Критическая ошибка"
+
+#: includes/class-logger.php:434
+msgid "Notice"
+msgstr "Уведомление"
+
+#: includes/class-logger.php:437
+msgid "Information"
+msgstr "Информация"
+
+#: includes/class-logger.php:440
+msgid "Debug information"
+msgstr "Отладочная информация"
+
+#: includes/trait-datetime-conversion.php:138
+msgid "currently"
+msgstr "текущий"
+
+#: admin/partials/live-weather-station-admin-config-options.php:116
+#: includes/trait-type-description.php:84
+msgid "Carbon monoxide"
+msgstr "Окись углерода"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:103
+msgid "icon datas"
+msgstr "значок данных"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:97
+msgid "OpenWeatherMap pollution"
+msgstr "Загрязнения OpenWeatherMap"
+
+#: includes/trait-datas-output.php:1953 includes/trait-type-description.php:84
+#: includes/trait-type-description.php:90
+msgid "CO"
+msgstr "CO"
+
+#: includes/trait-datas-output.php:1956 includes/trait-type-description.php:87
+#: includes/trait-type-description.php:93
+msgid "O₃"
+msgstr "O₃"
+
+#: includes/trait-owm-pollution-client.php:152
+#: includes/trait-type-description.php:45
+msgid "[OpenWeatherMap Pollution]"
+msgstr "[Загрязнения OpenWeatherMap]"
+
+#: includes/trait-schedules-manipulation.php:177
+msgid "Every three minutes"
+msgstr "Каждые 3 минуты"
+
+#: includes/trait-type-description.php:48
+msgid "[OpenWeatherMap Forecast]"
+msgstr "[Прогноз OpenWeatherMap]"
+
+#: includes/trait-type-description.php:81
+msgid "Carbon dioxide"
+msgstr "Углекислый газ"
+
+#: includes/trait-type-description.php:87
+msgid "Ozone"
+msgstr "Озон"
+
+#: includes/trait-type-description.php:90
+msgid "CO probe distance"
+msgstr "Расстояние до зонда CO"
+
+#: includes/trait-type-description.php:93
+msgid "O₃ probe distance"
+msgstr "Расстояние до зонда O₃"
+
+#: includes/trait-unit-description.php:298
+msgid "DU"
+msgstr "DU"
+
+#: includes/trait-unit-description.php:310
+msgid "dobson unit"
+msgstr "единица добсона"
+
+#: includes/trait-unit-description.php:324
+msgid "Pa"
+msgstr "Па"
+
+#: includes/trait-unit-description.php:327
+msgid "μg/g"
+msgstr "мкг/г"
+
+#: includes/trait-unit-description.php:330
+msgid "ppmv"
+msgstr "м³"
+
+#: includes/trait-unit-description.php:346
+msgid "pascal"
+msgstr "паскаль"
+
+#: includes/trait-unit-description.php:349
+msgid "microgram per gram"
+msgstr "микрограмм на грамм"
+
+#: includes/trait-unit-description.php:352
+msgid "part per million by volume"
+msgstr "частей на миллион по объему"
+
+#: admin/partials/live-weather-station-admin-config-options.php:77
+msgid "Temperatures"
+msgstr "Температуры"
+
+#: admin/partials/live-weather-station-admin-config-options.php:90
+msgid "Pressures"
+msgstr "Давления"
+
+#: admin/partials/live-weather-station-admin-config-options.php:103
+msgid "Windspeeds"
+msgstr "Скорости ветра"
+
+#: admin/partials/live-weather-station-admin-config-options.php:129
+msgid "Wind icon"
+msgstr "Значок ветра"
+
+#: admin/partials/live-weather-station-admin-config-options.php:142
+msgid "Rain & snow"
+msgstr "Дождя и снега"
+
+#: admin/partials/live-weather-station-admin-config-options.php:155
+msgid "Altitudes"
+msgstr "Высоты"
+
+#: admin/partials/live-weather-station-admin-config-options.php:168
+msgid "Distances"
+msgstr "Расстояния"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:86
+msgid "To obtain Station ID from Weather Underground please, follow these steps:"
+msgstr "Для получения ID станции от Weather Underground, пожалуйста, выполните следующие действия:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:88
+msgid "on the Weather Underground website"
+msgstr "на сайт Weather Underground"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:89
+msgid "add a new station by following the 4 steps registration form"
+msgstr "добавить новую станцию за 4 шага регистрации"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:96
+msgid "Unable to activate this service. Weather Underground servers have returned the following error:"
+msgstr "Не удается активировать эту услугу. Серверы Weather Underground вернули следующую ошибку:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:107
+msgid "Push data to Weather Underground"
+msgstr "Передача данных Weather Underground"
+
+#: includes/trait-javascript-array.php:117
+msgid "Unit symbol or abbreviation"
+msgstr "Символ единицы измерения или аббревиатура"
+
+#: includes/trait-javascript-array.php:118
+msgid "Unit with complement (if any)"
+msgstr "Единица с дополнением (если есть)"
+
+#: includes/trait-javascript-array.php:119
+msgid "Unit name"
+msgstr "Наименование единицы"
+
+#: includes/trait-unit-description.php:34
+#: includes/trait-unit-description.php:56
+#: includes/trait-unit-description.php:102
+msgid "percent"
+msgstr "процент"
+
+#: includes/trait-unit-description.php:78
+#: includes/trait-unit-description.php:378
+msgid "degree"
+msgstr "градус"
+
+#: includes/trait-unit-description.php:126
+msgid "percent of capacity"
+msgstr "процентов объёма"
+
+#: includes/trait-unit-description.php:150
+msgid "percent of strength"
+msgstr "процентов прочности"
+
+#: includes/trait-unit-description.php:189
+msgid "millimeter per hour"
+msgstr "миллиметров в час"
+
+#: includes/trait-unit-description.php:192
+#: includes/trait-unit-description.php:233
+msgid "inch"
+msgstr "дюйм"
+
+#: includes/trait-unit-description.php:195
+msgid "inch per hour"
+msgstr "дюймов в час"
+
+#: includes/trait-unit-description.php:198
+msgid "millimeter"
+msgstr "миллиметр"
+
+#: includes/trait-unit-description.php:236
+msgid "centimeter"
+msgstr "сантиметр"
+
+#: includes/trait-unit-description.php:262
+msgid "decibel"
+msgstr "децибел"
+
+#: includes/trait-unit-description.php:286
+msgid "part per million"
+msgstr "частей на миллион"
+
+#: includes/trait-unit-description.php:414
+msgid "inch of mercury"
+msgstr "дюймов ртутного столба"
+
+#: includes/trait-unit-description.php:417
+msgid "millimeter of mercury"
+msgstr "миллиметров ртутного столба"
+
+#: includes/trait-unit-description.php:420
+msgid "hectopascal"
+msgstr "гектопаскаль"
+
+#: includes/trait-unit-description.php:455
+msgid "fahrenheit degree"
+msgstr "градус Фаренгейта"
+
+#: includes/trait-unit-description.php:458
+msgid "celcius degree"
+msgstr "градус Цельсия"
+
+#: includes/trait-unit-description.php:502
+msgid "mile per hour"
+msgstr "миль в час"
+
+#: includes/trait-unit-description.php:505
+msgid "meter per second"
+msgstr "метров в секунду"
+
+#: includes/trait-unit-description.php:508
+msgid "beaufort"
+msgstr "бофорт"
+
+#: includes/trait-unit-description.php:511
+msgid "knot"
+msgstr "узел"
+
+#: includes/trait-unit-description.php:514
+msgid "kilometer per hour"
+msgstr "километр в час"
+
+#: includes/trait-unit-description.php:549
+msgid "foot"
+msgstr "фут"
+
+#: includes/trait-unit-description.php:552
+msgid "meter"
+msgstr "метр"
+
+#: includes/trait-unit-description.php:587
+msgid "mile"
+msgstr "миля"
+
+#: includes/trait-unit-description.php:590
+msgid "kilometer"
+msgstr "километр"
+
+#: includes/trait-unit-description.php:170
+msgid "in/h"
+msgstr "дюйм/ч"
+
+#: includes/trait-unit-description.php:847
+msgid "Towards... (points to the degree)"
+msgstr "К... (направление, куда дует ветер)"
+
+#: includes/trait-unit-description.php:848
+msgid "From... (points directly away from the degree)"
+msgstr "От... (направление, откуда дует ветер)"
+
+#: includes/class-netatmo-stations-list-table.php:78
+#: includes/class-netatmo-stations-list-table.php:85
+#: includes/class-netatmo-stations-list-table.php:92
+msgid "see it"
+msgstr "видеть это"
+
+#: includes/trait-unit-description.php:167
+#: includes/trait-unit-description.php:214
+msgid "in"
+msgstr "в"
+
+#: includes/class-netatmo-stations-list-table.php:76
+#: includes/class-netatmo-stations-list-table.php:83
+#: includes/class-netatmo-stations-list-table.php:90
+msgid "Yes"
+msgstr "Да"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:28
+msgid "on the Weather Observations Website from Met Office"
+msgstr "на сайт Weather Observations от Met Office"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:29
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:59
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:89
+msgid "After registration, log in and"
+msgstr "После регистрации войдите и"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:29
+msgid "create a site"
+msgstr "создайте сайт"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:30
+msgid "Then, copy and paste <em>Site ID</em> and <em>AWS 6-digit PIN</em> in the following fields, and activate push."
+msgstr "Затем, скопируйте и вставьте <em>ID сайта</em> и <em>АРМ 6-значный PIN</em> в следующие поля и нажмите активацию."
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:32
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:62
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:92
+msgid "After a few hours you'll get something"
+msgstr "Через несколько часов вы получите нечто"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:32
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:62
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:92
+msgid "like this!"
+msgstr "такое!"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:36
+msgid "Unable to activate this service. Met Office servers have returned the following error:"
+msgstr "Не удаётся активировать сервис. Сервер Met Office вернул следующую ошибку:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:47
+msgid "Push data to Met Office"
+msgstr "Передача данных Met Office"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:56
+msgid "To obtain Station ID from PWS please, follow these steps:"
+msgstr "Чтобы получить ID станции от PWS, пожалуйста, выполните следующие действия:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:58
+msgid "on the PWS website"
+msgstr "на сайте PWS"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:59
+msgid "add a new station"
+msgstr "добавить новую станцию"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:60
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:90
+msgid "Then, copy and paste <em>Station ID</em> in the corresponding following field, set your password and activate push."
+msgstr "Затем скопируйте и вставьте <em>ID станции</em> в соответствующее поле, установите пароль и активируйте."
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:66
+msgid "Unable to activate this service. PWS servers have returned the following error:"
+msgstr "Не удаётся активировать сервис. Сервера PWS возвращают следующую ошибку:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:77
+msgid "Push data to PWS"
+msgstr "Передача данных PWS"
+
+#: admin/partials/live-weather-station-admin-manage-netatmo.php:16
+msgid "Netatmo stations"
+msgstr "Станции Netatmo"
+
+#: includes/class-netatmo-stations-list-table.php:31
+msgid "Manage services"
+msgstr "Управление сервисами"
+
+#: includes/class-netatmo-stations-list-table.php:74
+#: includes/class-netatmo-stations-list-table.php:81
+#: includes/class-netatmo-stations-list-table.php:88
+msgid "No"
+msgstr "Нет"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:20
+msgid "manage related services"
+msgstr "управлять предоставляемыми услугами"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:11
+msgid "Manage services for"
+msgstr "Управлять сервисами для"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:14
+msgid "Some services could not be activated. See details in the following sections..."
+msgstr "Некоторые сервисы не были активированы. Детали смотрите в следующих разделах..."
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:16
+msgid "You can participate in the dissemination and sharing of data collected by your Netatmo weather station by enabling Live Weather Station to send, every 10 minutes, outdoor data<sup>*</sup> like temperature, pressure, humidity, dew point, wind and rain to the following services. To obtain help for each service, please click on logos."
+msgstr "Вы можете принять участие в распространении и обмене данными, собранными с помощью вашей метеорологической станции Netatmo при включении Live Weather Station и отправки каждые 10 минут таких наружных данных, как <sup>*</sup> температура, давление, влажность, точка росы, ветер и дождь. Для получения справки по каждой услуге, пожалуйста, нажмите на логотип."
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:17
+msgid "Note that no data from inside your home (noise, temperature, CO₂ ...) are transmitted to these services."
+msgstr "Обратите внимание, что никакие данные полученные внутри вашего дома (шум, температура, CO₂ ...) не будут переданы на эти сервисы."
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:26
+msgid "To obtain Site ID and AWS 6-digit PIN from Met Office please, follow these steps:"
+msgstr "Чтобы получить ID сайта и 6-значный PIN AWS от Met Office, пожалуйста, выполните следующие действия:"
+
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:28
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:58
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:88
+msgid "Create an account"
+msgstr "Создать аккаунт"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:15
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:15
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:15
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:15
+msgid "OpenWeatherMap error"
+msgstr "Ошибка OpenWeatherMap"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:17
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:17
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:17
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:17
+msgid "OpenWeatherMap servers have returned an empty response for this weather station. For this reason, it is currently not possible to generate a shortcode. This is normally a temporary error so, please, retry again later."
+msgstr "Сервера OpenWeatherMap возвращают пустой ответ на эту погодную станцию. По этой причине в настоящее время невозможно создать короткий код. Обычно это временная ошибка, поэтому, пожалуйста, попробуйте еще раз позже."
+
+#: includes/trait-schedules-manipulation.php:190
+msgid "Every five minutes"
+msgstr "Каждые пять минут"
+
+#: includes/trait-schedules-manipulation.php:229
+msgid "Every thirty minutes"
+msgstr "Каждые тридцать минут"
+
+#: admin/partials/live-weather-station-admin-config-about.php:50
+msgid "If you use OpenWeatherMap data on your site, the name of OpenWeatherMap must be mentioned as a weather source on pages where data are shown."
+msgstr "Если вы используете данные OpenWeatherMap на вашем сайте, название OpenWeatherMap должно быть упомянуто в качестве источника погоды на страницах которых изображены данные."
+
+#: admin/partials/live-weather-station-admin-config-summary.php:84
+msgid "PHP warning"
+msgstr "Предупреждение PHP"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:197
+#: admin/partials/live-weather-station-admin-config-summary.php:86
+msgid "Internationalisation extension is not installed. You can not manage OWM stations..."
+msgstr "Расширение интернационализации не установлено. Вы не можете управлять OWM станцией..."
+
+#: includes/trait-datas-output.php:1725 includes/trait-datas-output.php:1771
+#: includes/trait-datas-output.php:1795 includes/trait-datas-output.php:1858
+msgid "now"
+msgstr "сейчас"
+
+#: includes/trait-datas-output.php:1727 includes/trait-datas-output.php:1756
+msgid "/ 3 hr"
+msgstr "/ 3 ч."
+
+#: includes/trait-datas-output.php:1737 includes/trait-datas-output.php:1780
+#: includes/trait-datas-output.php:1804
+msgid "/ 1 hr"
+msgstr "/ 1 ч."
+
+#: includes/trait-owm-client.php:72 includes/trait-owm-current-client.php:186
+#: includes/trait-owm-pollution-client.php:195
+msgid "OpenWeatherMap servers have returned empty response for some weather stations. Retry will be done shortly."
+msgstr "Сервера OpenWeatherMap возвращают пустой ответ для некоторых погодных станций. Повтор будет сделан в ближайшее время."
+
+#: includes/trait-type-description.php:156
+msgid "Rain rate"
+msgstr "Норма дождя"
+
+#: includes/trait-type-description.php:159
+msgid "Accumulated rainfall for the last 3 hours"
+msgstr "Накопленные осадки в виде дождя за последние 3 часа"
+
+#: includes/trait-type-description.php:163
+msgid "Accumulated snowfall for the last 3 hours"
+msgstr "Накопленные осадки в виде снега за последние 3 часа"
+
+#: includes/trait-unit-description.php:164
+msgid "mm/h"
+msgstr "мм/ч"
+
+#: includes/trait-type-description.php:221
+msgid "outdoor"
+msgstr "наружний"
+
+#: includes/trait-type-description.php:236
+msgid "Age"
+msgstr "Возраст"
+
+#: includes/trait-type-description.php:239
+msgid "Phase"
+msgstr "Фаза"
+
+#: includes/trait-type-description.php:242
+msgid "Illumination"
+msgstr "освещённость"
+
+#: includes/trait-type-description.php:245
+#: includes/trait-type-description.php:251
+msgid "Distance"
+msgstr "Расстояние"
+
+#: includes/trait-type-description.php:257
+msgid "?"
+msgstr "?"
+
+#: includes/trait-javascript-array.php:1147
+msgid "Plain - Translucent"
+msgstr "Простой - Полупрозрачный"
+
+#: includes/trait-javascript-array.php:1148
+msgid "Plain - Liquid"
+msgstr "Простой - Плавный"
+
+#: includes/trait-javascript-array.php:1149
+msgid "Plain - Soft"
+msgstr "Простой - Мягкий"
+
+#: includes/trait-javascript-array.php:1150
+msgid "Plain - Hard"
+msgstr "Простой - Жёсткий"
+
+#: includes/trait-javascript-array.php:1151
+msgid "Fade-in - Translucent"
+msgstr "Появление - Прозрачный"
+
+#: includes/trait-javascript-array.php:1152
+msgid "Fade-in - Liquid"
+msgstr "Появление - Плавный"
+
+#: includes/trait-javascript-array.php:1153
+msgid "Fade-in - Soft"
+msgstr "Появление - Мягкий"
+
+#: includes/trait-javascript-array.php:1154
+msgid "Fade-in - Hard"
+msgstr "Появление - Жёсткий"
+
+#: includes/trait-javascript-array.php:1155
+msgid "Fade-out - Translucent"
+msgstr "Затухание - Прозрачный"
+
+#: includes/trait-javascript-array.php:1156
+msgid "Fade-out - Liquid"
+msgstr "Затухание - Плавный"
+
+#: includes/trait-javascript-array.php:1157
+msgid "Fade-out - Soft"
+msgstr "Затухание - Мягкий"
+
+#: includes/trait-javascript-array.php:1158
+msgid "Fade-out - Hard"
+msgstr "Затухание - Жёсткий"
+
+#: includes/trait-javascript-array.php:1159
+msgid "Complementary - Translucent"
+msgstr "Дополнительный - Полупрозрачный"
+
+#: includes/trait-javascript-array.php:1160
+msgid "Complementary - Liquid"
+msgstr "Дополнительный - Плавный"
+
+#: includes/trait-javascript-array.php:1161
+msgid "Complementary - Soft"
+msgstr "Дополнительный - Мягкий"
+
+#: includes/trait-javascript-array.php:1162
+msgid "Complementary - Hard"
+msgstr "Дополнительный - Жёсткий"
+
+#: includes/trait-javascript-array.php:1163
+msgid "Inverted complementary - Translucent"
+msgstr "Перевёрнутый дополнительный - Полупрозрачный"
+
+#: includes/trait-javascript-array.php:1164
+msgid "Inverted complementary - Liquid"
+msgstr "Перевёрнутый дополнительный - Плавный"
+
+#: includes/trait-javascript-array.php:1165
+msgid "Inverted complementary - Soft"
+msgstr "Перевёрнутый дополнительный - Мягкий"
+
+#: includes/trait-javascript-array.php:1166
+msgid "Inverted complementary - Hard"
+msgstr "Перевёрнутый дополнительный - Жёсткий"
+
+#: includes/trait-type-description.php:72
+msgid "Firmware"
+msgstr "Программное обеспечение"
+
+#: includes/trait-type-description.php:75
+msgid "Battery"
+msgstr "Батарея"
+
+#: includes/trait-type-description.php:78
+msgid "WiFi"
+msgstr "WiFi"
+
+#: includes/trait-type-description.php:102
+msgid "Noise"
+msgstr "Шум"
+
+#: includes/trait-type-description.php:105
+#: includes/trait-type-description.php:108
+msgid "Pressure"
+msgstr "Давление"
+
+#: includes/trait-type-description.php:138
+msgid "Heat"
+msgstr "Жара"
+
+#: includes/trait-type-description.php:147
+msgid "Cloud base"
+msgstr "Нижняя граница облаков"
+
+#: includes/trait-type-description.php:156
+#: includes/trait-type-description.php:159
+#: includes/trait-type-description.php:167
+#: includes/trait-type-description.php:171
+msgid "Rain"
+msgstr "Дождь"
+
+#: includes/trait-type-description.php:163
+msgid "Snow"
+msgstr "Снег"
+
+#: includes/trait-type-description.php:215
+msgid "TZ"
+msgstr "ЧЗ"
+
+#: includes/trait-type-description.php:218
+msgid "all"
+msgstr "все"
+
+#: includes/trait-javascript-array.php:1133
+msgid "Silver"
+msgstr "Серебряный"
+
+#: includes/trait-javascript-array.php:1125
+msgid "Teal"
+msgstr "Зеленовато-голубой"
+
+#: includes/trait-javascript-array.php:1126
+msgid "Aqua"
+msgstr "Аква"
+
+#: includes/trait-javascript-array.php:1127
+msgid "Light blue"
+msgstr "Светло-голубой"
+
+#: includes/trait-javascript-array.php:1129
+msgid "Navy"
+msgstr "Морской"
+
+#: includes/trait-javascript-array.php:1130
+msgid "Fuchsia"
+msgstr "Фуксия"
+
+#: includes/trait-javascript-array.php:1131
+msgid "Purple"
+msgstr "Пурпурный"
+
+#: includes/trait-javascript-array.php:1106
+msgid "Horizontal"
+msgstr "Горизонтальный"
+
+#: includes/trait-javascript-array.php:1107
+msgid "Tangent"
+msgstr "Тангенс"
+
+#: includes/trait-javascript-array.php:1120
+msgid "Maroon"
+msgstr "Бордовый"
+
+#: includes/trait-javascript-array.php:1123
+msgid "Lime"
+msgstr "Лаймовый"
+
+#: includes/trait-javascript-array.php:1021
+msgid "Plain - Black"
+msgstr "Простой - Чёрный"
+
+#: includes/trait-javascript-array.php:1022
+msgid "Plain - Brass"
+msgstr "Простой - Латунный"
+
+#: includes/trait-javascript-array.php:1023
+msgid "Plain - Silver"
+msgstr "Простой - Серебряный"
+
+#: includes/trait-javascript-array.php:1024
+msgid "Embossed - Black"
+msgstr "Рельефный - Чёрный"
+
+#: includes/trait-javascript-array.php:1025
+msgid "Embossed - Brass"
+msgstr "Рельефный - Латунный"
+
+#: includes/trait-javascript-array.php:1026
+msgid "Embossed - Silver"
+msgstr "Рельефный - Серебряный"
+
+#: includes/trait-javascript-array.php:1092
+msgid "Cursors"
+msgstr "Курсоры"
+
+#: includes/trait-javascript-array.php:1104
+msgid "Automatic"
+msgstr "Автоматический"
+
+#: includes/trait-javascript-array.php:1105
+msgid "Normal"
+msgstr "Нормальный"
+
+#: includes/trait-javascript-array.php:1001
+msgid "JUG Green"
+msgstr "JUG зелёный"
+
+#: includes/trait-javascript-array.php:1002
+msgid "Green LCD"
+msgstr "Зелёный LCD"
+
+#: includes/trait-javascript-array.php:1003
+#: includes/trait-javascript-array.php:1043
+msgid "Cyan"
+msgstr "Циан"
+
+#: includes/trait-javascript-array.php:1004
+msgid "Raith"
+msgstr "Рейт"
+
+#: includes/trait-javascript-array.php:1006
+#: includes/trait-javascript-array.php:1045
+msgid "Magenta"
+msgstr "Пурпурный"
+
+#: includes/trait-javascript-array.php:1008
+#: includes/trait-javascript-array.php:1134
+msgid "Gray"
+msgstr "Серый"
+
+#: includes/trait-javascript-array.php:999
+#: includes/trait-javascript-array.php:1041
+#: includes/trait-javascript-array.php:1122
+msgid "Yellow"
+msgstr "Жёлтый"
+
+#: includes/trait-javascript-array.php:936
+msgid "Mud"
+msgstr "Тина"
+
+#: includes/trait-javascript-array.php:937
+msgid "Punched sheet"
+msgstr "Перфорированный лист"
+
+#: includes/trait-javascript-array.php:938
+msgid "Carbon"
+msgstr "Карбон"
+
+#: includes/trait-javascript-array.php:939
+msgid "Stainless"
+msgstr "Стальной"
+
+#: includes/trait-javascript-array.php:940
+msgid "Brushed metal"
+msgstr "Матовый металл"
+
+#: includes/trait-javascript-array.php:941
+msgid "Brushed stainless"
+msgstr "Матовая сталь"
+
+#: includes/trait-javascript-array.php:942
+msgid "Turned"
+msgstr "Поворот"
+
+#: includes/trait-javascript-array.php:954
+msgid "Standard glass"
+msgstr "Стандартное стекло"
+
+#: includes/trait-javascript-array.php:955
+msgid "Crystal"
+msgstr "Кристалл"
+
+#: includes/trait-javascript-array.php:956
+msgid "Sapphire crystal"
+msgstr "Сапфировый кристалл"
+
+#: includes/trait-javascript-array.php:957
+msgid "Plexiglass"
+msgstr "Плексиглас"
+
+#: includes/trait-javascript-array.php:958
+msgid "Rhodoid"
+msgstr "Родоид"
+
+#: includes/trait-javascript-array.php:970
+msgid "Thin triangle"
+msgstr "Тонкий треугольник"
+
+#: includes/trait-javascript-array.php:971
+msgid "Fat Triangle"
+msgstr "Жирный треугольник"
+
+#: includes/trait-javascript-array.php:972
+msgid "3D triangle"
+msgstr "3D треугольник"
+
+#: includes/trait-javascript-array.php:973
+msgid "Clipped"
+msgstr "Обрезанный"
+
+#: includes/trait-javascript-array.php:974
+msgid "Double clipped"
+msgstr "Двойной обрезанный"
+
+#: includes/trait-javascript-array.php:975
+msgid "Flat clipped"
+msgstr "Плоский обрезанный"
+
+#: includes/trait-javascript-array.php:976
+msgid "Thin rod"
+msgstr "Тонкий стержень"
+
+#: includes/trait-javascript-array.php:977
+msgid "Fat rod"
+msgstr "Толстый стержень"
+
+#: includes/trait-javascript-array.php:978
+msgid "Thin curved triangle"
+msgstr "Тонкий изогнутый треугольник"
+
+#: includes/trait-javascript-array.php:979
+msgid "3D curved triangle"
+msgstr "3D изогнутый треугольник"
+
+#: includes/trait-javascript-array.php:980
+msgid "Double needle"
+msgstr "Двойная игла"
+
+#: includes/trait-javascript-array.php:981
+msgid "Culbuto"
+msgstr "Неваляшка"
+
+#: includes/trait-javascript-array.php:982
+msgid "Cessna"
+msgstr "Цессна"
+
+#: includes/trait-javascript-array.php:983
+msgid "Volvo"
+msgstr "Volvo"
+
+#: includes/trait-javascript-array.php:984
+msgid "Ferrari"
+msgstr "Ferrari"
+
+#: includes/trait-javascript-array.php:985
+msgid "Ferrari arched"
+msgstr "Ferrari изогнутый"
+
+#: includes/trait-javascript-array.php:998
+#: includes/trait-javascript-array.php:1040
+#: includes/trait-javascript-array.php:1121
+msgid "Orange"
+msgstr "Оранжевый"
+
+#: includes/trait-javascript-array.php:933
+#: includes/trait-javascript-array.php:1000
+#: includes/trait-javascript-array.php:1042
+#: includes/trait-javascript-array.php:1124
+msgid "Green"
+msgstr "Зелёный"
+
+#: includes/trait-javascript-array.php:934
+#: includes/trait-javascript-array.php:1005
+#: includes/trait-javascript-array.php:1044
+#: includes/trait-javascript-array.php:1128
+msgid "Blue"
+msgstr "Синий"
+
+#: includes/trait-javascript-array.php:932
+#: includes/trait-javascript-array.php:997
+#: includes/trait-javascript-array.php:1039
+#: includes/trait-javascript-array.php:1119
+msgid "Red"
+msgstr "Красный"
+
+#: includes/trait-javascript-array.php:930
+msgid "Beige"
+msgstr "Бежевый"
+
+#: includes/trait-javascript-array.php:931
+msgid "Brown"
+msgstr "Коричневый"
+
+#: includes/trait-javascript-array.php:929
+#: includes/trait-javascript-array.php:1009
+#: includes/trait-javascript-array.php:1135
+msgid "Black"
+msgstr "Черный"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:83
+msgid "Bezel"
+msgstr "Ободок"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:96
+msgid "Face"
+msgstr "Поверхность"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:109
+msgid "Labels orientation"
+msgstr "Ориентация меток"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:122
+msgid "Main pointer type"
+msgstr "Тип основного указателя"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:135
+msgid "Main pointer color"
+msgstr "Цвет основного указателя"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:148
+msgid "2nd pointer type"
+msgstr "Тип второго указателя"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:161
+msgid "2nd pointer color"
+msgstr "Цвет второго указателя"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:174
+msgid "Knob"
+msgstr "Головка"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:201
+msgid "Alarm"
+msgstr "Сигнал"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:214
+msgid "Trend"
+msgstr "Изменение"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:227
+msgid "Min/max"
+msgstr "Мин./макс."
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:240
+msgid "Index style"
+msgstr "Стиль шкалы"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:253
+msgid "Index color"
+msgstr "Цвет шкалы"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:266
+msgid "Glass"
+msgstr "Стекло"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:311
+#: admin/partials/live-weather-station-admin-config-stations.php:168
+msgid "steel meter"
+msgstr "стальной измеритель"
+
+#: includes/trait-datas-output.php:929 includes/trait-type-description.php:180
+#: includes/trait-type-description.php:183
+msgid "Gust"
+msgstr "Порыв"
+
+#: includes/trait-datas-output.php:1950 includes/trait-type-description.php:81
+msgid "CO₂"
+msgstr "CO₂"
+
+#: includes/trait-javascript-array.php:728
+msgid "Gigantic"
+msgstr "Гигантский"
+
+#: includes/trait-javascript-array.php:826
+#: includes/trait-javascript-array.php:831
+msgid "Short measurement type"
+msgstr "Тип коротких измерений"
+
+#: includes/trait-javascript-array.php:877
+msgid "Analog - 1/4"
+msgstr "Аналог - 1/4"
+
+#: includes/trait-javascript-array.php:878
+msgid "Analog - half"
+msgstr "Аналог - половина"
+
+#: includes/trait-javascript-array.php:879
+msgid "Analog - 3/4"
+msgstr "Аналог - 3/4"
+
+#: includes/trait-javascript-array.php:880
+msgid "Analog - full"
+msgstr "Аналог - полный"
+
+#: includes/trait-javascript-array.php:881
+msgid "Digital - 1/4"
+msgstr "Цифровой - 1/4"
+
+#: includes/trait-javascript-array.php:882
+msgid "Digital - half"
+msgstr "Цифровой - половина"
+
+#: includes/trait-javascript-array.php:883
+msgid "Digital - 3/4"
+msgstr "Цифровой - 3/4"
+
+#: includes/trait-javascript-array.php:884
+msgid "Digital - full"
+msgstr "Цифровой - полный"
+
+#: includes/trait-javascript-array.php:885
+msgid "Top meter"
+msgstr "Шкала сверху"
+
+#: includes/trait-javascript-array.php:886
+msgid "Left meter"
+msgstr "Шкала слева"
+
+#: includes/trait-javascript-array.php:887
+msgid "Right meter"
+msgstr "Шкала справа"
+
+#: includes/trait-javascript-array.php:888
+msgid "Vintage wind compass"
+msgstr "Старинный ветровой компас"
+
+#: includes/trait-javascript-array.php:889
+msgid "Standard wind compass"
+msgstr "Стандартный ветровой компас"
+
+#: includes/trait-javascript-array.php:890
+msgid "Modern wind compass"
+msgstr "Современный ветровой компас"
+
+#: includes/trait-javascript-array.php:891
+msgid "Altimeter"
+msgstr "Альтиметр"
+
+#: includes/trait-javascript-array.php:903
+msgid "Black metal"
+msgstr "Чёрный металл"
+
+#: includes/trait-javascript-array.php:904
+msgid "Metal"
+msgstr "Металл"
+
+#: includes/trait-javascript-array.php:905
+msgid "Shiny metal"
+msgstr "Блестящий металл"
+
+#: includes/trait-javascript-array.php:906
+msgid "Glossy metal"
+msgstr "Глянцевый металл"
+
+#: includes/trait-javascript-array.php:907
+#: includes/trait-javascript-array.php:935
+msgid "Anthracite"
+msgstr "Антрацит"
+
+#: includes/trait-javascript-array.php:908
+msgid "Tilted gray"
+msgstr "Наклонный серый"
+
+#: includes/trait-javascript-array.php:909
+msgid "Tilted black"
+msgstr "Наклонный чёрный"
+
+#: includes/trait-javascript-array.php:910
+msgid "Brass"
+msgstr "Латунный"
+
+#: includes/trait-javascript-array.php:911
+msgid "Steel"
+msgstr "Стальной"
+
+#: includes/trait-javascript-array.php:912
+msgid "Chrome"
+msgstr "Хромовый"
+
+#: includes/trait-javascript-array.php:913
+msgid "Gold"
+msgstr "Золотой"
+
+#: includes/trait-javascript-array.php:925
+msgid "Dark gray"
+msgstr "Темно-серый"
+
+#: includes/trait-javascript-array.php:926
+msgid "Satin gray"
+msgstr "Серый сатин"
+
+#: includes/trait-javascript-array.php:927
+msgid "Light gray"
+msgstr "Светло-серый"
+
+#: includes/trait-javascript-array.php:928
+#: includes/trait-javascript-array.php:1007
+#: includes/trait-javascript-array.php:1132
+msgid "White"
+msgstr "Белый"
+
+#: includes/trait-javascript-array.php:808
+msgid "Full - 3D - Standard"
+msgstr "Полный - 3D - Стандарт"
+
+#: includes/trait-javascript-array.php:809
+msgid "Full - 3D - Fat"
+msgstr "Полный - 3D - Жирный"
+
+#: includes/trait-javascript-array.php:810
+msgid "Full - 3D - Pie"
+msgstr "Полный - 3D - Диск"
+
+#: includes/trait-javascript-array.php:828
+#: includes/trait-javascript-array.php:831
+#: includes/trait-javascript-array.php:832
+#: includes/trait-javascript-array.php:846
+msgid "Measurement unit"
+msgstr "Единица измерения"
+
+#: includes/trait-javascript-array.php:859
+msgid "Test with actual background"
+msgstr "Тест с актуальным фоном"
+
+#: includes/trait-javascript-array.php:860
+msgid "Test with white background"
+msgstr "Тест с белым фоном"
+
+#: includes/trait-javascript-array.php:861
+msgid "Test with light background"
+msgstr "Тест со светлым фоном"
+
+#: includes/trait-javascript-array.php:862
+msgid "Test with medium background"
+msgstr "Тест со средним фоном"
+
+#: includes/trait-javascript-array.php:863
+msgid "Test with dark background"
+msgstr "Тест с тёмным фоном"
+
+#: includes/trait-javascript-array.php:864
+msgid "Test with black background"
+msgstr "Тест с чёрным фоном"
+
+#: includes/trait-unit-description.php:833
+msgid "Fixed min & max"
+msgstr "Фиксировать мин./макс."
+
+#: includes/trait-unit-description.php:834
+msgid "Adapted min & max when possible"
+msgstr "Адаптировать мин. и макс., когда возможно"
+
+#: includes/trait-javascript-array.php:781
+msgid "External"
+msgstr "Внешний"
+
+#: includes/trait-javascript-array.php:782
+msgid "Internal"
+msgstr "Внутренний"
+
+#: includes/trait-javascript-array.php:795
+msgid "Half - Flat - Thin"
+msgstr "Половина - Плоский - Тонкий"
+
+#: includes/trait-javascript-array.php:796
+msgid "Half - Flat - Standard"
+msgstr "Половина - Плоский - Стандартный"
+
+#: includes/trait-javascript-array.php:797
+msgid "Half - Flat - Fat"
+msgstr "Половина - Плоский - Жирный"
+
+#: includes/trait-javascript-array.php:798
+msgid "Half - Flat - Pie"
+msgstr "Половина - Плоский - Диск"
+
+#: includes/trait-javascript-array.php:799
+msgid "Half - 3D - Thin"
+msgstr "Половина - 3D - Тонкий"
+
+#: includes/trait-javascript-array.php:800
+msgid "Half - 3D - Standard"
+msgstr "Половина - 3D - Стандартный"
+
+#: includes/trait-javascript-array.php:801
+msgid "Half - 3D - Fat"
+msgstr "Половина - 3D - Жирный"
+
+#: includes/trait-javascript-array.php:802
+msgid "Half - 3D - Pie"
+msgstr "Половина - 3D - Диск"
+
+#: includes/trait-javascript-array.php:803
+msgid "Full - Flat - Thin"
+msgstr "Полный - Плоский - Тонкий"
+
+#: includes/trait-javascript-array.php:804
+msgid "Full - Flat - Standard"
+msgstr "Полный - Плоский - Стандартный"
+
+#: includes/trait-javascript-array.php:805
+msgid "Full - Flat - Fat"
+msgstr "Полный - Плоский - Жирный"
+
+#: includes/trait-javascript-array.php:806
+msgid "Full - Flat - Pie"
+msgstr "Полный - Плоский - Диск"
+
+#: includes/trait-javascript-array.php:807
+msgid "Full - 3D - Thin"
+msgstr "Полный - 3D - Тонкий"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:135
+msgid "Unit"
+msgstr "Единица"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:180
+#: admin/partials/live-weather-station-admin-config-stations.php:168
+msgid "clean gauge"
+msgstr "чистый датчик"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:174
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:317
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:216
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:661
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:142
+msgid "This shortcode is ready for use."
+msgstr "Этот короткий код готов к использованию."
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:61
+msgid "Hide obsolete measurements"
+msgstr "Скрыть устаревшие измерения"
+
+#: includes/trait-datas-output.php:186
+msgid "Outdoor"
+msgstr "Наружный"
+
+#: includes/trait-javascript-array.php:719
+msgid "Miniature"
+msgstr "Миниатюрный"
+
+#: includes/trait-javascript-array.php:742
+msgid "Standard (for light background)"
+msgstr "Стандарт (для светлого фона)"
+
+#: includes/trait-javascript-array.php:743
+msgid "Standard (for dark background)"
+msgstr "Стандарт (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:744
+msgid "Flag (for light background)"
+msgstr "Флаговый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:745
+msgid "Flag (for dark background)"
+msgstr "Флаговый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:746
+msgid "Pinky (for light background)"
+msgstr "Розоватый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:747
+msgid "Pinky (for dark background)"
+msgstr "Розоватый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:748
+msgid "Aquamarine (for light background)"
+msgstr "Аквамариновый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:749
+msgid "Aquamarine (for dark background)"
+msgstr "Аквамариновый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:750
+msgid "B&W (for light background)"
+msgstr "Чёрно-белый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:751
+msgid "B&W (for dark background)"
+msgstr "Чёрно-белый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:752
+msgid "Solid red (for light background)"
+msgstr "Сплошной красный (для светлого фона)"
+
+#: includes/trait-javascript-array.php:753
+msgid "Solid red (for dark background)"
+msgstr "Сплошной красный (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:754
+msgid "Solid orange (for light background)"
+msgstr "Сплошной оранжевый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:755
+msgid "Solid orange (for dark background)"
+msgstr "Сплошной оранжевый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:756
+msgid "Solid yellow (for light background)"
+msgstr "Сплошной жёлтый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:757
+msgid "Solid yellow (for dark background)"
+msgstr "Сплошной жёлтый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:758
+msgid "Solid green (for light background)"
+msgstr "Сплошной зелёный (для светлого фона)"
+
+#: includes/trait-javascript-array.php:759
+msgid "Solid green (for dark background)"
+msgstr "Сплошной зелёный (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:760
+msgid "Solid blue (for light background)"
+msgstr "Сплошной синий (для светлого фона)"
+
+#: includes/trait-javascript-array.php:761
+msgid "Solid blue (for dark background)"
+msgstr "Сплошной синий (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:762
+msgid "Solid purple (for light background)"
+msgstr "Сплошной фиолетовый (для светлого фона)"
+
+#: includes/trait-javascript-array.php:763
+msgid "Solid purple (for dark background)"
+msgstr "Сплошной фиолетовый (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:764
+msgid "Solid black (for light background)"
+msgstr "Сплошной чёрный (для светлого фона)"
+
+#: includes/trait-javascript-array.php:765
+msgid "Solid black (for dark background)"
+msgstr "Сплошной чёрный (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:766
+msgid "Transparent (for light background)"
+msgstr "Прозрачный (для светлого фона)"
+
+#: includes/trait-javascript-array.php:767
+msgid "Transparent (for dark background)"
+msgstr "Прозрачный (для тёмного фона)"
+
+#: includes/trait-javascript-array.php:780
+#: includes/trait-javascript-array.php:823
+#: includes/trait-javascript-array.php:845
+#: includes/trait-javascript-array.php:1038
+#: includes/trait-javascript-array.php:1057
+#: includes/trait-javascript-array.php:1091
+#: includes/trait-javascript-array.php:1146
+msgid "None"
+msgstr "Отсутствует"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:122
+msgid "Label"
+msgstr "Надпись"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:96
+msgid "Pointer"
+msgstr "Указатель"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:109
+msgid "Title"
+msgstr "Название"
+
+#: admin/partials/live-weather-station-admin-config-options.php:57
+msgid "Gauges boundaries"
+msgstr "Границы датчиков"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:83
+msgid "Colors"
+msgstr "Цвета"
+
+#: includes/trait-unit-description.php:816
+msgid "After 30 minutes"
+msgstr "Через 30 минут"
+
+#: includes/trait-unit-description.php:817
+msgid "After 1 hour"
+msgstr "Через 1 час"
+
+#: includes/trait-unit-description.php:818
+msgid "After 2 hours"
+msgstr "Через 2 часа"
+
+#: includes/trait-unit-description.php:819
+msgid "After 4 hours"
+msgstr "Через 4 часа"
+
+#: includes/trait-unit-description.php:820
+msgid "After 12 hours"
+msgstr "Через 12 часов"
+
+#: includes/trait-unit-description.php:821
+msgid "After 24 hours"
+msgstr "Через 24 часа"
+
+#: public/class-live-weather-station-public.php:110
+#: public/class-live-weather-station-public.php:135
+msgid "No data"
+msgstr "Нет данных"
+
+#: public/partials/live-weather-station-widget-ephemeris-display.php:29
+msgid "Sunrise & sunset"
+msgstr "Восход и закат"
+
+#: public/partials/live-weather-station-widget-ephemeris-display.php:52
+msgid "Moon"
+msgstr "Луна"
+
+#: public/partials/live-weather-station-widget-ephemeris-display.php:106
+msgid "Sun distance and angular size"
+msgstr "Расстояние до Солнца и угловой размер"
+
+#: public/partials/live-weather-station-widget-ephemeris-display.php:129
+msgid "Moon illumination, phase & age"
+msgstr "Освещенность Луны, фаза и возраст"
+
+#: public/partials/live-weather-station-widget-ephemeris-display.php:180
+msgid "Moon distance and angular size"
+msgstr "Расстояние до Луны и угловой размер"
+
+#. Plugin Name of the plugin/theme
+msgid "Live Weather Station"
+msgstr "Live Weather Station"
+
+#. Description of the plugin/theme
+msgid "Display, in many different and elegant ways, the meteorological data collected by your Netatmo weather station or coming from OpenWeatherMap."
+msgstr "Отображение метеорологических данных различными элегантными способами, собранных погодной станцией Netatmo или из OpenWeatherMap."
+
+#: includes/trait-type-description.php:230
+#: public/partials/live-weather-station-widget-ephemeris-display.php:165
+msgid "Moonrise"
+msgstr "Восход Луны"
+
+#: includes/trait-type-description.php:233
+#: public/partials/live-weather-station-widget-ephemeris-display.php:152
+msgid "Moonset"
+msgstr "Закат Луны"
+
+#: includes/trait-type-description.php:236
+msgid "Moon age"
+msgstr "Возраст Луны"
+
+#: includes/trait-type-description.php:239
+msgid "Moon phase"
+msgstr "Фаза Луны"
+
+#: includes/trait-type-description.php:242
+msgid "Moon illumination"
+msgstr "Освещение Луны"
+
+#: includes/trait-type-description.php:245
+msgid "Moon distance"
+msgstr "Расстояние до Луны"
+
+#: includes/trait-type-description.php:248
+msgid "Moon angular size"
+msgstr "Угловой размер Луны"
+
+#: includes/trait-type-description.php:251
+msgid "Sun distance"
+msgstr "Расстояние до Солнца"
+
+#: includes/trait-type-description.php:254
+msgid "Sun angular size"
+msgstr "Угловой размер Солнца"
+
+#: includes/trait-unit-description.php:217
+msgid "cm"
+msgstr "см"
+
+#: includes/trait-unit-description.php:568
+msgid "mi"
+msgstr "миля"
+
+#: includes/trait-unit-description.php:571
+msgid "km"
+msgstr "км"
+
+#: includes/trait-unit-description.php:800
+msgid "Netatmo and OpenWeatherMap"
+msgstr "Netatmo и OpenWeatherMap"
+
+#: includes/trait-unit-description.php:801
+msgid "Only Netatmo"
+msgstr "Только Netatmo"
+
+#: includes/trait-unit-description.php:802
+msgid "Only OpenWeatherMap"
+msgstr "Только OpenWeatherMap"
+
+#: includes/trait-unit-description.php:815
+msgid "Never"
+msgstr "Никогда"
+
+#: includes/trait-javascript-array.php:266
+msgid "Measurement timestamp"
+msgstr "Временная метка измерения"
+
+#: includes/trait-javascript-array.php:268
+#: includes/trait-javascript-array.php:827
+#: includes/trait-javascript-array.php:830
+#: includes/trait-javascript-array.php:832
+msgid "Measurement type"
+msgstr "Тип измерения"
+
+#: includes/trait-javascript-array.php:272
+#: includes/trait-javascript-array.php:279
+#: includes/trait-javascript-array.php:285
+#: includes/trait-javascript-array.php:288
+#: includes/trait-javascript-array.php:292
+#: includes/trait-javascript-array.php:296
+#: includes/trait-javascript-array.php:303
+#: includes/trait-javascript-array.php:309
+#: includes/trait-javascript-array.php:312
+msgid "Measurement value"
+msgstr "Значение измерения"
+
+#: includes/trait-netatmo-client.php:56 includes/trait-netatmo-client.php:179
+msgid "Wrong credentials. Please, verify your login and password."
+msgstr "Неправильные учётные данные. Пожалуйста, проверьте логин и пароль."
+
+#: includes/trait-netatmo-client.php:187
+msgid "Application deactivated. Please contact support."
+msgstr "Приложение деактивировано. Обратитесь в службу поддержки."
+
+#: includes/trait-netatmo-client.php:191
+msgid "Too many users with this IP."
+msgstr "Слишком много пользователей с этим IP."
+
+#: includes/trait-owm-current-client.php:76
+#: includes/trait-type-description.php:42
+msgid "[OpenWeatherMap Records]"
+msgstr "[Записи OpenWeatherMap]"
+
+#: includes/trait-owm-client.php:68 includes/trait-owm-current-client.php:180
+#: includes/trait-owm-pollution-client.php:189
+msgid "Wrong OpenWeatherMap API key."
+msgstr "Неправильный ключ OpenWeatherMap API."
+
+#: includes/trait-owm-client.php:76 includes/trait-owm-current-client.php:189
+#: includes/trait-owm-pollution-client.php:198
+msgid "Temporary unable to contact OpenWeatherMap servers. Retry will be done shortly."
+msgstr "Временно невозможно связаться с серверами OpenWeatherMap. В ближайшее время будет  произведён повтор."
+
+#: includes/trait-schedules-manipulation.php:216
+msgid "Every fifteen minutes"
+msgstr "Каждые пятнадцать минут"
+
+#: includes/trait-type-description.php:117
+msgid "Reference wind strength"
+msgstr "Указание силы ветра"
+
+#: public/partials/live-weather-station-widget-outdoor-display.php:177
+msgid "Snowfall"
+msgstr "Снежные осадки"
+
+#: includes/trait-type-description.php:224
+#: public/partials/live-weather-station-widget-ephemeris-display.php:78
+msgid "Sunrise"
+msgstr "Восход Солнца"
+
+#: includes/trait-type-description.php:227
+#: public/partials/live-weather-station-widget-ephemeris-display.php:91
+msgid "Sunset"
+msgstr "Закат Солнца"
+
+#: includes/trait-datetime-conversion.php:248
+msgid "hours"
+msgstr "часов"
+
+#: includes/trait-ephemeris-client.php:46
+#: includes/trait-type-description.php:51
+msgid "[Ephemeris]"
+msgstr "[Эфемерида]"
+
+#: includes/trait-javascript-array.php:101
+msgid "Elapsed or remaining approximative time"
+msgstr "Прошедшее или оставшееся приблизительное время"
+
+#: includes/trait-javascript-array.php:184
+msgid "Abbreviation"
+msgstr "Сокращение"
+
+#: includes/trait-datas-output.php:1970
+msgid "snow"
+msgstr "снег"
+
+#: includes/trait-datas-output.php:2006
+msgid "cloudiness"
+msgstr "облачность"
+
+#: includes/trait-datas-output.php:2181
+msgid "Northeast"
+msgstr "Северо-восток"
+
+#: includes/trait-datas-output.php:2185
+msgid "Southeast"
+msgstr "Юго-восток"
+
+#: includes/trait-datas-output.php:2189
+msgid "Southwest"
+msgstr "Юго-запад"
+
+#: includes/trait-datas-output.php:2193
+msgid "Northwest"
+msgstr "Северо-запад"
+
+#: includes/trait-datas-output.php:2370 includes/trait-datas-output.php:2378
+msgid "New Moon"
+msgstr "Новолуние"
+
+#: includes/trait-datas-output.php:2371
+msgid "Waxing Crescent"
+msgstr "Растущий серп"
+
+#: includes/trait-datas-output.php:2372
+msgid "First Quarter"
+msgstr "Первая четверть"
+
+#: includes/trait-datas-output.php:2373
+msgid "Waxing Gibbous"
+msgstr "Растущий месяц"
+
+#: includes/trait-datas-output.php:2374
+msgid "Full Moon"
+msgstr "Полнолуние"
+
+#: includes/trait-datas-output.php:2375
+msgid "Waning Gibbous"
+msgstr "Убывающая луна"
+
+#: includes/trait-datas-output.php:2376
+msgid "Third Quarter"
+msgstr "Третья четверть"
+
+#: includes/trait-datas-output.php:2377
+msgid "Waning Crescent"
+msgstr "Убывающий месяц"
+
+#: includes/trait-datas-output.php:2689
+msgid "clouds"
+msgstr "облака"
+
+#: includes/trait-datas-output.php:2794
+msgid "All data have been filtered: nothing to show"
+msgstr "Все данные отфильтрованы: показать нечего"
+
+#: includes/trait-datetime-conversion.php:122
+#: includes/trait-datetime-conversion.php:154
+msgid "in %s"
+msgstr "в %s"
+
+#: includes/trait-datetime-conversion.php:248
+msgid "days"
+msgstr "дней"
+
+#: includes/class-owm-stations-list-table.php:32
+msgid "Verify on a map"
+msgstr "Проверить на карте"
+
+#: includes/class-owm-stations-list-table.php:33
+#: includes/class-owm-stations-list-table.php:58
+msgid "Delete"
+msgstr "Удалить"
+
+#: includes/class-live-weather-station-widget-ephemeris.php:38
+msgid "Display ephemeris for sun and moon at the location of a Netatmo and/or OpenWeatherMap weather station."
+msgstr "Отображение эфемерид Солнца и Луны в месте расположения погодной станции Netatmo и/или OpenWeatherMap."
+
+#: includes/class-live-weather-station-widget-outdoor.php:41
+msgid "Display outdoor measurements of a Netatmo and/or OpenWeatherMap weather station."
+msgstr "Отображение уличных измерений погодной станции Netatmo и/или OpenWeatherMap."
+
+#: includes/class-owm-stations-list-table.php:31
+msgid "Edit"
+msgstr "Редактировать"
+
+#: includes/class-live-weather-station-list-table.php:353
+msgid "Last page"
+msgstr "Последняя страница"
+
+#: includes/class-live-weather-station-list-table.php:473
+msgid "Select All"
+msgstr "Выбрать все"
+
+#: includes/class-live-weather-station-list-table.php:343
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: includes/class-live-weather-station-list-table.php:327
+#: includes/class-live-weather-station-list-table.php:330
+msgid "Current Page"
+msgstr "Текущая страница"
+
+#: includes/class-live-weather-station-list-table.php:336
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr "%1$s из %2$s"
+
+#: includes/class-live-weather-station-list-table.php:320
+msgid "Previous page"
+msgstr "Предыдущая страница"
+
+#: includes/class-live-weather-station-list-table.php:310
+msgid "First page"
+msgstr "Первая страница"
+
+#: includes/class-live-weather-station-list-table.php:275
+#: includes/class-live-weather-station-list-table.php:657
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] "%s пункт"
+msgstr[1] "%s пункта"
+msgstr[2] "%s пунктов"
+
+#: includes/class-live-weather-station-list-table.php:223
+#: includes/class-live-weather-station-list-table.php:639
+msgid "Show more details"
+msgstr "Показать больше деталей"
+
+#: admin/partials/live-weather-station-admin-list-logs-bottom.php:17
+#: admin/partials/live-weather-station-admin-list-logs-top.php:29
+#: includes/class-live-weather-station-list-table.php:193
+msgid "Apply"
+msgstr "Применить"
+
+#: includes/class-live-weather-station-list-table.php:183
+msgid "Bulk Actions"
+msgstr "Групповые действия"
+
+#: includes/class-live-weather-station-list-table.php:181
+msgid "Select bulk action"
+msgstr "Выберите групповое действие"
+
+#: includes/class-live-weather-station-list-table.php:57
+msgid "Excerpt View"
+msgstr "Смотреть отрывок"
+
+#: includes/class-live-weather-station-list-table.php:124
+msgid "No items found."
+msgstr "Ничего не найдено."
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:22
+msgid "Extended"
+msgstr "Расширенный"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:30
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:69
+msgid "Subtitle to display"
+msgstr "Субтитры на дисплее"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:32
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:71
+msgid "Nothing"
+msgstr "Ничего"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:33
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:72
+msgid "Date and time of records"
+msgstr "Дата и время записи"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:34
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:73
+msgid "Station coordinates (if known)"
+msgstr "Координаты станции (если известны)"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:38
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:77
+msgid "Max width (in px)"
+msgstr "Макс. ширина (в пикселях)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:19
+msgid "Display current weather conditions (if available)"
+msgstr "Отображать текущие погодные условия (если доступно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:34
+msgid "Display snowfall (if available)"
+msgstr "Отображать снежные осадки (если доступно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:40
+msgid "Display cloud cover (if available)"
+msgstr "Отображать облачность (если доступно)"
+
+#: includes/class-live-weather-station-list-table.php:56
+msgid "List View"
+msgstr "Просмотреть список"
+
+#: admin/partials/live-weather-station-admin-manage-owm.php:17
+msgid "OpenWeatherMap stations"
+msgstr "Станции OpenWeatherMap"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:20
+msgid "Compact"
+msgstr "Компактный"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:21
+msgid "Standard"
+msgstr "Стандартный"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:55
+msgid "manage stations"
+msgstr "управление станциями"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:60
+msgid "OWM warning"
+msgstr "Предупреждение OWM"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:72
+msgid "OWM error"
+msgstr "Ошибка OWM"
+
+#: admin/partials/live-weather-station-admin-delete-owm.php:12
+msgid "Deleteting OpenWeatherMap stations"
+msgstr "Удаление OpenWeatherMap станций"
+
+#: admin/partials/live-weather-station-admin-delete-owm.php:20
+msgid "You have chosen to delete this station:"
+msgstr "Вы выбрали для удаления эту станцию:"
+
+#: admin/partials/live-weather-station-admin-delete-owm.php:22
+msgid "You have chosen to remove these stations:"
+msgstr "Вы выбрали для удаления эти станции:"
+
+#: admin/partials/live-weather-station-admin-delete-owm.php:29
+msgid "Confirm Delete"
+msgstr "Подтвердить удаление"
+
+#: admin/partials/live-weather-station-admin-manage-owm.php:13
+msgid "Add"
+msgstr "Добавить"
+
+#: admin/partials/live-weather-station-admin-config-options.php:18
+msgid "Collected data"
+msgstr "Собранные данные"
+
+#: admin/partials/live-weather-station-admin-config-options.php:44
+msgid "Data obsolescence"
+msgstr "Устаревшие данные"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:75
+msgid "OpenWeatherMap records"
+msgstr "Записи OpenWeatherMap"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:118
+msgid "Computed values"
+msgstr "Вычисленные значения"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:138
+#: includes/class-live-weather-station-widget-ephemeris.php:37
+msgid "Ephemeris"
+msgstr "Эфемерида"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:180
+msgid "Get started"
+msgstr "Начнём"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:186
+msgid "In order to display weather data, <strong><em>Live Weather Station</em></strong> must be connected to your Netatmo account and/or it must have a valid OpenWeatherMap API key...<br/><strong>If you have a Netatmo weather station</strong> (or have access to some friends stations) please enter your Netatmo login and password in the \"Settings\" box. <em>Note that, in accordance with the manufacturer recommendations, these credentials will not be stored in your WordPress site.</em><br/><strong>If you do not have a Netatmo account</strong> or if you want to enhance the rendedred datas of your Netatmo station, you must <a href=\"http://openweathermap.org/appid\" target=\"_blank\">get a free OpenWeatherMap API key</a> and paste it in the \"Settings\" box."
+msgstr "Для того, чтобы отобразить данные о погоде, <strong><em>Live Weather Station</em></strong> должен быть подключен к вашей учетной записи Netatmo и/или он должен иметь действительный ключ OpenWeatherMap API...<br/><strong>Если у вас есть метеостанция Netatmo</strong> (или вы имеете доступ к станциям друзей), пожалуйста, введите логин и пароль Netatmo в окне \"Настройки\". <em>Обратите внимание, что, в соответствии с рекомендациями производителя, эти учетные данные не будут сохранены на вашем WordPress сайте.</em><br/><strong>Если у вас нет учетной записи Netatmo</strong> или если вы хотите повысить визуализацию данных из вашей станции Netatmo, необходимо <a href=\"http://openweathermap.org/appid\" target=\"_blank\">получите бесплатный ключ OpenWeatherMap API</a> и вставьте его в окне \"Настройки\"."
+
+#: admin/partials/live-weather-station-admin-config-stations.php:191
+msgid "There is no Netatmo weather station associated with your account."
+msgstr "Нет погодной станции Netatmo, связанной с вашим аккаунтом."
+
+#: admin/partials/live-weather-station-admin-config-stations.php:201
+msgid "You have not created any OpenWeatherMap station at the moment, this is why nothing appears here. To add your first station, visit"
+msgstr "На данный момент у вас не создано ни одной станции OpenWeatherMap, почему здесь ничего нет. Чтобы добавить вашу первую станцию, посетите"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:201
+msgid "the stations management page"
+msgstr "страницу управления станциями"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:207
+msgid "To see data from OpenWeatherMap stations, you must choose another collection mode in the \"Options\" box."
+msgstr "Для просмотра данных станций OpenWeatherMap необходимо выбрать другой режим сбора данных в поле \"Параметры\"."
+
+#: admin/partials/live-weather-station-admin-config-summary.php:18
+#: admin/partials/live-weather-station-admin-config-summary.php:31
+msgid "Netatmo status"
+msgstr "Статус Netatmo"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:20
+#: admin/partials/live-weather-station-admin-config-summary.php:55
+msgid "Connected but inactive"
+msgstr "Подключен, но не активен"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:20
+#: admin/partials/live-weather-station-admin-config-summary.php:55
+msgid "disconnect"
+msgstr "отключить"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:24
+msgid "Netatmo warning"
+msgstr "Предупреждение Netatmo"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:37
+msgid "Netatmo error"
+msgstr "Ошибка Netatmo"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:47
+#: admin/partials/live-weather-station-admin-config-summary.php:53
+#: admin/partials/live-weather-station-admin-config-summary.php:67
+msgid "OWM status"
+msgstr "Статус OWM"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:20
+#: admin/partials/live-weather-station-admin-config-summary.php:55
+msgid "or"
+msgstr "или"
+
+#: admin/partials/live-weather-station-admin-config-about.php:50
+msgid "All meteorological data provided by OpenWeatherMap are distributed under the terms of the <a href=\"http://creativecommons.org/licenses/by-sa/4.0/\" target=\"_blank\">Creative Commons CC:BY-SA 4.0 license</a>."
+msgstr "Все метеорологические данные предоставлены OpenWeatherMap в соответствии с условиями <a href=\"http://creativecommons.org/licenses/by-sa/4.0/\" target=\"_blank\">лицензии Creative Commons CC:BY-SA 4.0</a>."
+
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:36
+msgid "OpenWeatherMap key"
+msgstr "Ключ OpenWeatherMap"
+
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:49
+msgid "Connect"
+msgstr "Подключить"
+
+#: admin/partials/live-weather-station-admin-config-options.php:12
+msgid "Options"
+msgstr "Настройки"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:48
+#: admin/partials/live-weather-station-admin-config-stations.php:28
+#: includes/class-owm-stations-list-table.php:45
+#: includes/trait-type-description.php:215
+msgid "Time zone"
+msgstr "Часовой пояс"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:83
+msgid "Altitude (in meters)"
+msgstr "Высота (в метрах)"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:88
+msgid "If you know the exact coordinates of this location, enter them here. Otherwise, we will try to find them for you..."
+msgstr "Если вы знаете точные координаты этого места, укажите их здесь. В противном случае мы постараемся найти их для вас..."
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:91
+msgid "Despite our best efforts, we were unable to find the coordinates of this location. Please, enter them here - or try an other location:"
+msgstr "Несмотря на все наши усилия, нам не удалось найти координаты этого места. Пожалуйста, введите их здесь - или попробуйте другое местоположение:"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:95
+msgid "The coordinates you have entered are not valid. Please, retry or left blank:"
+msgstr "Вы ввели неправильные координаты. Пожалуйста, повторите или оставьте пустым:"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:102
+msgid "(eg 49.85)"
+msgstr "(например, 49.85)"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:106
+msgid "(eg -1.6)"
+msgstr "(например, -1.6)"
+
+#: admin/partials/live-weather-station-admin-config-about.php:44
+msgid "<em>Live Weather Station</em> is a free and open source plugin for WordPress. It integrates other free and open source works (as-is or modified) like Weather Icons project by Erik Flowers, EnzoJS and SteelSeries by Gerrit Grunwald, JustGage by Bojan Đuričić, OpenWeatherMap PHP API by Christian Flach, phpcolors by Arlo Carreon, moonrise/moonset calculation from Matt \"dxprog\" Hackmann and moon phase calculation from Samir Shah."
+msgstr "<em>Live Weather Station</em>  является бесплатным плагином с открытым исходным кодом для WordPress. В него интегрированы другие бесплатные и с открытым исходным кодом произведения (как есть или изменённые), такие как отличный проект Иконок для погоды от Erik Flowers, EnzoJS и Стальные измерительные приборы от Gerrit Grunwald, JustGage от Bojan Đuričić, OpenWeatherMap PHP API от Christian Flach, phpcolors от Arlo Carreon, расчеты восхода и заката Луны от Matt \"dxprog\" Hackmann и вычисления фазы Луны от Samir Shah."
+
+#: admin/partials/live-weather-station-admin-config-about.php:47
+msgid "Data"
+msgstr "Данные"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:34
+msgid "City"
+msgstr "Город"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:38
+msgid "Country"
+msgstr "Страна"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:9
+msgid "verify on a map"
+msgstr "проверить на карте"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:10
+msgid "Here are the coordinates we've found %s. You can confirm it by clicking again on the button <em>%s</em>!"
+msgstr "Мы нашли ваши координаты %s. Вы можете подтвердить их повторным нажатием на кнопку <em>%s</em>!"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:10
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:112
+msgid "Add This Station"
+msgstr "Добавить эту станцию"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:18
+msgid "Add an OpenWeatherMap station"
+msgstr "Добавить станцию OpenWeatherMap"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:21
+msgid "Edit an OpenWeatherMap station"
+msgstr "Редактировать станцию OpenWeatherMap"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:24
+msgid "Some required fields are missing!"
+msgstr "Отсутствуют некоторые обязательные поля!"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:30
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:34
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:38
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:48
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:83
+msgid "(required)"
+msgstr "(обязательно)"
+
+#: includes/trait-datas-output.php:2192
+msgid "West-Northwest"
+msgstr "Западо-северозапад"
+
+#: includes/trait-datas-output.php:2194
+msgid "North-Northwest"
+msgstr "Северо-северозапад"
+
+#: public/partials/live-weather-station-widget-outdoor-display.php:103
+#: public/partials/live-weather-station-widget-outdoor-display.php:125
+msgid "Wind from"
+msgstr "Ветер с"
+
+#: admin/partials/live-weather-station-admin-config-about.php:32
+msgid "If you want to help to translate this plugin, you can do it with  <a href=\"https://translate.wordpress.org/projects/wp-plugins/live-weather-station\">GlotPress</a> (please, use the 'stable' column)."
+msgstr "Если вы хотите помочь перевести этот плагин, можете сделать это с  <a href=\"https://translate.wordpress.org/projects/wp-plugins/live-weather-station\">GlotPress</a> (используйте колонку 'stable')."
+
+#: admin/partials/live-weather-station-admin-config-about.php:35
+msgid "Thanks to"
+msgstr "Благодарности"
+
+#: admin/partials/live-weather-station-admin-config-about.php:38
+msgid "<a href=\"https://twitter.com/cyril_lakech\">Cyril Lakech</a>, for its tools and its reactivity and <a href=\"https://profiles.wordpress.org/bergjet\">Martin Punz</a> for tests and kindness from Austria."
+msgstr "<a href=\"https://twitter.com/cyril_lakech\">Cyril Lakech</a>, за его средства и реактивность и <a href=\"https://profiles.wordpress.org/bergjet\">Martin Punz</a> за тесты и доброту из Австрии."
+
+#: includes/trait-datas-output.php:2179 includes/trait-datas-output.php:2195
+msgid "North"
+msgstr "Север"
+
+#: includes/trait-datas-output.php:2180
+msgid "North-Northeast"
+msgstr "Северо-северовосток"
+
+#: includes/trait-datas-output.php:2182
+msgid "East-Northeast"
+msgstr "Восток-северовосток"
+
+#: includes/trait-datas-output.php:2183
+msgid "East"
+msgstr "Восток"
+
+#: includes/trait-datas-output.php:2184
+msgid "East-Southeast"
+msgstr "Восток-юговосток"
+
+#: includes/trait-datas-output.php:2186
+msgid "South-Southeast"
+msgstr "Юго-юговосток"
+
+#: includes/trait-datas-output.php:2187
+msgid "South"
+msgstr "Юг"
+
+#: includes/trait-datas-output.php:2188
+msgid "South-Southwest"
+msgstr "Юго-югозапад"
+
+#: includes/trait-datas-output.php:2190
+msgid "West-Southwest"
+msgstr "Западо-югозапад"
+
+#: includes/trait-datas-output.php:2191
+msgid "West"
+msgstr "Запад"
+
+#: admin/partials/live-weather-station-admin-config-about.php:26
+msgid "Is <em>Live Weather Station</em> helpful? I would be pleased that you <a href=\"https://wordpress.org/support/view/plugin-reviews/live-weather-station\">write a review</a>."
+msgstr "<em>Live Weather Station</em> полезен? Я буду рад, если вы <a href=\"https://wordpress.org/support/view/plugin-reviews/live-weather-station\">напишете отзыв</a>."
+
+#: admin/partials/live-weather-station-admin-config-about.php:29
+msgid "Translations"
+msgstr "Переводы"
+
+#: admin/partials/live-weather-station-admin-config-about.php:20
+msgid "You can find help and explanation about this plugin on <a href=\"https://pierre.lannoy.fr/wordpress-live-weather-station-for-netatmo/\">this page</a>."
+msgstr "Вы найдёте помощь и разъяснения по этому плагину на <a href=\"https://pierre.lannoy.fr/wordpress-live-weather-station-for-netatmo/\">этой странице</a>."
+
+#: admin/partials/live-weather-station-admin-config-about.php:23
+msgid "Plugin"
+msgstr "Плагин"
+
+#: admin/partials/live-weather-station-admin-config-about.php:17
+msgid "Help"
+msgstr "Помощь"
+
+#: admin/partials/live-weather-station-admin-config-about.php:12
+#: admin/partials/live-weather-station-admin-config-about.php:41
+msgid "About"
+msgstr "О программе"
+
+#: admin/class-live-weather-station-admin.php:119
+#: admin/class-live-weather-station-admin.php:354
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:13
+msgid "Settings"
+msgstr "Настройки"
+
+#: admin/partials/live-weather-station-admin-config-about.php:11
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:12
+#: admin/partials/live-weather-station-admin-config-options.php:11
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:14
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:41
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:154
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:167
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:14
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:41
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:310
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:330
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:14
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:41
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:196
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:209
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:14
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:41
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:641
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:654
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:14
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:124
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:135
+#: admin/partials/live-weather-station-admin-config-stations.php:14
+#: admin/partials/live-weather-station-admin-config-stations.php:179
+#: admin/partials/live-weather-station-admin-config-summary.php:11
+msgid "Click to toggle"
+msgstr "﻿Нажмите, чтобы переключить"
+
+#: admin/partials/live-weather-station-admin-config-options.php:31
+msgid "Live controls displays"
+msgstr "Выводить текущие значения"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:10
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:115
+#: admin/partials/live-weather-station-admin-config-options.php:186
+#: admin/partials/live-weather-station-admin-edit-netatmo.php:113
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:20
+msgid "Netatmo login"
+msgstr "Логин Netatmo"
+
+#: admin/partials/live-weather-station-admin-config-accounts-settings.php:27
+msgid "Netatmo password"
+msgstr "Пароль Netatmo"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:42
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:42
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:42
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:42
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:15
+msgid "1. Set parameters for the shortcode"
+msgstr "1. Выберите параметры для короткого кода"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:47
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:47
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:47
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:47
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:20
+#: admin/partials/live-weather-station-admin-view-log.php:30
+msgid "Module"
+msgstr "Модуль"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:60
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:60
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:60
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:60
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:33
+msgid "Measurement"
+msgstr "Измерение"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:70
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:70
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:70
+msgid "Design"
+msgstr "Дизайн"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:148
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:83
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:279
+#: includes/trait-type-description.php:248
+#: includes/trait-type-description.php:254
+msgid "Size"
+msgstr "Размер"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:96
+msgid "Speed"
+msgstr "Скорость"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:103
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:180
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:141
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:311
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:77
+msgid "Shortcodes for"
+msgstr "Короткий код для"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:27
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:141
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:188
+#: admin/partials/live-weather-station-admin-config-stations.php:168
+msgid "LCD display"
+msgstr "LCD-дисплей"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:155
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:331
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:197
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:642
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:125
+msgid "2. Verify the generated output"
+msgstr "2. Проверить сгенерированный вывод"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:355
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:203
+msgid "This controls will be dynamically resized to fit its parent's size."
+msgstr "Этот датчик будет динамически изменять размер в соответствии с размерами своего источника."
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:168
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:311
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:210
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:655
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:136
+msgid "3. Copy the following shortcode"
+msgstr "3. Скопировать следующий короткий код"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:177
+#: admin/partials/live-weather-station-admin-config-shortcodes-justgage.php:320
+#: admin/partials/live-weather-station-admin-config-shortcodes-lcd.php:219
+#: admin/partials/live-weather-station-admin-config-shortcodes-steelmeter.php:664
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:145
+msgid "Copy"
+msgstr "Копировать"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:70
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:43
+msgid "Element"
+msgstr "Элемент"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-icon.php:80
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:53
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:18
+msgid "Format"
+msgstr "Формат"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:77
+#: admin/partials/live-weather-station-admin-config-stations.php:168
+msgid "textual datas"
+msgstr "текстовые данные"
+
+#: admin/partials/live-weather-station-admin-config-shortcodes-textual.php:130
+msgid "This value is for illustration only and is not the precise value that will be computed at runtime."
+msgstr "Это значение показано только для иллюстрации и не является значением, которое будет вычислено во время выполнения."
+
+#: admin/partials/live-weather-station-admin-config-stations.php:25
+msgid "Location"
+msgstr "Местоположение"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:31
+#: admin/partials/live-weather-station-admin-config-stations.php:57
+#: includes/trait-type-description.php:75
+msgid "Battery level"
+msgstr "Уровень батареи"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:31
+msgid "WiFi signal"
+msgstr "Сигнал WiFi"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:32
+msgid "Last seen on"
+msgstr "Последний раз видели на"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:32
+msgid "at"
+msgstr "по"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:57
+msgid "Radio signal"
+msgstr "Радиосигнал"
+
+#: admin/partials/live-weather-station-admin-config-stations.php:167
+msgid "Get shortcodes for "
+msgstr "Получить короткий код для"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:12
+msgid "Summary"
+msgstr "Суммарный"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:20
+#: admin/partials/live-weather-station-admin-config-summary.php:55
+msgid "Up and running"
+msgstr "Поднят и запущен"
+
+#: includes/class-logger.php:431
+msgid "Warning"
+msgstr "Предупреждение"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:33
+#: admin/partials/live-weather-station-admin-config-summary.php:49
+#: admin/partials/live-weather-station-admin-config-summary.php:69
+msgid "Not connected"
+msgstr "Не подключен"
+
+#: includes/class-logger.php:428
+msgid "Error"
+msgstr "Ошибка"
+
+#: admin/partials/live-weather-station-admin-config-summary.php:78
+msgid "Version"
+msgstr "Версия"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:10
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:10
+msgid "Station to display"
+msgstr "Станция для отображения"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:22
+msgid "Display temperatures (if available)"
+msgstr "Отображать температуру (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:25
+msgid "Display atmospheric pressure (if available)"
+msgstr "Отображать атмосферное давление (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:28
+msgid "Display humidity (if available)"
+msgstr "Отображать влажность (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:31
+msgid "Display rainfall (if available)"
+msgstr "Отображать дождевые осадки (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:37
+msgid "Display wind (if available)"
+msgstr "Отображать ветер (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:43
+msgid "Display cloud base altitude (if available)"
+msgstr "Отображать высоту нижней границы облаков (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:46
+msgid "Display dew point (if available)"
+msgstr "Отображать точку росы (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:49
+msgid "Display frost point (if available)"
+msgstr "Отображать точку замерзания (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:52
+msgid "Display heat index (if available)"
+msgstr "Отображать индекс жары (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:55
+msgid "Display humidex (if available)"
+msgstr "Отображать humidex (если возможно)"
+
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:58
+msgid "Display wind chill (if available)"
+msgstr "Отображать ветро-холодовой индекс (если возможно)"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:26
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:65
+msgid "Displayed name"
+msgstr "Отображаемое имя"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:42
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:81
+msgid "Text color"
+msgstr "Цвет текста"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:46
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:85
+msgid "Background color"
+msgstr "Цвет фона"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:49
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:88
+msgid "Transparence of background"
+msgstr "Прозрачность фона"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:57
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:96
+msgid "Show borders"
+msgstr "Показывать границы"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:61
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:100
+msgid "Show tooltips"
+msgstr "Показывать подсказки"
+
+#: admin/partials/live-weather-station-widget-ephemeris-settings.php:65
+#: admin/partials/live-weather-station-widget-outdoor-settings.php:104
+msgid "Flat design"
+msgstr "Плоский дизайн"
+
+#: includes/class-live-weather-station-widget-outdoor.php:40
+msgid "Outdoor weather summary"
+msgstr "Краткий прогноз на улице"
+
+#: includes/trait-datas-query.php:103
+msgid "is not running..."
+msgstr "не запущен..."
+
+#: includes/trait-datas-output.php:1129
+msgid "Malformed shortcode. Please verify it!"
+msgstr "Искаженный короткий код. Пожалуйста, проверьте!"
+
+#: includes/class-log-list-table.php:55 includes/class-log-list-table.php:80
+#: includes/trait-datas-output.php:1256 includes/trait-datas-output.php:1261
+#: includes/trait-datas-output.php:1266 includes/trait-datas-output.php:1271
+#: includes/trait-datas-output.php:1276
+msgid "N/A"
+msgstr "Неизвестно"
+
+#: includes/trait-datas-output.php:1746 includes/trait-datas-output.php:1777
+#: includes/trait-datas-output.php:1801
+#: public/partials/live-weather-station-widget-outdoor-display.php:154
+msgid "today"
+msgstr "сегодня"
+
+#: includes/trait-datas-output.php:1774 includes/trait-datas-output.php:1798
+msgid "gust"
+msgstr "порыв"
+
+#: includes/trait-datas-output.php:1959
+msgid "humidity"
+msgstr "влажность"
+
+#: includes/trait-datas-output.php:1962
+msgid "noise"
+msgstr "шум"
+
+#: includes/trait-datas-output.php:1967
+msgid "rain"
+msgstr "дождь"
+
+#: includes/trait-datas-output.php:1982
+msgid "wind"
+msgstr "ветер"
+
+#: includes/trait-datas-output.php:1985
+msgid "atm pressure"
+msgstr "атмосферное давление"
+
+#: includes/trait-datas-output.php:1988
+msgid "dew point"
+msgstr "точка росы"
+
+#: includes/trait-datas-output.php:1991
+msgid "frost point"
+msgstr "точка замерзания"
+
+#: includes/trait-datas-output.php:1994
+msgid "heat-index"
+msgstr "индекс жары"
+
+#: includes/trait-datas-output.php:1997
+msgid "humidex"
+msgstr "humidex"
+
+#: includes/trait-datas-output.php:2000
+msgid "wind chill"
+msgstr "ветро-холодовой индекс"
+
+#: includes/trait-datas-output.php:2003
+msgid "cloud base"
+msgstr "нижняя граница облаков"
+
+#: includes/trait-datas-output.php:2011
+msgid "temperature"
+msgstr "температура"
+
+#: includes/trait-datas-output.php:2078 includes/trait-datas-output.php:2266
+#: includes/trait-datas-output.php:2310
+msgid "Very low"
+msgstr "Очень низкий"
+
+#: includes/trait-datas-output.php:2081
+msgid "Low"
+msgstr "Низкий"
+
+#: includes/trait-datas-output.php:2084 includes/trait-datas-output.php:2263
+#: includes/trait-datas-output.php:2307 includes/trait-javascript-array.php:637
+#: includes/trait-javascript-array.php:722
+msgid "Medium"
+msgstr "Средний"
+
+#: includes/trait-datas-output.php:2087 includes/trait-datas-output.php:2260
+#: includes/trait-datas-output.php:2304
+msgid "High"
+msgstr "Высокий"
+
+#: includes/trait-datas-output.php:2090 includes/trait-datas-output.php:2257
+msgid "Full"
+msgstr "Полный"
+
+#: includes/trait-datas-output.php:2093
+msgid "AC Power"
+msgstr "Переменный ток"
+
+#: includes/trait-datas-output.php:2096
+msgid "Unknown Power State"
+msgstr "Неизвестное состояние питания"
+
+#: includes/trait-datas-output.php:2118 includes/trait-datas-output.php:2148
+#: includes/trait-datas-output.php:2164
+msgid "N"
+msgstr "С"
+
+#: includes/trait-datas-output.php:2119 includes/trait-datas-output.php:2149
+msgid "N-NE"
+msgstr "С-СВ"
+
+#: includes/trait-datas-output.php:2120 includes/trait-datas-output.php:2150
+msgid "NE"
+msgstr "СВ"
+
+#: includes/trait-datas-output.php:2121 includes/trait-datas-output.php:2151
+msgid "E-NE"
+msgstr "В-СВ"
+
+#: includes/trait-datas-output.php:2122 includes/trait-datas-output.php:2152
+msgid "E"
+msgstr "В"
+
+#: includes/trait-datas-output.php:2123 includes/trait-datas-output.php:2153
+msgid "E-SE"
+msgstr "В-ЮВ"
+
+#: includes/trait-datas-output.php:2124 includes/trait-datas-output.php:2154
+msgid "SE"
+msgstr "ЮВ"
+
+#: includes/trait-datas-output.php:2125 includes/trait-datas-output.php:2155
+msgid "S-SE"
+msgstr "Ю-ЮВ"
+
+#: includes/trait-datas-output.php:2126 includes/trait-datas-output.php:2156
+msgid "S"
+msgstr "Ю"
+
+#: includes/trait-datas-output.php:2127 includes/trait-datas-output.php:2157
+msgid "S-SW"
+msgstr "Ю-ЮЗ"
+
+#: includes/trait-datas-output.php:2128 includes/trait-datas-output.php:2158
+msgid "SW"
+msgstr "ЮЗ"
+
+#: includes/trait-datas-output.php:2129 includes/trait-datas-output.php:2159
+msgid "W-SW"
+msgstr "З-ЮЗ"
+
+#: includes/trait-datas-output.php:2130 includes/trait-datas-output.php:2160
+msgid "W"
+msgstr "З"
+
+#: includes/trait-datas-output.php:2131 includes/trait-datas-output.php:2161
+msgid "W-NW"
+msgstr "З-СЗ"
+
+#: includes/trait-datas-output.php:2132 includes/trait-datas-output.php:2162
+msgid "NW"
+msgstr "СЗ"
+
+#: includes/trait-datas-output.php:2133 includes/trait-datas-output.php:2163
+msgid "N-NW"
+msgstr "С-СЗ"
+
+#: includes/trait-datas-output.php:2269
+msgid "No RF Signal"
+msgstr "Нет радиосигнала"
+
+#: includes/trait-datas-output.php:2313
+msgid "No WiFi Signal"
+msgstr "Нет сигнала WiFi"
+
+#: includes/trait-datas-output.php:2329
+msgid "Rising"
+msgstr "Восход"
+
+#: includes/trait-datas-output.php:2332
+msgid "Falling"
+msgstr "Понижение"
+
+#: includes/trait-datas-output.php:2335
+msgid "Stable"
+msgstr "Стабильный"
+
+#: includes/trait-datas-output.php:2434 includes/trait-datas-output.php:2555
+msgid "Successful operation"
+msgstr "Успешная операция"
+
+#: includes/trait-datas-output.php:2437 includes/trait-datas-output.php:2558
+#: includes/trait-datas-query.php:448 includes/trait-datas-query.php:475
+#: includes/trait-datas-query.php:501 includes/trait-datas-query.php:528
+#: includes/trait-datas-query.php:552 includes/trait-datas-query.php:670
+msgid "Database contains inconsistent datas"
+msgstr "База данных содержит противоречивые данные"
+
+#: includes/trait-datas-output.php:2621 includes/trait-datas-output.php:2628
+msgid "O/DR"
+msgstr "O/DR"
+
+#: includes/trait-datetime-conversion.php:119
+#: includes/trait-datetime-conversion.php:135
+#: includes/trait-datetime-conversion.php:151
+msgid "%s ago"
+msgstr "%s назад"
+
+#: includes/trait-javascript-array.php:27
+#: includes/trait-javascript-array.php:55
+#: includes/trait-javascript-array.php:69
+#: includes/trait-javascript-array.php:115
+#: includes/trait-javascript-array.php:133
+#: includes/trait-javascript-array.php:149
+#: includes/trait-javascript-array.php:164
+#: includes/trait-javascript-array.php:181
+#: includes/trait-javascript-array.php:199
+#: includes/trait-javascript-array.php:213
+#: includes/trait-javascript-array.php:227
+#: includes/trait-javascript-array.php:246
+msgid "Raw value"
+msgstr "Грубое значение"
+
+#: includes/trait-javascript-array.php:41
+#: includes/trait-javascript-array.php:84
+msgid "As-is"
+msgstr "Как есть"
+
+#: includes/trait-javascript-array.php:70
+#: includes/trait-javascript-array.php:116
+msgid "Formated value"
+msgstr "Отформатированное значение"
+
+#: includes/trait-javascript-array.php:98
+msgid "UTC timestamp"
+msgstr "Часовая зона UTC"
+
+#: includes/trait-javascript-array.php:99
+msgid "Formated local date"
+msgstr "Отформатированная местная дата"
+
+#: includes/trait-javascript-array.php:100
+msgid "Formated local time"
+msgstr "Отформатированное местное время"
+
+#: includes/trait-javascript-array.php:134
+#: includes/trait-javascript-array.php:150
+#: includes/trait-javascript-array.php:165
+#: includes/trait-javascript-array.php:182
+msgid "Converted value"
+msgstr "Преобразованное значение"
+
+#: includes/trait-javascript-array.php:135
+#: includes/trait-javascript-array.php:166
+#: includes/trait-javascript-array.php:183
+msgid "Converted value with unit"
+msgstr "Преобразованное значение с единицей измерения"
+
+#: includes/trait-javascript-array.php:167
+#: includes/trait-javascript-array.php:185
+#: includes/trait-javascript-array.php:247
+msgid "Plain text"
+msgstr "Простой текст"
+
+#: includes/trait-javascript-array.php:228
+msgid "Geodetic system WGS 84"
+msgstr "Геодезическая система WGS 84"
+
+#: includes/trait-javascript-array.php:229
+msgid "Geodetic system WGS 84 with unit"
+msgstr "Геодезическая система WGS 84 с единицей измерения"
+
+#: includes/trait-javascript-array.php:230
+msgid "DMS"
+msgstr "DMS"
+
+#: includes/trait-javascript-array.php:231
+msgid "DMS starting with cardinal"
+msgstr "DMS стартует вместе с основным"
+
+#: includes/trait-javascript-array.php:232
+msgid "DMS ending with cardinal"
+msgstr "DMS заканчивает вместе с основным"
+
+#: includes/trait-javascript-array.php:261
+msgid "Station ID"
+msgstr "ID станции"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:30
+#: includes/trait-javascript-array.php:262
+#: includes/trait-javascript-array.php:824
+#: includes/trait-javascript-array.php:829
+msgid "Station name"
+msgstr "Имя станции"
+
+#: includes/trait-javascript-array.php:263
+msgid "Module ID"
+msgstr "ID модуля"
+
+#: includes/trait-javascript-array.php:264
+msgid "Module type"
+msgstr "Тип модуля"
+
+#: includes/trait-javascript-array.php:265
+#: includes/trait-javascript-array.php:825
+#: includes/trait-javascript-array.php:829
+#: includes/trait-javascript-array.php:830
+msgid "Module name"
+msgstr "Имя модуля"
+
+#: includes/trait-javascript-array.php:581
+msgid "[all modules]"
+msgstr "[все модули]"
+
+#: includes/trait-javascript-array.php:721
+msgid "Small"
+msgstr "Небольшой"
+
+#: includes/trait-javascript-array.php:723
+msgid "Large"
+msgstr "Большой"
+
+#: includes/trait-javascript-array.php:725
+msgid "Scalable"
+msgstr "Масштабируемый"
+
+#: includes/trait-javascript-array.php:636
+msgid "Fast"
+msgstr "Быстро"
+
+#: includes/trait-javascript-array.php:638
+msgid "Slow"
+msgstr "Медленно"
+
+#: includes/trait-javascript-array.php:651
+#: includes/trait-javascript-array.php:1058
+msgid "Standard - Without backlight"
+msgstr "Стандартный - без подсветки"
+
+#: includes/trait-javascript-array.php:652
+msgid "Standard - With backlight"
+msgstr "Стандартный - с подсветкой"
+
+#: includes/trait-javascript-array.php:653
+#: includes/trait-javascript-array.php:1059
+msgid "Translucent - Red"
+msgstr "Прозрачный - Красный"
+
+#: includes/trait-javascript-array.php:654
+#: includes/trait-javascript-array.php:1060
+msgid "Translucent - Orange"
+msgstr "Прозрачный - Оранжевый"
+
+#: includes/trait-javascript-array.php:655
+#: includes/trait-javascript-array.php:1061
+msgid "Translucent - Beige"
+msgstr "Прозрачный - Бежевый"
+
+#: includes/trait-javascript-array.php:656
+msgid "Translucent - Yellow"
+msgstr "Прозрачный - Жёлтый"
+
+#: includes/trait-javascript-array.php:657
+#: includes/trait-javascript-array.php:1062
+msgid "Translucent - Yellow green"
+msgstr "Прозрачный - Жёлто-зелёный"
+
+#: includes/trait-javascript-array.php:658
+msgid "Translucent - Light green"
+msgstr "Прозрачный - Светло-зелёный"
+
+#: includes/trait-javascript-array.php:659
+#: includes/trait-javascript-array.php:1063
+msgid "Translucent - Standard green"
+msgstr "Прозрачный - Стандартный зелёный"
+
+#: includes/trait-javascript-array.php:660
+#: includes/trait-javascript-array.php:1064
+msgid "Translucent - Light blue"
+msgstr "Прозрачный - Светло-синий"
+
+#: includes/trait-javascript-array.php:661
+#: includes/trait-javascript-array.php:1065
+msgid "Translucent - Blue"
+msgstr "Прозрачный - Синий"
+
+#: includes/trait-javascript-array.php:662
+#: includes/trait-javascript-array.php:1067
+msgid "Translucent - Light purple"
+msgstr "Прозрачный - Светло-фиолетовый"
+
+#: includes/trait-javascript-array.php:663
+#: includes/trait-javascript-array.php:1068
+msgid "Translucent - Gray"
+msgstr "Прозрачный - Серый"
+
+#: includes/trait-javascript-array.php:664
+#: includes/trait-javascript-array.php:1066
+msgid "Translucent - White"
+msgstr "Прозрачный - Белый"
+
+#: includes/trait-javascript-array.php:665
+#: includes/trait-javascript-array.php:1069
+msgid "Contrasted - Red"
+msgstr "Контрастный - Красный"
+
+#: includes/trait-javascript-array.php:666
+msgid "Contrasted - Amber"
+msgstr "Контрастный - Янтарный"
+
+#: includes/trait-javascript-array.php:667
+msgid "Contrasted - Green"
+msgstr "Контрастный - Зелёный"
+
+#: includes/trait-javascript-array.php:668
+#: includes/trait-javascript-array.php:1070
+msgid "Contrasted - Turquoise"
+msgstr "Контрастный - Бирюзовый"
+
+#: includes/trait-javascript-array.php:669
+msgid "Contrasted - Light blue"
+msgstr "Контрастный - Светло-синий"
+
+#: includes/trait-javascript-array.php:670
+#: includes/trait-javascript-array.php:1073
+msgid "Contrasted - Blue"
+msgstr "Контрастный - Синий"
+
+#: includes/trait-javascript-array.php:671
+#: includes/trait-javascript-array.php:1074
+msgid "Contrasted - Dark blue"
+msgstr "Контрастный - Тёмно-синий"
+
+#: includes/trait-javascript-array.php:672
+msgid "Contrasted - Purple"
+msgstr "Контрастный - Фиолетовый"
+
+#: includes/trait-javascript-array.php:673
+msgid "Contrasted - Dark purple"
+msgstr "Контрастный - Тёмно-фиолетовый"
+
+#: includes/trait-javascript-array.php:674
+msgid "Contrasted - Black & Yellow"
+msgstr "Контрастный - Чёрный и Жёлтый"
+
+#: includes/trait-javascript-array.php:675
+#: includes/trait-javascript-array.php:1072
+msgid "Contrasted - Black"
+msgstr "Контрастный - Чёрный"
+
+#: includes/trait-javascript-array.php:676
+#: includes/trait-javascript-array.php:1071
+msgid "Contrasted - Dark grey"
+msgstr "Контрастный - Тёмно-серый"
+
+#: includes/trait-javascript-array.php:677
+#: includes/trait-javascript-array.php:1075
+msgid "Soft - Amber"
+msgstr "Мягкий - Янтарный"
+
+#: includes/trait-javascript-array.php:678
+#: includes/trait-javascript-array.php:1076
+msgid "Soft - Dark green"
+msgstr "Мягкий - Тёмно-зелёный"
+
+#: includes/trait-javascript-array.php:679
+#: includes/trait-javascript-array.php:1077
+msgid "Soft - Blue"
+msgstr "Мягкий - Синий"
+
+#: includes/trait-javascript-array.php:680
+#: includes/trait-javascript-array.php:1078
+msgid "Soft - Dark blue"
+msgstr "Мягкий - Тёмно-синий"
+
+#: includes/trait-javascript-array.php:681
+msgid "Soft - Navy"
+msgstr "Мягкий - Морской"
+
+#: includes/trait-javascript-array.php:682
+#: includes/trait-javascript-array.php:1079
+msgid "Soft - Purple"
+msgstr "Мягкий - Фиолетовый"
+
+#: includes/trait-javascript-array.php:683
+msgid "Soft - Dark purple"
+msgstr "Мягкий - Тёмно-фиолетовый"
+
+#: includes/trait-javascript-array.php:684
+msgid "Soft - Grey"
+msgstr "Мягкий - Серый"
+
+#: includes/trait-javascript-array.php:685
+msgid "Flat - Pomegranate"
+msgstr "Плоский - Гранатовый"
+
+#: includes/trait-javascript-array.php:686
+msgid "Flat - Alizarin"
+msgstr "Плоский - Ализарин"
+
+#: includes/trait-javascript-array.php:687
+msgid "Flat - Pumpkin"
+msgstr "Плоский - Тыквенный"
+
+#: includes/trait-javascript-array.php:688
+msgid "Flat - Carrot"
+msgstr "Плоский - Морковный"
+
+#: includes/trait-javascript-array.php:689
+msgid "Flat - Orange"
+msgstr "Плоский - Оранжевый"
+
+#: includes/trait-javascript-array.php:690
+msgid "Flat - Sunflower"
+msgstr "Плоский - Подсолнечный"
+
+#: includes/trait-javascript-array.php:691
+msgid "Flat - Emerald"
+msgstr "Плоский - Изумрудный"
+
+#: includes/trait-javascript-array.php:692
+msgid "Flat - Nephritis"
+msgstr "Плоский - Нефритовый"
+
+#: includes/trait-javascript-array.php:693
+msgid "Flat - Turquoise"
+msgstr "Плоский - Бирюзовый"
+
+#: includes/trait-javascript-array.php:694
+msgid "Flat - Peter river"
+msgstr "Плоский - река Петра"
+
+#: includes/trait-javascript-array.php:695
+msgid "Flat - Sky"
+msgstr "Плоский - Небесный"
+
+#: includes/trait-javascript-array.php:696
+msgid "Flat - Belize hole"
+msgstr "Плоский - дыра Белиза"
+
+#: includes/trait-javascript-array.php:697
+msgid "Flat - Amethyst"
+msgstr "Плоский - Аметистовый"
+
+#: includes/trait-javascript-array.php:698
+msgid "Flat - Wisteria"
+msgstr "Плоский - Глициновый"
+
+#: includes/trait-javascript-array.php:699
+msgid "Flat - Wet asphalt"
+msgstr "Плоский - Мокрый асфальт"
+
+#: includes/trait-javascript-array.php:700
+msgid "Flat - Midnight blue"
+msgstr "Плоский - Полуночная синева"
+
+#: includes/trait-javascript-array.php:701
+msgid "Flat - Black"
+msgstr "Плоский - Чёрный"
+
+#: includes/trait-javascript-array.php:702
+msgid "Flat - Asbestos"
+msgstr "Плоский - Асбестовый"
+
+#: includes/trait-javascript-array.php:703
+msgid "Flat - Concrete"
+msgstr "Плоский - Бетонный"
+
+#: includes/trait-javascript-array.php:704
+msgid "Flat - Silver"
+msgstr "Плоский - Серебряный"
+
+#: includes/trait-javascript-array.php:705
+msgid "Flat - Clouds"
+msgstr "Плоский - Облачный"
+
+#: includes/trait-netatmo-client.php:195
+msgid "Temporary unable to contact Netatmo servers. Retry will be done shortly."
+msgstr "Невозможно связаться с серверами Netatmo. В ближайшее время будет произведён повтор."
+
+#: includes/trait-type-description.php:39 includes/trait-weather-client.php:166
+msgid "[Computed Values]"
+msgstr "[Вычисленные значения]"
+
+#: includes/trait-schedules-manipulation.php:203
+msgid "Every ten minutes"
+msgstr "Каждые десять минут"
+
+#: includes/trait-type-description.php:24
+msgid "Base station"
+msgstr "Базовая станция"
+
+#: includes/trait-type-description.php:27
+msgid "Outdoor module"
+msgstr "Уличный модуль"
+
+#: includes/trait-type-description.php:30
+msgid "Rain gauge"
+msgstr "Датчик дождя"
+
+#: includes/trait-type-description.php:33
+msgid "Wind gauge"
+msgstr "Датчик ветра"
+
+#: includes/trait-type-description.php:36
+msgid "Indoor module"
+msgstr "Комнатный модуль"
+
+#: includes/trait-type-description.php:54
+msgid "Unknonw module"
+msgstr "Неизвестный модуль"
+
+#: includes/trait-type-description.php:72
+msgid "Firmware version"
+msgstr "Версия прошивки"
+
+#: includes/trait-type-description.php:78
+msgid "RF/WiFi signal quality"
+msgstr "Качество радио/WiFi сигнала"
+
+#: includes/trait-type-description.php:96
+#: includes/trait-type-description.php:99
+#: public/partials/live-weather-station-widget-outdoor-display.php:88
+msgid "Humidity"
+msgstr "Влажность"
+
+#: includes/trait-type-description.php:99
+msgid "Reference humidity"
+msgstr "Характеристика влажности"
+
+#: includes/trait-type-description.php:102
+msgid "Noise level"
+msgstr "Уровень шума"
+
+#: includes/trait-type-description.php:105
+#: public/partials/live-weather-station-widget-outdoor-display.php:73
+msgid "Atmospheric pressure"
+msgstr "Атмосферное давление"
+
+#: includes/trait-type-description.php:108
+msgid "Pressure trend"
+msgstr "Изменение давления"
+
+#: includes/trait-type-description.php:111
+#: includes/trait-type-description.php:114
+#: includes/trait-type-description.php:121
+#: includes/trait-type-description.php:125
+#: includes/trait-type-description.php:129
+#: public/partials/live-weather-station-widget-outdoor-display.php:35
+#: public/partials/live-weather-station-widget-outdoor-display.php:58
+msgid "Temperature"
+msgstr "Температура"
+
+#: includes/trait-type-description.php:114
+msgid "Reference temperature"
+msgstr "Характеристика температуры"
+
+#: includes/trait-type-description.php:121
+msgid "Highest temperature of the day"
+msgstr "Наивысшая температура за день"
+
+#: includes/trait-type-description.php:125
+msgid "Lowest temperature of the day"
+msgstr "Наименьшая температура за день"
+
+#: includes/trait-type-description.php:129
+msgid "Temperature trend"
+msgstr "Изменение температуры"
+
+#: includes/trait-type-description.php:132
+#: public/partials/live-weather-station-widget-outdoor-display.php:222
+msgid "Dew point"
+msgstr "Точка росы"
+
+#: includes/trait-type-description.php:135
+#: public/partials/live-weather-station-widget-outdoor-display.php:237
+msgid "Frost point"
+msgstr "Точка замерзания"
+
+#: includes/trait-type-description.php:138
+#: public/partials/live-weather-station-widget-outdoor-display.php:252
+msgid "Heat index"
+msgstr "Индекс жары"
+
+#: includes/trait-type-description.php:141
+#: public/partials/live-weather-station-widget-outdoor-display.php:266
+msgid "Humidex"
+msgstr "Humidex"
+
+#: includes/trait-type-description.php:144
+#: public/partials/live-weather-station-widget-outdoor-display.php:280
+msgid "Wind chill"
+msgstr "Ветро-холодовой индекс"
+
+#: includes/trait-type-description.php:147
+#: public/partials/live-weather-station-widget-outdoor-display.php:207
+msgid "Cloud base altitude"
+msgstr "Высота нижней границы облаков"
+
+#: public/partials/live-weather-station-widget-outdoor-display.php:140
+#: public/partials/live-weather-station-widget-outdoor-display.php:162
+msgid "Rainfall"
+msgstr "Дождевые осадки"
+
+#: includes/trait-type-description.php:167
+msgid "Accumulated rainfall for the last hour"
+msgstr "Накопленные дождевые осадки за последний час"
+
+#: includes/trait-type-description.php:171
+msgid "Accumulated rainfall for today"
+msgstr "Накопленные дождевые осадки за сегодняшний день"
+
+#: includes/trait-type-description.php:174
+msgid "Wind direction"
+msgstr "Направление ветра"
+
+#: includes/trait-type-description.php:177
+msgid "Wind strength"
+msgstr "Сила ветра"
+
+#: includes/trait-type-description.php:180
+msgid "Gust direction"
+msgstr "Направление порыва"
+
+#: includes/trait-type-description.php:183
+msgid "Gust strength"
+msgstr "Сила порыва"
+
+#: includes/trait-type-description.php:188
+msgid "Wind direction for the maximal wind strength for the last hour"
+msgstr "Направление ветра для максимальной силы ветра за последний час"
+
+#: includes/trait-type-description.php:193
+msgid "Maximal wind strength for the last hour"
+msgstr "Максимальная сила ветра за последний час"
+
+#: includes/class-owm-stations-list-table.php:48
+#: includes/trait-type-description.php:203
+msgid "Altitude"
+msgstr "Высота"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:102
+#: includes/class-owm-stations-list-table.php:46
+#: includes/trait-type-description.php:207
+msgid "Latitude"
+msgstr "Широта"
+
+#: admin/partials/live-weather-station-admin-add-edit-owm.php:106
+#: includes/class-owm-stations-list-table.php:47
+#: includes/trait-type-description.php:211
+msgid "Longitude"
+msgstr "Долгота"
+
+#: includes/trait-type-description.php:218
+msgid "[all measures]"
+msgstr "[все показатели]"
+
+#: includes/trait-type-description.php:221
+msgid "[outdoor measures]"
+msgstr "[наружные показатели]"
+
+#: includes/trait-type-description.php:257
+msgid "Unknown measurement"
+msgstr "Неизвестные измерения"
+
+#: includes/trait-unit-description.php:22
+#: includes/trait-unit-description.php:45
+#: includes/trait-unit-description.php:90
+#: includes/trait-unit-description.php:114
+#: includes/trait-unit-description.php:138
+msgid "%"
+msgstr "%"
+
+#: includes/trait-unit-description.php:173
+msgid "mm"
+msgstr "мм"
+
+#: includes/trait-unit-description.php:250
+msgid "dB"
+msgstr "дБ"
+
+#: includes/trait-unit-description.php:274
+msgid "ppm"
+msgstr "см³"
+
+#: includes/trait-unit-description.php:67
+#: includes/trait-unit-description.php:366
+msgid "°"
+msgstr "°"
+
+#: includes/trait-unit-description.php:392
+#: includes/trait-unit-description.php:606
+msgid "inHg"
+msgstr "дюйм рт.ст."
+
+#: includes/trait-unit-description.php:395
+#: includes/trait-unit-description.php:609
+msgid "mmHg"
+msgstr "мм.рт.ст."
+
+#: includes/trait-unit-description.php:398
+msgid "hPa"
+msgstr "гПа"
+
+#: includes/trait-unit-description.php:436
+msgid "°F"
+msgstr "°F"
+
+#: includes/trait-unit-description.php:439
+msgid "°C"
+msgstr "°C"
+
+#: includes/trait-unit-description.php:474
+#: includes/trait-unit-description.php:685
+msgid "mph"
+msgstr "миль/ч"
+
+#: includes/trait-unit-description.php:477
+#: includes/trait-unit-description.php:688
+msgid "m/s"
+msgstr "м/с"
+
+#: includes/trait-unit-description.php:480
+msgid "bf"
+msgstr "бофорт"
+
+#: includes/trait-unit-description.php:483
+msgid "kts"
+msgstr "узлов"
+
+#: includes/trait-unit-description.php:486
+#: includes/trait-unit-description.php:697
+msgid "km/h"
+msgstr "км/ч"
+
+#: includes/trait-unit-description.php:530
+msgid "ft"
+msgstr "фут"
+
+#: includes/trait-unit-description.php:533
+msgid "m"
+msgstr "м"
+
+#: includes/trait-unit-description.php:612
+msgid "hPa / mbar"
+msgstr "гПа / мбар"
+
+#: includes/trait-unit-description.php:628
+msgid "Fahrenheit - °F"
+msgstr "Фаренгейт - °F"
+
+#: includes/trait-unit-description.php:631
+msgid "Celcius - °C"
+msgstr "Цельсий - °C"
+
+#: includes/trait-unit-description.php:647
+#: includes/trait-unit-description.php:666
+msgid "Imperial system"
+msgstr "Имперская система"
+
+#: includes/trait-unit-description.php:650
+#: includes/trait-unit-description.php:669
+msgid "Metric system"
+msgstr "Метрическая система"
+
+#: includes/trait-unit-description.php:691
+msgid "Beaufort"
+msgstr "Бофорт"
+
+#: includes/trait-unit-description.php:694
+msgid "Knot"
+msgstr "Узел"
+
+#: includes/trait-unit-description.php:786
+msgid "Measured and computed values"
+msgstr "Измеренные и вычисленные значения"
+
+#: includes/trait-unit-description.php:787
+msgid "Only measured values"
+msgstr "Только измеренные значения"
+
+#: public/class-live-weather-station-public.php:106
+#: public/class-live-weather-station-public.php:131
+msgid "Error code "
+msgstr "Код ошибки"
+
+#: public/partials/live-weather-station-widget-outdoor-display.php:13
+msgid "Current weather conditions"
+msgstr "Текущие погодные условия"
+
+#: includes/trait-datas-output.php:929 includes/trait-type-description.php:117
+#: includes/trait-type-description.php:174
+#: includes/trait-type-description.php:177
+#: includes/trait-type-description.php:188
+#: includes/trait-type-description.php:193
+#: includes/trait-type-description.php:196
+#: includes/trait-type-description.php:199
+msgid "Wind"
+msgstr "Ветер"
+
+#: public/partials/live-weather-station-widget-outdoor-display.php:117
+msgid "max"
+msgstr "макс."
+
+#: includes/trait-type-description.php:152
+#: public/partials/live-weather-station-widget-outdoor-display.php:192
+msgid "Cloudiness"
+msgstr "Облачность"
+
+#. Plugin URI of the plugin/theme
+msgid "https://pierre.lannoy.fr/wordpress-live-weather-station-for-netatmo/"
+msgstr "https://pierre.lannoy.fr/wordpress-live-weather-station-for-netatmo/"
+
+#. Author of the plugin/theme
+msgid "Pierre Lannoy"
+msgstr "Pierre Lannoy"
+
+#. Author URI of the plugin/theme
+msgid "https://pierre.lannoy.fr"
+msgstr "https://pierre.lannoy.fr"

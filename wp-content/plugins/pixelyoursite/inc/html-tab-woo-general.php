@@ -112,14 +112,14 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Product price</p></td>
         <td>
-          <input type="radio" name="pricea" checked></input>
+          <input type="radio" name="pricea" checked>
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Percent of product price</p></td>
         <td>
-          <input type="radio" name="pricea"></input>
+          <input type="radio" name="pricea">
           <input type="text">%
         </td>
       </tr>
@@ -127,7 +127,7 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Use Global value</p></td>
         <td>
-          <input type="radio" name="pricea"></input>
+          <input type="radio" name="pricea">
           <input type="text">
         </td>
       </tr>
@@ -227,14 +227,14 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Products price (subtotal)</p></td>
         <td>
-          <input type="radio" name="pricec" checked></input>
+          <input type="radio" name="pricec" checked>
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Percent of products value (subtotal)</p></td>
         <td>
-          <input type="radio" name="pricec"></input>
+          <input type="radio" name="pricec">
           <input type="text">%
         </td>
       </tr>
@@ -242,7 +242,7 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Use Global value</p></td>
         <td>
-          <input type="radio" name="pricec"></input>
+          <input type="radio" name="pricec">
           <input type="text">
         </td>
       </tr>
@@ -312,7 +312,7 @@
 	    <tr class="tall">
 		    <td class="alignright"><p class="label big">Advanced Matching on Purchase event:</p></td>
 		    <td>
-			    <input type="checkbox" name="" value="1" class="woo-option disabled">
+			    <input type="checkbox" name="" value="1" class="disabled">
 			    Enable - <strong>This is a PRO feature</strong> - <a href="http://www.pixelyoursite.com/facebook-pixel-plugin">Update NOW</a>
 			    <span class="help">Advance Matching can lead to 10% increase in attributed conversions and 20% increase in reach of retargeting campaigns - <a href="http://www.pixelyoursite.com/enable-advance-matching-woocommerce" target="_blank">Click to read more</a> </span>
 		    </td>
@@ -328,7 +328,7 @@
 	    <tr class="disabled">
 		    <td class="alignright"></td>
 		    <td>
-			    <input type="checkbox" name="" value="1" class="woo-option">
+			    <input type="checkbox" name="" value="1">
 			    <strong>Add Town, State and Country parameters</strong>
 			    <span class="help">Will pull <code>town</code>, <code>state</code> and <code>country</code></span>
 
@@ -338,7 +338,7 @@
 	    <tr class="disabled">
 		    <td></td>
 		    <td>
-			    <input type="checkbox" name="" value="1" class="woo-option">
+			    <input type="checkbox" name="" value="1">
 			    <strong>Add Payment Method parameter</strong>
 			    <span class="help">Will pull <code>payment</code></span>
 
@@ -348,7 +348,7 @@
 	    <tr class="disabled">
 		    <td></td>
 		    <td>
-			    <input type="checkbox" name="" value="1" class="woo-option" >
+			    <input type="checkbox" name="" value="1">
 			    <strong>Add Shipping Method parameter</strong>
 			    <span class="help">Will pull <code>shipping</code></span>
 		    </td>
@@ -357,7 +357,7 @@
 	    <tr class="disabled">
 		    <td></td>
 		    <td>
-			    <input type="checkbox" name="" value="1" class="woo-option" >
+			    <input type="checkbox" name="" value="1">
 			    <strong>Add Coupons parameter</strong>
 			    <span class="help">Will pull <code>coupon_used</code> and <code>coupon_name</code></span>
 		    </td>
@@ -381,7 +381,7 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Event type:</p></td>
         <td>
-          <input type="radio" name="eta" checked></input>
+          <input type="radio" name="eta" checked>
           <select autocomplete="off" disabled>
             <option selected>Lead</option>
           </select>
@@ -391,7 +391,7 @@
       <tr class="disabled tall">
         <td class="alignright"><p class="label">Name of custom event:</p></td>
         <td>
-          <input type="radio" name="eta"></input>
+          <input type="radio" name="eta">
           <input type="text">
           <span class="help">* The Affiliate event will have all the parameters values specific for selected event.</span>
           <span class="help">* The Custom Affiliate event will have value, currency, content_name, content_type, content_ids.</span>
@@ -401,21 +401,21 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Do not pull event value</p></td>
         <td>
-          <input type="radio" name="pricex" checked></input>
+          <input type="radio" name="pricex" checked>
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Event Value = Prouct Price</p></td>
         <td>
-          <input type="radio" name="pricex"></input>
+          <input type="radio" name="pricex">
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Use Global value</p></td>
         <td>
-          <input type="radio" name="pricex"></input>
+          <input type="radio" name="pricex">
           <input type="text">
           <span class="help">* Set this if you want a unique global value every time affiliate product clicked.</span>
         </td>
@@ -437,7 +437,7 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Event type:</p></td>
         <td>
-          <input type="radio" name="etb" checked></input>
+          <input type="radio" name="etb" checked>
           <select autocomplete="off" disabled>
             <option selected>InitiatePayment</option>
           </select>
@@ -447,7 +447,7 @@
       <tr class="disabled tall">
         <td class="alignright"><p class="label">Name of custom event:</p></td>
         <td>
-          <input type="radio" name="etb"></input>
+          <input type="radio" name="etb">
           <input type="text">
           <span class="help">* The PayPal Standard event will have all the parameters values specific for selected event.</span>
           <span class="help">* The Custom Affiliate event will have value, currency, content_type, content_ids.</span>
@@ -457,21 +457,21 @@
       <tr class="disabled">
         <td class="alignright"><p class="label">Do not pull event value</p></td>
         <td>
-          <input type="radio" name="price" checked></input>
+          <input type="radio" name="price" checked>
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Event Value = Cart Total</p></td>
         <td>
-          <input type="radio" name="price"></input>
+          <input type="radio" name="price">
         </td>
       </tr>
       
       <tr class="disabled">
         <td class="alignright"><p class="label">Use Global value</p></td>
         <td>
-          <input type="radio" name="price"></input>
+          <input type="radio" name="price">
           <input type="text">
           <span class="help">* Set this if you want a unique global value every time affiliate product clicked.</span>
         </td>
@@ -495,7 +495,7 @@
         </td>
         <td>
           <input type="checkbox" name="pys[woo][enabled]" value="1"
-            <?php echo pys_checkbox_state( 'woo', 'enabled' ); ?> ></input>
+            <?php echo pys_checkbox_state( 'woo', 'enabled' ); ?> >
         </td>
       </tr>
       

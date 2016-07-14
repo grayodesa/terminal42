@@ -8,6 +8,11 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 
 		public $nag_data = array();
 
+		/**
+		 * @var Tribe__Tickets__Tickets[] 
+		 */
+		protected $commerce_providers = array();
+
 		public function __construct() {
 			add_action( 'admin_notices', array( $this, 'maybe_nagit' ) );
 
@@ -57,7 +62,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 				return;
 			}
 
-			if ( ! class_exists( 'Woocommerce' ) ) {
+			if ( ! $this->is_woocommerce_active() ) {
 				return;
 			}
 
@@ -77,7 +82,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 				return;
 			}
 
-			Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
+			$this->commerce_providers['woocommerce'] = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
 		}
 
 		/**
@@ -124,7 +129,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 				return;
 			}
 
-			Tribe__Tickets_Plus__Commerce__EDD__Main::get_instance();
+			$this->commerce_providers['easy_digital_downloads'] = Tribe__Tickets_Plus__Commerce__EDD__Main::get_instance();
 		}
 
 		/**
@@ -171,7 +176,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 				return;
 			}
 
-			Tribe__Tickets_Plus__Commerce__WPEC__Main::get_instance();
+			$this->commerce_providers['wpecommerce'] = Tribe__Tickets_Plus__Commerce__WPEC__Main::get_instance();
 		}
 
 		/**
@@ -227,7 +232,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 				return;
 			}
 
-			Tribe__Tickets_Plus__Commerce__Shopp__Main::get_instance();
+			$this->commerce_providers['shopp'] = Tribe__Tickets_Plus__Commerce__Shopp__Main::get_instance();
 		}
 
 		/**
@@ -250,6 +255,14 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 			return null;
 		}
 
+		/**
+		 * Whether at least one commerce provider is installed and activated or not.
+		 *
+		 * @return bool
+		 */
+		public function has_commerce_providers() {
+			return count( $this->commerce_providers ) > 0;
+		}
 
 		/**
 		 * Prints the HTML for the error we are talking about based on the arguments
@@ -288,6 +301,14 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Commerce__Loader' ) ) {
 			printf( $nag, esc_url( $url ), esc_attr( $plugin ), esc_html( $plugin ) );
 
 			echo '</p></div>';
+		}
+
+		/**
+		 * Whether the WooCommerce plugin is installed and activated.
+		 * @return bool
+		 */
+		public function is_woocommerce_active() {
+			return class_exists( 'Woocommerce' );
 		}
 	}
 }

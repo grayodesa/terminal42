@@ -67,4 +67,9 @@
 <b>[14.06.2016 16:10]</b> Confirmation message sent to Izachok@yandex.ru for appointment ID:33
 <b>[14.06.2016 16:12]</b> Reminder message sent to Izachok@yandex.ru for appointment ID:33
 <b>[15.06.2016 10:05]</b> Reminder message sent to gray@odesseya.net for appointment ID:33
+<b>[12.07.2016 15:04]</b> Notification message sent to gray@odesseya.net for appointment ID:34
+<b>[12.07.2016 18:06]</b> Сообщение Уведомление направляется gray@odesseya.net для назначения ID: 35
+<b>[13.07.2016 12:27]</b> Сообщение с подтверждением отправлено Ultrika@yandex.ua для назначения ID: 35
+<b>[13.07.2016 16:02]</b> Напоминание сообщение, отправленное на Ultrika@yandex.ua для назначения ID: 35
+<b>[14.07.2016 12:04]</b> Напоминание сообщение, отправленное на gray@odesseya.net для назначения ID: 35
 

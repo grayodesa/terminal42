@@ -20,7 +20,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 				$this->p->debug->mark();
 		}
 
-		public static function add_media_data( &$json_data, &$use_post, &$mod, &$mt_og, &$user_id ) {
+		public static function add_media_data( &$json_data, &$use_post, &$mod, &$mt_og, &$user_id, $size_name = false ) {
 
 			$wpsso =& Wpsso::get_instance();
 			
@@ -32,7 +32,9 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 
 			$prev_count = 0;
 			$max = $wpsso->util->get_max_nums( $mod, 'schema' );
-			$size_name = $wpsso->cf['lca'].'-schema';
+
+			if ( empty( $size_name ) )
+				$size_name = $wpsso->cf['lca'].'-schema';
 
 			// include any video preview images first
 			if ( ! empty( $mt_og['og:video'] ) && is_array( $mt_og['og:video'] ) ) {

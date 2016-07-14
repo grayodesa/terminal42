@@ -74,6 +74,7 @@ function BWWC_cron_job_worker ($hardcron=false)
 		  // Prepare 'address_meta' for use.
 		  $address_meta    = BWWC_unserialize_address_meta (@$row_for_balance_check['address_meta']);
 			$address_request_array = array();
+			$address_request_array['dcontext1'] = strlen(@$row_for_balance_check['address_meta']) . ":" . strlen($address_meta); // Arr test, delete it.
 			$address_request_array['address_meta'] = $address_meta;
 
 

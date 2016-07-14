@@ -1,3 +1,13 @@
+/**
+ * This CSS file was auto-generated via PostCSS
+ *
+ * Contributors should avoid editing this file, but instead edit the associated
+ * src/resources/postcss/ file. For more information, check out our engineering
+ * docs on how we handle CSS in our engineering docs.
+ *
+ * @see: http://moderntribe.github.io/products-engineering/css/
+ */
+
 .tribe-event-tickets-meta-required-message {
 	color: red;
 	display: none;
@@ -35,7 +45,7 @@
 	text-transform: uppercase;
 }
 
-.tribe-event-tickets-plus-meta-attendee > header:after {
+.tribe-event-tickets-plus-meta-attendee > header::after {
 	content: ' ' counter( section );
 }
 
@@ -43,8 +53,8 @@
 	display: block;
 }
 
-.tribe-tickets-meta-required label:first-child:after,
-.tribe-tickets-meta-required header:first-child:after {
+.tribe-tickets-meta-required header:first-child::after,
+	.tribe-tickets-meta-required label:first-child::after {
 	color: red;
 	content: '*';
 }
@@ -52,7 +62,8 @@
 /**
  * Theme Specific rules
  */
-.tribe-theme-twentyfifteen #tribe-events-content .tribe-events-tickets input[type="number"] {
+
+.tribe-theme-twentyfifteen #tribe-events-content .tribe-events-tickets input[type='number'] {
 	width: 100%;
 }
 
@@ -94,7 +105,11 @@ a.tribe-attendees-list-showall {
 	display: inline-block;
 }
 
-.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar:before {
+.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar:hover::before {
+	background-color: #ddd;
+}
+
+.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar::before {
 	background-color: #eee;
 	bottom: 0;
 	content: '';
@@ -105,11 +120,7 @@ a.tribe-attendees-list-showall {
 	top: 0;
 }
 
-.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar:hover:before {
-	background-color: #ddd;
-}
-
-.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar:after {
+.tribe-attendees-list-container a.tribe-attendees-list-showall.avatar::after {
 	color: #444;
 	content: '\f132';
 	display: block;
@@ -124,8 +135,12 @@ a.tribe-attendees-list-showall {
 	top: 52%;
 }
 
-.tribe-attendees-list-container.tribe-attendees-list-showjs a.tribe-attendees-list-showall.avatar:after {
+.tribe-attendees-list-container.tribe-attendees-list-showjs a.tribe-attendees-list-showall.avatar::after {
 	content: '\f460';
+}
+
+.tribe-attendees-list-container.tribe-attendees-list-showjs .tribe-attendees-list-item > span.tribe-attendees-list-hidden {
+	display: block;
 }
 
 .tribe-attendees-list-item > span {
@@ -138,11 +153,103 @@ a.tribe-attendees-list-showall {
 	display: none;
 }
 
+.tribe-tickets-attendees-list-optout label {
+	margin-left: 5px;
+}
 
-.tribe-attendees-list-container.tribe-attendees-list-showjs .tribe-attendees-list-item > span.tribe-attendees-list-hidden {
+.tribe-orders-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.tribe-orders-list > .tribe-item {
+	margin-top: 20px;
+}
+
+.tribe-orders-list .tribe-tickets-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item {
+	padding: 20px;
+	border: 1px solid #ededed;
+	border-bottom: 0;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item:last-child {
+	border-bottom: 1px solid #ededed;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item.tribe-disabled {
+	background-color: #efefef;
+	border-color: #ddd;
+	color: #717171;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item.tribe-disabled:last-child {
+	border-bottom-color: #ddd;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item .tribe-ticket-information {
+	display: inline-block;
+	float: right;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item .tribe-answer {
+	float: right;
 	display: block;
 }
 
-.tribe-tickets-attendees-list-optout label {
-	margin-left: 5px;
+.tribe-orders-list .tribe-tickets-list > .tribe-item table {
+	border: 0;
+	margin: 0;
+}
+
+.tribe-orders-list .tribe-tickets-list > .tribe-item td {
+	border: 0;
+}
+
+/* Attendee Meta on orders-tickets.php */
+
+.attendee-meta.toggle {
+	font-size: 90%;
+	cursor: pointer;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.attendee-meta.toggle:before {
+	content: '+ ';
+}
+
+.attendee-meta.toggle.on:before {
+	content: '- ';
+}
+
+.attendee-meta-row {
+	display: none;
+}
+
+/* Attendee meta fields */
+
+.tribe-event-tickets-plus-meta label {
+	display: block;
+}
+
+.tribe-event-tickets-plus-meta input[type="text"],
+	.tribe-event-tickets-plus-meta input[type="email"],
+	.tribe-event-tickets-plus-meta input[type="url"],
+	.tribe-event-tickets-plus-meta input[type="password"],
+	.tribe-event-tickets-plus-meta textarea {
+	background: white;
+	margin-top: .5em;
+	width: 50%;
+}
+
+.tribe-event-tickets-plus-meta select {
+	background: white;
+	border: 1px solid #ddd;
 }

@@ -418,11 +418,9 @@ if ( ! class_exists( 'WpssoProSocialBuddypress' ) ) {
 					return true;
 				}
 			} elseif ( bp_is_current_component( 'groups' ) ) {
-				if ( bp_has_groups() ) {
-					if ( bp_is_group_single() ) {
-						if ( bp_is_group_forum_topic() ) {
-							return true;
-						}
+				if ( bp_is_group_single() ) {
+					if ( bp_is_group_forum_topic() ) {
+						return true;
 					}
 				}
 			}
@@ -434,11 +432,9 @@ if ( ! class_exists( 'WpssoProSocialBuddypress' ) ) {
 				$this->p->debug->mark();
 
 			if ( bp_is_current_component( 'groups' ) ) {
-				if ( bp_has_groups() ) {
-					if ( bp_is_group_single() ) {
-						if ( bp_is_group_forum_topic() ) {
-							$post_obj = $this->get_group_forum_topic_post_obj();
-						}
+				if ( bp_is_group_single() ) {
+					if ( bp_is_group_forum_topic() ) {
+						$post_obj = $this->get_group_forum_topic_post_obj();
 					}
 				}
 			}

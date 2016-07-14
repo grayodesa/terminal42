@@ -646,6 +646,10 @@ class Tribe__Events__Pro__Recurrence__Meta {
 					self::add_date_exclusion_to_recurrence( $recurrence_meta, $date );
 				}
 			}
+
+			if ( ! empty( $recurrence_data['recurrence-description'] ) ) {
+				$recurrence_meta['description'] = $recurrence_data['recurrence-description'];
+			}
 		}
 
 		return apply_filters( 'tribe_pro_legacy_recurrence_meta', $recurrence_meta );
@@ -829,6 +833,8 @@ class Tribe__Events__Pro__Recurrence__Meta {
 		$latest_date = strtotime( self::$scheduler->get_latest_date() );
 
 		$recurrences = self::get_recurrence_for_event( $event_id );
+
+		/** @var Tribe__Events__Pro__Recurrence $recurrence */
 		foreach ( $recurrences['rules'] as &$recurrence ) {
 			$recurrence->setMinDate( strtotime( $next_pending ) );
 			$recurrence->setMaxDate( $latest_date );
@@ -837,16 +843,19 @@ class Tribe__Events__Pro__Recurrence__Meta {
 			if ( empty( $dates ) ) {
 				return; // nothing to add right now. try again later
 			}
+			
+			$sequence = new Tribe__Events__Pro__Recurrence__Sequence( $dates, $event_id );
 
 			delete_post_meta( $event_id, '_EventNextPendingRecurrence' );
+			
 			if ( $recurrence->constrainedByMaxDate() !== false ) {
 				update_post_meta( $event_id, '_EventNextPendingRecurrence', date( Tribe__Events__Pro__Date_Series_Rules__Rules_Interface::DATE_FORMAT, $recurrence->constrainedByMaxDate() ) );
 			}
 
 			$excluded = array_map( 'strtotime', self::get_excluded_dates( $event_id ) );
-			foreach ( $dates as $date_duration ) {
+			foreach ( $sequence->get_sorted_sequence() as $date_duration ) {
 				if ( ! in_array( $date_duration, $excluded ) ) {
-					$instance = new Tribe__Events__Pro__Recurrence__Instance( $event_id, $date_duration );
+					$instance = new Tribe__Events__Pro__Recurrence__Instance( $event_id, $date_duration, 0, $date_duration['sequence'] );
 					$instance->save();
 				}
 			}
@@ -883,6 +892,12 @@ class Tribe__Events__Pro__Recurrence__Meta {
 		foreach ( array( 'rules', 'exclusions' ) as $rule_type ) {
 			foreach ( $recurrence_meta[ $rule_type ] as &$recurrence ) {
 				$rule = Tribe__Events__Pro__Recurrence__Series_Rules_Factory::instance()->build_from( $recurrence, $rule_type );
+
+				// recurrence meta entry might be malformed
+				if ( is_wp_error( $rule ) ) {
+					// let's not process it and let's not try to fix it as it might be a third-party modification
+					continue;
+				}
 
 				$custom_type = 'none';
 				$start_time  = null;
@@ -1244,6 +1259,7 @@ class Tribe__Events__Pro__Recurrence__Meta {
 		$text = $recurrence_strings[ $key ];
 
 		switch ( $key ) {
+			case 'simple-date-on':
 			case 'simple-every-day-on':
 			case 'simple-every-week-on':
 			case 'simple-every-month-on':

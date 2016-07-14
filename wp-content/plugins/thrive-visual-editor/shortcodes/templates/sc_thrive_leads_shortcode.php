@@ -14,12 +14,12 @@ if ( ! function_exists( 'tve_leads_shortcode_render' ) ) {
 
 $shortcode_id = $_POST['thrive_leads_shortcode_id'];
 
-$shortcode_data = tve_leads_shortcode_render( array(
+$design_data = tve_leads_shortcode_render( array(
 	'id'         => $shortcode_id,
 	'for_editor' => true
 ) );
 
-if ( empty( $shortcode_data ) || ! is_array( $shortcode_data ) || empty( $shortcode_data['html'] ) ) {
+if ( empty( $design_data ) || ! is_array( $design_data ) || empty( $design_data['html'] ) ) {
 	echo '<p>Shortcode could not be rendered!</p>';
 	die;
 }
@@ -31,11 +31,11 @@ if ( empty( $shortcode_data ) || ! is_array( $shortcode_data ) || empty( $shortc
 	<div class="thrive-shortcode-config"
 	     style="display: none !important"><?php echo '__CONFIG_leads_shortcode__' . json_encode( array( 'id' => $shortcode_id ) ) . '__CONFIG_leads_shortcode__' ?></div>
 	<div class="thrive-shortcode-html">
-		<?php echo str_replace( 'tve_editor_main_content', '', $shortcode_data['html'] ) ?>
-		<?php foreach ( $shortcode_data['fonts'] as $font ): ?>
+		<?php echo str_replace( 'tve_editor_main_content', '', $design_data['html'] ) ?>
+		<?php foreach ( $design_data['fonts'] as $font ): ?>
 			<link href="<?php echo $font ?>"/>
 		<?php endforeach; ?>
-		<?php foreach ( $shortcode_data['css'] as $css ): ?>
+		<?php foreach ( $design_data['css'] as $css ): ?>
 			<link href="<?php echo $css ?>" type="text/css" rel="stylesheet"/>
 		<?php endforeach; ?>
 	</div>

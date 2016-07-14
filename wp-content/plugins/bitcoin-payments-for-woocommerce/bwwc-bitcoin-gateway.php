@@ -127,7 +127,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway ()
 		    		$reason_message = __("Please specify Electrum Master Public Key (MPK) in Bitcoinway plugin settings. <br />To retrieve MPK: launch your electrum wallet, select: Wallet->Master Public Keys, OR: <br />Preferences->Import/Export->Master Public Key->Show", 'woocommerce');
 		    		$valid = false;
 		    	}
-	    		else if (!preg_match ('/^[a-f0-9]{128}$/', $mpk) && !preg_match ('/^xpub661[a-zA-Z0-9]{104}$/', $mpk))
+	    		else if (!preg_match ('/^[a-f0-9]{128}$/', $mpk) && !preg_match ('/^xpub[a-zA-Z0-9]{107}$/', $mpk))
 	    		{
 		    		$reason_message = __("Electrum Master Public Key is invalid. Must be 128 or 111 characters long, consisting of digits and letters.", 'woocommerce');
 		    		$valid = false;

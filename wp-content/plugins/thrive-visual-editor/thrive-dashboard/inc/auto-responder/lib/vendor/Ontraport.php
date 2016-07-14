@@ -89,8 +89,16 @@ class Thrive_Dash_Api_Ontraport {
 	public function addContact( $list_id, $fields ) {
 		$fields['updateSequence'] = '*/*' . $list_id . '*/*';
 
-		if ( isset( $fields['phone'] ) ) {
+		if ( ! empty( $fields['phone'] ) && isset( $fields['phone'] ) ) {
 			$fields['cell_phone'] = $fields['phone'];
+		}
+		/* if those fields are empty */
+		if ( empty( $fields['firstname'] ) && isset( $fields['firstname'] ) ) {
+			unset( $fields['firstname'] );
+		}
+
+		if ( empty( $fields['lastname'] ) && isset( $fields['lastname'] ) ) {
+			unset( $fields['lastname'] );
 		}
 
 		$fields['objectID'] = 0;

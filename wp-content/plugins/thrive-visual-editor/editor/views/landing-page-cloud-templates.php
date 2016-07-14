@@ -32,7 +32,7 @@
 	<?php foreach ( $templates as $key => $template ) : ?>
 		<div class="tve_cloud_tpl_item<?php echo ' ' . $template['tag_classes'] ?>">
             <span
-	            class="tve_grid_cell<?php echo ! empty( $template['downloaded'] ) && $selected == $key ? ' tve_cell_selected' : '' ?>">
+	            class="tve_grid_cell<?php echo ! empty( $template['downloaded'] ) && $selected_campaign == $key ? ' tve_cell_selected' : '' ?>">
                 <input type="hidden" class="lp_code" value="<?php echo $key ?>"/>
                 <img src="<?php echo $template['thumb'] ?>" width="178" height="150"/>
                 <span class="tve_cell_caption_holder"><span

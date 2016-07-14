@@ -9,6 +9,13 @@ tribe_event_tickets_plus.meta.event = tribe_event_tickets_plus.meta.event || {};
 	 * Initializes the meta functionality
 	 */
 	my.init = function() {
+		$( '.tribe-list' ).on( 'click', '.attendee-meta.toggle', function() {
+			$( this )
+				.toggleClass( 'on' )
+				.siblings( '.attendee-meta-row' )
+				.slideToggle();
+		});
+		
 		this.$ticket_form = $( '.tribe-events-tickets' ).closest( '.cart' );
 
 		this.$ticket_form

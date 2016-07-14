@@ -1,5 +1,5 @@
-<?php if ( ! empty( $data['groups'] ) ) : ?>
 	<div id="thrive-api-groups">
+		<?php if ( ! empty( $data['groups'] ) ) : ?>
 		<div class="tve-sp"></div>
 			<h6><?php echo __( 'Choose your grouping:', TVE_DASH_TRANSLATE_DOMAIN ) ?></h6>
 			<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline">
@@ -29,11 +29,12 @@
 							if(isset($data['group'])) {
 								$selected_groups = explode(',',$data['group']);
 							} ?>
-							<label class="thrive-api-group-select"><input <?php echo in_array($group['id'], $selected_groups) ? 'checked="checked"' : '' ?> name="mailchimp_group" class="thrive-api-group-select <?php echo isset($data['groupin']) && $data['groupin'] == $groups['id'] ? 'tve-api-extra' : ''; ?>" type="<?php echo $groups['form_field'] == 'checkboxes' ? 'checkbox' : $groups['form_field']; ?>" name="<?php echo $groups['id'] ?>" value="<?php echo $group['id'] ?>"><?php echo $group['name'] ?></label>
+							<label class="thrive-api-group-select"><input style="margin-top: -5px;" <?php echo in_array($group['id'], $selected_groups) ? 'checked="checked"' : '' ?> name="mailchimp_group" class="thrive-api-group-select <?php echo isset($data['groupin']) && $data['groupin'] == $groups['id'] ? 'tve-api-extra' : ''; ?>" type="<?php echo $groups['form_field'] == 'checkboxes' ? 'checkbox' : $groups['form_field']; ?>" name="<?php echo $groups['id'] ?>" value="<?php echo $group['id'] ?>"><?php echo $group['name'] ?></label>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>
+		<?php endif; ?>
 	</div>
 	<script type="text/javascript">
 		(function ( $ ) {
@@ -51,5 +52,5 @@
 			});
 		})( jQuery );
 	</script>
-<?php endif; ?>
+
 

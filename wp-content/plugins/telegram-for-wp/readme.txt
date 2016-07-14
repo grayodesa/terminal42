@@ -3,7 +3,7 @@ Contributors: amir-mousavi
 Tags: telegram,notifications,email,admin,plugin,channel
 Requires at least: 3.5
 Tested up to: 4.5.2
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 

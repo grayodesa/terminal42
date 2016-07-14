@@ -4,9 +4,9 @@ jQuery(document).ready(function( $ ) {
     $(".ajax_add_to_cart").click(function(e){
 
         var code = jQuery(this).attr('data-pixelcode') || false;
-        console.log( code );
 
         if( code != false && code != '' ) {
+            console.log( code );
             eval( code );
         }
 

@@ -206,22 +206,43 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 		}
 
-		try {
-			$api->lists->subscribe(
-				$list_identifier,
-				array( 'email' => $arguments['email'] ),
-				$merge_tags,
-				'html',
-				$double_optin,
-				true
-			);
+		$member = $api->lists->memberInfo($list_identifier, array(array('email' => $arguments['email'])));
 
-			return true;
-		} catch ( Thrive_Dash_Api_Mailchimp_Error $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', TVE_DASH_TRANSLATE_DOMAIN );
-		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+		if($member['error_count'] == 1) {
+			try {
+				$api->lists->subscribe(
+					$list_identifier,
+					array( 'email' => $arguments['email'] ),
+					$merge_tags,
+					'html',
+					$double_optin,
+					true
+				);
+
+				return true;
+			} catch ( Thrive_Dash_Api_Mailchimp_Error $e ) {
+				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', TVE_DASH_TRANSLATE_DOMAIN );
+			} catch ( Exception $e ) {
+				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			}
+		} else {
+			try {
+				$api->lists->updateMember(
+					$list_identifier,
+					array( 'email' => $arguments['email'] ),
+					$merge_tags,
+					false
+				);
+
+				return true;
+			} catch ( Thrive_Dash_Api_Mailchimp_Error $e ) {
+				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', TVE_DASH_TRANSLATE_DOMAIN );
+			} catch ( Exception $e ) {
+				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			}
 		}
+
+
 
 	}
 

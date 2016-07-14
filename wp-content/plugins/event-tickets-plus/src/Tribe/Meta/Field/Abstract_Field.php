@@ -53,6 +53,24 @@ abstract class Tribe__Tickets_Plus__Meta__Field__Abstract_Field {
 	}
 
 	/**
+	 * Applies a filter to check if this field is restricted
+	 *
+	 * @param  int  $attendee_id Which attendee are we dealing with
+	 * @return boolean
+	 */
+	public function is_restricted( $attendee_id = null ) {
+		/**
+		 * Allow developers to prevent users to update a specific field
+		 * @param boolean $is_meta_field_restricted If is allowed or not
+		 * @param int     $attendee_id              Which attendee this update will be done to
+		 * @param self    $this                     This Field instance
+		 */
+		$is_meta_field_restricted = (bool) apply_filters( 'event_tickets_plus_is_meta_field_restricted', false, $attendee_id, $this );
+
+		return $is_meta_field_restricted;
+	}
+
+	/**
 	 * Renders the field on the front end
 	 *
 	 * @since 4.1
@@ -65,7 +83,7 @@ abstract class Tribe__Tickets_Plus__Meta__Field__Abstract_Field {
 		$field = $this->get_field_settings();
 		$value = $this->get_field_value( $attendee_id );
 
-		return $this->render_field( $field, $value );
+		return $this->render_field( $field, $value, $attendee_id );
 	}
 
 	/**
@@ -153,7 +171,28 @@ abstract class Tribe__Tickets_Plus__Meta__Field__Abstract_Field {
 			return null;
 		}
 
-		$value = get_post_meta( $attendee_id, self::META_PREFIX . $this->slug, true );
+		$value = null;
+		$values = get_post_meta( $attendee_id, Tribe__Tickets_Plus__Meta::META_KEY, true );
+
+		if ( 'checkbox' === $this->type ) {
+			foreach ( $this->extra['options'] as $label )  {
+				$slug = $this->slug . '_' . sanitize_title( $label );
+				if ( ! isset( $values[ $slug ] ) ) {
+					continue;
+				}
+
+				// Save the Slug for checking which were saved
+				$value[] = $slug;
+			}
+
+			if ( ! is_array( $value ) ) {
+				$value = array();
+			}
+		} else {
+			if ( isset( $values[ $this->slug ] ) ) {
+				$value = $values[ $this->slug ];
+			}
+		}
 
 		return $value;
 	}
@@ -168,7 +207,7 @@ abstract class Tribe__Tickets_Plus__Meta__Field__Abstract_Field {
 	 *
 	 * @return string
 	 */
-	public function render_field( $field, $value = null ) {
+	public function render_field( $field, $value = null, $attendee_id = null ) {
 		ob_start();
 
 		$template = sanitize_file_name( $field->type );

@@ -395,6 +395,7 @@ function tve_load_font_css() {
 
 	/**
 	 * Loop through font classes and display their css properties
+	 *
 	 * @var string $font_class
 	 * @var array $rules
 	 */
@@ -445,6 +446,7 @@ function tve_output_custom_font_css( $fonts ) {
 
 	/**
 	 * Loop through font classes and display their css properties
+	 *
 	 * @var string $font_class
 	 * @var array $rules
 	 */
@@ -585,7 +587,12 @@ function tve_save_post() {
 			$tve_get_last_revision_id = tve_get_last_revision_id( $_POST['post_id'] );
 			exit( $tve_get_last_revision_id ? (string) $tve_get_last_revision_id : '1' );
 		}
+
 		if ( ! empty( $_POST['tve_default_tooltip_settings'] ) ) {
+
+			if ( ! empty( $_POST['tve_default_tooltip_settings']['event_tooltip_text'] ) ) {
+				$_POST['tve_default_tooltip_settings']['event_tooltip_text'] = stripslashes( $_POST['tve_default_tooltip_settings']['event_tooltip_text'] );
+			}
 			update_option( "tve_default_tooltip_settings", $_POST['tve_default_tooltip_settings'] );
 		}
 
@@ -672,6 +679,7 @@ function tve_save_post() {
 		/**
 		 * trigger also a post / page update for the caching plugins to know there has been a save
 		 * update post here so we can have access to its meta when a revision of it is saved
+		 *
 		 * @see tve_save_post_callback
 		 */
 		if ( ! empty( $_POST['tve_content'] ) ) {
@@ -733,6 +741,8 @@ function tve_editor_content( $content, $use_case = null ) {
 	if ( is_editor_page() ) {
 
 		// this is an editor page
+//		print_r(tve_get_post_meta( $post_id, "tve_save_post", true ));
+
 		$tve_saved_content = stripslashes( tve_get_post_meta( $post_id, "tve_save_post", true ) );
 
 		/*
@@ -744,7 +754,8 @@ function tve_editor_content( $content, $use_case = null ) {
 			add_action( 'wp_footer', 'tve_output_wysiwyg_editor' );
 		}
 
-		$page_loader = '<div id="tve_page_loader" class="tve_page_loader"><div class="tve_loader_inner">
+		$page_loader
+			= '<div id="tve_page_loader" class="tve_page_loader"><div class="tve_loader_inner">
                 <img src="' . tve_editor_css() . '/images/loader.gif" alt=""/></div></div>';
 
 	} else {
@@ -912,11 +923,11 @@ function tve_turn_off_get_current_screen() {
  * wrapper over the wp enqueue_style function
  * it will append the TVE_VERSION as a query string parameter to the $src if $ver is left empty
  *
- * @param $handle
- * @param $src
+ * @param       $handle
+ * @param       $src
  * @param array $deps
  * @param bool $ver
- * @param $media
+ * @param       $media
  */
 function tve_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media = 'all' ) {
 	if ( $ver === false ) {
@@ -929,7 +940,7 @@ function tve_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media
  * wrapper over the wp_enqueue_script functions
  * it will add the plugin version to the script source if no version is specified
  *
- * @param $handle
+ * @param        $handle
  * @param string $src
  * @param array $deps
  * @param bool $ver
@@ -1169,6 +1180,7 @@ function tcb_custom_editable_content() {
 		}
 
 		$tcb_landing_page->enqueueCss();
+		$tcb_landing_page->ensure_external_assets();
 
 		include_once ABSPATH . '/wp-admin/includes/plugin.php';
 		if ( is_editor_page() || ! tve_hooked_in_template_redirect() ) {
@@ -1527,6 +1539,7 @@ function tve_editor_display_config() {
 
 /**
  * determine whether the user is on the editor page or not (also takes into account edit capabilities)
+ *
  * @return bool
  */
 function is_editor_page() {
@@ -1563,6 +1576,7 @@ function tve_tcb__license_activated() {
 /**
  * determine whether the user is on the editor page or not based just on a $_GET parameter
  * modification: WP 4 removed the "preview" parameter
+ *
  * @return bool
  */
 function is_editor_page_raw() {
@@ -1934,6 +1948,7 @@ function tve_enqueue_editor_scripts() {
 						'SelectSavedTemplate'                  => __( 'Please select a saved template first', 'thrive-cb' ),
 						'DeleteSavedTemplate'                  => __( 'Are you sure you want to delete this saved template? This action cannot be undone', 'thrive-cb' ),
 						'ChooseExistingAPI'                    => __( 'Please choose an existing API connection and a mailing list!', 'thrive-cb' ),
+						'RemoveCustomFields'                   => __( 'Remove', 'thrive-cb' ),
 						'RemoveContentTemplate'                => __( 'Are you sure you want to remove this Content Template? This action cannot be undone', 'thrive-cb' ),
 						'RemoveHighlightedColumn'              => __( 'Remove highlighted column', 'thrive-cb' ),
 						'AddHighlightedColumn'                 => __( 'Add highlighted column', 'thrive-cb' ),
@@ -1981,7 +1996,8 @@ function tve_enqueue_editor_scripts() {
 
 // now print scripts for preview logo in admin bar. will write directly to page because only a small snippet and thus will load faster than another external css file load.
 	if ( tve_is_post_type_editable( get_post_type( get_the_ID() ) ) && is_admin_bar_showing()
-	     && ! isset( $_GET[ TVE_EDITOR_FLAG ] ) && ( is_single() || is_page() )
+	     && ! isset( $_GET[ TVE_EDITOR_FLAG ] )
+	     && ( is_single() || is_page() )
 	): ?>
 		<style type="text/css">
 			.thrive-adminbar-icon {
@@ -2041,7 +2057,7 @@ function tve_enqueue_style_family( $post_id = null ) {
 /**
  * retrieve the style family used for a specific post / page
  *
- * @param $post_id
+ * @param        $post_id
  * @param string $default
  */
 function tve_get_style_family( $post_id, $default = 'Flat' ) {
@@ -2317,6 +2333,7 @@ function tve_get_thrive_optins() {
 
 /**
  * Thrive Shortcode callback that will call apply_filters on "tve_additional_fields" tag
+ *
  * @see tve_thrive_shortcodes
  *
  * @param array $data with [group_id, form_type_id, variation_id]
@@ -2392,7 +2409,7 @@ function tve_thrive_shortcodes( $content, $keepConfig = false ) {
 				if ( ! ( $_params = @json_decode( $json_safe, true ) ) ) {
 					$_params = array();
 				}
-				$replacement = call_user_func( $callback, $_params );
+				$replacement = call_user_func( $callback, $_params, $keepConfig );
 				if ( $callback === 'tve_do_post_grid_shortcode' && PostGridHelper::$render_post_grid === false ) {
 					$keepConfig = false;
 				}
@@ -2755,7 +2772,7 @@ function tve_get_landing_page_templates() {
  * each template will have it's own fields saved for the post, this helps users to not lose any content when switching back and forth various templates
  *
  * @param int $post_id
- * @param $landing_page_template
+ * @param     $landing_page_template
  */
 function tve_change_landing_page_template( $post_id, $landing_page_template ) {
 	if ( ! $landing_page_template ) {
@@ -3050,9 +3067,9 @@ function tve_update_post_custom_fonts( $post_id, $custom_font_classes ) {
 /**
  * get all custom fonts used for a post
  *
- * @param $post_id
+ * @param      $post_id
  * @param bool $include_thrive_fonts - whether or not to include Thrive Themes fonts for this post in the list.
- * By default it will return all the fonts that are used in TCB but are not already used from the Theme (admin WP editor)
+ *                                   By default it will return all the fonts that are used in TCB but are not already used from the Theme (admin WP editor)
  *
  * @return array with index => href link
  */
@@ -3284,9 +3301,20 @@ function tve_create_lightbox( $title = '', $tcb_content = '', $tve_globals = arr
 function tve_render_widget_menu( $attributes ) {
 	$menu_id = $attributes['menu_id'];
 
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && function_exists( 'Nav_Menu_Roles' ) ) {
+		/**
+		 * If loading the menu via ajax ( in the TCB editor page ) and the Nav Menu Roles plugin is active, we need to add its filtering function here
+		 * in order to show the same menu items in the editor page and in Preview
+		 */
+		$nav_menu_roles = Nav_Menu_Roles();
+		if ( ! empty( $nav_menu_roles ) && $nav_menu_roles instanceof Nav_Menu_Roles ) {
+			add_filter( 'wp_get_nav_menu_items', array( $nav_menu_roles, 'exclude_menu_items' ) );
+		}
+	}
+
 	$items = wp_get_nav_menu_items( $menu_id );
 	if ( empty( $items ) ) {
-		return '<p class="no-entry">You don\'t have any menu configured in your WordPress install. Create your first menu from the Appearance section in your WordPress administration panel.</p>';
+		return '';
 	}
 
 	$ul_custom_color       = ! empty( $attributes['ul_attr'] ) ? sprintf( " data-tve-custom-colour='%s'", $attributes['ul_attr'] ) : '';
@@ -3574,11 +3602,13 @@ function tve_ajax_load() {
 		case 'lb_table':
 		case 'lb_text_link':
 		case 'lb_text_link_settings':
+		case 'lb_ultimatum_shortcode':
 			include plugin_dir_path( dirname( __FILE__ ) ) . 'editor/' . $file . '.php';
 			break;
 		case 'sc_thrive_custom_menu':
 		case 'sc_thrive_custom_phone':
 		case 'sc_thrive_leads_shortcode':
+		case 'sc_thrive_ultimatum_shortcode':
 		case 'sc_thrive_optin':
 		case 'sc_thrive_posts_list':
 		case 'sc_widget_menu':
@@ -3612,6 +3642,7 @@ function tve_post_revision_fields( $fields ) {
  * At this moment post is reverted to required revision.
  * This means the post is saved and a new revision is already created.
  * When a revision is created all metas are assigned to revision;
+ *
  * @see tve_save_post_callback
  *
  * Get all the metas of the revision received as parameter and set it for the newly revision created.
@@ -3703,6 +3734,7 @@ function tve_post_has_changed( $post_has_changed, $last_revision, $post ) {
 
 /**
  * Return an array with meta keys that are used for custom content on posts
+ *
  * @see tve_save_post_callback, tve_post_has_changed, tve_restore_post_to_revision
  *
  * @return array
@@ -3886,7 +3918,7 @@ function tve_find_quick_link_contents() {
 		$post_types    = array( 'post', 'page' );
 
 	} else {
-		$accepted    = unserialize( $post_types );
+		$accepted = unserialize( $post_types );
 
 		if ( ! $accepted ) {
 			$accepted = array();
@@ -3897,7 +3929,7 @@ function tve_find_quick_link_contents() {
 
 	$postList = array();
 	if ( $post_types !== null ) {
-		$args        = array(
+		$args           = array(
 			'post_type'   => $post_types,
 			'post_status' => 'publish',
 			's'           => $s,

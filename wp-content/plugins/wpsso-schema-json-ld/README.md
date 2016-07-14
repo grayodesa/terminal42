@@ -3,13 +3,13 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Schema JSON-LD Markup (WPSSO JSON)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.8.1-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.9.1-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
 <tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
 <tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpssojson-readme-donate">https://wpsso.com/?utm_source=wpssojson-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
-<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, pinterest, google, seo, news, amp, co-authors, co-authors plus</td></tr>
+<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, event, review, rating, pinterest, google, seo, news, amp, co-authors, co-authors plus</td></tr>
 </table>
 
 <h2>Description</h2>
@@ -250,6 +250,18 @@
   <li>Thumbnail Width</li>
   <li>Thumbnail Height</li>
   </ul></li>
+  </ul></li>
+  <li>CreativeWork ItemReviewed as Any Schema Type
+  
+  <ul>
+  <li>Item URL</li>
+  </ul></li>
+  <li>CreativeWork ReviewRating as <a href="http://schema.org/Rating">schema.org/Rating</a>
+  
+  <ul>
+  <li>RatingValue</li>
+  <li>WorstRating</li>
+  <li>BestRating</li>
   </ul></li>
   </ul>
 </blockquote>

@@ -76,7 +76,7 @@ class Tribe__Tickets_Plus__Meta__Render {
 	 */
 	public function ticket_email_meta( $item ) {
 		$meta_fields = Tribe__Tickets_Plus__Main::instance()->meta()->get_meta_fields_by_ticket( $item['product_id'] );
-		$meta_data = get_post_meta( $item['ticket_id'], Tribe__Tickets_Plus__Meta::META_KEY, true );
+		$meta_data = get_post_meta( $item['qr_ticket_id'], Tribe__Tickets_Plus__Meta::META_KEY, true );
 
 		if ( ! $meta_fields || ! $meta_data ) {
 			return;

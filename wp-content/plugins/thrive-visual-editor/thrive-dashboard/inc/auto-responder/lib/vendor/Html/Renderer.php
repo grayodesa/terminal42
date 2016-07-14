@@ -50,7 +50,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * generate the setup table for the fields included in API-connected forms
 	 *
 	 * @param array $params provide a way to filter the output
-	 * @param array $order elements order - numeric array containing field names as values
+	 * @param array $order  elements order - numeric array containing field names as values
 	 *
 	 * @return string the generated table containing all input data
 	 */
@@ -134,6 +134,7 @@ class Thrive_Dash_Api_Html_Renderer {
 
 	/**
 	 * render the table head
+	 *
 	 * @return string
 	 */
 	protected function _tableHead() {
@@ -161,7 +162,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * render a row for a text input
 	 *
 	 * @param array $element the element data
-	 * @param int $input_index
+	 * @param int   $input_index
 	 *
 	 * @return string
 	 */
@@ -177,7 +178,8 @@ class Thrive_Dash_Api_Html_Renderer {
 			<?php if ( $this->show_display_options ) : ?>
 				<?php if ( $field != 'email' ) : ?>
 					<label class="tve_switch">
-						<input class="tve-lg-display-elem tve_lightbox_input" data-elem-field="display" type="checkbox" id="<?php echo 'elem_display_' . $field ?>"<?php echo ! empty( $element['display'] ) ? ' checked="checked"' : '' ?> />
+						<input class="tve-lg-display-elem tve_lightbox_input" data-elem-field="display" type="checkbox"
+						       id="<?php echo 'elem_display_' . $field ?>"<?php echo ! empty( $element['display'] ) ? ' checked="checked"' : '' ?> />
 						<span></span>
 					</label>
 				<?php else : ?>
@@ -191,7 +193,8 @@ class Thrive_Dash_Api_Html_Renderer {
 			<input type="hidden" class="lg_elem_field" value="<?php echo $field ?>"/>
 		</td>
 		<td>
-			<input type="<?php echo $type; ?>" data-elem-field="label" value="<?php echo empty( $element['label'] ) ? '' : $element['label'] ?>" class='tve_lightbox_input' id='txt_label_<?php echo $field; ?>'/>
+			<input type="<?php echo $type; ?>" data-elem-field="label" value="<?php echo empty( $element['label'] ) ? '' : $element['label'] ?>" class='tve_lightbox_input'
+			       id='txt_label_<?php echo $field; ?>'/>
 		</td>
 		<td>
 			<div class="tve_lightbox_select_holder">
@@ -223,7 +226,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * render a row for a select (dropdown) element
 	 *
 	 * @param array $element element data
-	 * @param int $input_index
+	 * @param int   $input_index
 	 *
 	 * @return string
 	 */
@@ -241,7 +244,8 @@ class Thrive_Dash_Api_Html_Renderer {
 			<input type="hidden" class="lg_elem_field" value="<?php echo $field ?>"/>
 		</td>
 		<td>
-			<input type="text" data-elem-field="label" value="<?php echo empty( $element['default_value'] ) ? '' : $element['default_value'] ?>" class='tve_lightbox_input' id='txt_label_<?php echo $field; ?>'/>
+			<input type="text" data-elem-field="label" value="<?php echo empty( $element['default_value'] ) ? '' : $element['default_value'] ?>" class='tve_lightbox_input'
+			       id='txt_label_<?php echo $field; ?>'/>
 		</td>
 		<td style="text-align: center">&nbsp;</td>
 		<td class="tve_text_center">
@@ -250,13 +254,9 @@ class Thrive_Dash_Api_Html_Renderer {
 				<label for="required_<?php echo $field ?>"></label>
 			</div>
 		</td>
-		<td>
-			<div class="tve_lightbox_input_holder tve_lightbox_no_label">
-				<input data-elem-field="show_icon" type="checkbox" id="icon_<?php echo $field ?>"/>
-				<label for="icon_<?php echo $field ?>"></label>
-			</div>
-			<button class="tve_editor_button tve_editor_button_default tve_click tve_editor_small_button" data-ctrl="function:auto_responder.open_icon_picker"
-			        data-field="<?php echo $field; ?>"><?php echo __( 'Add icon', TVE_DASH_TRANSLATE_DOMAIN ) ?></button>
+		<td class="tve_center">
+			-
+			<input data-elem-field="show_icon" type="checkbox" id="icon_<?php echo $field ?>" style="display: none"/>
 		</td>
 		</tr><?php
 
@@ -270,7 +270,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * render a row for a radio input element
 	 *
 	 * @param array $element element data
-	 * @param int $input_index
+	 * @param int   $input_index
 	 *
 	 * @return string
 	 */
@@ -313,7 +313,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * render a row for a checkbox element
 	 *
 	 * @param array $element
-	 * @param int $input_index
+	 * @param int   $input_index
 	 *
 	 * @return string
 	 */
@@ -353,7 +353,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * render a row for a textarea element
 	 *
 	 * @param array $element element data
-	 * @param int $input_index
+	 * @param int   $input_index
 	 *
 	 * @return string
 	 */
@@ -365,7 +365,7 @@ class Thrive_Dash_Api_Html_Renderer {
 	 * output validation options
 	 *
 	 * @param string $field
-	 * @param array $element element data
+	 * @param array  $element element data
 	 */
 	protected function _validationOptions( $field, $element ) {
 		$selected = ! empty( $element['validation'] ) ? $element['validation'] : '';

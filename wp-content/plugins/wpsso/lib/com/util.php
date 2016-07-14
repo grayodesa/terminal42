@@ -268,7 +268,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		}
 
 		public static function is_https( $url = '' ) {
-			if ( ! empty( $url ) ) {
+			if ( ! empty( $url ) && strpos( $url, '://' ) ) {
 				if ( parse_url( $url, PHP_URL_SCHEME ) === 'https' )
 					return true;
 				else return false;
@@ -278,11 +278,12 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			else return false;
 		}
 
-		// returns 'http' or 'https'
 		public static function get_prot( $url = '' ) {
-			if ( self::is_https( $url ) )
-				return 'https';
-			else return 'http';
+			return self::is_https( $url ) ? 'https' : 'http';
+		}
+
+		public static function add_prot( $url = '' ) {
+			return self::get_prot( $url ).'://'.preg_replace( '/^(.*://|//)/', '', $url );
 		}
 
 		public static function get_const( $const, $not_found = null ) {
@@ -646,26 +647,40 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		}
 
 		// return the custom site name, and if empty, the default site name
-		public static function get_site_name( array &$opts, array &$mod ) {
-			return self::get_locale_opt( 'og_site_name', $opts, $mod, get_bloginfo( 'name', 'display' ) );
+		// $mixed = 'default' | 'current' | post ID | $mod array
+		public static function get_site_name( array &$opts, $mixed = 'current' ) {
+			$site_name = self::get_locale_opt( 'og_site_name', $opts, $mixed );
+			if ( empty( $site_name ) )
+				return get_bloginfo( 'name', 'display' );
+			else return $site_name;
 		}
 
 		// return the custom site description, and if empty, the default site description
 		// $mixed = 'default' | 'current' | post ID | $mod array
-		public static function get_site_description( array &$opts, array &$mod ) {
-			return self::get_locale_opt( 'og_site_description', $opts, $mod, get_bloginfo( 'description', 'display' ) );
+		public static function get_site_description( array &$opts, $mixed = 'current' ) {
+			$site_desc = self::get_locale_opt( 'og_site_description', $opts, $mixed );
+			if ( empty( $site_desc ) )
+				return get_bloginfo( 'description', 'display' );
+			else return $site_desc;
 		}
 
 		// return a localize options value
 		// $mixed = 'default' | 'current' | post ID | $mod array
-		public static function get_locale_opt( $key, array &$opts, $mixed = 'current', $if_empty = null ) {
+		public static function get_locale_opt( $key, array &$opts, $mixed = 'current' ) {
 			$key_locale = self::get_key_locale( $key, $opts, $mixed );
-			if ( $if_empty !== null )
-				return empty( $opts[$key_locale] ) ?
-					$if_empty : $opts[$key_locale];
-			// allow for empty values
-			else return isset( $opts[$key_locale] ) ?
+			$val_locale = isset( $opts[$key_locale] ) ?
 				$opts[$key_locale] : null;
+
+			// fallback to default value for non-existing keys or empty strings
+			if ( ! isset( $opts[$key_locale] ) || $opts[$key_locale] === '' ) {
+				if ( ( $pos = strpos( $key_locale, '#' ) ) > 0 ) {
+					$key_default = SucomUtil::get_key_locale( substr( $key_locale, 0, $pos ), $opts, 'default' );
+					if ( $key_locale !== $key_default ) {
+						return isset( $opts[$key_default] ) ?
+							$opts[$key_default] : $val_locale;
+					} else return $val_locale;
+				} else return $val_locale;
+			} else return $val_locale;
 		}
 
 		// localize an options array key
@@ -685,9 +700,9 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		}
 
 		public static function get_multi_key_locale( $prefix, array &$opts, $add_none = false ) {
-			$default = SucomUtil::get_locale( 'default' );
-			$current = SucomUtil::get_locale( 'current' );
-			$matches = SucomUtil::preg_grep_keys( '/^'.$prefix.'_([0-9]+)(#.*)?$/', $opts );
+			$default = self::get_locale( 'default' );
+			$current = self::get_locale( 'current' );
+			$matches = self::preg_grep_keys( '/^'.$prefix.'_([0-9]+)(#.*)?$/', $opts );
 			$results = array();
 
 			foreach ( $matches as $key => $value ) {
@@ -745,7 +760,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		}
 
 		public static function get_mod_salt( array $mod ) {
-			return 'locale:'.SucomUtil::get_locale( $mod ).'_'.$mod['name'].':'.$mod['id'];
+			return 'locale:'.self::get_locale( $mod ).'_'.$mod['name'].':'.$mod['id'];
 		}
 
 		public static function restore_checkboxes( &$opts ) {
@@ -880,7 +895,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		public static function maybe_load_post( $id, $force = false ) {
 			global $post;
 			if ( empty( $post ) || $force ) {
-				$post = SucomUtil::get_post_object( $id, 'object' );
+				$post = self::get_post_object( $id, 'object' );
 				return true;
 			} else return false;
 		}

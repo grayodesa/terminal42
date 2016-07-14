@@ -144,6 +144,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	public function addSubscriber( $list_identifier, $arguments ) {
 		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 
+		/** @var Thrive_Dash_Api_Sendinblue $api */
 		$api = $this->getApi();
 
 		$merge_tags = array(

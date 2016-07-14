@@ -2,8 +2,9 @@
 /**
  * Renders the Shopp tickets table/form
  *
- * @version 4.1
+ * @version 4.2
  *
+ * @var bool $must_login
  */
 $is_there_any_product         = false;
 $is_there_any_product_to_sell = false;
@@ -71,7 +72,7 @@ ob_start();
 						'</td>' .
 					'</tr>';
 
-				include dirname( __FILE__ ) . '/../meta.php';
+				include Tribe__Tickets_Plus__Main::instance()->get_template_hierarchy( 'meta.php' );
 			}
 		}
 
@@ -81,8 +82,12 @@ ob_start();
 			<?php if ( $is_there_any_product_to_sell ) { ?>
 				<tr>
 					<td colspan="4" class='shopp'>
-						<input type="hidden" name="cart" value="add" />
-						<button type="submit" class="button alt"><?php esc_html_e( 'Add to cart', 'event-tickets-plus' );?></button>
+						<?php if ( $must_login ): ?>
+							<?php include Tribe__Tickets_Plus__Main::instance()->get_template_hierarchy( 'login-to-purchase' ); ?>
+						<?php else: ?>
+							<input type="hidden" name="cart" value="add" />
+							<button type="submit" class="button alt"><?php esc_html_e( 'Add to cart', 'event-tickets-plus' );?></button>
+						<?php endif; ?>
 					</td>
 				</tr>
 				<?php
@@ -96,4 +101,17 @@ ob_start();
 $contents = ob_get_clean();
 if ( $is_there_any_product_to_sell ) {
 	echo $contents;
+} else {
+	$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
+
+	// if there isn't an unavailability message, bail
+	if ( ! $unavailability_message ) {
+		return;
+	}
+
+	?>
+	<div class="tickets-unavailable">
+		<?php echo esc_html( $unavailability_message ); ?>
+	</div>
+	<?php
 }

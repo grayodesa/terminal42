@@ -15,9 +15,28 @@ class Tribe__Tickets_Plus__Meta {
 	 */
 	protected $export;
 
-	public function __construct( $path ) {
+	/**
+	 * Get (and instantiate, if necessary) the instance of the class
+	 *
+	 * @static
+	 * @return self
+	 *
+	 */
+	public static function instance() {
+		static $instance;
 
-		$this->path = trailingslashit( $path );
+		if ( ! $instance instanceof self ) {
+			$instance = new self;
+		}
+
+		return $instance;
+	}
+
+	public function __construct( $path = null ) {
+
+		if ( ! is_null( $path ) ) {
+			$this->path = trailingslashit( $path );
+		}
 
 		add_action( 'tribe_events_tickets_metabox_advanced', array( $this, 'metabox' ), 99, 2 );
 		add_action( 'wp_ajax_tribe-tickets-info-render-field', array( $this, 'ajax_render_fields' ) );

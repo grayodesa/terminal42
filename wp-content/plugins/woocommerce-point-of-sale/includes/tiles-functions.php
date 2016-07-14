@@ -61,42 +61,38 @@ function the_grid_layout_cycle($grid, $ret = false){
     if(empty($default_order) || !$default_order){
       $default_order = 'menu_order';
     }
-    $sql = '';
-    switch ($default_order) {
-      case 'popularity':
-        $sql = "SELECT product.ID as ID, meta.meta_value+0 as popularity FROM {$wpdb->posts} product
-        LEFT JOIN {$wpdb->postmeta} meta ON ( product.ID = meta.post_id AND meta.meta_key = 'total_sales' )
-        WHERE post_type = 'product' AND post_status = 'publish' 
-        ORDER BY meta.meta_value+0 DESC, product.post_date DESC";
-        break; 
-      case 'price':
-        $sql = "SELECT product.ID as ID FROM {$wpdb->posts} product
-        LEFT JOIN {$wpdb->postmeta} meta ON ( product.ID = meta.post_id AND meta.meta_key = '_price' )
-        WHERE post_type = 'product' AND post_status = 'publish' 
-        ORDER BY meta.meta_value+0 ASC, product.ID ASC";
-        break;
-      case 'price-desc':
-        $sql = "SELECT product.ID as ID FROM {$wpdb->posts} product
-        LEFT JOIN {$wpdb->postmeta} meta ON ( product.ID = meta.post_id AND meta.meta_key = '_price' )
-        WHERE post_type = 'product' AND post_status = 'publish' 
-        ORDER BY meta.meta_value+0 DESC, product.ID DESC";
-        break;
-      case 'rating':
-        $sql = "SELECT {$wpdb->posts}.ID as ID, AVG( $wpdb->commentmeta.meta_value ) as average_rating  FROM {$wpdb->posts}
-        LEFT OUTER JOIN $wpdb->comments ON($wpdb->posts.ID = $wpdb->comments.comment_post_ID)
-        LEFT JOIN $wpdb->commentmeta ON($wpdb->comments.comment_ID = $wpdb->commentmeta.comment_id)
-        WHERE post_type = 'product' AND post_status = 'publish' 
-        GROUP BY $wpdb->posts.ID
-        ORDER BY average_rating DESC, $wpdb->posts.post_date DESC";        
-        break;      
-      case 'date':
-        $sql = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'product' AND post_status = 'publish' ORDER BY post_date DESC ";
-        break;      
-      default:
-        $sql = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'product' AND post_status = 'publish' ORDER BY {$default_order}, post_title ASC ";
-        break;
-    }
-    $tiles = $wpdb->get_results($sql);    
+
+      // Ordering
+      switch ($default_order) {
+        case 'date':
+        case 'price':
+        case 'popularity':
+        case 'rating':
+          $ordering = WC()->query->get_catalog_ordering_args($default_order);
+          break;
+        case 'price-desc':
+          $ordering = WC()->query->get_catalog_ordering_args('price', 'DESC');
+          break;
+        
+        default:
+          $ordering = WC()->query->get_catalog_ordering_args();
+          break;
+      }
+      #var_dump($ordering);
+      $args       = array(
+        'posts_per_page' => -1,
+        'post_type' => 'product',
+        'fields'    => 'ids',
+        'order'     => $ordering['order'],
+        'orderby'   => $ordering['orderby']
+      );
+
+      if ( isset( $ordering['meta_key'] ) ) {
+        $args['meta_key'] = $ordering['meta_key'];
+      }
+      $products = new WP_Query($args);
+      $tiles = $products->posts;
+
   }else{
     $tiles = wc_point_of_sale_get_tiles($grid->ID);
   }  
@@ -122,7 +118,7 @@ function pos_grid_layout_cycle($tiles, $grid_name, $is_all = false)
   $hide_text = $hide_text == 'yes' ? true : false;
   foreach ($tiles as $tile) : 
     if($is_all === true){
-      $tile->product_id = $tile->ID;
+      $tile->product_id = isset($tile->ID) ? $tile->ID : $tile;
       $tile->default_selection = '';
       $tile->style = 'image';
       $tile->color = '';
@@ -293,7 +289,7 @@ function the_grid_category_layout_cycle(){
       $products = the_grid_layout_cycle('all', true);
       if($products){
         foreach ($products as $value) {
-          pos_product_grid_cycle($value->ID);
+          pos_product_grid_cycle(isset($value->ID) ? $value->ID : $value);
         }
       }
       echo '</ul></div>';

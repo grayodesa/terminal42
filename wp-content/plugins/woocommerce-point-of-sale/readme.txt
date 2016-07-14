@@ -50,6 +50,12 @@ Should you find a bug, please do not hesitate to contact us through our support 
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog =
+= 3.1.4.6 - 2016.07.08 =
+* Fix bug of customers staying after the order is complete.
+* Fix bug with loading orders after they have been saved through custom order.
+* Fix bug with default tile sorting.
+* Fix bug with shipping state not appearing correctly on shipping fields.
+
 = 3.1.4.5 - 2016.06.22 =
 * Tweak to blur effect being appleid incorrectly on Firefox and Safari browsers causing slow performance.
 * Tweak to selecting text when double clicking in register, no longer possible to ensure quick response and user friendliness.

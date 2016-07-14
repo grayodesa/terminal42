@@ -15,6 +15,7 @@ add_action( 'wp_ajax_tve_dash_api_delete_log', 'tve_dash_api_delete_log' );
 
 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	add_action( 'wp_ajax_tve_dash_api_handle_save', 'tve_dash_api_handle_save' );
+	add_action( 'wp_ajax_tve_dash_api_handle_redirect', 'tve_dash_api_api_handle_redirect' );
 } else {
 	add_action( 'admin_init', 'tve_dash_api_handle_save' );
 }
@@ -120,7 +121,7 @@ function tve_dash_api_handle_save() {
 
 	$response = array(
 		'success' => false,
-		'message' => __( "Unknown error occurred", TVE_DASH_TRANSLATE_DOMAIN )
+		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN )
 	);
 	if ( ! empty( $_REQUEST['disconnect'] ) ) {
 		$connection->disconnect()->success( $connection->getTitle() . ' ' . __( "is now disconnected", TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -145,7 +146,51 @@ function tve_dash_api_handle_save() {
 		exit( json_encode( $response ) );
 	}
 
+	if ( $response['success'] !== true ) {
+		update_option( 'tve_dash_api_error', $response['message'] );
+		wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#failed/" . $_REQUEST['api'] );
+		exit;
+	}
+
 	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#done/" . $_REQUEST['api'] );
+	exit();
+}
+
+/**
+ *  Handles the creation of the authorization URL and redirection to that url for token generation purposes
+ */
+function tve_dash_api_api_handle_redirect() {
+
+	if ( empty( $_REQUEST['api'] ) && empty( $_REQUEST['oauth_token'] ) && empty( $_REQUEST['disconnect'] ) ) {
+		return;
+	}
+
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+
+	require_once dirname( __FILE__ ) . '/misc.php';
+	$connection = Thrive_Dash_List_Manager::connectionInstance( $_REQUEST['api'] );
+
+	if ( is_null( $connection ) ) {
+		return;
+	}
+
+	$response = array(
+		'success' => false,
+		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN )
+	);
+
+	$connection->setCredentials( $_POST['connection'] );;
+	$result = $connection->getAuthorizeUrl();
+
+	$response['success'] = ( filter_var( $result, FILTER_VALIDATE_URL ) ) === false ? false : true;
+	$response['message'] = $result;
+
+	if ( $doing_ajax ) {
+		exit( json_encode( $response ) );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#failed/" . $_REQUEST['api'] );
+
 	exit();
 }
 
@@ -178,6 +223,14 @@ function tve_dash_api_admin_scripts( $hook ) {
 		'jquery',
 		'backbone'
 	) );
+
+	$api_response = array(
+		'message' => get_option( 'tve_dash_api_error' ),
+	);
+	if ( ! empty( $api_response['message'] ) ) {
+		wp_localize_script( 'tve-dash-api-admin-global', 'tve_dash_api_error', $api_response );
+		delete_option( 'tve_dash_api_error' );
+	}
 }
 
 /**
@@ -222,7 +275,8 @@ function tve_dash_remove_api_from_one_click_signups( $apiName ) {
 }
 
 function tve_dash_api_filter_localize( $localize ) {
-	$localize['actions']['api_handle_save'] = 'tve_dash_api_handle_save';
+	$localize['actions']['api_handle_save']     = 'tve_dash_api_handle_save';
+	$localize['actions']['api_handle_redirect'] = 'tve_dash_api_handle_redirect';
 
 	return $localize;
 }

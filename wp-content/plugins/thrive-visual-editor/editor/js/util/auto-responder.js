@@ -317,16 +317,16 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						_main = _parts.shift(),
 						_field = _parts.join( '_' );
 
-					if(!reset_field) {
+					if ( ! reset_field ) {
 						reset_field = true;
-						_settings[_main] = '';
+						_settings[_main] = {};
 					}
 
 					if ( $this.is( 'input:radio, input:checkbox' ) ) {
-						if($this.is(':radio') && $this.is( ':checked' )) {
+						if ( $this.is( ':radio' ) && $this.is( ':checked' ) ) {
 							_settings[_main][_field] = $this.val();
-						} else if ($this.is(':checkbox') && $this.is( ':checked' )) {
-							!_settings[_main][_field] ? _settings[_main][_field] = $this.val(): _settings[_main][_field] += ',' + $this.val();
+						} else if ( $this.is( ':checkbox' ) && $this.is( ':checked' ) ) {
+							! _settings[_main][_field] ? _settings[_main][_field] = $this.val() : _settings[_main][_field] += ',' + $this.val();
 						}
 					} else {
 						_settings[_main] = _settings[_main] || {};
@@ -410,9 +410,10 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			 */
 			save: function ( $btn ) {
 				var $api = $( '#thrive-api-connections-select' ),
-					$list = $( '#thrive-api-list-select' );
+					$list = $( '#thrive-api-list-select' ),
+					$value = $list.val();
 
-				if ( ! $api.val() || ! $list.val() ) {
+				if ( ! $api.val() || ! $value ) {
 					alert( tve_path_params.translations.ChooseExistingAPI );
 					return true;
 				}
@@ -431,7 +432,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				if ( $btn.attr( 'data-edit' ) && $btn.attr( 'data-edit' ) != $api.val() ) {
 					lead_generation.removeApiConnection( $btn.attr( 'data-edit' ) );
 				}
-				lead_generation.setApiConnection( $api.val(), $list.val() );
+				lead_generation.setApiConnection( $api.val(), $value );
 				TVE_Content_Builder.auto_responder.dashboard();
 
 				lead_generation.api_form_data.extra = this.readExtraSettings( $lb );
@@ -455,6 +456,57 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					$input.val( url );
 				}
 				lead_generation.api_form_data.thank_you_url = url;
+			},
+			/**
+			 * Adds a new field or set of fields for custom inputs
+			 */
+			add_new_field: function () {
+				var $elem = $( '.tve-custom-fields' ).last(),
+					$container = $( '.tve-custom-fields-container' ),
+					$clone = $elem.clone();
+
+				// check if it's the first element which has no remove option
+				if ( $clone.find( '.tve_lightbox_link_remove' ).length == 0 ) {
+					var markup = '<div class="tvd-col tvd-s4"><a href="javascript:void(0)" data-ctrl="auto_responder.api.remove_field" class="tve_click tve_lightbox_link tve_lightbox_link_remove">' + tve_path_params.translations.RemoveCustomFields + '</a></div>'
+					$clone.append( markup );
+				}
+
+				$clone.appendTo( $container );
+			},
+			/**
+			 * Removes a field or a set of fields for custom inputs
+			 * @param $link
+			 */
+			remove_field: function ( $link ) {
+				var container = $link.parentsUntil( '.tve-custom-fields-container' );
+
+				container.remove();
+			},
+			/**
+			 * change an input name based on the value of an input
+			 */
+			change_input_name: function ( $input ) {
+				var patt = /^[A-Za-z0-9-_]+$/,
+					val = $input.val(),
+					$container = $input.closest( '.tve-custom-fields' );
+
+				if ( ! patt.test( val ) ) {
+					alert( 'No spaces, commas, dots, or special characters are allowed' );
+					return;
+				}
+				// change the name of the field to fit the parent field value
+				$container.find( '.drip-custom-field-value' ).attr( 'name', 'drip_field[' + val + ']' );
+			},
+			/**
+			 * toggle trough the selected options
+			 * @param $select
+			 */
+			change_integration_type: function ( $select ) {
+				var $container = $( '.tve_lightbox_content' ),
+					$element = '.tve-api-option-group-' + $select.val();
+
+				$container.find( '.tve-api-option-group' ).hide().find( '.tve-api-extra' ).removeClass( 'tve-api-extra' );
+				$container.find( $element ).show().find( 'input, select' ).addClass( 'tve-api-extra' );
 			},
 			/**
 			 *

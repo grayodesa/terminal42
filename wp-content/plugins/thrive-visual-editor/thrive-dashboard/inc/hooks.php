@@ -64,7 +64,12 @@ function tve_dash_font_import_manager_main_page() {
 	$font_import_manager->mainPage();
 }
 
-function tve_dash_admin_enqueue_scripts( $hook ) {
+/**
+ * Checks if the current screen (current admin screen) needs to have the dashboard scripts and styles enqueued
+ *
+ * @param string $hook current admin page hook
+ */
+function tve_dash_needs_enqueue( $hook ) {
 	$accepted_hooks = array(
 		'toplevel_page_tve_dash_section',
 		'thrive-dashboard_page_tve_dash_license_manager_section',
@@ -78,11 +83,28 @@ function tve_dash_admin_enqueue_scripts( $hook ) {
 
 	$accepted_hooks = apply_filters( 'tve_dash_include_ui', $accepted_hooks, $hook );
 
-	if ( ! in_array( $hook, $accepted_hooks ) ) {
-		return;
-	}
+	return in_array( $hook, $accepted_hooks );
+}
 
-	tve_dash_enqueue();
+function tve_dash_admin_enqueue_scripts( $hook ) {
+	if ( tve_dash_needs_enqueue( $hook ) ) {
+		tve_dash_enqueue();
+	}
+}
+
+/**
+ * Dequeue conflicting scripts
+ *
+ * @param string $hook
+ */
+function tve_dash_admin_dequeue_conflicting( $hook ) {
+	if ( isset( $GLOBALS['tve_dash_resources_enqueued'] ) || tve_dash_needs_enqueue( $hook ) ) {
+		// NewsPaper messing about and including css / scripts all over the admin panel
+		wp_dequeue_style( 'select2' );
+		wp_deregister_style( 'select2' );
+		wp_dequeue_script( 'select2' );
+		wp_deregister_script( 'select2' );
+	}
 }
 
 /**
@@ -148,6 +170,10 @@ function tve_dash_enqueue() {
 	 * output the main tpls for backbone views used in dashboard
 	 */
 	add_action( 'admin_print_footer_scripts', 'tve_dash_backbone_templates' );
+	/**
+	 * set this flag here so we can later remove conflicting scripts / styles
+	 */
+	$GLOBALS['tve_dash_resources_enqueued'] = true;
 }
 
 /**
@@ -288,7 +314,8 @@ function tve_dash_frontend_enqueue() {
 	tve_dash_enqueue_script( 'tve-dash-frontend', TVE_DASH_URL . '/js/dist/frontend.min.js', array( 'jquery' ), false, true );
 
 	$data = array(
-		'ajaxurl' => admin_url( 'admin-ajax.php' )
+		'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+		'is_crawler' => (bool) tve_dash_is_crawler(),
 	);
 	wp_localize_script( 'tve-dash-frontend', 'tve_dash_front', $data );
 }

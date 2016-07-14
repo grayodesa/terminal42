@@ -37,7 +37,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 * on error, it should register an error message (and redirect?)
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key   = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
 		$email = ! empty( $_POST['connection']['email'] ) ? $_POST['connection']['email'] : '';
 
 		if ( empty( $key ) ) {
@@ -51,10 +51,26 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		$this->setCredentials( $_POST['connection'] );
 
 		$result = $this->testConnection();
-
-
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			/**
+			 * Doing this because Mandrill devs are retarded and because it's unprofessional for the end user to read 'gibberish'
+			 */
+			preg_match( '#"?(.+?)\{(.+)\}(")?$#', json_decode( $result ), $matches );
+			if ( ! empty( $matches ) ) {
+				$result  = json_decode( '{' . $matches[2] . '}', true );
+				$message = false;
+				foreach ( $result as $level1 ) {
+					foreach ( $level1 as $level2 ) {
+						if ( ! $message ) {
+							$message = $level2;
+						};
+					}
+				}
+			} else {
+				$message = $result;
+			}
+
+			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $message ? $message : '' ) );
 		}
 
 		/**
@@ -112,9 +128,19 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		$ip_pool = 'Main Pool';
 
 
-
 		try {
-			$mandrill->messages->send( $message, $async, $ip_pool );
+			$result = $mandrill->messages->send( $message, $async, $ip_pool );
+			if ( isset( $result['body'] ) ) {
+				$body = json_decode( $result['body'] );
+				$body = $body[0];
+				if ( $body->status == 'rejected' ) {
+					if ( $body->reject_reason == 'unsigned' ) {
+						return $this->error( __( "The email filled in was not verified by Mandrill", TVE_DASH_TRANSLATE_DOMAIN ) );
+					}
+
+					return $this->error( __( "Mandrill couldn't connect", TVE_DASH_TRANSLATE_DOMAIN ) );
+				}
+			}
 		} catch ( Thrive_Dash_Api_Mandrill_Exceptions $e ) {
 			return $e->getMessage();
 		}
@@ -123,7 +149,6 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		if ( $connection == false ) {
 			update_option( 'tve_api_delivery_service', 'mandrill' );
 		}
-
 
 		return true;
 
@@ -143,11 +168,6 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		$mandrill = $this->getApi();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
-		if ( isset( $credentials ) ) {
-			$domain = $credentials['domain'];
-		} else {
-			return false;
-		}
 
 		if ( isset( $credentials ) ) {
 			$from_email = $credentials['email'];
@@ -156,7 +176,6 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		}
 
 		try {
-
 
 			$message = array(
 				'html'           => empty ( $data['html_content'] ) ? '' : $data['html_content'],

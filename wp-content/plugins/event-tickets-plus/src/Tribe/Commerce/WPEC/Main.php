@@ -4,7 +4,7 @@ if ( class_exists( 'Tribe__Tickets_Plus__Commerce__WPEC__Main' ) || ! class_exis
 	return;
 }
 
-class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets {
+class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets_Plus__Tickets {
 	/**
 	 * Current version of this plugin
 	 */
@@ -309,16 +309,27 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 					update_post_meta( $attendee_id, self::ATTENDEE_OPTOUT_KEY, $optout );
 
 					/**
+					 * WPEC specific action fired when a WPEC-driven attendee ticket for an event is generated
+					 *
+					 * @param $attendee_id ID of attendee ticket
+					 * @param $event_id ID of event
+					 * @param $order_id WPEC order ID
+					 * @param $product_id WPEC product ID
+					 */
+					do_action( 'event_tickets_wpec_attendee_created', $attendee_id, $event_id, $product_id );
+
+					/**
 					 * Action fired when an attendee ticket is generated
 					 *
-					 * @var $attendee_id ID of attendee ticket
-					 * @var $purchase_log WPEC purchase log object
-					 * @var $product_id Product ID attendee is "purchasing"
-					 * @var $order_attendee_id Attendee # for order
-					 * @var $event_id The Event which this ticket belongs
+					 * @param $attendee_id ID of attendee ticket
+					 * @param $purchase_log WPEC purchase log object
+					 * @param $product_id Product ID attendee is "purchasing"
+					 * @param $order_attendee_id Attendee # for order
+					 * @param $event_id The Event which this ticket belongs
 					 */
 					do_action( 'event_tickets_wpec_ticket_created', $attendee_id, $purchase_log, $product_id, $order_attendee_id, $event_id );
 
+					$this->record_attendee_user_id( $attendee_id );
 					$order_attendee_id++;
 				}
 			}
@@ -426,20 +437,20 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		/**
 		 * Generic action fired after saving a ticket (by type)
 		 *
-		 * @var int Post ID of post the ticket is tied to
-		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
-		 * @var array Ticket data
-		 * @var string Commerce engine class
+		 * @param int Post ID of post the ticket is tied to
+		 * @param Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @param array Ticket data
+		 * @param string Commerce engine class
 		 */
 		do_action( 'event_tickets_after_' . $save_type . '_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
 
 		/**
 		 * Generic action fired after saving a ticket
 		 *
-		 * @var int Post ID of post the ticket is tied to
-		 * @var Tribe__Tickets__Ticket_Object Ticket that was just saved
-		 * @var array Ticket data
-		 * @var string Commerce engine class
+		 * @param int Post ID of post the ticket is tied to
+		 * @param Tribe__Tickets__Ticket_Object Ticket that was just saved
+		 * @param array Ticket data
+		 * @param string Commerce engine class
 		 */
 		do_action( 'event_tickets_after_save_ticket', $event_id, $ticket, $raw_data, __CLASS__ );
 
@@ -467,6 +478,15 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		// Try to kill the actual ticket/attendee post
 		$delete = wp_delete_post( $ticket_id, true );
 		if ( is_wp_error( $delete ) ) return false;
+
+		/* Class exists check exists to avoid bumping Tribe__Tickets_Plus__Main::REQUIRED_TICKETS_VERSION
+		 * during a minor release; as soon as we are able to do that though we can remove this safeguard.
+		 *
+		 * @todo remove class_exists() check once REQUIRED_TICKETS_VERSION >= 4.2
+		 */
+		if ( class_exists( 'Tribe__Tickets__Attendance' ) ) {
+			Tribe__Tickets__Attendance::instance( $event_id )->increment_deleted_attendees_count();
+		}
 
 		do_action( 'eddtickets_ticket_deleted', $ticket_id, $event_id, $product_id, $order_id );
 		return true;
@@ -545,6 +565,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		if ( empty( $tickets ) )
 			return;
 
+		$must_login = ! is_user_logged_in() && $this->login_required();
 		include $this->getTemplateHierarchy( 'wpectickets/tickets' );
 
 	}
@@ -719,11 +740,12 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		}
 
 		foreach ( $attendees_query->posts as $attendee ) {
-			$order_id      = get_post_meta( $attendee->ID, self::ATTENDEE_ORDER_KEY, true );
-			$checkin       = get_post_meta( $attendee->ID, $this->checkin_key, true );
-			$security      = get_post_meta( $attendee->ID, $this->security_code, true );
-			$optout        = (bool) get_post_meta( $attendee->ID, self::ATTENDEE_OPTOUT_KEY, true );
-			$product_id    = get_post_meta( $attendee->ID, self::ATTENDEE_PRODUCT_KEY, true );
+			$order_id   = get_post_meta( $attendee->ID, self::ATTENDEE_ORDER_KEY, true );
+			$checkin    = get_post_meta( $attendee->ID, $this->checkin_key, true );
+			$security   = get_post_meta( $attendee->ID, $this->security_code, true );
+			$optout     = (bool) get_post_meta( $attendee->ID, self::ATTENDEE_OPTOUT_KEY, true );
+			$product_id = get_post_meta( $attendee->ID, self::ATTENDEE_PRODUCT_KEY, true );
+			$user_id    = get_post_meta( $attendee->ID, self::ATTENDEE_USER_ID, true );
 
 			if ( empty( $product_id ) ) {
 				continue;
@@ -736,22 +758,23 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 			$attendee_data = array_merge(
 				$this->get_order_data( $order_id ),
 				array(
-					'ticket'             => $product_title,
-					'attendee_id'        => $attendee->ID,
-					'security'           => $security,
-					'optout'             => $optout,
-					'product_id'         => $product_id,
-					'check_in'           => $checkin,
+					'ticket'      => $product_title,
+					'attendee_id' => $attendee->ID,
+					'security'    => $security,
+					'optout'      => $optout,
+					'product_id'  => $product_id,
+					'check_in'    => $checkin,
+					'user_id'     => $user_id,
 				)
 			);
 
 			/**
 			 * Allow users to filter the Attendee Data
 			 *
-			 * @var array An associative array with the Information of the Attendee
-			 * @var string What Provider is been used
-			 * @var WP_Post Attendee Object
-			 * @var int Event ID
+			 * @param array An associative array with the Information of the Attendee
+			 * @param string What Provider is been used
+			 * @param WP_Post Attendee Object
+			 * @param int Event ID
 			 *
 			 */
 			$attendee_data = apply_filters( 'tribe_tickets_attendee_data', $attendee_data, 'wpec', $attendee, $event_id );
@@ -817,14 +840,15 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 			'purchaser_email'    => $email,
 			'provider'           => __CLASS__,
 			'provider_slug'      => 'wpec',
+			'purchase_time'      => get_post_time( Tribe__Date_Utils::DBDATETIMEFORMAT, false, $order_id ),
 		);
 
 		/**
 		 * Allow users to filter the Order Data
 		 *
-		 * @var array An associative array with the Information of the Order
-		 * @var string What Provider is been used
-		 * @var int Order ID
+		 * @param array An associative array with the Information of the Order
+		 * @param string What Provider is been used
+		 * @param int Order ID
 		 *
 		 */
 		$data = apply_filters( 'tribe_tickets_order_data', $data, 'wpec', $order_id );
@@ -910,8 +934,8 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets__Tickets 
 		/**
 		 * Fires a checkin action
 		 *
-		 * @var int $attendee_id
-		 * @var bool|null $qr
+		 * @param int $attendee_id
+		 * @param bool|null $qr
 		 */
 		do_action( 'wpectickets_checkin', $attendee_id, $qr );
 

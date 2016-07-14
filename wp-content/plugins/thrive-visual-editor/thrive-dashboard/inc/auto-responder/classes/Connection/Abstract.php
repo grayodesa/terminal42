@@ -339,7 +339,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function getGroups ($list_id) {
+	public function getGroups( $list_id ) {
 		if ( ! $this->isConnected() ) {
 			$this->_error = $this->getTitle() . ' ' . __( "is not connected", TVE_DASH_TRANSLATE_DOMAIN );
 
@@ -348,7 +348,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		$params['list_id'] = $list_id;
 
-		return $this->_getGroups($params);
+		return $this->_getGroups( $params );
 	}
 
 	/**
@@ -375,6 +375,10 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @param array $params allow various different calls to this method
 	 */
 	public function renderExtraEditorSettings( $params = array() ) {
+		return;
+	}
+
+	public function renderBeforeListsSettings( $params = array() ) {
 		return;
 	}
 

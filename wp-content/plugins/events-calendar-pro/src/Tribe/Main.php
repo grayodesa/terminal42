@@ -46,8 +46,8 @@
 			 */
 			public $widget_wrappers;
 
-			const REQUIRED_TEC_VERSION = '4.1.1';
-			const VERSION = '4.1.2';
+			const REQUIRED_TEC_VERSION = '4.2.2';
+			const VERSION = '4.2.2.1';
 
 
 			private function __construct() {
@@ -187,6 +187,13 @@
 				// override list view ajax get_event args if viewing all instances of a recurring post
 				add_filter( 'tribe_events_listview_ajax_get_event_args', array( $this, 'override_listview_get_event_args' ), 10, 2 );
 				add_filter( 'tribe_events_listview_ajax_event_display', array( $this, 'override_listview_display_setting' ), 10, 2 );
+
+				// Event CSV import additions
+				add_filter( 'tribe_events_importer_venue_column_names', array( Tribe__Events__Pro__CSV_Importer__Fields::instance(), 'filter_venue_column_names' ), 10, 1 );
+				add_filter( 'tribe_events_importer_venue_array', array( Tribe__Events__Pro__CSV_Importer__Fields::instance(), 'filter_venue_array' ), 10, 4 );
+
+				add_filter( 'oembed_discovery_links', array( $this, 'oembed_discovery_links_for_recurring_events' ) );
+				add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id_for_recurring_events' ), 10, 2 );
 			}
 
 			/**
@@ -940,12 +947,15 @@
 					$post_id = $parent_id;
 				} else {
 					/* Look for child posts taking place on the requested date (but not
-					 * necessarily at the same time as the parent event). This does not
-					 * cater to scenarios where multiple children take place on the same
-					 * date but at different times - which is a known limitation to be
-					 * addressed in a future release.
+					 * necessarily at the same time as the parent event); take sequence into
+					 * account to distinguish between recurring event instances happening on the same
+					 * day.
 					 */
-					$child_sql = "
+					$sequence_number     = $query->get( 'eventSequence' );
+					$should_use_sequence = ! empty( $sequence_number ) && is_numeric( $sequence_number ) && intval( $sequence_number ) > 1;
+					$sequence_number     = intval( $sequence_number );
+					if ( ! $should_use_sequence ) {
+						$child_sql = "
 						SELECT     ID
 						FROM       {$wpdb->posts} p
 						INNER JOIN {$wpdb->postmeta} m ON m.post_id=p.ID AND m.meta_key='_EventStartDate'
@@ -953,7 +963,20 @@
 						  AND      p.post_type=%s
 						  AND      LEFT( m.meta_value, 10 ) = %s
 					";
-					$child_sql = $wpdb->prepare( $child_sql, $parent_id, Tribe__Events__Main::POSTTYPE, $date );
+						$child_sql = $wpdb->prepare( $child_sql, $parent_id, Tribe__Events__Main::POSTTYPE, $date );
+					} else {
+						$child_sql = "
+						SELECT     ID
+						FROM       {$wpdb->posts} p
+						INNER JOIN {$wpdb->postmeta} m ON m.post_id=p.ID AND m.meta_key='_EventStartDate'
+						INNER JOIN {$wpdb->postmeta} seqm ON seqm.post_id=p.ID AND seqm.meta_key='_EventSequence'
+						WHERE      p.post_parent=%d
+						  AND      p.post_type=%s
+						  AND      LEFT( m.meta_value, 10 ) = %s
+						  AND      LEFT( seqm.meta_value, 10 ) = %s
+					";
+						$child_sql = $wpdb->prepare( $child_sql, $parent_id, Tribe__Events__Main::POSTTYPE, $date, $sequence_number );
+					}
 					$post_id = $wpdb->get_var( $child_sql );
 				}
 
@@ -1350,7 +1373,16 @@
 			 * @return void
 			 */
 			public function loadTextDomain() {
-				load_plugin_textdomain( 'tribe-events-calendar-pro', false, $this->pluginDir . 'lang/' );
+				$mopath = $this->pluginDir . 'lang/';
+				$domain = 'tribe-events-calendar-pro';
+
+				// If we don't have Common classes load the old fashioned way
+				if ( ! class_exists( 'Tribe__Main' ) ) {
+					load_plugin_textdomain( $domain, false, $mopath );
+				} else {
+					// This will load `wp-content/languages/plugins` files first
+					Tribe__Main::instance()->load_text_domain( $domain, $mopath );
+				}
 			}
 
 			/**
@@ -1706,6 +1738,58 @@
 				return self::$instance;
 			}
 
+			/**
+			 * Outputs oembed resource links on the /all/ pages for recurring events
+			 *
+			 * @since 4.2
+			 *
+			 * @param string $output Resource links to output
+			 *
+			 * @return string
+			 */
+			public function oembed_discovery_links_for_recurring_events( $output ) {
+				global $wp_query;
 
+				if ( $output ) {
+					return $output;
+				}
+
+				if ( ! tribe_is_showing_all() ) {
+					return $output;
+				}
+
+				if ( empty( $wp_query->posts[0] ) ) {
+					return $output;
+				}
+
+				$post = $wp_query->posts[0];
+				$post_id = $post->ID;
+
+				$output = '<link rel="alternate" type="application/json+oembed" href="' . esc_url( get_oembed_endpoint_url( add_query_arg( 'post_id', $post_id, get_permalink( $post_id ) ) ) ) . '" />' . "\n";
+
+				if ( class_exists( 'SimpleXMLElement' ) ) {
+					$output .= '<link rel="alternate" type="text/xml+oembed" href="' . esc_url( get_oembed_endpoint_url( add_query_arg( 'post_id', $post_id, get_permalink( $post_id ) ), 'xml' ) ) . '" />' . "\n";
+				}
+
+				return $output;
+			}
+
+			/**
+			 * Convert a /all/ URL to an upcoming post id for oembeds
+			 *
+			 * @since 4.2
+			 *
+			 * @param int $post_id Post ID of the event
+			 * @param string $url URL of the oembed resource
+			 *
+			 * @return int
+			 */
+			public function oembed_request_post_id_for_recurring_events( $post_id, $url ) {
+				if ( $post_id ) {
+					return $post_id;
+				}
+
+				return tribe_get_upcoming_recurring_event_id_from_url( $url );
+			}
 		} // end Class
 	}

@@ -51,6 +51,7 @@ add_action( 'wp_enqueue_scripts', 'tve_dash_frontend_enqueue' );
 if ( is_admin() ) {
 	add_action( 'admin_menu', 'tve_dash_admin_menu', 10 );
 	add_action( 'admin_enqueue_scripts', 'tve_dash_admin_enqueue_scripts' );
+	add_action( 'admin_enqueue_scripts', 'tve_dash_admin_dequeue_conflicting', 90000 );
 	add_action( 'wp_ajax_tve_dash_backend_ajax', 'tve_dash_backend_ajax' );
 
 	add_action( 'wp_ajax_tve_dash_front_ajax', 'tve_dash_frontend_ajax_load' );

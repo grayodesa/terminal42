@@ -60,6 +60,7 @@ whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['dir'])
 whitelistParam(url='/(?:lint|import)\.php$/i', param=request.body['sql_query'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['divi_integration_body'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['divi_integration_head'])
+whitelistParam(url='#wp\-admin/+options\-general.php$#i', param=request.body['options']['modules']['ga_code'], rules=[9])
 
 sqliRegex = '/(?:[^\w<]|\/\*\![0-9]*|^)(?:
 @@HOSTNAME|
@@ -84,7 +85,7 @@ xssRegex = '/(?:
 #tags
 (?:\<|\+ADw\-|\xC2\xBC)(script|iframe|svg|object|embed|applet|link|style|meta|\/\/|\?xml\-stylesheet)(?:[^\w]|\xC2\xBE)|
 #protocols
-(?:^|[^\w])(?:(?:\s*(?:&\#(?:x0*6a|0*106)|j)\s*(?:&\#(?:x0*61|0*97)|a)\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*62|0*98)|b)|\s*(?:&\#(?:x0*65|0*101)|e)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*6c|0*108)|l)\s*(?:&\#(?:x0*69|0*105)|i)\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*65|0*101)|e))\s*(?:&\#(?:x0*73|0*115)|s)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*72|0*114)|r)\s*(?:&\#(?:x0*69|0*105)|i)\s*(?:&\#(?:x0*70|0*112)|p)\s*(?:&\#(?:x0*74|0*116)|t)|\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*68|0*104)|h)\s*(?:&\#(?:x0*74|0*116)|t)\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*6c|0*108)|l)|\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*6f|0*111)|o)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*68|0*104)|h)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*64|0*100)|d)\s*(?:&\#(?:x0*61|0*97)|a)\s*(?:&\#(?:x0*74|0*116)|t)\s*(?:&\#(?:x0*61|0*97)|a))\s*(?:&\#(?:x0*3a|0*58)|\:)|
+(?:^|[^\w])(?:(?:\s*(?:&\#(?:x0*6a|0*106)|j)\s*(?:&\#(?:x0*61|0*97)|a)\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*62|0*98)|b)|\s*(?:&\#(?:x0*65|0*101)|e)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*6c|0*108)|l)\s*(?:&\#(?:x0*69|0*105)|i)\s*(?:&\#(?:x0*76|0*118)|v)\s*(?:&\#(?:x0*65|0*101)|e))\s*(?:&\#(?:x0*73|0*115)|s)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*72|0*114)|r)\s*(?:&\#(?:x0*69|0*105)|i)\s*(?:&\#(?:x0*70|0*112)|p)\s*(?:&\#(?:x0*74|0*116)|t)|\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*68|0*104)|h)\s*(?:&\#(?:x0*74|0*116)|t)\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*6c|0*108)|l)|\s*(?:&\#(?:x0*6d|0*109)|m)\s*(?:&\#(?:x0*6f|0*111)|o)\s*(?:&\#(?:x0*63|0*99)|c)\s*(?:&\#(?:x0*68|0*104)|h)\s*(?:&\#(?:x0*61|0*97)|a)|\s*(?:&\#(?:x0*64|0*100)|d)\s*(?:&\#(?:x0*61|0*97)|a)\s*(?:&\#(?:x0*74|0*116)|t)\s*(?:&\#(?:x0*61|0*97)|a)(?!(?:&\#(?:x0*3a|0*58)|\:)(?:&\#(?:x0*69|0*105)|i)(?:&\#(?:x0*6d|0*109)|m)(?:&\#(?:x0*61|0*97)|a)(?:&\#(?:x0*67|0*103)|g)(?:&\#(?:x0*65|0*101)|e)(?:&\#(?:x0*2f|0*47)|\/)(?:(?:&\#(?:x0*70|0*112)|p)(?:&\#(?:x0*6e|0*110)|n)(?:&\#(?:x0*67|0*103)|g)|(?:&\#(?:x0*62|0*98)|b)(?:&\#(?:x0*6d|0*109)|m)(?:&\#(?:x0*70|0*112)|p)|(?:&\#(?:x0*67|0*103)|g)(?:&\#(?:x0*69|0*105)|i)(?:&\#(?:x0*66|0*102)|f)|(?:&\#(?:x0*70|0*112)|p)?(?:&\#(?:x0*6a|0*106)|j)(?:&\#(?:x0*70|0*112)|p)(?:&\#(?:x0*65|0*101)|e)(?:&\#(?:x0*67|0*103)|g)|(?:&\#(?:x0*74|0*116)|t)(?:&\#(?:x0*69|0*105)|i)(?:&\#(?:x0*66|0*102)|f)(?:&\#(?:x0*66|0*102)|f)|(?:&\#(?:x0*73|0*115)|s)(?:&\#(?:x0*76|0*118)|v)(?:&\#(?:x0*67|0*103)|g)(?:&\#(?:x0*2b|0*43)|\+)(?:&\#(?:x0*78|0*120)|x)(?:&\#(?:x0*6d|0*109)|m)(?:&\#(?:x0*6c|0*108)|l))(?:(?:&\#(?:x0*3b|0*59)|;)(?:&\#(?:x0*63|0*99)|c)(?:&\#(?:x0*68|0*104)|h)(?:&\#(?:x0*61|0*97)|a)(?:&\#(?:x0*72|0*114)|r)(?:&\#(?:x0*73|0*115)|s)(?:&\#(?:x0*65|0*101)|e)(?:&\#(?:x0*74|0*116)|t)(?:&\#(?:x0*3d|0*61)|=)[\-a-z0-9]+)?(?:(?:&\#(?:x0*3b|0*59)|;)(?:&\#(?:x0*62|0*98)|b)(?:&\#(?:x0*61|0*97)|a)(?:&\#(?:x0*73|0*115)|s)(?:&\#(?:x0*65|0*101)|e)(?:&\#(?:x0*36|0*54)|6)(?:&\#(?:x0*34|0*52)|4))?(?:&\#(?:x0*2c|0*44)|,)))\s*(?:&\#(?:x0*3a|0*58)|\:)|
 #css expression
 (?:^|[^\w])(?:(?:\\0*65|\\0*45|e)(?:\/\*.*?\*\/)*(?:\\0*78|\\0*58|x)(?:\/\*.*?\*\/)*(?:\\0*70|\\0*50|p)(?:\/\*.*?\*\/)*(?:\\0*72|\\0*52|r)(?:\/\*.*?\*\/)*(?:\\0*65|\\0*45|e)(?:\/\*.*?\*\/)*(?:\\0*73|\\0*53|s)(?:\/\*.*?\*\/)*(?:\\0*73|\\0*53|s)(?:\/\*.*?\*\/)*(?:\\0*69|\\0*49|i)(?:\/\*.*?\*\/)*(?:\\0*6f|\\0*4f|o)(?:\/\*.*?\*\/)*(?:\\0*6e|\\0*4e|n))[^\w]*?(?:\\0*28|\()|
 #css properties
@@ -94,12 +95,12 @@ xssRegex = '/(?:
 )/ix'
 
 if (notEquals('', request.body.ure_other_roles) and match('#/wp\-admin/(network/)?(profile|user-new)\.php#i', request.path) and currentUserIsNot('administrator', server.empty)):
-	block(id=18, category='priv-esc', description='User Roles Manager Priviledge Escalation <= 4.24', whitelist=0)
+	block(id=18, category='priv-esc', description='User Roles Manager Privilege Escalation <= 4.24', whitelist=0)
 
 if ((match('#/wp\-admin/(network/)?(post|profile|user-new|settings)\.php$#i', server.script_filename)) or (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (equals('wordfence_loadLiveTraffic', request.body.action) or equals('wordfence_ticker', request.body.action)))):
 	allow(id=1, category='whitelist', description='Whitelisted URL')
 
-if (match('/\/wp\-admin[\/]+admin\-ajax\.php/', request.path) and ((equals('revslider_show_image', request.queryString.action) and match('/\.php$/i', request.queryString.img)) or (equals('revslider_show_image', request.body.action) and match('/\.php$/i', request.body.img)))):
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/', request.path) and (((equals('revslider_show_image', request.queryString.action) or equals('nopriv_revslider_show_image', request.queryString.action)) and match('/\.php$/i', request.queryString.img)) or ((equals('revslider_show_image', request.body.action) or equals('nopriv_revslider_show_image', request.body.action)) and match('/\.php$/i', request.body.img)))):
 	block(id=2, category='lfi', description='Slider Revolution: Local File Inclusion', whitelist=0)
 
 if (match('/dzs\-videogallery[\/]+admin[\/]+(?:playlist|tag)seditor[\/]+popup\.php/', request.path) and contains('\'', request.queryString.initer)):
@@ -117,13 +118,13 @@ if (matchCount(sqliRegex, request.body, request.queryString)):
 if (matchCount(xssRegex, request.body, request.queryString)):
 	failXSS(id=9, category='xss', score=100, description='XSS: Cross Site Scripting')
 
-if (match('/\.(p(h(p|tml)[0-9]?|l|y)|(j|a)sp|aspx|sh|shtml|html?|cgi|htaccess)($|\.)/i', request.fileNames)):
+if (match('/\.(p(h(p|tml)[0-9]?|l|y)|(j|a)sp|aspx|sh|shtml|html?|cgi|htaccess)($|\.)/i', request.fileNames) and currentUserIsNot('administrator', server.empty)):
 	block(id=11, category='file_upload', description='Malicous File Upload')
 
-if (match('/(^|\/|\\)\.\.(\\|\/)/', request.body, request.queryString)):
+if (match('/(^|\/|\\)\.\.(\\|\/)/', request.body, request.queryString) and currentUserIsNot('administrator', server.empty)):
 	block(id=12, category='lfi', description='Directory Traversal')
 
-if (match('/^\/(?:\.\/)*(?:var|home|usr|mnt|media|etc|tmp|dev|proc)\//i', request.body, request.queryString)):
+if (match('/^\/(?:\.\/)*(?:var|home|usr|mnt|media|etc|tmp|dev|proc)\//i', request.body, request.queryString) and currentUserIsNot('administrator', server.empty)):
 	block(id=13, category='lfi', description='LFI: Local File Inclusion')
 
 if (match('/<\!(?:DOCTYPE|ENTITY)\s+(?:%\s*)?\w+\s+SYSTEM/i', request.body, request.queryString)):

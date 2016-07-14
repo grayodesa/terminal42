@@ -171,8 +171,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 			# create a subscriber
 			$params = array(
-				'email' => $arguments['email'],
-				'name'  => $arguments['name'],
+				'email'      => $arguments['email'],
+				'name'       => $arguments['name'],
+				'ip_address' => $_SERVER['REMOTE_ADDR'],
 			);
 
 			if ( ! empty( $arguments['phone'] ) && ( $phone_field_name = $this->phoneCustomFieldExists( $list ) ) ) {

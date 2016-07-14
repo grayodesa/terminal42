@@ -1,18 +1,18 @@
-=== Woocommerce Abandoned Cart Lite ===
-Contributors: ashokrane, pinal.shah, mansishah, dharakothari, bhavik.kiri, chetnapatel
-Tags: abandon cart, shopping cart abandonment
+=== Abandoned Cart Lite for WooCommerce ===
+Contributors: ashokrane, pinal.shah, bhavik.kiri, chetnapatel
+Tags: abandon cart, shopping cart abandonment, sales recovery
 Requires at least: 1.3
-Tested up to: 4.5.2
+Tested up to: 4.5.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: http://www.tychesoftwares.com/
 
-This easy-to-use plugin gives store owners the ability to recover sales that are lost to abandoned shopping carts by logged-in customers. 
+This easy-to-use plugin allows WooCommerce store owners to recover sales that are lost to abandoned shopping carts by customers. 
 
 == Description ==
 
-Abandoned Cart plugin works in the background, sending email notifications to your customers, reminding them about their abandoned orders.
+Abandoned Cart plugin works in the background, sending email notifications to your guests customers & logged-in customers, reminding them about their abandoned orders.
 
 The Abandoned Cart plugin allows you to recover orders that were just a step away from closing. It enables you to create automatic & well-timed email reminders to be sent to your customers who have added your products to their cart, but did not complete the order. As a result, with this plugin you will start recovering at least 30% or more of your lost sales. Why let this 30% revenue go unclaimed?
 
@@ -35,7 +35,7 @@ Abandoned Cart PRO plugin enables to do the following additional things:
 <li>Works off-the-shelf as it comes with 3 default email templates</li>
 <li>Offer incentives to customers to return and complete their checkout with discounts and coupons</li>
 <li>Add custom variables like Customer Name, Product Information, Coupons, etc. in the email template</li>
-<li>Embed Woocommerce coupons & also generate unique coupons in the emails being sent to customers</li>
+<li>Embed WooCommerce coupons & also generate unique coupons in the emails being sent to customers</li>
 <li>Track whether expired coupons are causing cart abandonment</li>
 <li>Track emails sent, emails opened, links clicked for each template/email</li>
 <li>Product report allows you to see which products are being abandoned & which are being recovered the most</li>
@@ -44,7 +44,7 @@ Abandoned Cart PRO plugin enables to do the following additional things:
 
 **Pro Version:**
 
-**[WooCommerce Abandoned Cart Pro 3.1](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "WooCommerce Abandoned Cart Pro")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
+**[Abandoned Cart Pro for WooCommerce 3.3](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "Abandoned Cart Pro for WooCommerce")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
 
 
 **Email Sending Setup:**
@@ -55,7 +55,7 @@ Abandoned Cart Plugin relies on a function called WP-Cron, and this function onl
 
 == Installation ==
 
-1. Ensure you have latest version of Woocommerce plugin installed
+1. Ensure you have latest version of WooCommerce plugin installed
 2. Unzip and upload contents of the plugin to your /wp-content/plugins/ directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. The plugin will start working as per the settings entered.
@@ -88,6 +88,16 @@ The documentation can be found **[here](https://www.tychesoftwares.com/woocommer
 4. Lists Recovered Orders.
 
 == Changelog ==
+
+= 2.9 =
+
+* New Feature - New merge tag {{cart.unsubscribe}} has been added for email templates. This merge tag allows user to stop receiving further abandoned cart reminder email notifications. This merge tag has been added to comply with email sending laws in different countries.
+
+* Bugs Fixed - Earlier if any user came from abandoned cart reminder email and place the order using PayPal payment gateway and do not reach the order received page. Then plugin was not considering that order as a recovered order. From now onwards if the user came from the abandoned cart reminder email and place the order using PayPal and does not reach the order received the page. Then plugin will consider that cart as a recovered order.
+
+* Bugs Fixed - When the cart is abandoned as a guest & product have the special character in the attributes name, then it was displaying a blank row with only a checkbox on the Abandoned Orders tab. This has been fixed.
+
+* Tweak - If the order is recovered from the abandoned cart reminder email then it will add a note "This order was abandoned & subsequently recovered." for the order.
 
 = 2.8 =
 

@@ -59,11 +59,9 @@ require_once $wcap_root.'/inc/class-wcap-lite-aes.php';
 				    foreach ( $results_query as $k => $v ) {
 				        if ( $value->id == $v->user_id ) {
 				            $record_found = "YES";
+				            unset( $results_guest_list[ $key ] );
 				        }
-				    }
-				    if ( $record_found == "YES" ) {
-				        unset( $results_guest_list[ $key ] );
-				    }
+				    } 
 				}
 				foreach ( $results_guest_list as $key => $value ) {
 				    $query_email_id      = "SELECT post_id FROM `" . $wpdb->prefix . "postmeta` WHERE meta_key = '_billing_email' AND meta_value = %s";
@@ -230,10 +228,30 @@ require_once $wcap_root.'/inc/class-wcap-lite-aes.php';
 								    else if ( isset( $results_guest[0]->billing_first_name ) ) $email_body = str_replace( "{{customer.fullname}}", $results_guest[0]->billing_first_name, $email_body );
 								    else if ( isset( $results_guest[0]->billing_last_name)) $email_body = str_replace( "{{customer.fullname}}", $results_guest[0]->billing_last_name, $email_body );
 								} else {
-								    $email_body = str_replace( "{{customer.firstname}}", get_user_meta( $value->user_id, 'first_name', true ), $email_body );
-								    $email_subject = str_replace( "{{customer.firstname}}", get_user_meta( $value->user_id, 'first_name', true ), $email_subject );
-								    $email_body = str_replace( "{{customer.lastname}}", get_user_meta( $value->user_id, 'last_name', true ), $email_body );
-								    $email_body = str_replace( "{{customer.fullname}}", get_user_meta( $value->user_id, 'first_name', true )." ".get_user_meta( $value->user_id, 'last_name', true ), $email_body );
+								    $user_first_name = '';
+								    //
+								    $user_first_name_temp = get_user_meta( $value->user_id, 'billing_first_name', true );
+								    if ( isset( $user_first_name_temp ) &&  '' != $user_first_name_temp) {
+								        $user_first_name = $user_first_name_temp;
+								    }else {
+								        $user_first_name = get_user_meta( $value->user_id, 'first_name', true );
+								    }
+								    
+								    $email_body = str_replace( "{{customer.firstname}}", $user_first_name, $email_body );
+								    
+								    $email_subject = str_replace( "{{customer.firstname}}", $user_first_name, $email_subject );
+								    
+								    $user_last_name = '';
+								    $user_last_name_temp = get_user_meta( $value->user_id, 'billing_last_name', true);
+								    if ( isset( $user_last_name_temp ) && '' !=  $user_last_name_temp) {
+								        $user_last_name = $user_last_name_temp;
+								    }else {
+								        $user_last_name = get_user_meta( $value->user_id, 'last_name', true);;
+								    }
+								    
+								    $email_body = str_replace( "{{customer.lastname}}", $user_last_name, $email_body );
+								    
+								    $email_body = str_replace( "{{customer.fullname}}", $user_first_name." ".$user_last_name, $email_body );
 								}
 								
 								$order_date = "";
@@ -270,6 +288,13 @@ require_once $wcap_root.'/inc/class-wcap-lite-aes.php';
 								$validate_cart = $this->encrypt_validate ($encoding_cart);
 								$cart_link_track = get_option('siteurl').'/?wacp_action=track_links&validate=' . $validate_cart;
 								$email_body	= str_replace( "{{cart.link}}", $cart_link_track, $email_body );
+								
+								$validate_unsubscribe          = $this->encrypt_validate( $email_sent_id );
+								$email_sent_id_address         = $results_sent[0]->sent_email_id;
+								$encrypt_email_sent_id_address = hash( 'sha256', $email_sent_id_address );
+								$plugins_url                   = get_option( 'siteurl' ) . "/?wcap_track_unsubscribe_lite=wcap_unsubscribe&validate=" . $validate_unsubscribe . "&track_email_id=" . $encrypt_email_sent_id_address;
+								$unsubscribe_link_track        = $plugins_url;
+								$email_body                    = str_replace( "{{cart.unsubscribe}}" , $unsubscribe_link_track , $email_body );
 								
 								$var = '';
 								if( preg_match( "{{products.cart}}", $email_body, $matched ) ) {
@@ -381,14 +406,16 @@ require_once $wcap_root.'/inc/class-wcap-lite-aes.php';
 				$cart_time = current_time( 'timestamp' ) - $template_to_send_after_time - $cart_abandon_cut_off_time;
 			    
 				$cart_ignored = 0;
+				$unsubscribe  = 0;
 				$query = "SELECT wpac . * , wpu.user_login, wpu.user_email
             			  FROM `".$wpdb->prefix."ac_abandoned_cart_history_lite` AS wpac
             			  LEFT JOIN ".$wpdb->base_prefix."users AS wpu ON wpac.user_id = wpu.id
 				            			  WHERE cart_ignored = %s
+				            			  AND unsubscribe_link = %s
 				            			  AND abandoned_cart_time < $cart_time
 				            			  ORDER BY `id` ASC ";
 					
-				$results = $wpdb->get_results( $wpdb->prepare( $query, $cart_ignored ) );
+				$results = $wpdb->get_results( $wpdb->prepare( $query, $cart_ignored, $unsubscribe ) );
 				
 				return $results;
 			

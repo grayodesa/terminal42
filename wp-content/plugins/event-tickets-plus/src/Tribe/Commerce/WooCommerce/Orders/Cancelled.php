@@ -75,24 +75,30 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Cancelled {
 		$order_item_ids = $wpdb->get_col(
 			"SELECT order_item_id FROM {$wc_order_itemmeta_table} WHERE meta_key = '_product_id' AND meta_value = {$this->ticket_id}"
 		);
+
 		if ( empty( $order_item_ids ) ) {
 			return 0;
 		}
+
 		$order_item_ids_interval = implode( ',', $order_item_ids );
 		$order_ids               = $wpdb->get_results(
 			"SELECT order_id, order_item_id  FROM {$wc_order_items_table} WHERE order_item_id IN ({$order_item_ids_interval})"
 		);
+
 		if ( empty( $order_ids ) ) {
 			return 0;
 		}
+
 		// keep cancelled orders
 		$order_post_ids_interval  = implode( ',', wp_list_pluck( $order_ids, 'order_id' ) );
 		$cancelled_order_post_ids = $wpdb->get_col(
 			"SELECT ID FROM {$wpdb->posts} WHERE ID in ({$order_post_ids_interval}) AND post_status = 'wc-cancelled'"
 		);
+
 		if ( empty( $cancelled_order_post_ids ) ) {
 			return 0;
 		}
+
 		// get each cancelled order qty
 		$cancelled_order_item_ids = array();
 		foreach ( $order_ids as $order_id ) {
@@ -100,9 +106,11 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Orders__Cancelled {
 				$cancelled_order_item_ids[] = $order_id->order_item_id;
 			}
 		}
+
 		if ( empty( $cancelled_order_item_ids ) ) {
 			return 0;
 		}
+
 		$cancelled_order_item_ids_interval = implode( ',', $cancelled_order_item_ids );
 		$cancelled_qty                     = $wpdb->get_var(
 			"SELECT SUM(meta_value) FROM {$wc_order_itemmeta_table} WHERE order_item_id IN ({$cancelled_order_item_ids_interval}) AND meta_key = '_qty'"

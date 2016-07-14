@@ -39,7 +39,7 @@ function BWWC__MATH_generate_bitcoin_address_from_mpk ($master_public_key, $key_
   if (preg_match ('/^[a-f0-9]{128}$/', $master_public_key))
     return BWWC__MATH_generate_bitcoin_address_from_mpk_v1 ($master_public_key, $key_index);
 
-  if (preg_match ('/^xpub661[a-zA-Z0-9]{104}$/', $master_public_key))
+  if (preg_match ('/^xpub[a-zA-Z0-9]{107}$/', $master_public_key))
     return BWWC__MATH_generate_bitcoin_address_from_mpk_v2 ($master_public_key, $key_index, $is_for_change);
 
   BWWC__log_event (__FILE__, __LINE__, "Invalid MPK passed: '$master_public_key'. Aborting.");

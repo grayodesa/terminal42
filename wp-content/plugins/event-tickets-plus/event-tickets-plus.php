@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Event Tickets Plus
-Description: Event Tickets Plus allows you to sell tickets to events
-Version: 4.1.2
+Description: Event Tickets Plus lets you sell tickets to events, collect custom attendee information, and more!
+Version: 4.2.2
 Author: Modern Tribe, Inc.
 Author URI: http://m.tri.be/28
 License: GPLv2 or later
@@ -33,20 +33,40 @@ if ( ! defined( 'ABSPATH' ) ) die( '-1' );
 define( 'EVENT_TICKETS_PLUS_DIR', dirname( __FILE__ ) );
 define( 'EVENT_TICKETS_PLUS_FILE', __FILE__ );
 
-add_action( 'plugins_loaded', 'event_tickets_plus_init', 9 );
+/* Defer loading Event Tickets Plus until we know that Event Tickets itself has
+ * completed setup (which may not happen in some situations, such as if an
+ * incompatible version of The Events Calendar is active).
+ */
+add_action( 'tribe_tickets_plugin_loaded', 'event_tickets_plus_init' );
+add_action( 'tribe_tickets_plugin_failed_to_load', 'event_tickets_plus_setup_fail_message' );
+
+// If we get to this action and neither of the above two actions fired, we'll need to show an error
+add_action( 'plugins_loaded', 'event_tickets_plus_check_for_init_failure', 9 );
 
 function event_tickets_plus_init() {
-	tribe_init_tickets_plus_autoloading();
-
-	$langpath = trailingslashit( basename( dirname( __FILE__ ) ) ) . 'lang/';
-	load_plugin_textdomain( 'event-tickets-plus', false, $langpath );
-
-	if ( event_tickets_plus_is_incompatible_tickets_core_installed() ) {
-		add_action( 'admin_notices', 'event_tickets_plus_show_fail_message' );
-		return;
-	}
+	event_tickets_plus_setup_textdomain();
 
 	Tribe__Tickets_Plus__Main::instance();
+}
+
+/**
+ * Sets up the textdomain stuff
+ */
+function event_tickets_plus_setup_textdomain() {
+	tribe_init_tickets_plus_autoloading();
+
+	$mopath = trailingslashit( basename( dirname( __FILE__ ) ) ) . 'lang/';
+	$domain = 'event-tickets-plus';
+
+	// If we don't have Common classes load the old fashioned way
+	if ( ! class_exists( 'Tribe__Main' ) ) {
+		load_plugin_textdomain( $domain, false, $mopath );
+	} else {
+		// This will load `wp-content/languages/plugins` files first
+		Tribe__Main::instance()->load_text_domain( $domain, $mopath );
+	}
+
+	define( 'EVENT_TICKETS_PLUS_TEXTDOMAIN_LOADED', true );
 }
 
 /**
@@ -83,11 +103,19 @@ function event_tickets_plus_is_incompatible_tickets_core_installed () {
 	return false;
 }
 
+/**
+ * Hooks up the failure message.
+ */
+function event_tickets_plus_setup_fail_message() {
+	add_action( 'admin_notices', 'event_tickets_plus_show_fail_message' );
+}
 
 /**
  * Shows an admin_notices message explaining why it couldn't be activated.
  */
 function event_tickets_plus_show_fail_message() {
+	event_tickets_plus_setup_textdomain();
+
 	if ( ! current_user_can( 'activate_plugins' ) )
 		return;
 
@@ -97,11 +125,28 @@ function event_tickets_plus_show_fail_message() {
 		'TB_iframe' => 'true',
 	), admin_url( 'plugin-install.php' ) );
 
-	$title = __( 'Event Tickets', 'event-tickets-plus' );
+	$title = esc_html__( 'Event Tickets', 'event-tickets-plus' );
 
 	echo '<div class="error"><p>';
 
-	printf( __( 'To begin using Event Tickets Plus, please install and activate the latest version of <a href="%s" class="thickbox" title="%s">%s</a>.', 'event-tickets-plus' ), esc_url( $url ), $title, $title );
+	printf(
+		esc_html__( 'To begin using Event Tickets Plus, please install and activate the latest version of %1$s%2$s%3$s and ensure its own requirements have been met.', 'event-tickets-plus' ),
+		'<a href="' . esc_url( $url ) . '" class="thickbox" title="' . $title . '">',
+		$title,
+		'</a>'
+	);
 
 	echo '</p></div>';
+}
+
+/**
+ * Last ditch effort to display an error message in the event that Event Tickets didn't even load
+ * far enough to fire tribe_tickets_plugin_loaded or tribe_tickets_plugin_failed_to_load
+ */
+function event_tickets_plus_check_for_init_failure() {
+	if ( defined( 'EVENT_TICKETS_PLUS_TEXTDOMAIN_LOADED' ) && EVENT_TICKETS_PLUS_TEXTDOMAIN_LOADED ) {
+		return;
+	}
+
+	event_tickets_plus_setup_fail_message();
 }

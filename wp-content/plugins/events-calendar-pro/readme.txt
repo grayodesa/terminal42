@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
-Tested up to: 4.4.2
-Stable tag: 4.1.2
+Tested up to: 4.5.3
+Stable tag: 4.2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -176,29 +176,7 @@ The plugin is produced by <a href="http://m.tri.be/45">Modern Tribe Inc</a>.
 
 = Translations =
 
-* Bulgarian
-* Chinese (Taiwan)
-* Danish
-* Dutch
-* English (UK)
-* Finnish
-* French (France)
-* German
-* Greek
-* Hungarian
-* Icelandic
-* Italian
-* Lithuanian
-* Polish
-* Portuguese (Portugal)
-* Portuguese (Brazil)
-* Slovak
-* Slovenian
-* Spanish (Spain)
-* Swedish
-* Turkish
-
-Many thanks to all our translators!  You can grab the latest translations or contribute at http://translations.theeventscalendar.com
+Modern Tribe’s premium plugins are translated by volunteers at <a href=“http://m.tri.be/194h”>translations.theeventscalendar.com</a>. There you can find a list of available languages, download translation files, or help update the translations. Thank you to everyone who helps to maintain our translations!
 
 == Add-Ons ==
 
@@ -224,6 +202,38 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.2.2.1] 2016-07-11 =
+
+* Fix - Issue that could lead to the generation of infinite recurring events (props to hydeaway and many others)
+
+= [4.2.2] 2016-07-06 =
+
+* Fix - Broken oembedding of content
+* Fix - Recurring event instances happening on the same day are now assigned different post names and guids
+* Tweak - Avoid loading customizer preview scripts when not previewing site in Theme Customizer
+
+= [4.2.1] 2016-06-22 =
+
+* Fix - Fix issue where width of content area in photo view was inheriting styles making it too narrow
+* Fix - Allow '0' to be set as the value of additional fields
+* Fix - Graciously handle malformed recurrence event meta information
+* Tweak - Added helper text near Distance filter to add clarity for Filter Bar users
+* Fix - Fixed an issue where 'All Day' label was displaying on Wednesday rather than the time column
+
+= [4.2] 2016-06-08 =
+
+* Tweak - Advanced List Widget shows the month instead of the day of the week in the date icon when the event is not in the current month
+* Tweak - Improved our JSON-LD output to ensure consistency (Props to @garrettjohnson!)
+* Tweak - Language files in the `wp-content/languages/plugins` path will be loaded before attempting to load internal language files (Thank you to user @aafhhl for bringing this to our attention!)
+* Tweak - Move plugin CSS to PostCSS
+* Fix - Tooltip not was not rendering properly for date recurrence (Thank you @Maciej for reporting this issue!)
+
+= [4.1.3] 2016-05-19 =
+
+* Tweak - restored section heading for Additional Fields
+* Fix - Resolved minor incompatibilities with the Safari browser
+* Fix - Fixed issue where legacy recurrence description fields were not migrated to the new recurrence data structure introduced in 3.12 (props to publiclife on the forums for reporting this!)
 
 = [4.1.2] 2016-04-11 =
 

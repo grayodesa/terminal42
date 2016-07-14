@@ -8,11 +8,9 @@
 
 	$data = (array)json_decode($json, TRUE);
 
-	//telegram_sendmessage( '63480147', 'CIAO !!!');
-
-    if ( !( $data['message']['message_id'] > get_option('wp_telegram_last_id') ) ) {
+    if ( $data['message']['message_id'] && ( $data['message']['message_id'] == get_option('wp_telegram_last_id') ) ) {
         telegram_log('EXCEPTION', 'MESSAGE_ID', json_encode($json, TRUE));
-        //die();
+        die();
     }
     update_option('wp_telegram_last_id', $data['message']['message_id']);
 
@@ -35,8 +33,7 @@
 	   telegram_log('####', 'DEBUG', json_encode($json, TRUE));
     }
 
-	$o = get_page_by_title( $USERID, OBJECT, $CPT);
-	if ( !$o ) {
+	if ( !telegram_getid( $USERID ) ) {
 		$p = wp_insert_post(array(
 			'post_title' => $USERID,
 			'post_content' => '',
@@ -51,17 +48,16 @@
 			telegram_sendmessage( $USERID, telegram_option('wmuser') );
 		} else if ( $GROUP ) {
 			update_post_meta($p, 'telegram_name', $data['message']['chat']['title']);
-			telegram_log('-<--->-', '', 'Bot added to <strong>'.$data['message']['chat']['title'].'</strong>');
+			telegram_log('', '', 'Bot added to <strong>'.$data['message']['chat']['title'].'</strong>');
+            telegram_sendmessage( $USERID, telegram_option('wmgroup') );
 		}
 		return;
 	} else if ($PRIVATE) {
 	    update_post_meta($o->ID, 'telegram_first_name', $data['message']['from']['first_name']);
 		update_post_meta($o->ID, 'telegram_last_name', $data['message']['from']['last_name']);
 		update_post_meta($o->ID, 'telegram_username', $data['message']['from']['username']);
-        delete_post_meta( telegram_getid( $USERID ), 'telegram_status');
 	} else if ($GROUP) {
 		update_post_meta($o->ID, 'telegram_name', $data['message']['chat']['title']);
-		delete_post_meta( telegram_getid( $USERID ), 'telegram_status');
 	}
 
     if ( isset( $data['message']['location'] ) ) {
@@ -105,37 +101,20 @@
 
 	if ( $PRIVATE ) {
 		switch ($data['message']['text']) {
-			case '/start':
-                $ok_found = true;
-			    if ( !telegram_useractive( $USERID ) ) {
-				    telegram_sendmessage( $USERID, telegram_option('wmuser') );
-			    } else {
-                    telegram_sendmessage( $USERID, telegram_option('wmuser') );
-                    delete_post_meta( telegram_getid( $USERID ), 'telegram_status');
-			    }
-			    break;   
 			case '/stop':
                 $ok_found = true;
-			    if ( telegram_useractive( $USERID ) ) {
-				    telegram_sendmessage( $USERID, telegram_option('bmuser') );
-				    update_post_meta( telegram_getid( $USERID ), 'telegram_status', '1');
-			    } else {
-				    telegram_sendmessage( $USERID, telegram_option('bmuser') );
-			    }
+                telegram_sendmessage( $USERID, telegram_option('bmuser') );
+                wp_delete_post( telegram_getid( $USERID ) );
 			    break;              
 			default:
 			    break;
-
 			return;
 		}
 	}
 
-    if ( $GROUP && $data['message']['new_chat_participant']['id'] == current( explode(':', telegram_option('token') ) ) ) {
-        telegram_sendmessage( $USERID, telegram_option('wmgroup') );
-    }
 	if ( $GROUP && $data['message']['left_chat_participant']['id'] == current( explode(':', telegram_option('token') ) ) ) {
-		update_post_meta( telegram_getid( $USERID ), 'telegram_status', '1');
-		telegram_log('-<--->-', '', 'Bot removed from <strong>'.$data['message']['chat']['title'].'</strong>');
+        wp_delete_post( telegram_getid( $USERID ) );
+		telegram_log('', '', 'Bot removed from <strong>'.$data['message']['chat']['title'].'</strong>');
 	}
     if ( $PRIVATE && !$ok_found ) {
          telegram_sendmessage( $USERID, telegram_option('emuser') );

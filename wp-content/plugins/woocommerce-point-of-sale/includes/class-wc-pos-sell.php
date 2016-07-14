@@ -1198,7 +1198,7 @@ class WC_Pos_Sell{
 	    }else{
 			$products = the_grid_layout_cycle($grid_id, true);
 			foreach ($products as $key => $value) {
-				$_id = absint($value->ID);
+				$_id = absint(isset($value->ID) ? $value->ID : $value );
 				$add = true;
     			if( $out_of_stock != 'yes' ){
     				$product = wc_get_product($_id);

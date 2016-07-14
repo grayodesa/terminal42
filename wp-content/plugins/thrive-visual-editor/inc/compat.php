@@ -22,6 +22,14 @@ add_filter( 'fp5_filter_has_shortcode', 'tve_compat_flowplayer5_has_shortcode' )
 add_filter( 'ws_plugin__s2member_lazy_load_css_js', '__return_true' );
 
 /**
+ *
+ * Compatibility with Survey Funnel plugin - it fails to include CSS / JS on pages / posts created with TCB
+ */
+if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'surveyfunnel/survey_funnel.php' ) ) {
+	add_action( 'wp_enqueue_scripts', 'tve_compat_survey_funnel', 11 );
+}
+
+/**
  * Checks if a post / page has a shortcode in TCB content
  *
  * @param string $shortcode
@@ -272,8 +280,10 @@ function tve_membership_plugin_can_display_content() {
 	 * Simple Membership plugin compatibility - hide TCB content for non members
 	 */
 	if ( class_exists( 'BAccessControl' ) ) {
-		$control = BAccessControl::get_instance();
-		$control->can_i_read_post( $post->ID );
+		$control = SwpmAccessControl::get_instance();
+
+		return $control->can_i_read_post( $post );
+
 	}
 
 	/**
@@ -308,4 +318,28 @@ function tve_compat_flowplayer5_has_shortcode( $has_shortcode ) {
 	}
 
 	return tve_compat_has_shortcode( 'flowplayer' );
+}
+
+/**
+ * compatibility with Survey Funnel
+ */
+function tve_compat_survey_funnel() {
+	global $is_survey_page, $post;
+	if ( $is_survey_page === true ) {
+		return;
+	}
+	$content_saved   = tve_get_post_meta( $post->ID, 'tve_save_post' );
+	$content_updated = tve_get_post_meta( $post->ID, 'tve_updated_post' );
+
+	if ( stristr( $content_saved, '[survey_funnel' ) || stristr( $content_updated, '[survey_funnel' ) ) {
+		$is_survey_page = true;
+		wp_script_is( 'survey_funnel_ajax' ) || wp_enqueue_script( 'survey_funnel_ajax', SF_PLUGIN_URL . '/js/ajax.js', array( 'jquery' ), '1.0', false );
+		wp_script_is( 'survey_funnel' ) || wp_enqueue_script( 'survey_funnel', SF_PLUGIN_URL . '/js/survey_funnel.js', array( 'jquery' ), '1.0', false );
+		wp_script_is( 'survey_funnel_fancybox' ) || wp_enqueue_script( 'survey_funnel_fancybox', SF_PLUGIN_URL . '/jquery/fancyBox-2.1.5/source/jquery.fancybox.pack.js', array( 'jquery' ), '1.0', false );
+
+		wp_style_is( 'survey_funnel_styles' ) || wp_enqueue_style( 'survey_funnel_styles', SF_PLUGIN_URL . '/css/styles.css' );
+		wp_style_is( 'survey_funnel_client_styles' ) || wp_enqueue_style( 'survey_funnel_client_styles', SF_PLUGIN_URL . '/css/survey_funnel.css' );
+		wp_style_is( 'survey_funnel_client_styles_fancybox' ) || wp_enqueue_style( 'survey_funnel_client_styles_fancybox', SF_PLUGIN_URL . '/jquery/fancyBox-2.1.5/source/jquery.fancybox.css' );
+	}
+
 }

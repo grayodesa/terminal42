@@ -10,6 +10,64 @@ msgstr ""
 "X-Generator: GlotPress/1.0-alpha-1100\n"
 "Project-Id-Version: Tribe Common\n"
 
+#: src/Tribe/Log/Admin.php:132
+msgctxt "log selector"
+msgid "None currently available"
+msgstr ""
+
+#: src/Tribe/Log/Admin.php:147
+msgctxt "log engines"
+msgid "None currently available"
+msgstr ""
+
+#: src/Tribe/Log/File_Logger.php:116
+msgid "Default (uses temporary files)"
+msgstr ""
+
+#: src/Tribe/Log.php:210
+msgid "Cannot set %s as the current logging engine"
+msgstr ""
+
+#: src/Tribe/Log.php:309
+msgid "Disabled"
+msgstr ""
+
+#: src/Tribe/Log.php:310
+msgid "Only errors"
+msgstr ""
+
+#: src/Tribe/Log.php:311
+msgid "Warnings and errors"
+msgstr ""
+
+#: src/Tribe/Log.php:312
+msgid "Full debug (all events)"
+msgstr ""
+
+#: src/Tribe/PUE/Checker.php:457
+msgid "Sorry, there is a problem with your license key. You'll need to %scheck your license%s to have access to updates, downloads, and support."
+msgstr ""
+
+#: src/Tribe/Validate.php:183
+msgid "%s must contain numbers, letters, dashes and undescores only"
+msgstr ""
+
+#: src/admin-views/event-log.php:21
+msgid "Logging level"
+msgstr ""
+
+#: src/admin-views/event-log.php:39
+msgid "Method"
+msgstr ""
+
+#: src/admin-views/event-log.php:99
+msgid "The selected log file is empty or has not been generated yet."
+msgstr ""
+
+#: src/admin-views/event-log.php:104
+msgid "Download log"
+msgstr ""
+
 #: src/admin-views/tribe-options-help.php:37
 msgid "Recent Template Changes"
 msgstr "Poslední změny v šablonách"
@@ -46,7 +104,7 @@ msgstr "Zde najdete přehled posledních změn v šablonách a také přehled v�
 msgid "The details of your calendar plugin and settings is often needed for you or our staff to help troubleshoot an issue. We may ask you to share this information if you ask for support. If you post in one of our premium forums, please copy and paste this information into the System Information field and it will help us help you faster!"
 msgstr "Detaily o vašem pluginu kalendáře a nastavení jsou často užitečné nejen pro vás, ale i pro naše pracovníky při řešení různých problémů. Možná vás požádáme o poskytnutí těchto informací až nás budete žádat o pomoc. Pokud budete psát dotaz na některé z našich prémiových fór podpory, zkopírujte a vložte prosím tyto informace do kolonky System Information. To nám umožní vám rychleji pomoci!"
 
-#: src/admin-views/tribe-options-licenses.php:28
+#: src/admin-views/tribe-options-licenses.php:27
 msgid "Only license fields for %1$snetwork activated%2$s plugins will be listed on this screen. "
 msgstr "Na této stránce se zobrazí pole pro licenční klíče pouze pro pluginy %1$saktivované v síti webů%2$s."
 
@@ -130,43 +188,43 @@ msgstr "Vylepšete si zobrazování akcí na vašich stránkách pomocí našeho
 msgid "Community Tickets"
 msgstr "Community Tickets"
 
-#: src/Tribe/Admin/Help_Page.php:788
+#: src/Tribe/Admin/Help_Page.php:767
 msgid "Activate %s"
 msgstr "Aktivovat %s"
 
-#: src/Tribe/Admin/Help_Page.php:788
+#: src/Tribe/Admin/Help_Page.php:767
 msgid "Activate Plugin"
 msgstr "Aktivovat plugin"
 
-#: src/Tribe/Admin/Help_Page.php:796
+#: src/Tribe/Admin/Help_Page.php:775
 msgid "Upgrade Plugin"
 msgstr "Aktualizovat plugin"
 
-#: src/Tribe/Admin/Help_Page.php:812
+#: src/Tribe/Admin/Help_Page.php:791
 msgid "Install %s"
 msgstr "Instalovat %s"
 
-#: src/Tribe/Admin/Help_Page.php:812
+#: src/Tribe/Admin/Help_Page.php:791
 msgid "Install Plugin"
 msgstr "Instalovat plugin"
 
-#: src/Tribe/Admin/Help_Page.php:835
+#: src/Tribe/Admin/Help_Page.php:814
 msgid "Active Users:"
 msgstr "Aktivních uživatelů:"
 
-#: src/Tribe/Admin/Help_Page.php:838
+#: src/Tribe/Admin/Help_Page.php:817
 msgid "Rating:"
 msgstr "Hodnocení:"
 
-#: src/Tribe/Admin/Help_Page.php:863
+#: src/Tribe/Admin/Help_Page.php:842
 msgid "Plugin Active"
 msgstr "Aktivovaný plugin"
 
-#: src/Tribe/Admin/Help_Page.php:865
+#: src/Tribe/Admin/Help_Page.php:844
 msgid "Plugin Inactive"
 msgstr "Neaktivní plugin"
 
-#: src/Tribe/Admin/Help_Page.php:870
+#: src/Tribe/Admin/Help_Page.php:849
 msgid "Visit the Add-on Page"
 msgstr "Navštívit webovou stránku doplňku"
 
@@ -178,17 +236,13 @@ msgstr "<a href=\"%s\">změňte nastavení akcí</a>."
 msgid "Rate %3$sThe Events Calendar%4$s %1$s on %2$s to keep this plugin free.  Thanks from the friendly folks at Modern Tribe."
 msgstr "Ohodnocením pluginu %3$sThe Events Calendar%4$s %1$s na webu %2$s ho pomůžete zachovat i nadále bezplatným. Vřelé díky od lidiček v Modern Tribe."
 
-#: src/Tribe/PUE/Checker.php:440
+#: src/Tribe/PUE/Checker.php:437
 msgid "Thanks for setting up a valid key, it will expire on %s"
 msgstr "Děkujeme za vložení platného klíče. Jeho platnost skončí %s"
 
-#: src/Tribe/Validate.php:195
+#: src/Tribe/Validate.php:211
 msgid "%s must be a positive number or percent."
 msgstr "%s musí být kladné číslo nebo procento."
-
-#: src/admin-views/tribe-options-display.php:31
-msgid "Enter the format to use for displaying dates with the year. Used when displaying a date in a future year."
-msgstr "Zadejte formát pro zobrazování data včetně roku. Používá se při zobrazení data v příštím roce."
 
 #: src/admin-views/tribe-options-general.php:10
 msgid "Thank you for using Event Tickets! All of us at Modern Tribe sincerely appreciate your support and we're excited to see you using our plugins. Check out our handy %1$sNew User Primer%2$s to get started."
@@ -254,7 +308,7 @@ msgstr "Požádejte administrátora webu aby upravil název v URL u stránky"
 msgid " ask the site administrator set a different Events URL slug."
 msgstr "požádejte administrátora webu aby změnil název v URL u akcí."
 
-#: src/Tribe/Settings.php:322
+#: src/Tribe/Settings.php:321
 msgid "Save Changes"
 msgstr "Uložit změny"
 
@@ -338,6 +392,10 @@ msgstr "Verze"
 msgid "Last Update"
 msgstr "Poslední aktualizace"
 
+#: src/admin-views/event-log.php:57
+msgid "View"
+msgstr "Zobrazit"
+
 #: src/admin-views/tribe-options-display.php:22
 msgid "Date Format Settings"
 msgstr "Nastavení formátu data"
@@ -347,22 +405,10 @@ msgid "<p>The following three fields accept the date format options available to
 msgstr "<p>Následující tři pole používají k formátování data stejné volby, které jsou dostupné u PHP funkce date(). <a href=\"http://codex.wordpress.org/Formatting_Date_and_Time\" target=\"_blank\">O možnostech vlastního formátu data se dočtete zde</a>.</p>"
 
 #: src/admin-views/tribe-options-display.php:30
-msgid "Date with year"
-msgstr "Datum s letopočtem"
-
-#: src/admin-views/tribe-options-display.php:38
-msgid "Date time separator"
-msgstr "Oddělovač data a času"
-
-#: src/admin-views/tribe-options-display.php:39
-msgid "Enter the separator that will be placed between the date and time, when both are shown."
-msgstr "Zadejte oddělovač, který se vloží mezi datum a čas v případech, kdy se uvádí oba údaje."
-
-#: src/admin-views/tribe-options-display.php:46
 msgid "Datepicker Date Format"
 msgstr "Formát data pro Datepicker"
 
-#: src/admin-views/tribe-options-display.php:47
+#: src/admin-views/tribe-options-display.php:31
 msgid "Select the date format to use in datepickers"
 msgstr "Vyberte formát data, který se použije u datumového ovládacího prvku (datepicker)."
 
@@ -395,39 +441,15 @@ msgstr "Říkáte si: \"Wow, to je ale úžasný plugin! Měl bych poděkovat Mo
 msgid "Show The Events Calendar link"
 msgstr "Zobrazit odkaz na stránky pluginu The Events Calendar"
 
-#: src/admin-views/tribe-options-general.php:55
-msgid "General Settings"
-msgstr "Obecné nastavení"
-
-#: src/admin-views/tribe-options-general.php:59
-msgid "Default currency symbol"
-msgstr "Výchozí symbol měny"
-
-#: src/admin-views/tribe-options-general.php:60
-msgid "Set the default currency symbol for event costs. Note that this only impacts future events, and changes made will not apply retroactively."
-msgstr "Zadejte výchozí symbol měny pro vstupné na akci. Berte na vědomí, že tato volba a její případná změna se projeví pouze u nových akcí, ale nikoliv zpětně."
-
-#: src/admin-views/tribe-options-general.php:67
-msgid "Currency symbol follows value"
-msgstr "Symbol měny uvádět za hodnotou"
-
-#: src/admin-views/tribe-options-general.php:68
-msgid "The currency symbol normally precedes the value. Enabling this option positions the symbol after the value."
-msgstr "Symbol měny se obvykle uvádí před hodnotou. Zaškrtnutím této volby se symbol vloží za hodnotu."
-
-#: src/admin-views/tribe-options-general.php:74
-msgid "Miscellaneous Settings"
-msgstr "Další nastavení"
-
-#: src/admin-views/tribe-options-general.php:81
+#: src/admin-views/tribe-options-general.php:58
 msgid "Debug mode"
 msgstr "Debug režim"
 
-#: src/admin-views/tribe-options-general.php:87
+#: src/admin-views/tribe-options-general.php:64
 msgid "Enable this option to log debug information. By default this will log to your server PHP error log. If you'd like to see the log messages in your browser, then we recommend that you install the %s and look for the \"Tribe\" tab in the debug output."
 msgstr "Zaškrtnutím této volby se budou zapisovat debug informace. Standardně se budou zapisovat do chybového logu PHP na vašem serveru. Pokud si přejete, aby se zprávy protokolu zobrazovaly ve vašem prohlížeči, pak doporučujeme nainstalovat %s a podívat se do záložky \"Tribe\" v debug výstupu."
 
-#: src/admin-views/tribe-options-general.php:87
+#: src/admin-views/tribe-options-general.php:64
 msgid "Debug Bar Plugin"
 msgstr "Debug Bar Plugin"
 
@@ -440,7 +462,7 @@ msgstr "není k dispozici"
 msgid "You need to upgrade!"
 msgstr "Je třeba provést aktualizaci!"
 
-#: src/Tribe/Admin/Help_Page.php:402 src/Tribe/Admin/Help_Page.php:798
+#: src/Tribe/Admin/Help_Page.php:402 src/Tribe/Admin/Help_Page.php:777
 msgid "You are up to date!"
 msgstr "Používáte nejnovější verzi!"
 
@@ -536,7 +558,7 @@ msgstr "Iowa"
 msgid "Kansas"
 msgstr "Kansas"
 
-#: src/Tribe/Admin/Help_Page.php:829
+#: src/Tribe/Admin/Help_Page.php:808
 msgid "Latest Version:"
 msgstr "Nejnovější verze:"
 
@@ -552,7 +574,7 @@ msgstr "Louisiana"
 msgid "Maine"
 msgstr "Maine"
 
-#: src/Tribe/Admin/Help_Page.php:832
+#: src/Tribe/Admin/Help_Page.php:811
 msgid "Requires:"
 msgstr "Vyžaduje:"
 
@@ -560,7 +582,7 @@ msgstr "Vyžaduje:"
 msgid "Maryland"
 msgstr "Maryland"
 
-#: src/Tribe/Admin/Help_Page.php:833
+#: src/Tribe/Admin/Help_Page.php:812
 msgid "WordPress "
 msgstr "WordPress"
 
@@ -584,7 +606,7 @@ msgstr "Mississippi"
 msgid "Missouri"
 msgstr "Missouri"
 
-#: src/Tribe/Admin/Help_Page.php:857
+#: src/Tribe/Admin/Help_Page.php:836
 msgid "Premium Add-Ons"
 msgstr "Premium doplňky"
 
@@ -905,7 +927,7 @@ msgstr "Metropolitní Francie"
 msgid "French Guiana"
 msgstr "Francouzská Guyana"
 
-#: src/Tribe/Settings.php:583
+#: src/Tribe/Settings.php:585
 msgid "Settings saved."
 msgstr "Nastavení bylo uloženo."
 
@@ -941,8 +963,8 @@ msgstr "Ghana"
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
-#: src/Tribe/Settings.php:148 src/Tribe/Settings.php:203
-#: src/Tribe/Settings.php:204
+#: src/Tribe/Settings.php:148 src/Tribe/Settings.php:202
+#: src/Tribe/Settings.php:203
 msgid "Events"
 msgstr "Akce"
 
@@ -1271,7 +1293,7 @@ msgstr "Nigérie"
 msgid "Niue"
 msgstr "Niue"
 
-#: src/Tribe/Settings.php:215
+#: src/Tribe/Settings.php:214
 msgid "Settings"
 msgstr "Nastavení"
 
@@ -1355,39 +1377,23 @@ msgstr "Omlouváme se, ale server k ověření klíče není dostupný."
 msgid "Qatar"
 msgstr "Katar"
 
-#: src/Tribe/PUE/Checker.php:424
-msgid "Sorry, this key is expired."
-msgstr "Omlouváme se, ale platnost tohoto klíče skončila."
-
 #: src/Tribe/View_Helpers.php:223
 msgid "Reunion"
 msgstr "Réunion"
-
-#: src/Tribe/PUE/Checker.php:427
-msgid "Sorry, this key is out of installs."
-msgstr "Omlouváme se, ale tento klíč je mimo instalaci."
 
 #: src/Tribe/View_Helpers.php:224
 msgid "Romania"
 msgstr "Rumunsko"
 
-#: src/Tribe/PUE/Checker.php:428
-msgid "Why am I seeing this message?"
-msgstr "Proč vidím tuto zprávu?"
-
 #: src/Tribe/View_Helpers.php:225
 msgid "Russian Federation"
 msgstr "Rusko"
-
-#: src/Tribe/PUE/Checker.php:431
-msgid "Sorry, this key is not valid."
-msgstr "Omlouváme se, ale tento klíč není platný."
 
 #: src/Tribe/View_Helpers.php:226
 msgid "Rwanda"
 msgstr "Rwanda"
 
-#: src/Tribe/PUE/Checker.php:435
+#: src/Tribe/PUE/Checker.php:432
 msgid "Valid Key! Expires on %s"
 msgstr "Platný klíč! Platnost tohoto klíče skončí %s"
 
@@ -1395,7 +1401,7 @@ msgstr "Platný klíč! Platnost tohoto klíče skončí %s"
 msgid "Saint Kitts And Nevis"
 msgstr "Svatý Kryštof a Nevis"
 
-#: src/Tribe/PUE/Checker.php:448
+#: src/Tribe/PUE/Checker.php:445
 msgid "Hmmm... something's wrong with this validator. Please contact %ssupport%s."
 msgstr "Hmmm... něco je špatně s tímto validátorem. Kontaktujte prosím %spodporu%s."
 
@@ -1407,7 +1413,7 @@ msgstr "Svatá Lucie"
 msgid "Saint Vincent And The Grenadines"
 msgstr "Svatý Vincenc a Grenadiny"
 
-#: src/Tribe/Settings.php:214 src/Tribe/Settings.php:235
+#: src/Tribe/Settings.php:213 src/Tribe/Settings.php:234
 msgid "Events Settings"
 msgstr "Nastavení akcí"
 
@@ -1415,7 +1421,7 @@ msgstr "Nastavení akcí"
 msgid "Samoa"
 msgstr "Samoa"
 
-#: src/Tribe/Settings.php:300
+#: src/Tribe/Settings.php:299
 msgid "%s Settings"
 msgstr "Nastavení %s"
 
@@ -1423,7 +1429,7 @@ msgstr "Nastavení %s"
 msgid "San Marino"
 msgstr "San Marino"
 
-#: src/Tribe/Settings.php:314
+#: src/Tribe/Settings.php:313
 msgid "You've requested a non-existent tab."
 msgstr "Požadovaný panel neexistuje."
 
@@ -1431,7 +1437,7 @@ msgstr "Požadovaný panel neexistuje."
 msgid "Sao Tome And Principe"
 msgstr "Svatý Tomáš a Princův ostrov"
 
-#: src/Tribe/Settings.php:370
+#: src/Tribe/Settings.php:369
 msgid "You don't have permission to do that."
 msgstr "Nemáte dostatečné oprávnění pro tuto činnost."
 
@@ -1439,7 +1445,7 @@ msgstr "Nemáte dostatečné oprávnění pro tuto činnost."
 msgid "Saudi Arabia"
 msgstr "Saúdská Arábie"
 
-#: src/Tribe/Settings.php:376
+#: src/Tribe/Settings.php:375
 msgid "The request was sent insecurely."
 msgstr "Požadavek byl odeslán nezabezpečený."
 
@@ -1447,7 +1453,7 @@ msgstr "Požadavek byl odeslán nezabezpečený."
 msgid "Senegal"
 msgstr "Senegal"
 
-#: src/Tribe/Settings.php:382
+#: src/Tribe/Settings.php:381
 msgid "The request wasn't sent from this tab."
 msgstr "Požadavek nebyl odeslán z tohoto panelu."
 
@@ -1455,7 +1461,7 @@ msgstr "Požadavek nebyl odeslán z tohoto panelu."
 msgid "Serbia"
 msgstr "Srbsko"
 
-#: src/Tribe/Settings.php:550
+#: src/Tribe/Settings.php:549
 msgid "Your form had the following errors:"
 msgstr "Ve formuláři se vyskytly následující chyby:"
 
@@ -1463,7 +1469,7 @@ msgstr "Ve formuláři se vyskytly následující chyby:"
 msgid "Seychelles"
 msgstr "Seychely"
 
-#: src/Tribe/Settings.php:560
+#: src/Tribe/Settings.php:559
 msgid "None of your settings were saved. Please try again."
 msgstr "Žádné z vašich nastavení nebylo uloženo. Zkuste to prosím znovu."
 
@@ -1471,7 +1477,7 @@ msgstr "Žádné z vašich nastavení nebylo uloženo. Zkuste to prosím znovu."
 msgid "Sierra Leone"
 msgstr "Sierra Leone"
 
-#: src/Tribe/Settings.php:561
+#: src/Tribe/Settings.php:560
 msgid "The above setting was not saved. Other settings were successfully saved."
 msgid_plural "The above settings were not saved. Other settings were successfully saved."
 msgstr[0] "Výše uvedené nastavení nebylo uloženo. Ostatní nastavení byla úspěšně uložena."
@@ -1688,60 +1694,60 @@ msgstr "%s se musí skládat pouze z číslic a písmen"
 msgid "%s must contain numbers, letters and dots only"
 msgstr "%s se musí skládat pouze z číslic, písmen a teček."
 
-#: src/Tribe/Validate.php:181 src/Tribe/Validate.php:209
+#: src/Tribe/Validate.php:197 src/Tribe/Validate.php:225
 msgid "%s must be a positive number."
 msgstr "%s musí být kladné číslo."
 
-#: src/Tribe/Validate.php:224
+#: src/Tribe/Validate.php:240
 msgid "%s must be a valid slug (numbers, letters, dashes, and underscores)."
 msgstr "%s musí být platným názvem v URL (číslice, písmena, pomlčky, a podtržítka)."
 
-#: src/Tribe/Validate.php:239
+#: src/Tribe/Validate.php:255
 msgid "%s must be a valid absolute URL."
 msgstr "%s musí být platná absolutní adresa URL."
 
-#: src/Tribe/Validate.php:255 src/Tribe/Validate.php:272
-#: src/Tribe/Validate.php:294
+#: src/Tribe/Validate.php:271 src/Tribe/Validate.php:288
+#: src/Tribe/Validate.php:310
 msgid "%s must have a value that's part of its options."
 msgstr "%s musí mít hodnotu, která je jednou z možných voleb."
 
-#: src/Tribe/Validate.php:308
+#: src/Tribe/Validate.php:324
 msgid "Comparison validation failed because no comparison value was provided, for field %s"
 msgstr "Kontrola porovnávání se nezdařila, protože nebyla zadána porovnávací hodnota pro pole %s"
 
-#: src/Tribe/Validate.php:315
+#: src/Tribe/Validate.php:331
 msgid "%s cannot be the same as %s."
 msgstr "%s nemůže být stejné jako %s."
 
-#: src/Tribe/Validate.php:317
+#: src/Tribe/Validate.php:333
 msgid "%s cannot be a duplicate"
 msgstr "%s nemůže být duplicitní"
 
-#: src/Tribe/Validate.php:333
+#: src/Tribe/Validate.php:349
 msgid "%s must be a number or percentage."
 msgstr "%s musí být číslo nebo procento."
 
-#: src/Tribe/Validate.php:387
+#: src/Tribe/Validate.php:403
 msgid "%s must be a number between 0 and 21."
 msgstr "%s musí být číslo v rozmezí 0 až 21."
 
-#: src/Tribe/Validate.php:403
+#: src/Tribe/Validate.php:419
 msgid "%s must consist of letters, numbers, dashes, apostrophes, and spaces only."
 msgstr "%s se musí skládat pouze z písmen, číslic, pomlček, apostrofů a mezer."
 
-#: src/Tribe/Validate.php:419
+#: src/Tribe/Validate.php:435
 msgid "%s must consist of letters, spaces, apostrophes, and dashes."
 msgstr "%s se musí skládat pouze z písmen, mezer, apostrofů a pomlček."
 
-#: src/Tribe/Validate.php:433
+#: src/Tribe/Validate.php:449
 msgid "%s must consist of 5 numbers."
 msgstr "%s se musí skládat z 5 čísel."
 
-#: src/Tribe/Validate.php:447
+#: src/Tribe/Validate.php:463
 msgid "%s must be a phone number."
 msgstr "%s musí být telefonní číslo."
 
-#: src/Tribe/Validate.php:463
+#: src/Tribe/Validate.php:479
 msgid "Country List must be formatted as one country per line in the following format: <br>US, United States <br> UK, United Kingdom."
 msgstr "Seznam zemí musí být formátován jako jedna země na řádek v následujícím formátu: <br>US, United States <br> UK, United Kingdom."
 

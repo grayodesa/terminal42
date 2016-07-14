@@ -34,6 +34,7 @@ dbDelta( $sql );
  */
 function twp_db_need_update() {
 	global $wpdb;
+	global $table_name;
 	$installed_db = get_option('twp_db_version');
 	$missing_table = false; // Check if tables not yet installed
 	if ( $wpdb->get_var("show tables like '$table_name'") != $table_name ) $missing_table = true;

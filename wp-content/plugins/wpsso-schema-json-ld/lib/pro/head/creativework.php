@@ -42,6 +42,15 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 
 			$ret = array();
 
+			if ( isset( $mt_og['schema:type:id'] ) &&
+				$this->p->schema->schema_type_child_of( $mt_og['schema:type:id'], 'article' ) ) {
+					$org_logo_key = 'org_banner_url';		// use a banner for all article sub-types
+				$size_name = $this->p->cf['lca'].'-schema-article';	// same size, but minimum width is 696px
+			} else {
+				$org_logo_key = 'org_logo_url';
+				$size_name = $this->p->cf['lca'].'-schema';
+			}
+
 			/*
 			 * Property:
 			 * 	datepublished
@@ -62,23 +71,14 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 			 * Property:
 			 *	publisher as http://schema.org/Organization
 			 */
-			if ( isset( $mt_og['schema:type:id'] ) &&
-				$this->p->schema->schema_type_child_of( $mt_og['schema:type:id'], 'article' ) ) {
+			$org_id = is_object( $mod['obj'] ) ?
+				$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : false;	// null, false, 'none', 'site', or number (including 0)
 
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'skipping publisher: schema type '.$mt_og['schema:type:id'].
-						' is article type (publisher added by article filter)' );
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'publisher / organization id is '.
+					( empty( $org_id ) ? 'empty' : $org_id ) );
 
-			} else {
-				$org_id = is_object( $mod['obj'] ) ?
-					$mod['obj']->get_options( $mod['id'], 'schema_pub_org_id' ) : false;	// null, false, 'none', 'site', or number (including 0)
-
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'custom publisher / organization id is '.
-						( empty( $org_id ) ? 'empty' : $org_id ) );
-
-				WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, $org_id, 'org_logo_url', false );	// $list_element = false
-			}
+			WpssoSchema::add_single_organization_data( $ret['publisher'], $mod, $org_id, $org_logo_key, false );	// $list_element = false
 
 			/*
 			 * Property:
@@ -86,14 +86,14 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 			 *	contributor as http://schema.org/Person
 			 */
 			if ( $user_id > 0 )
-				WpssoSchema::add_author_and_coauthor_data( $ret, $mod, $user_id );
+				WpssoSchema::add_author_coauthor_data( $ret, $mod, $user_id );
 
 			/*
 			 * Property:
 			 *	image as http://schema.org/ImageObject
 			 *	video as http://schema.org/VideoObject
 			 */
-			WpssoJsonSchema::add_media_data( $ret, $use_post, $mod, $mt_og, $user_id );
+			WpssoJsonSchema::add_media_data( $ret, $use_post, $mod, $mt_og, $user_id, $size_name );
 
 			if ( empty( $ret['image'] ) ) {
 				if ( $this->p->debug->enabled )

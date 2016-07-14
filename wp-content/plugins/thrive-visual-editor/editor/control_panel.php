@@ -1,7 +1,8 @@
 <?php
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-$is_thrive_leads_active = is_plugin_active( 'thrive-leads/thrive-leads.php' );
+$is_thrive_leads_active     = is_plugin_active( 'thrive-leads/thrive-leads.php' );
+$is_thrive_ultimatum_active = is_plugin_active( 'thrive-ultimatum/thrive-ultimatum.php' );
 
 global $page_section_patterns, $template_uri;
 
@@ -26,6 +27,10 @@ if ( $is_thrive_theme ) {
 }
 if ( $is_thrive_leads_active ) {
 	$thrive_leads_shortcodes = tve_leads_get_shortcodes();
+}
+$tu_campaigns = array();
+if ( $is_thrive_ultimatum_active && function_exists( 'tve_ult_get_campaign_with_shortcodes' ) ) {
+	$tu_campaigns = tve_ult_get_campaign_with_shortcodes();
 }
 $landing_page_template = empty( $_POST['landing_page'] ) ? false : $_POST['landing_page'];
 $fonts                 = tve_get_all_custom_fonts( true );
@@ -195,6 +200,10 @@ $show_thrive_theme_elements = $show_page_sections;
 
 		<div id="thrive_leads_shortcode_menu">
 			<?php include $menu_path . 'thrive_leads_shortcode.php' ?>
+		</div>
+
+		<div id="thrive_ultimatum_shortcode_menu">
+			<?php include $menu_path . 'thrive_ultimatum_shortcode.php' ?>
 		</div>
 
 		<div id="content_reveal_menu">
@@ -2335,6 +2344,14 @@ $show_thrive_theme_elements = $show_page_sections;
 			<a class="tve_click tve_green_button clearfix" id="lb_custom_html" data-ctrl="controls.lb_open">
 				<i class="tve_icm tve-ic-code"></i>
 				<span><?php echo __( "Insert Custom HTML", "thrive-cb" ) ?></span>
+			</a>
+		</div>
+	</div>
+	<div data-elem="sc_thrive_ultimatum_shortcode">
+		<div class="tve_custom_html_placeholder code_placeholder thrv_wrapper">
+			<a class="tve_click tve_green_button clearfix" data-lb="lb_ultimatum_shortcode" data-ctrl="controls.lb_open">
+				<i class="tve_icm tve-ic-code"></i>
+				<span><?php echo __( "Insert Ultimatum Countdown", "thrive-cb" ) ?></span>
 			</a>
 		</div>
 	</div>

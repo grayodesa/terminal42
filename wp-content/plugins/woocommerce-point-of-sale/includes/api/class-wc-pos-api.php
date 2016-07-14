@@ -38,7 +38,7 @@ class WC_Pos_API {
 		add_filter( 'woocommerce_api_product_response', array( $this, 'filter_product_response' ), 99, 3 );
 		add_filter( 'woocommerce_api_customer_response', array( $this, 'filter_customer_response' ), 99, 4 );
 		add_action( 'woocommerce_api_coupon_response', array($this, 'api_coupon_response'), 99, 4 );
-		add_filter( 'woocommerce_api_order_response', array( $this, 'filter_order_response' ), 99, 4 );
+		add_filter( 'woocommerce_api_order_response', array( $this, 'filter_order_response' ), 999, 4 );
 		add_filter( 'woocommerce_api_query_args', array( $this, 'filter_api_query_args' ), 99, 2 );
 
 
@@ -366,9 +366,10 @@ class WC_Pos_API {
 		        
 		        $dp = ( isset( $filter['dp'] ) ? intval( $filter['dp'] ) : 2 );
 		        $order_data['line_items'][$key]['price'] = wc_format_decimal( $this->get_item_total( $item ), $dp );
+
 			}
 		}
-		
+
 		$order_data['print_url'] = wp_nonce_url( admin_url( 'admin.php?print_pos_receipt=true&order_id=' . $the_order->id ), 'print_pos_receipt' );
 		
 		return $order_data;	
@@ -388,7 +389,7 @@ class WC_Pos_API {
 
 		$price = $round ? round( $price, wc_get_price_decimals() ) : $price;
 
-		return apply_filters( 'woocommerce_order_amount_item_total', $price, $this, $item, $inc_tax, $round );
+		return $price;
 	}
 
 

@@ -483,8 +483,9 @@ jQuery(document).ready(function($) {
         		if( typeof order != 'undefined' ){
         			CART.empty_cart();
         			POS_TRANSIENT.order_id = order.id;
-                    
+
         			$.each(order.line_items, function(index, item) {
+
         				var quantity = parseInt(item.quantity);
                         if( wc_pos_params.decimal_quantity == 'yes' ){
                             quantity = parseFloat(item.quantity);
@@ -505,6 +506,7 @@ jQuery(document).ready(function($) {
                             var adding_to_cart = clone(pos_custom_product);
                                 adding_to_cart.title = item.name;
                                 adding_to_cart.price = item.price;
+
                                 adding_to_cart.regular_price = adding_to_cart.price;
 
                                 var subtotal_tax = parseFloat(item.subtotal_tax);
@@ -512,10 +514,11 @@ jQuery(document).ready(function($) {
                                     adding_to_cart.tax_class  = item.tax_class != null ? item.tax_class : '';
                                     adding_to_cart.taxable    = true;
                                     adding_to_cart.tax_status = 'taxable';
-                                    if( pos_cart.prices_include_tax ){
+                                    /*if( pos_cart.prices_include_tax ){
                                         adding_to_cart.price = parseFloat(item.price) + subtotal_tax;
                                         adding_to_cart.regular_price = adding_to_cart.price;
-                                    }
+                                    }*/
+
                                 }else{
                                     adding_to_cart.tax_status = 'none';
                                     adding_to_cart.taxable    = false;
@@ -1204,7 +1207,13 @@ jQuery(document).ready(function($) {
                         delete POS_TRANSIENT.order_id;
                         ADDONS.crlearCardfields();
                         APP.processing_payment = false;
-                        APP.sync_data(true);                      
+                        APP.sync_data(true);     
+
+                        if( pos_default_customer > 0){
+                            APP.setCustomer( pos_default_customer );
+                        }else{
+                            APP.setGuest();
+                        }                 
                   }
                 },
                 error: function(data){
