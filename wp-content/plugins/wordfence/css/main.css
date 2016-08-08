@@ -285,6 +285,9 @@ table.wfConfigForm th {
 table.wfConfigForm td {
 	vertical-align: middle;
 }
+table.wfConfigForm td.align-top {
+	vertical-align: top;
+}
 table th.wfConfigEnable { font-weight: bold; }
 .wfSavedMsg { display: none; color: #A00; }
 table th.wfSubheading { font-weight: bold; padding-top: 10px; }
@@ -579,16 +582,8 @@ table.block-ranges-table tr td {
 	border: 1px solid #ffd975;
 	border-width: 1px 1px 1px 10px;
 }
-.wf-error {
-	margin: 12px 0;
-	padding: 8px;
-	background-color: #fff0f0;
-	border: 1px solid #dc3232;
-	border-width: 1px 1px 1px 10px;
-}
 .wf-success-text,
-.wf-notice-text,
-.wf-error-text {
+.wf-notice-text {
 	display: inline-block;
 	vertical-align: middle;
 	line-height: 1.3;
@@ -597,9 +592,6 @@ table.block-ranges-table tr td {
 	font-style: italic;
 }
 .wf-notice-text {
-	color: #6d798c;
-}
-.wf-error-text {
 	color: #6d798c;
 }
 .wf-success-text {
@@ -1061,4 +1053,19 @@ tr.wf-table-filters input {
 	margin-bottom: 12px;
 	padding: 1px 13px;
 	max-width: 900px;
+}
+
+#wfTwoFactorQRCodeTable {
+	width: 256px;
+	height: 256px;
+	margin: 0 auto;
+}
+
+#wfTwoFactorRecoveryCodes {
+	list-style-type: none;
+}
+
+#wfTwoFactorRecoveryCodes li {
+	font-family: monospace;
+	text-align: center;
 }

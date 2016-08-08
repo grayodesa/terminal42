@@ -117,7 +117,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
 			}
 
 			// if creating order for existing customer
-			if ( ! empty( $data['customer_id'] ) ) {
+			if ( isset( $data['customer_id'] ) ) {
 
 				if( $data['customer_id'] > 0 ){
 					// make sure customer exists
@@ -129,6 +129,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
 				$order_args['customer_id'] = $data['customer_id'];
 
 			}
+
 			if( $data['create_account'] === true ) {
 
 				$billing_data = $data['billing_address'];
@@ -181,7 +182,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
 				$order_args['customer_id'] = $new_customer;
 			}
 
-			if( isset($order_args['customer_id']) && $order_args['customer_id'] ){
+			if( isset($order_args['customer_id']) ){
 				update_post_meta( $order->id, '_customer_user', $order_args['customer_id'] );
 				$order = wc_get_order( $id );
 			}	
@@ -192,11 +193,29 @@ class WC_API_POS_Orders extends WC_API_Orders {
 				}
 			}		
 
+			$address_fields = array(
+				'first_name',
+				'last_name',
+				'company',
+				'email',
+				'phone',
+				'address_1',
+				'address_2',
+				'city',
+				'state',
+				'postcode',
+				'country',
+			);
+			foreach ($address_fields as $mkey) {				
+				delete_post_meta( $order->id, "_billing_" . $mkey );
+				delete_post_meta( $order->id, "_shipping_" . $mkey );
+			}
+
 			// billing/shipping addresses
 			$this->set_order_addresses( $order, $data );
 
 			$lines = array(
-				/*'line_item' => 'line_items',*/
+				'line_item' => 'line_items',
 				'shipping'  => 'shipping_lines',
 				'fee'       => 'fee_lines',
 				'coupon'    => 'coupon_lines',
@@ -209,45 +228,27 @@ class WC_API_POS_Orders extends WC_API_Orders {
 				}
 			}
 
-				$custom_pr_id   = (int)get_option('wc_pos_custom_product_id');
-				$line_items_ids = array();
-				if ( isset( $data[ 'line_items' ] ) && is_array( $data[ 'line_items' ] ) ) {
 
-					
-					foreach ( $data[ 'line_items' ] as $item ) {
+			$order_items = $order->get_items( array( 'line_item' ) ) ;
+			if ( count($order_items) > 0){
+				$order_stock_reduced = get_post_meta( $order->id, '_order_stock_reduced', true );
 
-						if( isset($item['id']) && $item['id'] > 0){
-							if ( $item['product_id'] > 0 && $item['product_id'] != $custom_pr_id) {
-								
-								$_product  = $order->get_product_from_item( $item );
-								$item_meta = $order->get_item_meta( $item['id'] );
-								
+				foreach ( $order_items as $item_id => $item) {
 
-								if ( $_product && $_product->exists() && $_product->managing_stock() ) {
-									$qty       = (float)$item_meta['_qty'][0];
-									$new_stock = $_product->increase_stock( $qty );
-								}
-							}
-							$line_items_ids[] = $this->set_line_item( $order, $item, 'update' );
-						}else{
-							$line_items_ids[] = $this->set_line_item( $order, $item, 'create' );
-						}						
-					}
-					foreach ( $order->get_items( array( 'line_item' ) ) as $item_id => $item) {
-
-						if( !in_array($item_id, $line_items_ids)){
-							$_product  = $order->get_product_from_item( $item );
-							$item_meta = $order->get_item_meta( $item_id );
-							if ( $_product && $_product->exists() && $_product->managing_stock() ) {
-								$qty       = (float)$item_meta['_qty'][0];
-								$new_stock = $_product->increase_stock( $qty );
-							}
-							wc_delete_order_item( $item_id );
+					if( $order_stock_reduced ){
+						$_product  = $order->get_product_from_item( $item );
+						$item_meta = $order->get_item_meta( $item_id );
+						if ( $_product && $_product->exists() && $_product->managing_stock() ) {
+							$qty       = (float)$item_meta['_qty'][0];
+							$new_stock = $_product->increase_stock( $qty );
 						}
 					}
-
-
+					wc_delete_order_item( $item_id );
 				}
+
+				delete_post_meta( $order->id, '_order_stock_reduced');
+
+			}
 
 			foreach ( $lines as $line_type => $line ) {
 
@@ -257,7 +258,12 @@ class WC_API_POS_Orders extends WC_API_Orders {
 
 					foreach ( $data[ $line ] as $item ) {
 
-						$this->$set_item( $order, $item, 'create' );
+						if( $line_type == 'coupon' && $item['code'] == 'POS Discount' && isset($item['type']) && $item['type'] == 'percent' && isset($item['pamount'])){
+							$item_id = $order->add_coupon( $item['code'], isset( $item['amount'] ) ? floatval( $item['amount'] ) : 0 );	
+							wc_add_order_item_meta( $item_id, 'discount_amount_percent', $item['pamount'] );
+						}else{
+							$this->$set_item( $order, $item, 'create' );							
+						}
 						if( $line_type == 'coupon' && $item['code'] == 'WC_POINTS_REDEMPTION'){
 							global $wc_points_rewards;
 							$discount_amount = $item['amount'];
@@ -381,16 +387,17 @@ class WC_API_POS_Orders extends WC_API_Orders {
 					$order->update_status( $data['status'], isset( $data['status_note'] ) ? $data['status_note'] : __( 'Point of Sale transaction completed.', 'wc_point_of_sale' ) );
 				}
 			}
-			if ( !isset($data['payment_details']) ) {
-				
-				switch ($order->get_status()) {
+
+			if( ! get_post_meta( $order->id, '_order_stock_reduced', true ) ){
+				switch ( $order->get_status() ) {
 					case 'completed':
 					case 'processing':
 					case 'on-hold':
 						$order->reduce_order_stock();
 						break;
-				}
+				}				
 			}
+
 
 			do_action( 'woocommerce_checkout_order_processed', $order->id, $data );
 
@@ -1164,17 +1171,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
 			return false;
 		}
 
-		if( $data['payment_details']['method_id'] == "pos_chip_pin" ){
-			if( ! empty( $data['status'] )  ){
-				switch ($data['status']) {
-					case 'completed':
-					case 'processing':
-					case 'on-hold':
-						$order = wc_get_order( $order_id );
-						$order->reduce_order_stock();
-						break;
-				}
-			}
+		if( $data['payment_details']['method_id'] == "pos_chip_pin" ){			
 			$response = array('result' => 'success', 'redirect' => '');
 			return $response;
 		}

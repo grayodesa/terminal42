@@ -174,7 +174,17 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 				'email'      => $arguments['email'],
 				'name'       => $arguments['name'],
 				'ip_address' => $_SERVER['REMOTE_ADDR'],
+				'custom_fields' => array(
+					'Web Form URL' => ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
+					),
 			);
+			// create custom fields
+			$custom_fields = $list->custom_fields;
+
+			try {
+				$custom_fields->create( array( 'name' => 'Web Form URL' ) );
+			}
+			catch ( Exception $e ) {}
 
 			if ( ! empty( $arguments['phone'] ) && ( $phone_field_name = $this->phoneCustomFieldExists( $list ) ) ) {
 				$params['custom_fields'] = array(

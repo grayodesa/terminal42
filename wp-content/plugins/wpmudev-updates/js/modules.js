@@ -98,6 +98,7 @@ jQuery(function initModules() {
 		jQuery('body').on('click', '.title-action [data-action]', ajaxProjectAction);
 		jQuery(document).on('wpmu:show-project', updateProjectBox);
 		jQuery(document).on('wpmu:update-done', function() { refreshUpdateCounter('theme', -1); } );
+		jQuery(document).on('wpmu:update-done', closeUpfrontUpgrade);
 		txtFilter.on('keyup', filterProjects);
 		txtFilter.on('search', filterProjects);
 		txtFilter.on('blur', filterProjects);
@@ -135,7 +136,15 @@ jQuery(function initModules() {
 	// ------------------------------------------------------------------------
 	// SUPPORT PAGE
 	function initSupport() {
-
+		var searchForm = jQuery("#support-search");
+		searchForm.submit(function() {
+			var query = jQuery('#support-search input[name="q"]').val();
+			window.location.href = 'https://premium.wpmudev.org/support/?search=true#stq='+query+'&stp=1';
+			return false;
+		});
+		searchForm.on('click', '.search-icon', function() {
+			searchForm.submit();
+		});
 	}
 
 	// ------------------------------------------------------------------------
@@ -197,16 +206,68 @@ jQuery(function initModules() {
 			if ('set' === action) { step = step - count; }
 			count += step;
 			if (count < 0) { count = 0; }
-			badge_details.removeClass().addClass(type + '-updates update-plugins count-' + count);
-			badge_details.find('.countval').text(count);
+			if ( count ) {
+				badge_details.removeClass().addClass(type + '-updates update-plugins count-' + count);
+				badge_details.find('.countval').text(count);
+			} else {
+				badge_details.hide();
+			}
 		}
 
 		if (badge_total.length) {
 			count = parseInt(badge_total.first().find('.countval').text());
 			count += step;
 			if (count < 0) { count = 0; }
-			badge_total.removeClass().addClass('total-updates update-plugins count-' + count);
-			badge_total.find('.countval').text(count);
+			if ( count ) {
+				badge_total.removeClass().addClass('total-updates update-plugins count-' + count);
+				badge_total.find('.countval').text(count);
+			} else {
+				badge_total.hide();
+			}
+			badge_total.removeAttr('title');
+		}
+
+		if ('set' === action ) { return true; }//don't mess with core bubbles
+
+		//handle core count bubbles
+		var id = ( 'theme' == type ) ? 'appearance' : 'plugins',
+			menu = jQuery('#menu-'+id),
+			badge_details = menu.find('.update-plugins'),
+			badge_details_count = badge_details.first().find('.'+type+'-count'),
+			badge_total = jQuery('#wp-admin-bar-updates .ab-item'),
+			count = 0;
+
+		if (badge_details.length) {
+			count = parseInt(badge_details_count.text());
+			count += step;
+			if (count < 0) { count = 0; }
+			if ( count ) {
+				badge_details.removeClass().addClass('update-plugins count-' + count);
+				badge_details_count.text(count);
+			} else {
+				badge_details_count.text(count);
+				badge_details.hide();
+			}
+		}
+
+		//admin bar updated icon
+		if (badge_total.length) {
+			orig_count = parseInt(badge_total.first().find('.ab-label').text());
+			count = orig_count + step;
+			if (count < 0) { count = 0; }
+			if ( count ) {
+				badge_total.find('.ab-label').text(count);
+			} else {
+				badge_total.find('.ab-label').hide();
+			}
+			badge_total.find('.screen-reader-text').remove();
+			badge_total.removeAttr('title');
+		}
+	}
+
+	function closeUpfrontUpgrade( type, pid ) {
+		if ( '938297' == pid ) {
+			jQuery('.frash-notice.active').hide();
 		}
 	}
 
@@ -393,6 +454,7 @@ jQuery(function initModules() {
 		} else if (jQuery('body').hasClass('wpmud-themes')) {
 			refreshUpdateCounter('theme', count_updates, 'set');
 		}
+
 
 		sortProjects();
 	}

@@ -226,6 +226,25 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
 			}
 		} else {
+
+			var_dump($merge_tags);
+
+			$existing_groups = array();
+			if(isset($member['data'][0]['merges']['GROUPINGS'])) {
+				foreach($member['data'][0]['merges']['GROUPINGS'] as $grouping) {
+					foreach($grouping['groups'] as $group) {
+						if($group['interested'] == true) {
+							$grouping_id = $grouping['id'];
+							$existing_groups[$grouping_id]['id'] = $grouping_id;
+							$existing_groups[$grouping_id]['groups'][] = $group['name'];
+						}
+					}
+				}
+			}
+
+
+			$merge_tags['groupings'] = array_merge($merge_tags['groupings'], $existing_groups);
+
 			try {
 				$api->lists->updateMember(
 					$list_identifier,

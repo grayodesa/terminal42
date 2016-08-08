@@ -381,9 +381,7 @@ if ( ! class_exists( 'WpssoAdmin' ) ) {
 				$this->p->util->clear_all_cache( true, __FUNCTION__, true );
 			}
 
-			// filter_head_attributes() is disabled when the wpsso-schema-json-ld extension is active
-			if ( apply_filters( $this->p->cf['lca'].'_add_schema_head_attributes', true ) )
-				$this->check_tmpl_head_elements();
+			$this->check_tmpl_head_elements();
 
 			return $opts;
 		}
@@ -1020,12 +1018,10 @@ if ( ! class_exists( 'WpssoAdmin' ) ) {
 		}
 
 		public function show_metabox_help() {
-			echo '<table class="sucom-setting '.$this->p->cf['lca'].'" side><tr><td>';
-
+			echo '<table class="sucom-setting '.
+				$this->p->cf['lca'].'" side><tr><td>';
 			$this->show_follow_icons();
-
-			echo '<p>'.sprintf( __( 'The development of %1$s is mostly driven by customer requests &mdash; we welcome your comments and suggestions. ;-)',
-				'wpsso' ), $this->p->cf['plugin'][$this->p->cf['lca']]['short'] ).'</p>';
+			echo $this->p->msgs->get( 'side-help-support' );
 
 			foreach ( $this->p->cf['plugin'] as $ext => $info ) {
 				if ( empty( $info['version'] ) )	// filter out extensions that are not installed
@@ -1360,13 +1356,6 @@ if ( ! class_exists( 'WpssoAdmin' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			// filter_head_attributes() is disabled when the wpsso-schema-json-ld extension is active
-			if ( ! apply_filters( $this->p->cf['lca'].'_add_schema_head_attributes', true ) ) {
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'exiting early: schema head attributes disabled' );
-				return;
-			}
-
 			// only check if using the default filter name
 			if ( empty( $this->p->options['plugin_head_attr_filter_name'] ) ||
 				$this->p->options['plugin_head_attr_filter_name'] !== 'head_attributes' )
@@ -1379,8 +1368,7 @@ if ( ! class_exists( 'WpssoAdmin' ) ) {
 
 				if ( strpos( $html, '<head>' ) !== false ) {
 					$this->p->notice->warn( $this->p->msgs->get( 'notice-header-tmpl-no-head-attr' ),
-						true, true, 'notice-header-tmpl-no-head-attr-'.
-							SucomUtil::get_theme_slug_version(), true );
+						true, true, 'notice-header-tmpl-no-head-attr-'.SucomUtil::get_theme_slug_version(), true );
 					break;
 				}
 			}

@@ -188,6 +188,16 @@ class WPMUDEV_Dashboard_Site {
 			array( $this, 'after_transient_changed' )
 		);
 
+		//refresh after plugin/theme is activated/deactivated
+		add_action( 'activated_plugin', array( $this, 'after_activation_change' ) );
+		add_action( 'deactivated_plugin', array( $this, 'after_activation_change' ) );
+		if ( is_multisite() ) {
+			add_action( 'update_site_option_allowedthemes', array( $this, 'after_activation_change' ) ); //network enable/disable
+		}
+		if ( is_main_site() ) {
+			add_action( 'after_switch_theme', array( $this, 'after_activation_change' ) ); //per site activation
+		}
+
 		// Add WPMUDEV projects to the WP updates list.
 		add_filter(
 			'site_transient_update_plugins',
@@ -1230,18 +1240,35 @@ class WPMUDEV_Dashboard_Site {
 	 */
 	public function to_localtime( $time ) {
 		if ( is_numeric( $time ) ) {
-			$timestamp = intval( $time );
+			$gmt_timestamp = intval( $time );
 		} else {
-			$timestamp = strtotime( $time );
+			$gmt_timestamp = strtotime( $time );
 		}
 
 		if ( ! $time ) { return 0; }
 
-		// In Multisite networks this option is from the main blog.
-		$offset = intval( get_option( 'gmt_offset' ) ) * 60 * 60;
-		$timestamp += $offset;
+		$string = date( 'Y-m-d H:i:s', $gmt_timestamp );
+		$tz     = get_option( 'timezone_string' ); // In Multisite networks this option is from the main blog.
 
-		return $timestamp;
+		if ( $tz ) {
+			$datetime = date_create( $string, new DateTimeZone( 'UTC' ) );
+			if ( ! $datetime ) {
+				return 0;
+			}
+			$datetime->setTimezone( new DateTimeZone( $tz ) );
+			$localtime = strtotime( $datetime->format( 'Y-m-d H:i:s' ) );
+		} else {
+			if ( ! preg_match( '#([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})#', $string, $matches ) ) {
+				return 0;
+			}
+
+			$gmt_offset = get_option( 'gmt_offset' ); // In Multisite networks this option is from the main blog.
+
+			$string_time = gmmktime( $matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1] );
+			$localtime = $string_time + $gmt_offset * HOUR_IN_SECONDS;
+		}
+
+		return $localtime;
 	}
 
 	/**
@@ -1310,7 +1337,8 @@ class WPMUDEV_Dashboard_Site {
 			self::$_cache_projectinfos = array();
 		}
 
-		if ( ! isset( self::$_cache_projectinfos[ $pid ] ) ) {
+		//build data if it's not cached or we need changelog and the changelog is missing from cache
+		if ( ! isset( self::$_cache_projectinfos[ $pid ] ) || ( $fetch_full && ! count( self::$_cache_projectinfos[ $pid ]->changelog ) ) ) {
 			$res = (object) array(
 				'pid' => $pid,
 				'type' => '', // Possible: 'plugin' or 'theme'.
@@ -1371,7 +1399,7 @@ class WPMUDEV_Dashboard_Site {
 			$res->info = strip_tags( $remote['short_description'] );
 			$res->version_latest = $remote['version'];
 			$res->features = $remote['features'];
-			$res->default_order = intval( $remote['_order'] );
+			$res->default_order = isset( $remote['_order'] ) ? intval( $remote['_order'] ) : 0;
 			$res->downloads = intval( $remote['downloads'] );
 			$res->popularity = intval( $remote['popularity'] );
 			$res->release_stamp = intval( $remote['released'] );
@@ -1398,15 +1426,13 @@ class WPMUDEV_Dashboard_Site {
 
 			$res->is_installed = WPMUDEV_Dashboard::$upgrader->is_project_installed( $pid );
 
-			if ( $res->is_licensed && WPMUDEV_Dashboard::$api->has_key() ) {
-				$res->can_autoupdate = ('1' == $remote['autoupdate']);
-			}
+			$res->can_autoupdate = ( '1' == $remote['autoupdate'] ); //this has nothing to do with permissions, just project capability
+			$res->is_compatible = WPMUDEV_Dashboard::$upgrader->is_project_compatible( $pid, $incompatible_reason );
 
 			// Plugin can be active, even if not licensed:
 			// E.g. it was installed and then the admin logged out from WPMU DEV
 			// Dashboard, or the API-Key was changed from the Hub, ...
 			if ( $res->is_installed ) {
-				$res->is_compatible = WPMUDEV_Dashboard::$upgrader->is_project_compatible( $pid, $incompatible_reason );
 				if ( ! empty( $local['name'] ) ) { $res->name = $local['name']; }
 				if ( 'muplugin' == $local['type'] ) {
 					$res->special = $local['type'];
@@ -1560,6 +1586,7 @@ class WPMUDEV_Dashboard_Site {
 					$pid,
 					$res->version_latest
 				);
+
 			}
 
 			self::$_cache_projectinfos[ $pid ] = $res;
@@ -2086,19 +2113,19 @@ class WPMUDEV_Dashboard_Site {
 	 * @since  4.0.3
 	 */
 	public function notice_upfront_update() {
-		$upfront = $this->get_project_infos( $this->id_upfront );
+		$upfront_url = '#update=' . $this->id_upfront;
 		$message = sprintf(
 			'<b>%s</b><br>%s',
 			__( 'Awesome news for Upfront', 'wpmudev' ),
-			__( 'We have a new version of Upfront for you! Install it right now to get all the latest improvements and features', 'wpmudev' )
+			__( 'We have a new version of Upfront for you! Install it right now to get all the latest improvements and features.', 'wpmudev' )
 		);
 
 		$cta = sprintf(
 			'<span data-project="%s">
-			<a href="%s" class="button">Update Upfront</a>
+			<a href="%s" class="button show-project-update">Update Upfront</a>
 			</span>',
 			$this->id_upfront,
-			$upfront->url->update
+			$upfront_url
 		);
 
 		do_action( 'wpmudev_override_notice', $message, $cta );
@@ -2318,6 +2345,18 @@ class WPMUDEV_Dashboard_Site {
 		self::$_cache_themeupdates = false;
 		self::$_cache_pluginupdates = false;
 		$this->set_option( 'updates_available', false );
+		// API call to inform wpmudev site about the change if a DEV plugin changed.
+		WPMUDEV_Dashboard::$site->refresh_local_projects( 'remote' );
+	}
+
+	/**
+	 * After a plugin/theme activation/deactivation we ping the hub
+	 *
+	 * @since  4.1.1
+	 */
+	public function after_activation_change() {
+		//TODO Only refresh if it's a DEV plugin/theme
+		WPMUDEV_Dashboard::$site->refresh_local_projects( 'remote' );
 	}
 
 	/**
@@ -2604,6 +2643,9 @@ class WPMUDEV_Dashboard_Site {
 	 * @return object Modified transient value.
 	 */
 	public function filter_plugin_update_count( $value ) {
+		global $wp_version;
+		$cur_wp_version = preg_replace( '/-.*$/', '', $wp_version );
+
 		if ( ! is_object( $value ) ) { return $value; }
 
 		if ( ! self::$_cache_pluginupdates ) {
@@ -2636,7 +2678,7 @@ class WPMUDEV_Dashboard_Site {
 					$package = '';
 					$autoupdate = false;
 					$local = $this->get_cached_projects( $id );
-					$last_changes = $plugin['changelog'];
+					//$last_changes = $plugin['changelog'];
 
 					if ( '1' == $plugin['autoupdate'] && WPMUDEV_Dashboard::$api->has_key() ) {
 						$package = WPMUDEV_Dashboard::$api->rest_url_auth( 'download/' . $id );
@@ -2649,6 +2691,7 @@ class WPMUDEV_Dashboard_Site {
 						'new_version' => $plugin['new_version'],
 						'package' => $package,
 						'autoupdate' => $autoupdate,
+						'tested' => $cur_wp_version,
 					);
 
 					// Add update information to response.
@@ -2673,6 +2716,9 @@ class WPMUDEV_Dashboard_Site {
 	 * @return object Modified transient value.
 	 */
 	public function filter_theme_update_count( $value ) {
+		global $wp_version;
+		$cur_wp_version = preg_replace( '/-.*$/', '', $wp_version );
+
 		if ( ! is_object( $value ) ) { return $value; }
 
 		if ( ! self::$_cache_themeupdates ) {
@@ -2708,6 +2754,7 @@ class WPMUDEV_Dashboard_Site {
 					$object['new_version'] = $theme['new_version'];
 					$object['package'] = WPMUDEV_Dashboard::$api->rest_url_auth( 'download/' . $id );
 					$object['theme'] = $theme_slug;
+					$object['tested'] = $cur_wp_version;
 
 					// Add changes back into response.
 					$value->response[ $theme_slug ] = $object;

@@ -61,6 +61,7 @@ function tve_license_notice() {
  */
 function tve_global_options_init() {
 	/* register the "lightbox" post type */
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 	register_post_type( 'tcb_lightbox', array(
 		'labels'              => array(
 			'name'          => __( 'Thrive Lightboxes', "thrive-cb" ),
@@ -73,7 +74,7 @@ function tve_global_options_init() {
 		'has_archive'         => false,
 		'rewrite'             => false,
 		'show_in_nav_menus'   => false,
-		'show_in_menu'        => apply_filters( 'tcb_lightbox_menu_visible', true )
+		'show_in_menu'        => is_plugin_active( 'thrive-visual-editor/thrive-visual-editor.php' )
 	) );
 
 	$plugin_db_version = get_option( 'tve_version' );
@@ -1773,7 +1774,9 @@ function tve_enqueue_editor_scripts() {
 				// variables for custom colours used for post
 				$tve_remembered_colours       = get_option( "thrv_custom_colours", null );
 				$tve_default_tooltip_settings = get_option( "tve_default_tooltip_settings", null );
-
+				if ( ! empty( $tve_default_tooltip_settings['event_tooltip_text'] ) ) {
+					$tve_default_tooltip_settings['event_tooltip_text'] = stripslashes( $tve_default_tooltip_settings['event_tooltip_text'] );
+				}
 				if ( ! $tve_remembered_colours ) {
 					$tve_remembered_colours = array();
 				}
@@ -1967,6 +1970,7 @@ function tve_enqueue_editor_scripts() {
 						'WistiaVideoPlaceholder'               => __( 'Wistia Popover Video placeholder' ),
 						'ValidWistiaUrl'                       => __( "Please enter a valid Wistia URL", 'thrive-cb' ),
 						'Downloading'                          => __( 'Downloading...', 'thrive-cb' ),
+						'Template_updated'                     => __( 'Template updated', 'thrive-cb' ),
 					)
 				);
 				$tve_path_params['extra_body_class'] .= ( $tve_cp_config['position'] == 'left' ? ' tve_cpanelFlip' : '' );
@@ -3915,7 +3919,7 @@ function tve_find_quick_link_contents() {
 	function_exists( 'tve_leads_get_groups' ) ? $leads = array( 'tve_lead_2s_lightbox' ) : $leads = array();
 
 	if ( ! $post_types ) {
-		$post_types    = array( 'post', 'page' );
+		$post_types = array( 'post', 'page' );
 
 	} else {
 		$accepted = unserialize( $post_types );
@@ -3938,10 +3942,10 @@ function tve_find_quick_link_contents() {
 		);
 		$accepted_array = get_posts( $args );
 
-		$lightbox = array('tcb_lightbox');
-		$boxes = array_merge( $lightbox, $leads );
+		$lightbox = array( 'tcb_lightbox' );
+		$boxes    = array_merge( $lightbox, $leads );
 
-		$lightbox_args        = array(
+		$lightbox_args  = array(
 			'post_type'   => $boxes,
 			'post_status' => 'publish',
 			's'           => $s,

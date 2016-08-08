@@ -187,7 +187,8 @@ if (!defined('WFWAF_LOG_PATH')) {
 	define('WFWAF_LOG_PATH', WP_CONTENT_DIR . '/wflogs/');
 }
 if (!is_dir(WFWAF_LOG_PATH)) {
-	@mkdir(WFWAF_LOG_PATH, 0755);
+	@mkdir(WFWAF_LOG_PATH, 0775);
+	@chmod(WFWAF_LOG_PATH, 0775);
 	@file_put_contents(rtrim(WFWAF_LOG_PATH . '/') . '/.htaccess', <<<APACHE
 <IfModule mod_authz_core.c>
 	Require all denied
@@ -198,6 +199,7 @@ if (!is_dir(WFWAF_LOG_PATH)) {
 </IfModule>
 APACHE
 	);
+	@chmod(rtrim(WFWAF_LOG_PATH . '/') . '/.htaccess', 0664);
 }
 
 
@@ -216,6 +218,7 @@ try {
 		if (!file_exists($rulesFile)) {
 			@touch($rulesFile);
 		}
+		@chmod($rulesFile, 0664);
 		if (is_writable($rulesFile)) {
 			wfWAF::getInstance()->setCompiledRulesFile($rulesFile);
 			break;

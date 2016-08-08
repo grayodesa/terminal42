@@ -805,7 +805,7 @@ class WC_Pos_Sell{
 
 		$params = apply_filters('wc_pos_params', array(
 	      'wp_debug'                => defined('WP_DEBUG') ? WP_DEBUG : false,
-	      'avatar'                  => function_exists('get_avatar_url') ? get_avatar_url( 0, array( 'size' => 30 ) ) : '',
+	      'avatar'                  => function_exists('get_avatar_url') ? get_avatar_url( 0, array( 'size' => 64 ) ) : '',
 	      'sound_path'              => WC_POS()->plugin_sound_url(),
 	      'ajax_url'                => WC()->ajax_url(),
 	      'edit_link'               => get_admin_url(get_current_blog_id(), '/post.php?post={{post_id}}&action=edit'),
@@ -831,6 +831,7 @@ class WC_Pos_Sell{
 	      'currency_format'          => esc_attr(str_replace(array('%1$s', '%2$s'), array('%s', '%v'), get_woocommerce_price_format())), // For accounting JS
 
 	      'ready_to_scan'            => get_option('woocommerce_pos_register_ready_to_scan'),
+	      'scan_field'               => get_option('woocommerce_pos_register_scan_field'),
 	      'cc_scanning'              => get_option('woocommerce_pos_register_cc_scanning'),
 	      'instant_quantity'         => get_option('woocommerce_pos_register_instant_quantity'),
 	      'instant_quantity_keypad'  => get_option('woocommerce_pos_register_instant_quantity_keypad'),	      
@@ -866,6 +867,7 @@ class WC_Pos_Sell{
 		if( $pos_tax_based_on == 'default' ){
 			$pos_tax_based_on = get_option( 'woocommerce_tax_based_on' );
 		}
+		$precision = function_exists('wc_get_rounding_precision') ? wc_get_rounding_precision() : ( defined( 'WC_ROUNDING_PRECISION' ) ? WC_ROUNDING_PRECISION : 4 );
 		
 		$params = apply_filters('wc_pos_wc_params', array(
 			'tax_display_shop'      => get_option( 'woocommerce_tax_display_shop' ),
@@ -876,7 +878,7 @@ class WC_Pos_Sell{
 			'default_customer_addr' => get_option( 'woocommerce_default_customer_address' ),
 			'calc_discounts_seq'    => get_option( 'woocommerce_calc_discounts_sequentially', 'no' ),
 			'pos_tax_based_on'      => $pos_tax_based_on,
-			'precision'             => WC_ROUNDING_PRECISION,
+			'precision'             => $precision,
 			'all_rates'             => wc_pos_find_all_rates(),
 			'outlet_location'       => wc_pos_get_outlet_location(),
 			'shop_location'         => wc_pos_get_shop_location(),

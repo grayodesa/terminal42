@@ -170,9 +170,9 @@
         <thead>
             <tr>
                 <th><?php _e( 'Qty', 'wc_point_of_sale' ); ?></th>
-                <th><?php _e( 'Description', 'wc_point_of_sale' ); ?></th>
-                <th><?php _e( 'Price', 'wc_point_of_sale' ); ?></th>
-                <th><?php _e( 'Amount', 'wc_point_of_sale' ); ?></th>
+                <th><?php _e( 'Product', 'wc_point_of_sale' ); ?></th>
+                <th><?php _e( 'Cost', 'wc_point_of_sale' ); ?></th>
+                <th><?php _e( 'Total', 'wc_point_of_sale' ); ?></th>
             </tr>
         </thead>
         <tbody>

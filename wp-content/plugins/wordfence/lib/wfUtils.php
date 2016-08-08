@@ -348,7 +348,7 @@ class wfUtils {
 		if(isset($_COOKIE)){
 			if(is_array($_COOKIE)){
 				foreach($_COOKIE as $key => $val){
-					if(strpos($key, 'wordpress_logged_in') == 0){
+					if(strpos($key, 'wordpress_logged_in') === 0){
 						return true;
 					}
 				}
@@ -1165,7 +1165,7 @@ class wfUtils {
 			return gethostbynamel($host);
 		}
 
-		$ips = array_merge((array) dns_get_record($host, DNS_AAAA), (array) dns_get_record($host, DNS_A));
+		$ips = array_merge((array) @dns_get_record($host, DNS_AAAA), (array) @dns_get_record($host, DNS_A));
 		$return = array();
 
 		foreach ($ips as $record) {
@@ -1275,7 +1275,6 @@ class wfUtils {
 		$keys[$index] = $newKey;
 		return array_combine($keys, array_values($array));
 	}
-
 }
 
 // GeoIP lib uses these as well

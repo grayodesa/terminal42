@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WPSSO Schema JSON-LD Markup (WPSSO JSON) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.9.1-1\n"
+"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.10.0-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-schema-json-"
 "ld\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
@@ -25,7 +25,7 @@ msgid ""
 "Organization, Place, Product, etc.) for Google and Pinterest."
 msgstr ""
 
-#: lib/filters.php:114
+#: lib/filters.php:124
 msgid ""
 "The Free / Basic version of WPSSO JSON does not include support for the "
 "Schema type <a href=\"%1$s\">%1$s</a> &mdash; only the basic Schema "
@@ -33,68 +33,96 @@ msgid ""
 "included in the Schema JSON-LD markup."
 msgstr ""
 
-#: lib/filters.php:114
+#: lib/filters.php:124
 msgid ""
 "The <a href=\"%1$s\">Pro version of WPSSO JSON</a> includes a wide selection "
 "of supported Schema types, including the Schema type <a href=\"%2$s\">%2$s</"
 "a>."
 msgstr ""
 
-#: lib/filters.php:114
+#: lib/filters.php:124
 msgid ""
 "If this Schema is an important classification for your content, you should "
 "consider purchasing the Pro version."
 msgstr ""
 
-#: lib/filters.php:118
+#: lib/filters.php:128
 msgid "This notice is only shown to users with Administrative privileges."
 msgstr ""
 
-#: lib/filters.php:224
+#: lib/filters.php:281
 msgid ""
 "Check this option if the Schema markup describes the main content (aka "
 "\"main entity\") of this webpage."
 msgstr ""
 
-#: lib/filters.php:227
+#: lib/filters.php:284
 msgid ""
 "Select a Schema item type that best describes the main content of this "
 "webpage."
 msgstr ""
 
-#: lib/filters.php:230
+#: lib/filters.php:287
 msgid ""
 "Select a publisher for the Schema Article item type and/or its sub-type "
 "(NewsArticle, TechArticle, etc)."
 msgstr ""
 
-#: lib/filters.php:233
+#: lib/filters.php:290
 msgid ""
 "A custom headline for the Schema Article item type and/or its sub-type. The "
 "headline Schema property is not added for non-Article item types."
 msgstr ""
 
-#: lib/filters.php:236
+#: lib/filters.php:293
 msgid ""
 "Select an organizer for the Schema Event item type and/or its sub-type "
 "(Festival, MusicEvent, etc)."
 msgstr ""
 
-#: lib/filters.php:239
+#: lib/filters.php:296
+msgid "The total time it takes to prepare this recipe."
+msgstr ""
+
+#: lib/filters.php:299
+msgid "The total time it takes to cook this recipe."
+msgstr ""
+
+#: lib/filters.php:302
+msgid "The total time it takes to prepare and cook this recipe."
+msgstr ""
+
+#: lib/filters.php:305
+msgid ""
+"The quantity or servings made by this recipe (example: \"5 servings\", "
+"\"Serves 4-6\", \"Yields 10 burgers\", etc.)."
+msgstr ""
+
+#: lib/filters.php:308
+msgid "The total number of calories for this recipe (all servings)."
+msgstr ""
+
+#: lib/filters.php:311
 msgid ""
 "Select a performer for the Schema Event item type and/or its sub-type "
 "(Festival, MusicEvent, etc)."
 msgstr ""
 
-#: lib/filters.php:242
+#: lib/filters.php:314
+msgid ""
+"A list of ingredients for this recipe (example: \"1 cup flour\", \"1 tsp salt"
+"\", etc.)."
+msgstr ""
+
+#: lib/filters.php:317
 msgid "Select a Schema item type that best describes the item being reviewed."
 msgstr ""
 
-#: lib/filters.php:245
+#: lib/filters.php:320
 msgid "A URL for the item being reviewed."
 msgstr ""
 
-#: lib/filters.php:248
+#: lib/filters.php:323
 msgid ""
 "A rating for the item being reviewed, along with the low / high rating scale "
 "(defaults are 1 to 5)."
@@ -114,72 +142,102 @@ msgctxt "option comment"
 msgid "%s extension required"
 msgstr ""
 
-#: lib/gpl/admin/post.php:57 lib/pro/admin/post.php:73
+#: lib/gpl/admin/post.php:58 lib/pro/admin/post.php:74
 msgctxt "metabox title"
 msgid "Google Structured Data / Schema Markup"
 msgstr ""
 
-#: lib/gpl/admin/post.php:63 lib/pro/admin/post.php:79
+#: lib/gpl/admin/post.php:64 lib/pro/admin/post.php:80
 msgctxt "option label"
 msgid "Schema Item Name"
 msgstr ""
 
-#: lib/gpl/admin/post.php:70 lib/pro/admin/post.php:86
+#: lib/gpl/admin/post.php:71 lib/pro/admin/post.php:87
 msgctxt "option label"
 msgid "Schema Description"
 msgstr ""
 
-#: lib/gpl/admin/post.php:77 lib/pro/admin/post.php:93
+#: lib/gpl/admin/post.php:78 lib/pro/admin/post.php:94
 msgctxt "option label"
 msgid "Main Entity of Page"
 msgstr ""
 
-#: lib/gpl/admin/post.php:82 lib/pro/admin/post.php:98
+#: lib/gpl/admin/post.php:83 lib/pro/admin/post.php:99
 msgctxt "option label"
 msgid "Schema Item Type"
 msgstr ""
 
-#: lib/gpl/admin/post.php:92 lib/pro/admin/post.php:108
+#: lib/gpl/admin/post.php:93 lib/pro/admin/post.php:109
 msgctxt "option label"
 msgid "Article Publisher"
 msgstr ""
 
-#: lib/gpl/admin/post.php:98 lib/pro/admin/post.php:115
+#: lib/gpl/admin/post.php:99 lib/pro/admin/post.php:116
 msgctxt "option label"
 msgid "Article Headline"
 msgstr ""
 
-#: lib/gpl/admin/post.php:108 lib/pro/admin/post.php:126
+#: lib/gpl/admin/post.php:109 lib/pro/admin/post.php:127
 msgctxt "option label"
 msgid "Event Organizer"
 msgstr ""
 
-#: lib/gpl/admin/post.php:114 lib/pro/admin/post.php:133
+#: lib/gpl/admin/post.php:115 lib/pro/admin/post.php:134
 msgctxt "option label"
 msgid "Event Performer"
 msgstr ""
 
-#: lib/gpl/admin/post.php:123 lib/pro/admin/post.php:143
+#: lib/gpl/admin/post.php:124 lib/pro/admin/post.php:144
+msgctxt "option label"
+msgid "Recipe Preperation Time"
+msgstr ""
+
+#: lib/gpl/admin/post.php:133 lib/pro/admin/post.php:153
+msgctxt "option label"
+msgid "Recipe Cooking Time"
+msgstr ""
+
+#: lib/gpl/admin/post.php:142 lib/pro/admin/post.php:162
+msgctxt "option label"
+msgid "Recipe Total Time"
+msgstr ""
+
+#: lib/gpl/admin/post.php:151 lib/pro/admin/post.php:171
+msgctxt "option label"
+msgid "Recipe Total Calories"
+msgstr ""
+
+#: lib/gpl/admin/post.php:157 lib/pro/admin/post.php:177
+msgctxt "option label"
+msgid "Recipe Quantity"
+msgstr ""
+
+#: lib/gpl/admin/post.php:163 lib/pro/admin/post.php:183
+msgctxt "option label"
+msgid "Recipe Ingredients"
+msgstr ""
+
+#: lib/gpl/admin/post.php:172 lib/pro/admin/post.php:192
 msgctxt "option label"
 msgid "Reviewed Item Type"
 msgstr ""
 
-#: lib/gpl/admin/post.php:129 lib/pro/admin/post.php:149
+#: lib/gpl/admin/post.php:178 lib/pro/admin/post.php:198
 msgctxt "option label"
 msgid "Reviewed Item URL"
 msgstr ""
 
-#: lib/gpl/admin/post.php:135 lib/pro/admin/post.php:155
+#: lib/gpl/admin/post.php:184 lib/pro/admin/post.php:205
 msgctxt "option label"
 msgid "Reviewed Item Rating"
 msgstr ""
 
-#: lib/gpl/admin/post.php:138 lib/pro/admin/post.php:159
+#: lib/gpl/admin/post.php:187 lib/pro/admin/post.php:209
 msgctxt "option comment"
 msgid "from"
 msgstr ""
 
-#: lib/gpl/admin/post.php:140 lib/pro/admin/post.php:162
+#: lib/gpl/admin/post.php:189 lib/pro/admin/post.php:212
 msgctxt "option comment"
 msgid "to"
 msgstr ""
@@ -189,59 +247,64 @@ msgctxt "metabox title"
 msgid "Schema JSON-LD Markup"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:48
+#: lib/submenu/schema-json-ld.php:44
 msgctxt "option label"
 msgid "Website Alternate Name"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:54
+#: lib/submenu/schema-json-ld.php:50
 msgctxt "option label"
 msgid "Organization Logo Image URL"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:58
+#: lib/submenu/schema-json-ld.php:53
 msgctxt "option label"
 msgid "Organization Banner (600x60px) URL"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:62
+#: lib/submenu/schema-json-ld.php:57
 msgctxt "option label"
 msgid "Maximum Images to Include"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:67
+#: lib/submenu/schema-json-ld.php:62
 msgctxt "option comment"
-msgid "<em>video preview images are enabled</em> (and included first)"
+msgid "video preview images are enabled (and included first)"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:70
+#: lib/submenu/schema-json-ld.php:65
 msgctxt "option label"
 msgid "Schema Image Dimensions"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:75
+#: lib/submenu/schema-json-ld.php:70
 msgctxt "option label"
 msgid "Maximum Description Length"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:78
+#: lib/submenu/schema-json-ld.php:73
 msgctxt "option comment"
 msgid "characters or less"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:81
+#: lib/submenu/schema-json-ld.php:76
 msgctxt "option label"
 msgid "Author / Person Name Format"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:93
+#: lib/submenu/schema-json-ld.php:87
 msgctxt "option label"
 msgid "Default Item Type for Home Page"
 msgstr ""
 
-#: lib/submenu/schema-json-ld.php:98
+#: lib/submenu/schema-json-ld.php:91
 msgctxt "option label"
 msgid "Default Item Type by Post Type"
+msgstr ""
+
+#: lib/submenu/schema-json-ld.php:96
+msgctxt "option label"
+msgid "Recipe Ingredients Custom Field"
 msgstr ""
 
 #: wpsso-schema-json-ld.php:80
@@ -256,7 +319,7 @@ msgid ""
 "activate the %3$s plugin."
 msgstr ""
 
-#: wpsso-schema-json-ld.php:138
+#: wpsso-schema-json-ld.php:147
 msgid ""
 "The %1$s extension version %2$s requires the use of %3$s version %4$s or "
 "newer (version %5$s is currently installed)."

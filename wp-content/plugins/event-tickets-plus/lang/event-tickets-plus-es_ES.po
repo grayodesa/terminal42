@@ -534,23 +534,23 @@ msgid "Easy Digital Downloads"
 msgstr "Easy Digital Downloads"
 
 #: src/Tribe/Commerce/EDD/Main.php:481
-#: src/Tribe/Commerce/WooCommerce/Main.php:724
+#: src/Tribe/Commerce/WooCommerce/Main.php:741
 msgid "You'll receive your tickets in another email."
 msgstr "Recibirás tus tickets en otro correo electrónico."
 
 #: src/Tribe/Commerce/EDD/Main.php:922 src/Tribe/Commerce/WPEC/Main.php:755
-#: src/Tribe/Commerce/WooCommerce/Main.php:1414
+#: src/Tribe/Commerce/WooCommerce/Main.php:1431
 msgid "(deleted)"
 msgstr "(eliminado)"
 
 #: src/Tribe/Commerce/EDD/Main.php:1097
-#: src/Tribe/Commerce/WooCommerce/Main.php:1661
+#: src/Tribe/Commerce/WooCommerce/Main.php:1678
 msgid "Event sales report"
 msgstr "Reporte de ventas por evento"
 
 #: src/Tribe/Commerce/EDD/Main.php:1155 src/Tribe/Commerce/Shopp/Main.php:1121
 #: src/Tribe/Commerce/WPEC/Main.php:1026
-#: src/Tribe/Commerce/WooCommerce/Main.php:1707
+#: src/Tribe/Commerce/WooCommerce/Main.php:1724
 msgid "This is a ticket for the event:"
 msgstr "Este es un tíquet para el evento:"
 
@@ -611,17 +611,17 @@ msgid "We're sorry but there was insufficient inventory to completely fulfill yo
 msgstr "Lo sentimos pero no hay suficiente inventario para completar tu pedido. Hemos añadido tantos tickets como podemos, recomendamos revisar tu pedido (más abajo) por si necesitas modificar algo."
 
 #: src/Tribe/Commerce/WPEC/Main.php:819
-#: src/Tribe/Commerce/WooCommerce/Main.php:1483
+#: src/Tribe/Commerce/WooCommerce/Main.php:1500
 msgid "In trash (was %s)"
 msgstr "En la papelera (era %s)"
 
 #: src/Tribe/Commerce/WPEC/Main.php:825
-#: src/Tribe/Commerce/WooCommerce/Main.php:1489
+#: src/Tribe/Commerce/WooCommerce/Main.php:1506
 msgid "Deleted"
 msgstr "Eliminado"
 
 #: src/Tribe/Commerce/WPEC/Main.php:872
-#: src/Tribe/Commerce/WooCommerce/Main.php:1537
+#: src/Tribe/Commerce/WooCommerce/Main.php:1554
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -649,7 +649,7 @@ msgstr "Asunto"
 msgid "Defaults to <code>%s</code>"
 msgstr "El valor predeterminado es <code>%s</code>"
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:1684
+#: src/Tribe/Commerce/WooCommerce/Main.php:1701
 msgid "Report"
 msgstr "Informe"
 

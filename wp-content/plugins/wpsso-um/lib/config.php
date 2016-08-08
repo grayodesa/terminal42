@@ -15,7 +15,7 @@ if ( ! class_exists( 'WpssoUmConfig' ) ) {
 		public static $cf = array(
 			'plugin' => array(
 				'wpssoum' => array(
-					'version' => '1.5.5-1',		// plugin version
+					'version' => '1.5.6-1',		// plugin version
 					'opt_version' => '2',		// increment when changing default options
 					'short' => 'WPSSO UM',
 					'name' => 'WPSSO Pro Update Manager (WPSSO UM)',
@@ -115,7 +115,7 @@ if ( ! class_exists( 'WpssoUmConfig' ) ) {
 				if ( file_exists( $filepath ) ) {
 					require_once( $filepath );
 					if ( empty( $classname ) )
-						return SucomUtil::sanitize_classname( 'wpssoum'.$filespec );
+						return SucomUtil::sanitize_classname( 'wpssoum'.$filespec, false );	// $underscore = false
 					else return $classname;
 				}
 			}

@@ -57,8 +57,8 @@ if ( ! class_exists( 'WpssoJsonProHeadCreativeWork' ) ) {
 			 * 	datemodified
 			 */
 			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array(
-				'datepublished' => 'article:published_time',
-				'datemodified' => 'article:modified_time',
+				'datePublished' => 'article:published_time',
+				'dateModified' => 'article:modified_time',
 			) );
 
 			/*

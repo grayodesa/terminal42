@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
 Tested up to: 4.5.3
-Stable tag: 4.2.2.1
+Stable tag: 4.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -202,6 +202,11 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.2.3] 2016-07-21 =
+
+* Fix - Change myremove to jQuery Grep to improve compatibility with Black Studio TinyMCE Widget (Thank you @digisavvy for reporting this in the support Forums)
+* Fix - Add check for past events in the mini calendar and event list widget date icon box so it shows the correct information (Initialy reported by @yuryvasilchenko in the support forums. Thanks!)
 
 = [4.2.2.1] 2016-07-11 =
 

@@ -38,9 +38,17 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 		}
 
 		public function get_options( $post_id, $idx = false, $filter_options = true ) {
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->log_args( array( 
+					'post_id' => $post_id, 
+					'idx' => $idx, 
+					'filter_options' => $filter_options, 
+				) );
+			}
 
-			if ( ! isset( $this->opts[$post_id]['options_filtered'] ) || 
-				$this->opts[$post_id]['options_filtered'] !== true ) {
+			if ( empty( $this->opts[$post_id]['options_filtered'] ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'options_filtered key is empty' );
 
 				$renamed_keys = apply_filters( $this->p->cf['lca'].'_get_md_renamed_keys', array(
 					'link_desc' => 'seo_desc',
@@ -72,39 +80,20 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 
 					if ( ! empty( $renamed_keys ) )
 						$this->opts[$post_id] = SucomUtil::rename_keys( $this->opts[$post_id], $renamed_keys );
+
 					$this->opts[$post_id]['options_version'] = $this->p->cf['opt']['version'];
+
 					update_post_meta( $post_id, WPSSO_META_NAME, $this->opts[$post_id] );
+
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'post_id '.$post_id.' settings upgraded' );
 				}
 
-				// allow certain 3rd-party custom field values to override those of our social settings
-				$post_meta = get_post_meta( $post_id, null, false );
-
-				if ( is_array( $post_meta ) && ! empty( $post_meta ) ) {
-					$charset = get_bloginfo( 'charset' );	// required for html_entity_decode()
-					foreach ( array( 
-						'plugin_cf_img_url' => 'og_img_url',
-						'plugin_cf_vid_url' => 'og_vid_url',
-						'plugin_cf_vid_embed' => 'og_vid_embed',
-					) as $cf_opt_name => $meta_opt_name ) {
-						// check that a custom field name has been defined
-						if ( ! empty( $this->p->options[$cf_opt_name] ) ) {
-							$cf_name = $this->p->options[$cf_opt_name];
-							// empty or not, if the array element is set, use it
-							if ( isset( $post_meta[$cf_name] ) ) {
-								if ( $this->p->debug->enabled )
-									$this->p->debug->log( $cf_name.' custom field found - setting '.
-										$meta_opt_name.' to '.$cf_name.' value' );
-								$this->opts[$post_id][$meta_opt_name] = html_entity_decode( SucomUtil::decode_utf8( get_post_meta( $post_id, 
-									$cf_name, true ) ), ENT_QUOTES, $charset );
-								$this->opts[$post_id][$meta_opt_name.':is'] = 'disabled';
-							}
-						}
-					}
-				}
-
 				if ( $filter_options ) {
+
+					// allow certain 3rd-party custom field values to override those of our social settings
+					$this->opts[$post_id] = $this->get_custom_fields( $this->opts[$post_id], get_post_meta( $post_id ) );
+
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'applying filters for post_id '.$post_id.' meta' );
 
@@ -115,8 +104,12 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( $this->opts[$post_id] );
-				}
-			}
+
+				} elseif ( $this->p->debug->enabled )
+					$this->p->debug->log( 'get_post_options filter skipped' );
+
+			} elseif ( $this->p->debug->enabled )
+				$this->p->debug->log( 'using cached options for post_id '.$post_id );
 
 			if ( $idx !== false ) {
 				if ( isset( $this->opts[$post_id][$idx] ) ) 

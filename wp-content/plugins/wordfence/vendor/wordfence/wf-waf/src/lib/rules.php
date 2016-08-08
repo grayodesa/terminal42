@@ -1223,10 +1223,16 @@ class wfWAFRuleComparisonSubject {
 	 * @return string
 	 */
 	public function renderRule() {
-		if (is_array($this->getSubject())) {
+		$subjects = $this->getSubject();
+		if (is_array($subjects)) {
+			if (strpos($subjects[0], '.') !== false) {
+				list($superGlobal, $global) = explode('.', $subjects[0], 2);
+				unset($subjects[0]);
+				$subjects = array_merge(array($superGlobal, $global), $subjects);
+			}
 			$rule = '';
-			foreach ($this->getSubject() as $subject) {
-				if (preg_match("/^[a-zA-Z_][\\w_]*/", $subject)) {
+			foreach ($subjects as $subject) {
+				if (preg_match("/^[a-zA-Z_][a-zA-Z0-9_]*$/", $subject)) {
 					$rule .= "$subject.";
 				} else {
 					$rule = rtrim($rule, '.');

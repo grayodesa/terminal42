@@ -432,12 +432,17 @@ body.point-of-sale_page_wc_pos_outlets ._outlet_state_field.form-field #s2id__ou
 	background-color: #fff;	
 	border-color: #ddd #ddd;
 }
+#modal-order_customer .nav-tab-wrapper a:focus {
+	box-shadow: none;
+}
 #modal-order_customer #customer_details{
 	height: 60vh;
 }
 
 #modal-order_customer #create_new_account{
 	padding: 10px 20px;
+    float: left;
+    padding-left: 0;
 }
 .pos-customer-details-tab{
 	display: none;

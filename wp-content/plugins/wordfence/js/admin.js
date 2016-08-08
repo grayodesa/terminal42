@@ -944,8 +944,11 @@
 					}
 				});
 			},
-			colorbox: function(width, heading, body) {
-				this.colorboxQueue.push([width, heading, body]);
+			colorbox: function(width, heading, body, settings) {
+				if (typeof settings === 'undefined') {
+					settings = {};
+				}
+				this.colorboxQueue.push([width, heading, body, settings]);
 				this.colorboxServiceQueue();
 			},
 			colorboxServiceQueue: function() {
@@ -956,18 +959,19 @@
 					return;
 				}
 				var elem = this.colorboxQueue.shift();
-				this.colorboxOpen(elem[0], elem[1], elem[2]);
+				this.colorboxOpen(elem[0], elem[1], elem[2], elem[3]);
 			},
-			colorboxOpen: function(width, heading, body) {
+			colorboxOpen: function(width, heading, body, settings) {
 				var self = this;
 				this.colorboxIsOpen = true;
-				jQuery.colorbox({
+				jQuery.extend(settings, {
 					width: width,
 					html: "<h3>" + heading + "</h3><p>" + body + "</p>",
 					onClosed: function() {
 						self.colorboxClose();
 					}
 				});
+				jQuery.colorbox(settings);
 			},
 			colorboxClose: function() {
 				this.colorboxIsOpen = false;
@@ -2099,14 +2103,59 @@
 					}, 2000);
 				});
 			},
-			addTwoFactor: function(username, phone) {
+			addTwoFactor: function(username, phone, mode) {
 				var self = this;
 				this.ajax('wordfence_addTwoFactor', {
 					username: username,
-					phone: phone
+					phone: phone,
+					mode: mode
 				}, function(res) {
 					if (res.ok) {
-						self.twoFacStatus('User added! Check the user\'s phone to get the activation code.');
+						if (mode == 'authenticator') {
+							var totpURL = "otpauth://totp/" + encodeURI(res.homeurl) + encodeURI(" (" + res.username + ")") + "?" + res.uriQueryString + "&issuer=Wordfence"; 
+							self.twoFacStatus('User added! Scan the QR code with your authenticator app to add it.');
+							
+							var message = "Scan the code below with your authenticator app to add this account. Some authenticator apps also allow you to type in the text version instead.<br><div id=\"wfTwoFactorQRCodeTable\"></div><br><strong>Code:</strong> <input type=\"text\" size=\"34\" value=\"" + res.base32Secret + "\" onclick=\"this.select();\" readonly>";
+							if (res.recoveryCodes.length > 0) {
+								message = message + "<br><br><strong>Recovery Codes</strong><br><p>Use these codes to log in if you lose access to your authenticator device. Each one may be used only once.</p><ul id=\"wfTwoFactorRecoveryCodes\">";
+
+								var splitter = /.{4}/g;
+								for (var i = 0; i < res.recoveryCodes.length; i++) { 
+									var code = res.recoveryCodes[i];
+									var chunks = code.match(splitter);
+									message = message + "<li>" + chunks[0] + " " + chunks[1] + " " + chunks[2] + " " + chunks[3] + "</li>";
+								}
+								
+								message = message + "</ul>";
+							}
+
+							message = message + "<p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
+							
+							self.colorbox('400px', "Authentication Code", message, {onComplete: function() {
+								jQuery('#wfTwoFactorQRCodeTable').qrcode({text: totpURL});
+							}});
+						}
+						else {
+							self.twoFacStatus('User added! Check the user\'s phone to get the activation code.');
+
+							if (res.recoveryCodes.length > 0) {
+								var message = "<p>Use these codes to log in if you are unable to access your phone. Each one may be used only once.</p><ul id=\"wfTwoFactorRecoveryCodes\">";
+
+								var splitter = /.{4}/g;
+								for (var i = 0; i < res.recoveryCodes.length; i++) {
+									var code = res.recoveryCodes[i];
+									var chunks = code.match(splitter);
+									message = message + "<li>" + chunks[0] + " " + chunks[1] + " " + chunks[2] + " " + chunks[3] + "</li>";
+								}
+
+								message = message + "</ul><p><em>This will be shown only once. Keep these codes somewhere safe.</em></p>";
+
+								self.colorbox('400px', "Recovery Codes", message, {onComplete: function() {
+									jQuery('#wfTwoFactorQRCodeTable').qrcode({text: totpURL});
+								}});
+							}
+						}
+						
 						var updatedTwoFac = jQuery('#wfTwoFacUserTmpl').tmpl({users: [res]});
 						jQuery('#twoFactorUser-none').remove();
 						jQuery('#wfTwoFacUsers > table > tbody:last-child').append(updatedTwoFac.find('tbody > tr'));

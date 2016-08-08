@@ -1,25 +1,43 @@
-<h1>WordPress Social Sharing Optimization</h1><h3>Manage Social Content / SEO and Media Easily</h3>
+<h1>WPSSO WordPress Social Sharing Optimization</h1><h3>The Most Advanced &quot;Social SEO&quot; Plugin</h3>
 
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WordPress Social Sharing Optimization (WPSSO)</td></tr>
-<tr><th align="right" valign="top" nowrap>Summary</th><td>A fast, light-weight, comprehensive plugin to manage all aspects of social meta tags &amp; Schema markup for Google + all social websites.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.33.4-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Summary</th><td>Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>3.33.8-2</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
-<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
+<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.6</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
 <tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpsso-readme-donate">https://wpsso.com/?utm_source=wpsso-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
-<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>amp, bbPress, buddypress, e-commerce, easy digital downloads, edd, facebook, g+, gallery, google, google plus, hashtags, JSON-LD, knowledge graph, linkedin, marketpress, meta tags, multilingual, multisite, nextgen gallery, open graph, pinterest, player card, polylang, rich pins, schema, seo, singlepic, slideshare, social, summary card, twitter, twitter cards, vimeo, wistia, woocommerce, wpsso, youtube, yotpo, yourls, co-authors, co-authors plus, the events calendar</td></tr>
+<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>amp, bbPress, buddypress, e-commerce, easy digital downloads, edd, facebook, g+, google, google plus, hashtags, JSON-LD, knowledge graph, linkedin, marketpress, meta tags, multilingual, multisite, nextgen gallery, open graph, pinterest, player card, polylang, rich pin, schema, seo, share, social, summary card, twitter, twitter card, vimeo, wistia, woocommerce, youtube, yotpo, yourls, co-authors, co-authors plus, the events calendar</td></tr>
 </table>
 
 <h2>Description</h2>
 
 <p align="center"><img src="https://surniaulula.github.io/wpsso/assets/icon-256x256.png" /></p><p>
-<strong>A solid social markup plugin is the foundation of any good social strategy</strong> &mdash; WordPress Social Sharing Optimization (WPSSO) allows you to manage the information social websites need, improving <em>Google Search ranking</em>, <em>social engagement</em>, and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more.</p>
+<strong>WPSSO provides <em>complete</em> and <em>accurate</em> meta tags and Schema markup</strong> &mdash;</p>
 
-<p><strong>Complete <a href="http://ogp.me/">Facebook / Open Graph</a>, <a href="https://business.pinterest.com/en/rich-pins">Pinterest Rich Pin</a>, <a href="https://dev.twitter.com/cards/overview">Twitter Card</a>, SEO meta tags and <a href="http://schema.org/">Schema</a> markup</strong> &mdash; meta tags and Schema markup are read by Google Search and <em>all</em> social websites, to describe and display your content correctly (title, description, hashtags, images, videos, ecommerce product details, author profile / authorship, publisher name, etc.). WPSSO uses the existing content of your webpages to generate complete meta tags and Schema markup &mdash; there's no need to manually enter / configure any additional values or settings.</p>
+<blockquote>
+<p>Google and social websites use a wide variety of meta tags and Schema markup standards provided by WPSSO (<a href="http://ogp.me/">Facebook / Open Graph</a>, <a href="https://business.pinterest.com/en/rich-pins">Pinterest Rich Pin</a>, <a href="https://dev.twitter.com/cards/overview">Twitter Card</a> meta tags and <a href="https://developers.google.com/search/docs/guides/intro-structured-data">Schema / Structured Data / Rich Snippet</a> markup) to describe &amp; display your content correctly &mdash; including titles, descriptions, hashtags, images, videos, ecommerce product details, author profile / authorship, publisher name, ratings, event details, and much more.</li></ul></p>
+</blockquote>
 
-<p><strong>Easy and comprehensive social meta tags and Schema markup</strong> &mdash; WPSSO (Pro version) <em>automatically</em> retrieves and uses information from a wide range or sources, including All in One SEO Pack, bbPress, BuddyPress, Co-Authors Plus, Easy Digital Downloads, HeadSpace2 SEO, NextGEN Gallery, MarketPress - WordPress eCommerce, Polylang, rtMedia for WordPress (BuddyPress and bbPress), The Events Calendar, The SEO Framework, WooCommerce, WP e-Commerce, WordPress REST API, Yoast SEO (aka WordPress SEO), Yotpo Social Reviews for WooCommerce, along with service APIs like Bitly, Google URL Shortener, Gravatar, Ow.ly, Slideshare, TinyURL, Vimeo, Wistia, Your Own URL Shortener (YOURLS), and YouTube.</p>
+<p><strong>WPSSO uses <em>existing</em> content to generate meta tags and Schema markup</strong> &mdash;</p>
+
+<blockquote>
+<p>There's no need to manually enter / configure any additional settings or values.</p>
+</blockquote>
+
+<p><strong>Social meta tags and Schema markup are the cornerstone of social SEO</strong> &mdash;</p>
+
+<blockquote>
+<p>WPSSO provides all the information social websites need, improving <em>Google Search ranking</em>, <em>social engagement</em>, and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more. <strong>WPSSO includes special support and optimization features specifically for Pinterest</strong> to avoid incompatible meta tags and Schema markup.</p>
+</blockquote>
+
+<p><strong>Additional meta tags and markup for 3rd party plugins and services</strong> &mdash;</p>
+
+<blockquote>
+<p>WPSSO (Pro version) retrieves information from a wide range of sources <em>automatically</em>, including All in One SEO Pack, bbPress, BuddyPress, Co-Authors Plus, Easy Digital Downloads, HeadSpace2 SEO, NextGEN Gallery, MarketPress - WordPress eCommerce, Polylang, rtMedia for WordPress (BuddyPress and bbPress), The Events Calendar, The SEO Framework, WooCommerce, WP e-Commerce, WordPress REST API, Yoast SEO (aka WordPress SEO), Yotpo Social Reviews for WooCommerce, along with service APIs like Bitly, Google URL Shortener, Gravatar, Ow.ly, Slideshare, TinyURL, Vimeo, Wistia, Your Own URL Shortener (YOURLS), and YouTube.</p>
+</blockquote>
 
 <h4>Quick List of Features</h4>
 
@@ -35,7 +53,7 @@
 <li><a href="https://dev.twitter.com/cards/types/summary">Summary Card</a></li>
 <li><a href="https://dev.twitter.com/cards/types/player">Player Card</a> is available in the Pro version (requires video discovery modules, provided with the Pro version).</li>
 </ul></li>
-<li>Adds Pinterest Rich Pin meta tags and Schema markup.</li>
+<li>Adds Pinterest Rich Pin meta tags and Schema / Structured Data / Rich Snippet markup.</li>
 <li>Adds author (Person), publisher (Organization) and WebSite markup for Google Search and Google's <em>Knowledge Graph</em>.</li>
 <li>Customizable image dimensions for Facebook / Open Graph, Pinterest, Schema and all Twitter Card types.</li>
 <li>Validation of minimum / maximum image dimensions and aspect ratios.</li>
@@ -227,7 +245,7 @@
 
 <p><strong>Enhanced SEO</strong></p>
 
-<p>WPSSO (Pro version) integrates with <a href="https://wordpress.org/plugins/all-in-one-seo-pack/">All in One SEO Pack</a>, <a href="https://wordpress.org/plugins/headspace2/">HeadSpace2 SEO</a>, <a href="https://wordpress.org/plugins/autodescription/">The SEO Framework</a>, and <a href="https://wordpress.org/plugins/wordpress-seo/">Yoast SEO</a> (aka WordPress SEO) &mdash; making sure your custom SEO settings are reflected in the Open Graph, Rich Pin, Schema, and Twitter Card meta tags.</p>
+<p>WPSSO (Pro version) integrates with <a href="https://wordpress.org/plugins/all-in-one-seo-pack/">All in One SEO Pack</a>, <a href="https://wordpress.org/plugins/headspace2/">HeadSpace2 SEO</a>, <a href="https://wordpress.org/plugins/autodescription/">The SEO Framework</a>, and <a href="https://wordpress.org/plugins/wordpress-seo/">Yoast SEO</a> (aka WordPress SEO) &mdash; making sure your custom SEO settings are reflected in the Open Graph, Rich Pin, Schema / Structured Data / Rich Snippet, and Twitter Card meta tags.</p>
 
 <div style="clear:both;"></div>
 
@@ -247,7 +265,7 @@
 
 <h4>Proven Performance</h4>
 
-<p>WPSSO is <em>fast and coded for performance</em>, making full use of all available caching techniques (persistent / non-persistent object and disk caching). WPSSO loads only the library files and object classes it needs, keeping it small, fast, and yet still able to support a wide range of 3rd party integration features.</p>
+<p>WPSSO is <em>fast and coded for performance</em>, making full use of all available caching techniques (persistent / non-persistent object and disk caching). WPSSO loads only the library files and object classes it needs, keeping it small, fast, and yet still able to support a wide range of 3rd party integration features. WPSSO requires PHP v4.1.0 or better, and is fully compatible with PHP v7.</p>
 
 <h4>Professional Support</h4>
 
@@ -365,6 +383,7 @@
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/by-name/">Filters by Name</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/filters/other/">Other Filters</a></li>
 </ul></li>
+<li><a href="http://wpsso.com/codex/plugins/wpsso/notes/developer/the-mod-variable/">The $mod Variable</a></li>
 </ul></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/inline-variables/">Inline Variables</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso/notes/multisite-network-support/">Multisite / Network Support</a></li>

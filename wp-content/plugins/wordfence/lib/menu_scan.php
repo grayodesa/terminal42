@@ -81,7 +81,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 					<p>As new threats emerge, the Threat Defense Feed is updated to detect these new hacks. The Premium
 						version of the Threat Defense Feed is updated in real-time protecting you immediately. As a free
 						user <strong>you are receiving the community version</strong> of the feed which is updated 30 days later. Upgrade
-						now for less than $5 a month!</p>
+						now for just $8.25 per month!</p>
 					<p class="center"><a class="button button-primary"
 					                     href="https://www.wordfence.com/gnl1scanUpgrade/wordfence-signup/">
 							Get Premium</a></p>
@@ -374,6 +374,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
 		<tr><th>Plugin Name:</th><td>${data.Name}</td></tr>
 		{{if data.PluginURI}}<tr><th>Plugin Website:</th><td><a href="${data.PluginURI}" target="_blank">${data.PluginURI}</a></td></tr>{{/if}}
+		<tr><th>Changelog:</th><td><a href="${data.wpURL}/changelog" target="_blank">${data.wpURL}/changelog</a></td></tr>
 		<tr><th>Current Plugin Version:</th><td>${data.Version}</td></tr>
 		<tr><th>New Plugin Version:</th><td>${data.newVersion}</td></tr>
 		<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
@@ -383,6 +384,7 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 		</td></tr>
 		</table>
 	</p>
+	{{if data.vulnerabilityPatched}}<p><strong>Update includes security-related fixes.</strong></p>{{/if}}
 	<p>
 		{{html longMsg}}
 		<a href="<?php echo get_admin_url() . 'update-core.php'; ?>">Click here to update now</a>.
@@ -761,6 +763,39 @@ $sigUpdateTime = wfConfig::get('signatureUpdateTime');
 </div>
 </div>
 </script>
+
+<script type="text/x-jquery-template" id="issueTmpl_coreUnknown">
+	<div>
+		<div class="wfIssue">
+			<h2>${shortMsg}</h2>
+			<p>
+			<table border="0" class="wfIssue" cellspacing="0" cellpadding="0">
+				<tr><th>Issue first detected:</th><td>${timeAgo} ago.</td></tr>
+				<tr><th>Severity:</th><td>{{if severity == '1'}}Critical{{else}}Warning{{/if}}</td></tr>
+				<tr><th>Status</th><td>
+						{{if status == 'new' }}New{{/if}}
+						{{if status == 'ignoreP' }}Permanently ignoring this version{{/if}}
+						{{if status == 'ignoreC' }}Ignoring this version until it changes{{/if}}
+					</td></tr>
+			</table>
+			</p>
+			<p>
+				{{html longMsg}}
+			</p>
+			<div class="wfIssueOptions">
+				{{if status == 'new'}}
+				<strong>Resolve:</strong>
+				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreC'); return false;">Ignore until the version changes.</a>
+				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'ignoreP'); return false;">Always ignore this version.</a>
+				{{/if}}
+				{{if status == 'ignoreC' || status == 'ignoreP'}}
+				<a href="#" onclick="WFAD.updateIssueStatus('${id}', 'delete'); return false;">Stop ignoring this issue.</a>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</script>
+
 <script type="text/x-jquery-template" id="issueTmpl_database">
 <div>
 <div class="wfIssue">

@@ -82,7 +82,7 @@ $username = isset( $credentials['username'] ) ? $credentials['username'] : '';
 		<?php
 		printf(
 			__( 'Or you can %senable one-click installations%s on this site by adding the following details to <code>wp-config.php</code>:', 'wpmudev' ),
-			'<a href="http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/configuring-automatic-updates/" target="_blank">',
+			'<a href="https://codex.wordpress.org/Editing_wp-config.php#WordPress_Upgrade_Constants" target="_blank">',
 			'</a>'
 		);
 		?>

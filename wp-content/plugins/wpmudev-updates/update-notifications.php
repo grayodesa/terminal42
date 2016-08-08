@@ -4,8 +4,8 @@
  * Plugin URI:  https://premium.wpmudev.org/project/wpmu-dev-dashboard/
  * Description: Brings the powers of WPMU DEV directly to you. It will revolutionize how you use WordPress. Activate now!
  * Author:      WPMU DEV
- * Version:     4.1.0
- * Author URI:  http://premium.wpmudev.org/
+ * Version:     4.1.1
+ * Author URI:  https://premium.wpmudev.org/
  * Text Domain: wpmudev
  * Domain Path: includes/languages/
  * Network:     true
@@ -44,7 +44,7 @@ class WPMUDEV_Dashboard {
 	 *
 	 * @var string (Version number)
 	 */
-	static public $version = '4.1.0';
+	static public $version = '4.1.1';
 
 	/**
 	 * Holds the API module.
@@ -142,6 +142,9 @@ class WPMUDEV_Dashboard {
 		// Register the plugin activation hook.
 		register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
 
+		// Register the plugin deactivation hook.
+		register_activation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
+
 		/**
 		 * Custom code can be executed after Dashboard is initialized with the
 		 * default settings.
@@ -172,12 +175,23 @@ class WPMUDEV_Dashboard {
 		}
 
 		// On next page load we want to redirect user to login page.
-		WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', false );
+		WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 0 );
 
 		// Force refresh of all data when plugin is activated.
 		WPMUDEV_Dashboard::$site->set_option( 'refresh_remote_flag', 1 );
 		WPMUDEV_Dashboard::$site->set_option( 'refresh_local_flag', 1 );
 		WPMUDEV_Dashboard::$site->set_option( 'refresh_profile_flag', 1 );
+	}
+
+	/**
+	 * Run code on plugin deactivation.
+	 *
+	 * @since  4.1.1
+	 * @internal Action hook
+	 */
+	public function deactivate_plugin() {
+		// On next page load we want to redirect user to login page.
+		WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 0 );
 	}
 };
 

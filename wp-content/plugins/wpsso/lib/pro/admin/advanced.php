@@ -99,9 +99,9 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 		public function filter_plugin_social_rows( $table_rows, $form, $network = false ) {
 
 			foreach ( array( 
-				'og_img' => sprintf( _x( 'Add \'%s\' Column for', 'option label', 'wpsso' ), 
+				'og_img' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Img', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
-				'og_desc' => sprintf( _x( 'Add \'%s\' Column for', 'option label', 'wpsso' ), 
+				'og_desc' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Desc', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
 			) as $key => $label ) {
 
@@ -143,69 +143,68 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 				'option label', 'wpsso' ), null, 'plugin_add_to' ).
 			'<td>'.$add_to_checkboxes.'</td>';
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
+			$table_rows['plugin_cf_img_url'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Image URL Custom Field',
 				'option label', 'wpsso' ), null, 'plugin_cf_img_url' ).
 			'<td>'.$form->get_input( 'plugin_cf_img_url' ).'</td>';
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
+			$table_rows['plugin_cf_vid_url'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Video URL Custom Field',
 				'option label', 'wpsso' ), null, 'plugin_cf_vid_url' ).
 			'<td>'.$form->get_input( 'plugin_cf_vid_url' ).'</td>';
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
+			$table_rows['plugin_cf_vid_embed'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Video Embed HTML Custom Field',
 				'option label', 'wpsso' ), null, 'plugin_cf_vid_embed' ).
 			'<td>'.$form->get_input( 'plugin_cf_vid_embed' ).'</td>';
+
+			$table_rows['plugin_cf_recipe_ingredients'] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( 'Recipe Ingredients Custom Field',
+				'option label', 'wpsso' ), null, 'plugin_cf_recipe_ingredients' ).
+			'<td>'.$form->get_input( 'plugin_cf_recipe_ingredients' ).'</td>';
 
 			return $table_rows;
 		}
 
 		public function filter_plugin_integration_rows( $table_rows, $form ) {
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
+			$table_rows['plugin_html_attr_filter'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( '&lt;html&gt; Attributes Filter Hook',
 				'option label', 'wpsso' ), null, 'plugin_html_attr_filter' ).
 			'<td>Name:&nbsp;'.$form->get_input( 'plugin_html_attr_filter_name' ).'</td><td>'.
 			'Priority:&nbsp;'.$form->get_input( 'plugin_html_attr_filter_prio', 'short' ).'</td>';
 
-			// filter_head_attributes() is disabled when the wpsso-schema-json-ld extension is active
-			if ( apply_filters( $this->p->cf['lca'].'_add_schema_head_attributes', true ) ) {
-				$table_rows[] = $form->get_th_html( _x( '&lt;head&gt; Attributes Filter Hook',
-					'option label', 'wpsso' ), null, 'plugin_head_attr_filter' ).
-				'<td>Name:&nbsp;'.$form->get_input( 'plugin_head_attr_filter_name' ).'</td><td>'.
-				'Priority:&nbsp;'.$form->get_input( 'plugin_head_attr_filter_prio', 'short' ).'</td>';
-			} else {
-				$table_rows[] = '<tr class="hide_in_basic">'.
-				$form->get_th_html( _x( '&lt;head&gt; Attributes Filter Hook',
-					'option label', 'wpsso' ), null, 'plugin_head_attr_filter' ).
-				'<td colspan="2"><em>'.__( 'head attributes filter disabled by extension plugin or custom filter',
-					'wpsso' ).'<em></td>';
-			}
+			$table_rows['plugin_head_attr_filter'] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( '&lt;head&gt; Attributes Filter Hook',
+				'option label', 'wpsso' ), null, 'plugin_head_attr_filter' ).
+			'<td>Name:&nbsp;'.$form->get_input( 'plugin_head_attr_filter_name' ).'</td><td>'.
+			'Priority:&nbsp;'.$form->get_input( 'plugin_head_attr_filter_prio', 'short' ).'</td>';
 
-			$table_rows[] = $form->get_th_html( _x( 'Check for Duplicate Meta Tags',
+			$table_rows['plugin_check_head'] = $form->get_th_html( _x( 'Check for Duplicate Meta Tags',
 				'option label', 'wpsso' ), null, 'plugin_check_head' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_check_head' ).'</td>';
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
+			$table_rows['plugin_filter_lang'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Use WP Locale for Language',
 				'option label', 'wpsso' ), null, 'plugin_filter_lang' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_filter_lang' ).'</td>';
 
-			$table_rows[] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Generate Missing WP Media Sizes',
+			$table_rows['plugin_auto_img_resize'] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( 'Recreate Missing WP Media Sizes',
 				'option label', 'wpsso' ), null, 'plugin_auto_img_resize' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_auto_img_resize' ).'</td>';
 
-			$table_rows[] = $form->get_th_html( _x( 'Enforce Image Dimensions Check',
+			$table_rows['plugin_check_img_dims'] = $form->get_th_html( _x( 'Enforce Image Dimensions Check',
 				'option label', 'wpsso' ), null, 'plugin_check_img_dims' ).
-			'<td colspan="2">'.$form->get_checkbox( 'plugin_check_img_dims' ).'</td>';
+			'<td colspan="2">'.$form->get_checkbox( 'plugin_check_img_dims' ).
+				' <em>'._x( 'recommended', 'option comment', 'wpsso' ).'</em></td>';
 
-			$table_rows[] = $form->get_th_html( _x( 'Allow Upscaling of WP Media Images',
+			$table_rows['plugin_upscale_images'] = $form->get_th_html( _x( 'Allow Upscaling of WP Media Images',
 				'option label', 'wpsso' ), null, 'plugin_upscale_images' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_upscale_images' ).'</td>';
 
-			$table_rows[] = $form->get_th_html( _x( 'Maximum Image Upscale Percentage',
+			$table_rows['plugin_upscale_img_max'] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( _x( 'Maximum Image Upscale Percentage',
 				'option label', 'wpsso' ), null, 'plugin_upscale_img_max' ).
 			'<td colspan="2">'.$form->get_input( 'plugin_upscale_img_max', 'short' ).' %</td>';
 
@@ -280,9 +279,15 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 				'option label', 'wpsso' ), null, 'plugin_bitly_login' ).
 			'<td>'.$form->get_input( 'plugin_bitly_login', 'mono' ).'</td>';
 
-			$table_rows['plugin_bitly_api_key'] = $form->get_th_html( _x( 'Bitly API Key',
-				'option label', 'wpsso' ), null, 'plugin_bitly_api_key' ).
-			'<td>'.$form->get_input( 'plugin_bitly_api_key', 'api_key mono' ).'</td>';
+			$table_rows['plugin_bitly_token'] = $form->get_th_html( '<a href="https://bitly.com/a/oauth_apps" target="_blank">'.
+				_x( 'Bitly Generic Access Token', 'option label', 'wpsso' ).'</a>', null, 'plugin_bitly_token' ).
+			'<td>'.$form->get_input( 'plugin_bitly_token', 'api_key mono' ).'</td>';
+
+			$table_rows['plugin_bitly_api_key'] = '<tr class="hide_in_basic">'.
+			$form->get_th_html( '<a href="http://bitly.com/a/your_api_key" target="_blank">'.
+				_x( 'or Bitly API Key (deprecated)', 'option label', 'wpsso' ).'</a>', null, 'plugin_bitly_api_key' ).
+			'<td>'.$form->get_input( 'plugin_bitly_api_key', 'api_key mono' ).' <em>'.
+				_x( 'api key authentication is deprecated', 'option comment', 'wpsso' ).'</em></td>';
 
 			$table_rows['subsection_plugin_google'] = '<tr class="hide_in_basic">'.
 				'<td></td><td class="subsection"><h4>'.

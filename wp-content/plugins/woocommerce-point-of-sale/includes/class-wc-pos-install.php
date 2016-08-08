@@ -142,6 +142,19 @@ class WC_POS_Install {
         $wpdb->show_errors();
         $installed_ver = get_option("wc_pos_db_version");
 
+        $db_name = DB_NAME;
+        $result = $wpdb->query("SELECT * 
+                                FROM information_schema.COLUMNS 
+                                WHERE 
+                                    TABLE_SCHEMA = '{$db_name}' 
+                                AND TABLE_NAME = '{$wpdb->users}' 
+                                AND COLUMN_NAME = 'user_modified_gmt'");
+        
+        if( !$result ){
+          $result = $wpdb->query("ALTER TABLE {$wpdb->users} ADD user_modified_gmt DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER user_registered");
+          $result = $wpdb->query("UPDATE {$wpdb->users} SET user_modified_gmt=user_registered");
+        }
+
         if ($installed_ver != WC_POS_VERSION) {
 
             $collate = '';
@@ -255,8 +268,7 @@ class WC_POS_Install {
     )" . $collate;
             dbDelta($sql);
 
-
-        }
+    }
   }
   /**
    * Create roles and capabilities

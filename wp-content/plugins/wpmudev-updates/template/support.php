@@ -68,10 +68,11 @@ $time_format = get_option( 'time_format' );
 ?>
 
 <div class="row row-space">
-	<form action="<?php echo esc_url( $url_search ); ?>" target="_blank" method="GET">
+	<form id="support-search" action="<?php echo esc_url( $url_search ); ?>" target="_blank" method="GET">
 		<input
 			name="q"
 			type="search"
+			data-no-empty-msg="true"
 			placeholder="<?php esc_attr_e( 'Search WPMU DEV support resources', 'wpmudev' ); ?>" />
 	</form>
 </div>

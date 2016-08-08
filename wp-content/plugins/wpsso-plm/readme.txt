@@ -4,13 +4,13 @@ Plugin Slug: wpsso-plm
 Text Domain: wpsso-plm
 Domain Path: /languages
 Contributors: jsmoriss
-Donate Link: https://wpsso.com/
+Donate Link: https://wpsso.com/?utm_source=wpssoplm-readme-donate
 Tags: wpsso, place, location, venue, longitude, latitude, address, local, business, hours, seo
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.1
-Tested Up To: 4.5.3
-Stable Tag: 2.0.7-1
+Tested Up To: 4.6
+Stable Tag: 2.0.10-1
 
 WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
 
@@ -48,7 +48,7 @@ WPSSO Place / Location and Local Business Meta (WPSSO PLM) works in conjunction 
 
 **WPSSO PLM Pro / Power-User Features**
 
-* Extends the features of WPSSO Pro (requires a licensed and active WPSSO Pro plugin).
+* Extends the features of WPSSO Pro (requires a licensed WPSSO Pro plugin).
 * Add a custom "Place / Location" settings tab to Posts, Pages, and Custom Post Types. Allows the selection of an existing Address, or entering custom Address information.
 
 = Example Meta Tags and Markup =
@@ -92,9 +92,9 @@ Example WPSSO PLM meta tags for a Restaurant (Local Business). The image and vid
 
 The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the WPSSO PLM extension.
 
-Use the Free version of WPSSO PLM with *both* the Free and Pro versions of WPSSO. The [WPSSO PLM Pro](http://wpsso.com/extend/plugins/wpsso-plm/) extension (along with all WPSSO Pro extensions) requires the [WPSSO Pro](http://wpsso.com/extend/plugins/wpsso/) plugin as well.
+Use the Free version of WPSSO PLM with *both* the Free and Pro versions of WPSSO. The [WPSSO PLM Pro](http://wpsso.com/extend/plugins/wpsso-plm/?utm_source=wpssoplm-readme-extends) extension (along with all WPSSO Pro extensions) requires the [WPSSO Pro](http://wpsso.com/extend/plugins/wpsso/?utm_source=wpssoplm-readme-extends) plugin as well.
 
-Purchase the [WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro](http://wpsso.com/extend/plugins/wpsso-plm/) extension (includes a *No Risk 30 Day Refund Policy*).
+[Purchase the WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro extension](http://wpsso.com/extend/plugins/wpsso-plm/?utm_source=wpssoplm-readme-purchase) (includes a *No Risk 30 Day Refund Policy*).
 
 == Installation ==
 
@@ -125,12 +125,12 @@ Purchase the [WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro](ht
 
 = Free / Basic Version Repository =
 
-* [GitHub](https://github.com/SurniaUlula/wpsso-plm)
+* [GitHub](https://surniaulula.github.io/wpsso-plm/)
 * [WordPress.org](https://wordpress.org/plugins/wpsso-plm/developers/)
 
 = Changelog / Release Notes =
 
-**Version 2.0.7-1 (2016/06/21)**
+**Version 2.0.10-1 (2016/07/29)**
 
 Official announcement: N/A
 
@@ -141,31 +141,11 @@ Official announcement: N/A
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Renamed the 'wpsso_place_options' filter to 'wpsso_get_place_options'.
-
-**Version 2.0.6-1 (2016/06/14)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Added a new checkbox to delete addresses (instead of leaving its name blank).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* Added localization support when retrieving address information.
-	* Replaced the `WpssoPlmAddress::get_names()` method by `SucomUtil::get_multi_key_locale()`.
-	* Replaced the `WpssoPlmAddress::get_first_next_ids()` method by `SucomUtil::get_first_last_next_nums()`.
-	* Added a new hook for the 'wpsso_place_options' filter.
+	* Updated the 'wpsso_schema_meta_itemprop' filter for WPSSO 3.33.8-1.
 
 == Upgrade Notice ==
 
-= 2.0.7-1 =
+= 2.0.10-1 =
 
-(2016/06/21) Renamed the 'wpsso_place_options' filter to 'wpsso_get_place_options'.
-
-= 2.0.6-1 =
-
-(2016/06/14) Added a new checkbox to delete addresses. Replaced two methods in WpssoPlmAddress for SucomUtil methods. Added a new hook for the 'wpsso_place_options' filter.
+(2016/07/29) Updated the 'wpsso_schema_meta_itemprop' filter for WPSSO 3.33.8-1.
 

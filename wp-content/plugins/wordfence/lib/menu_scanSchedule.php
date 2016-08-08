@@ -7,7 +7,7 @@
 		<h3>Scan Scheduling is only available to Premium Members</h3>
 		<p>Premium users can increase their WordPress protection by controlling scan frequency up to once per hour. Premium also allows you to control when Wordfence initiates a scan, selecting optimal times that don’t interfere with high-traffic or optimal usage of your site.</p>
 
-		<p>Upgrade to Premium today for less than $5 per month:</p>
+		<p>Upgrade to Premium today for just $8.25 per month:</p>
 		<ul>
 			<li>Receive real-time Firewall and Scan engine rule updates for protection as threats emerge</li>
 			<li>Other advanced features like IP reputation monitoring, an advanced comment spam filter, country blocking and cell phone sign-in give you the best protection available</li>

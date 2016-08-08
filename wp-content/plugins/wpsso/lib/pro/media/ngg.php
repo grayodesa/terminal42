@@ -65,7 +65,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 		public function get_image_src( $pid, $size_name = 'thumbnail', $check_dupes = true ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array(
+				$this->p->debug->log_args( array(
 					'pid' => $pid,
 					'size_name' => $size_name,
 					'check_dupes' => $check_dupes,
@@ -75,7 +75,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 			if ( $this->p->is_avail['media']['ngg'] !== true || strpos( $pid, 'ngg-' ) !== 0 )
 				return array( null, null, null, null, null );
 
-			$size_info = $this->p->media->get_size_info( $size_name );
+			$size_info = SucomUtil::get_size_info( $size_name );
 			$pid = substr( $pid, 4 );
 			$img_url = '';
 			$img_width = -1;
@@ -177,6 +177,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 				return $ret_empty;
 			}
 
+			// check if image exceeds hard-coded limits (dimensions, ratio, etc.)
 			$img_size_within_limits = $this->p->media->img_size_within_limits( $pid, $size_name, $img_width, $img_height, 
 				__( 'NextGEN Gallery', 'wpsso' ) );
 
@@ -204,7 +205,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 			if ( ! $bool )	// don't recheck already rejected images
 				return false;
 
-			$size_info = $this->p->media->get_size_info( $size_name );
+			$size_info = SucomUtil::get_size_info( $size_name );
 			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
 			$is_sufficient_h = $img_height >= $size_info['height'] ? true : false;
@@ -239,7 +240,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 		public function get_query_images( $num = 0, $size_name = 'thumbnail', $post_id, $check_dupes = true ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'num' => $num,
 					'size_name' => $size_name,
 					'post_id' => $post_id,
@@ -391,7 +392,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 		public function get_shortcode_images( $num = 0, $size_name = 'thumbnail', $post_id, $check_dupes = true ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'num' => $num,
 					'size_name' => $size_name,
 					'post_id' => $post_id,
@@ -522,7 +523,7 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 		public function get_singlepic_images( $num = 0, $size_name = 'thumbnail', $post_id, $check_dupes = false ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'num' => $num,
 					'size_name' => $size_name,
 					'post_id' => $post_id,

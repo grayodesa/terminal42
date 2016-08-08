@@ -17,7 +17,9 @@ perspective effects (not including the modals and the overlay).
 	-moz-perspective: 600px;
 	perspective: 600px;
 }
-
+#modal-order_customer {
+	max-width: 630px;
+}
 .container {
 	background: #e74c3c;
 	min-height: 100%;

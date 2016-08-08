@@ -29,7 +29,7 @@ if ( ! is_array( $history ) ) { $history = array(); }
 $url_profile = $urls->remote_site . 'hub/profile/';
 
 // Upgrade membership URL.
-$url_upgrade = $urls->remote_site . '#pricing';
+$url_upgrade = $urls->remote_site . 'hub/account/#pricing';
 
 // Details on "Earn points".
 $url_points = $urls->remote_site . 'earn-your-wpmudev-membership/';
@@ -42,6 +42,7 @@ $quick_4 = $urls->remote_site . 'forums/';
 
 // Find the 5 most popular plugins, that are not installed yet.
 $popular = array();
+$count = 0;
 foreach ( $data['projects'] as $item ) {
 	// Skip themes.
 	if ( 'plugin' != $item['type'] ) { continue; }
@@ -57,13 +58,11 @@ foreach ( $data['projects'] as $item ) {
 	// Skip hidden/deprecated projects.
 	if ( $plugin->is_hidden ) { continue; }
 
-	$rating = intval( $plugin->popularity );
-	while ( isset( $popular[ $rating ] ) ) { $rating += 1; }
+	$popular[] = $item;
+	$count++;
 
-	$popular[ $rating ] = $item;
+	if ( $count >= 5 ) break;
 }
-krsort( $popular );
-$popular = array_slice( $popular, 0, 5 );
 
 // Render the page header section.
 $page_title = sprintf( __( 'Welcome, %s', 'wpmudev' ), $profile['name'] );

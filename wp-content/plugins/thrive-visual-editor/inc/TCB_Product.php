@@ -19,6 +19,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 		parent::__construct( $data );
 
 		$this->logoUrl = tve_editor_css() . '/images/thrive-content-builder-logo.png';
+		$this->logoUrlWhite = tve_editor_css() . '/images/thrive-content-builder-logo-white.png';
 
 		$this->description = __( 'Create beautiful content & conversion optimized landing pages.', 'thrive-cb' );
 

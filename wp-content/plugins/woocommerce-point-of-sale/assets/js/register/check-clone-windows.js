@@ -156,21 +156,3 @@
 
     win.WindowStateManager = WindowStateManager;
 })(window);
-
-/*var WindowStateManager = new WindowStateManager(true, windowUpdated);
-
-function windowUpdated()
-{
-    //"this" is a reference to the WindowStateManager
-    if( this.isMainWindow() ){
-        closeModal('modal-clone-window');
-        if( APP.initialized === false){
-            APP.init();            
-        }
-    }else{
-        openModal('modal-clone-window');
-    }
-    //statusWindow.className = (this.isMainWindow() ? 'main' : 'child');
-}*/
-//Resets the count in case something goes wrong in code
-//WindowStateManager.resetWindows()

@@ -50,15 +50,15 @@ if ( ! class_exists( 'WpssoProAdminGeneral' ) ) {
 			$table_rows['og_vid_https'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Use HTTPS for Video API Requests',
 				'option label', 'wpsso' ), null, 'og_vid_https' ).
-			'<td>'.$form->get_checkbox( 'og_vid_https' ).' '.
+			'<td>'.$form->get_checkbox( 'og_vid_https' ).' <em>'.
 				sprintf( _x( 'uses %s', 'option comment', 'wpsso' ),
-					str_replace( WPSSO_PLUGINDIR, WPSSO_PLUGINSLUG.'/', WPSSO_CURL_CAINFO ) ).'</td>';
+					str_replace( WPSSO_PLUGINDIR, WPSSO_PLUGINSLUG.'/', WPSSO_PHP_CURL_CAINFO ) ).'</em></td>';
 
 			$table_rows['og_vid_prev_img'] = $form->get_th_html( _x( 'Include Video Preview Image(s)',
 				'option label', 'wpsso' ), null, 'og_vid_prev_img' ).
-			'<td>'.$form->get_checkbox( 'og_vid_prev_img' ).' '.
+			'<td>'.$form->get_checkbox( 'og_vid_prev_img' ).' <em>'.
 				_x( 'video preview images are included first',
-					'option comment', 'wpsso' ).'</td>';
+					'option comment', 'wpsso' ).'</em></td>';
 
 			$table_rows['og_vid_html_type'] = $form->get_th_html( _x( 'Include Embed text/html Type',
 				'option label', 'wpsso' ), null, 'og_vid_html_type' ).

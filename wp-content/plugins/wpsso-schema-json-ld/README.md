@@ -1,28 +1,31 @@
-<h1>WPSSO Schema JSON-LD Markup</h1><h3>Schema / Rich Snippet Markup for Google / Pinterest</h3>
+<h1>WPSSO Schema JSON-LD Markup</h1><h3>Schema / Structured Data / Rich Snippet Markup</h3>
 
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Schema JSON-LD Markup (WPSSO JSON)</td></tr>
-<tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.9.1-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.10.0-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
-<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
+<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.6</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
 <tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpssojson-readme-donate">https://wpsso.com/?utm_source=wpssojson-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
-<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, event, review, rating, pinterest, google, seo, news, amp, co-authors, co-authors plus</td></tr>
+<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, schema, structured data, json, json-ld, ld+json, rich snippet, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest</td></tr>
 </table>
 
 <h2>Description</h2>
 
-<p align="center"><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" /></p><p><strong>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup.</strong></p>
+<p style="margin:0;">
+<p align="center"><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" /></p>
+<blockquote class="top_info">
+<p>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup, including images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, recipe details, event information, etc.</p>
+<p>Overrides any missing or incomplete Schema markup in your theme templates.</p>
+<p>Choose another Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</p>
+<p>Include all WooCommerce product variations and their details in the Schema Product markup! (Pro version)</p>
+<p><strong>Specific Schema markup for Pinterest</strong> &mdash; Pinterest does not (presently) read the popular JSON-LD format. The WPSSO plugin and its WPSSO JSON extension include provisions for Pinterest to provide Schema markup using meta tags instead.</p>
+</blockquote>
+</p>
 
-<p><strong>Corrects incomplete and innacurate Schema markup in theme templates.</strong></p>
-
-<p><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</strong></p>
-
-<p><strong>Include all WooCommerce product variations in the Schema markup!</strong> (Pro version)</p>
-
-<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, ratings, publisher, place, product, etc.) for Google Search, Pinterest, and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
+<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Structured Data / Rich Snippet markup (images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, etc.) for Google Search and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema / Structured Data / Rich Snippet markup in theme templates.</p>
 
 <h4>Quick List of Features</h4>
 
@@ -48,7 +51,7 @@
 <li>Default Item Type by Post Type (for Posts, Pages, Media, and custom post types).</li>
 </ul>
 
-<p>Adds Google / Schema JSON-LD markup:</p>
+<p>Adds Schema / Structured Data JSON-LD markup:</p>
 
 <ul>
 <li>Schema Type <a href="http://schema.org/BlogPosting">schema.org/BlogPosting</a></li>
@@ -137,7 +140,7 @@
 <li>Schema Description</li>
 </ul>
 
-<p>Adds Google / Schema JSON-LD markup:</p>
+<p>Adds Schema / Structured Data JSON-LD markup:</p>
 
 <ul>
 <li>Schema Type <a href="http://schema.org/CreativeWork">schema.org/CreativeWork</a>
@@ -267,7 +270,7 @@
 </blockquote>
 
 <ul>
-<li>Schema Type <a href="http://schema.org/Event">schema.org/Event</a> (<strong>supported Event / Calendar plugin required</strong>)
+<li>Schema Type <a href="http://schema.org/Event">schema.org/Event</a>
 
 <ul>
 <li>Schema Type <a href="http://schema.org/BusinessEvent">schema.org/BusinessEvent</a></li>
@@ -1203,6 +1206,18 @@
 <h4>Additional Documentation</h4>
 
 <ul>
-<li>None</li>
+<li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/">Developer Resources</a>
+
+<ul>
+<li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/">Filters</a>
+
+<ul>
+<li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/">Filter Examples</a>
+
+<ul>
+<li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-aggregaterating-property/">Modify the aggregateRating Property</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
 </ul>
 

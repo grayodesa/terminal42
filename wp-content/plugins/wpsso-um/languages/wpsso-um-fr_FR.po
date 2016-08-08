@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WPSSO Pro Update Manager (WPSSO UM) 1.5.5-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-um\n"
-"POT-Creation-Date: 2016-06-16 07:33-0400\n"
-"PO-Revision-Date: 2016-06-16 07:33-0400\n"
+"POT-Creation-Date: 2016-07-09 15:43-0400\n"
+"PO-Revision-Date: 2016-07-14 12:04-0400\n"
 "Last-Translator: JS Morisset <jsm@surniaulula.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -15,13 +15,13 @@ msgstr ""
 "X-Generator: Poedit 1.8.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: lib/com/update.php:342
+#: lib/com/update.php:341
 msgid "Plugin update information for %s has been retrieved and saved."
 msgstr "L'information de mise à jour pour l'extension %s a été récupérée et sauvegardée."
 
-#: lib/com/update.php:421
-msgid "Update error: %s"
-msgstr "Erreur de mise à jour: %s"
+#: lib/com/update.php:420
+msgid "Update error &mdash; %s"
+msgstr "Erreur de mise à jour &mdash; %s"
 
 #: lib/config-gettext-extract.php:3
 msgctxt "option value"
@@ -106,7 +106,7 @@ msgstr "Gestionnaire de mise a jour"
 #: lib/config-gettext-extract.php:19
 msgctxt "plugin description"
 msgid "WPSSO extension to provide updates for the WordPress Social Sharing Optimization (WPSSO) Pro plugin and its Pro extensions."
-msgstr "Une extension WPSSO pour fournir des mises à jour a WordPress Social Sharing Optimization (WPSSO) Pro et ses extensions Pro."
+msgstr "Extension WPSSO pour fournir des mises à jour a WordPress Social Sharing Optimization (WPSSO) Pro et ses extensions Pro."
 
 #: lib/filters.php:110
 msgid "How often would you like the %1$s to check for new updates? You can also use the \"%2$s\" button to refresh the update information manually."
@@ -149,7 +149,7 @@ msgstr "L'extension %1$s requiert %2$s &mdash; s'il vous plaît installer et act
 msgid "The %1$s extension requires the %2$s plugin &mdash; please install and activate the %3$s plugin."
 msgstr "L'extension %1$s requiert %2$s &mdash; s'il vous plaît installer et activer l'extension %3$s."
 
-#: wpsso-um.php:142
+#: wpsso-um.php:143
 msgid "The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed)."
 msgstr "L'extension %1$s version %2$s requiert l'utilisation de %3$s version %4$s ou plus récente (la version %5$s est actuellement installée)."
 
@@ -163,7 +163,7 @@ msgstr "http://surniaulula.com/extend/plugins/wpsso-um/"
 
 #. Description of the plugin/theme
 msgid "WPSSO extension to provide updates for the WordPress Social Sharing Optimization (WPSSO) Pro plugin and its Pro extensions."
-msgstr "Une extension WPSSO pour fournir des mises à jour a WordPress Social Sharing Optimization (WPSSO) Pro et ses extensions Pro."
+msgstr "Extension WPSSO pour fournir des mises à jour a WordPress Social Sharing Optimization (WPSSO) Pro et ses extensions Pro."
 
 #. Author of the plugin/theme
 msgid "JS Morisset"

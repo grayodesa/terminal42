@@ -13,6 +13,11 @@
 		   class="tve_editor_button tve_editor_button_success tve_editor_button_small tve_click"
 		   data-ctrl="function:tve_landing_page_cloud_select"
 		   data-template="<?php echo $template_downloaded ?>"><?php echo __( 'Open', 'thrive-cb' ) ?></a>
+		<span class="tve-grid-btn-sep">&nbsp;</span>
+		<a href="http://landingpages.thrivethemes.com/thrive-landing-pages/?tcb_preview=<?php echo $template; ?>"
+		   class="tve_editor_button tve_editor_button_default tve_editor_button_small"
+		   target="_blank"><?php echo __( 'Preview', 'thrive-cb' ) ?></a>
+		<div class="tve_clear"></div>
 	<?php endif ?>
 <?php elseif ( ! empty( $templates ) ) : ?>
 
@@ -32,7 +37,7 @@
 	<?php foreach ( $templates as $key => $template ) : ?>
 		<div class="tve_cloud_tpl_item<?php echo ' ' . $template['tag_classes'] ?>">
             <span
-	            class="tve_grid_cell<?php echo ! empty( $template['downloaded'] ) && $selected_campaign == $key ? ' tve_cell_selected' : '' ?>">
+	            class="tve_grid_cell<?php echo ! empty( $template['downloaded'] ) && $selected == $key ? ' tve_cell_template_cloud_selected' : '' ?>">
                 <input type="hidden" class="lp_code" value="<?php echo $key ?>"/>
                 <img src="<?php echo $template['thumb'] ?>" width="178" height="150"/>
                 <span class="tve_cell_caption_holder"><span
@@ -61,11 +66,11 @@
 					   data-ctrl="function:tve_cloud_template_download"
 					   data-template="<?php echo $key ?>"
 					   title="<?php echo __( 'Download', 'thrive-cb' ) ?>"><?php echo __( 'Download', 'thrive-cb' ) ?></a>
-					<span class="tve-grid-btn-sep">&nbsp;</span>
-					<a href="<?php echo $template['preview'] ?>"
-					   class="tve_editor_button tve_editor_button_default tve_editor_button_small"
-					   target="_blank"><?php echo __( 'Preview', 'thrive-cb' ) ?></a>
 				<?php endif ?>
+				<span class="tve-grid-btn-sep">&nbsp;</span>
+				<a href="<?php echo $template['preview'] ?>"
+				   class="tve_editor_button tve_editor_button_default tve_editor_button_small"
+				   target="_blank"><?php echo __( 'Preview', 'thrive-cb' ) ?></a>
 				<div class="tve_clear"></div>
 			</div>
 		</div>

@@ -9,6 +9,7 @@
 class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
 	public static function getType() {
@@ -42,6 +43,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 		$url = ! empty( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : '';
 
 		$lists = ! empty( $_POST['connection']['lists'] ) ? $_POST['connection']['lists'] : array();
+		$lists = array_map( 'trim', $lists );
 		$lists = array_filter( $lists );
 
 		if ( empty( $url ) || empty( $lists ) ) {

@@ -32,7 +32,7 @@ if ( ! class_exists( 'WpssoProEventTribeEvents' ) ) {
 				'get_event_options' => 3,		// $opts, $mod, $event_id
 				'get_person_options' => 3,		// $opts, $mod, $person_id
 				'get_place_options' => 3,		// $opts, $mod, $place_id
-				'schema_meta_itemprop' => 3,		// $mt_schema, $use_post, $mod
+				'schema_meta_itemprop' => 2,		// $mt_schema, $mod
 			) );
 
 			if ( ! empty( $this->p->is_avail['json'] ) )
@@ -133,7 +133,7 @@ if ( ! class_exists( 'WpssoProEventTribeEvents' ) ) {
 			return $opts;
 		}
 
-		public function filter_schema_meta_itemprop( $mt_schema, $use_post, $mod ) {
+		public function filter_schema_meta_itemprop( $mt_schema, $mod ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 

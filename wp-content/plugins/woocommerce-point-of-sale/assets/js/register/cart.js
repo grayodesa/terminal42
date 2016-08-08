@@ -131,7 +131,8 @@ jQuery(document).ready(function($) {
 			if ( quantity == 0 || quantity < 0 ) {
 				delete cart_contents[ cart_item_key ];
 			} else {
-				old_quantity = CART.cart_contents[ cart_item_key ]['quantity'];
+				var old_quantity = CART.cart_contents[ cart_item_key ]['quantity'];
+				
 				CART.cart_contents[ cart_item_key ]['quantity'] = quantity;
 			}
 
@@ -322,7 +323,7 @@ jQuery(document).ready(function($) {
 				APP.showNotice(e.message, 'error');
 			}
 
-		},
+		},		
 		/**
 		 * Remove a cart item
 		 *
@@ -499,15 +500,19 @@ jQuery(document).ready(function($) {
 		 *
 		 * @param bool $clear_persistent_cart (default: true)
 		 */
-		empty_cart : function () {
-			CUSTOMER.reset();
-			if(pos_default_customer){
-                APP.setCustomer( pos_default_customer );
-            }
+		empty_cart : function (updateCastomer) {
 			$.each(CART.cart_empty_data, function(key, _default) {
 				window.POS_CART[key] = clone(_default);
 			});
-			CART.calculate_totals();
+
+			if( updateCastomer !== false ){	
+				if(pos_default_customer){
+	                APP.setCustomer( pos_default_customer );
+	            }else{
+	            	APP.setGuest();
+	            }
+			}
+			//CART.calculate_totals();
 			$('#order_items_list').html('');
 			$('#order_comments').val('');
 		},
@@ -1125,12 +1130,12 @@ jQuery(document).ready(function($) {
 				if( typeof record != 'undefined' ){
 					// Get the coupon
 					var the_coupon = new WC_Coupon( coupon_code, record );
-
 					// Check it can be used with cart
 					if ( ! the_coupon.is_valid() ) {
 						APP.showNotice( the_coupon.get_error_message(), 'error' );
 						return false;
 					}
+
 
 					// Check if applied
 					if ( CART.has_discount( coupon_code ) ) {
@@ -1145,8 +1150,8 @@ jQuery(document).ready(function($) {
 
 					var individual_use = false;
 					if ( CART.applied_coupons ) {
-						$.each(CART.applied_coupons, function(index, code) {
-							var coupon = new WC_Coupon( code );
+						$.each(CART.coupons, function(code, coupon) {
+							//var coupon = new WC_Coupon( code );
 
 							if ( coupon.individual_use == true ) {
 								// Reject new coupon
@@ -1218,7 +1223,7 @@ jQuery(document).ready(function($) {
 				}
 				$.each(CART.coupons, function(code, coupon) {
 
-					if ( coupon.is_valid() && ( coupon.is_valid_for_product( product, values ) || coupon.is_valid_for_cart() ) ) {
+					if ( coupon.is_valid() && ( coupon.is_valid_for_product( values['data'], values ) || coupon.is_valid_for_cart() ) ) {
 						var discount_amount = coupon.get_discount_amount( ( 'yes' === pos_wc.calc_discounts_seq ? price : undiscounted_price ), values, true );
 						
 

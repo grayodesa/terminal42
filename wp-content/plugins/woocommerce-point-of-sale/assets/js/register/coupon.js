@@ -433,6 +433,7 @@ WC_Coupon = function( code, data ) {
 		var valid        = false;
 		var product_cats = product.categories_ids;
 
+
 		// Specific products get the discount
 		if ( sizeof( instance.product_ids ) > 0 ) {
 			if ( in_array( product.id, instance.product_ids ) || ( ( product.variation_id ) && in_array( product.variation_id, instance.product_ids ) ) ) {

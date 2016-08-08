@@ -87,13 +87,17 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 					$post_type = get_post_type( $post_id );				// post type name
 					$post_status = get_post_status( $post_id );			// post status name
 
-					if ( empty( $post_type ) || empty( $post_status ) ) {
+					if ( empty( $post_type ) ) {
 						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'exiting early: incomplete post object' );
+							$this->p->debug->log( 'exiting early: post_type is empty' );
+						return $shortlink;
+					} elseif ( empty( $post_status ) ) {
+						if ( $this->p->debug->enabled )
+							$this->p->debug->log( 'exiting early: post_status is empty' );
 						return $shortlink;
 					} elseif ( $post_status === 'auto-draft' ) {
 						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'exiting early: post is an auto-draft' );
+							$this->p->debug->log( 'exiting early: post_status is auto-draft' );
 						return $shortlink;
 					}
 
@@ -175,14 +179,21 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 			}
 
 			$post_obj = SucomUtil::get_post_object();
-			$post_id = empty( $post_obj->ID ) ? 0 : $post_obj->ID;
+			$post_id = empty( $post_obj->ID ) ?
+				0 : $post_obj->ID;
 
-			// make sure we have at least a post type and post status
-			if ( $post_obj === false || 
-				empty( $post_obj->post_type ) || 
-					empty( $post_obj->post_status ) ) {
+			// make sure we have at least a post type and status
+			if ( ! is_object( $post_obj ) ) {
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'exiting early: incomplete post object' );
+					$this->p->debug->log( 'exiting early: post_obj is not an object' );
+				return;
+			} elseif ( empty( $post_obj->post_type ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: post_type is empty' );
+				return;
+			} elseif ( empty( $post_obj->post_status ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: post_status is empty' );
 				return;
 			}
 
@@ -191,12 +202,12 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->log( SucomDebug::pretty_array( $mod ) );
 
-			if ( $post_obj->post_status !== 'auto-draft' ) {
+			if ( $post_obj->post_status === 'auto-draft' ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'head meta skipped: post_status is auto-draft' );
+			} else {
 				$add_metabox = empty( $this->p->options['plugin_add_to_'.$post_obj->post_type] ) ? false : true;
 				if ( apply_filters( $lca.'_add_metabox_post', $add_metabox, $post_id ) ) {
-
-					if ( $this->p->debug->enabled )
-						$this->p->debug->log( 'adding metabox for post' );
 
 					// hooked by woocommerce module to load front-end libraries and start a session
 					do_action( $lca.'_admin_post_header', $mod, $screen->id );
@@ -218,8 +229,7 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 							$this->check_post_header( $post_id, $post_obj );
 					}
 				}
-			} elseif ( $this->p->debug->enabled )
-				$this->p->debug->log( 'skipped head meta: post_status is auto-draft' );
+			} 
 
 			$action_query = $lca.'-action';
 			if ( ! empty( $_GET[$action_query] ) ) {
@@ -281,9 +291,8 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 			$lca = $this->p->cf['lca'];
 			$charset = get_bloginfo( 'charset' );
 			$permalink = get_permalink( $post_id );
-			$permalink_html = SucomUtil::encode_emoji( htmlentities( urldecode( $permalink ), 
+			$permalink_encoded = SucomUtil::encode_emoji( htmlentities( urldecode( $permalink ), 
 				ENT_QUOTES, $charset, false ) );	// double_encode = false
-			$permalink_no_meta = add_query_arg( array( 'WPSSO_META_TAGS_DISABLE' => 1 ), $permalink );
 			$check_opts = apply_filters( $lca.'_check_head_meta_options',
 				SucomUtil::preg_grep_keys( '/^add_/', $this->p->options, false, '' ), $post_id );
 
@@ -294,13 +303,11 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 			else $notice_suffix = '';
 
 			$this->p->notice->inf( sprintf( __( 'Checking %1$s for duplicate meta tags', 'wpsso' ), 
-				'<a href="'.$permalink.'">'.$permalink_html.'</a>' ).$notice_suffix.'...', true );
+				'<a href="'.$permalink.'">'.$permalink_encoded.'</a>' ).$notice_suffix.'...', true );
 
 			// use the permalink and have get_head_meta() remove our own meta tags
 			// to avoid issues with caching plugins that ignore query arguments
-			if ( ( $metas = $this->p->util->get_head_meta( $permalink, 
-				'/html/head/link|/html/head/meta', true ) ) !== false ) {
-
+			if ( ( $metas = $this->p->util->get_head_meta( $permalink, '/html/head/link|/html/head/meta', true ) ) !== false ) {
 				foreach( array(
 					'link' => array( 'rel' ),
 					'meta' => array( 'name', 'itemprop', 'property' ),
@@ -340,7 +347,6 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 
 			$lca = $this->p->cf['lca'];
 			$add_metabox = empty( $this->p->options[ 'plugin_add_to_'.$post_obj->post_type ] ) ? false : true;
-
 			if ( apply_filters( $lca.'_add_metabox_post', $add_metabox, $post_id ) ) {
 				add_meta_box( $lca.'_social_settings', _x( 'Social Settings', 'metabox title', 'wpsso' ),
 					array( &$this, 'show_metabox_social_settings' ), $post_obj->post_type, 'normal', 'low' );
@@ -419,7 +425,6 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 					$lca = $this->p->cf['lca'];
 					$locale = SucomUtil::get_locale( $post_id );
 					$permalink = get_permalink( $post_id );
-					$permalink_no_meta = add_query_arg( array( 'WPSSO_META_TAGS_DISABLE' => 1 ), $permalink );
 					$sharing_url = $this->p->util->get_sharing_url( $post_id );
 					$locale_salt = 'locale:'.$locale.'_post:'.$post_id;
 
@@ -427,10 +432,10 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 					$transients = array(
 						'SucomCache::get' => array(
 							'url:'.$permalink,
-							'url:'.$permalink_no_meta,
 						),
 						'WpssoHead::get_header_array' => array( 
 							$locale_salt.'_url:'.$sharing_url,
+							$locale_salt.'_url:'.$sharing_url.'_amp:true',
 							$locale_salt.'_url:'.$sharing_url.'_crawler:pinterest',
 						),
 						'WpssoMeta::get_mod_column_content' => array( 

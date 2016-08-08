@@ -9,10 +9,10 @@
  * Author URI: http://surniaulula.com/
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl.txt
- * Description: Fast, light-weight, full-featured plugin for great looking shares on all social sites - no matter how your content is shared or re-shared!
+ * Description: Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.
  * Requires At Least: 3.1
- * Tested Up To: 4.5.3
- * Version: 3.33.4-1
+ * Tested Up To: 4.6
+ * Version: 3.33.8-2
  * 
  * Version Numbers: {major}.{minor}.{bugfix}-{stage}{level}
  *
@@ -113,6 +113,9 @@ if ( ! class_exists( 'Wpsso' ) ) {
 
 			$this->set_objects();				// define the class object variables
 
+			if ( $this->debug->enabled )
+				$this->debug->mark( 'plugin initialization' );
+
 			if ( $this->debug->enabled ) {
 				foreach ( array( 'wp_head', 'wp_footer', 'admin_head', 'admin_footer' ) as $action ) {
 					foreach ( array( -9999, 9999 ) as $prio ) {
@@ -122,7 +125,13 @@ if ( ! class_exists( 'Wpsso' ) ) {
 					}
 				}
 			}
+
+			if ( $this->debug->enabled )
+				$this->debug->log( 'running init_plugin action' );
 			do_action( 'wpsso_init_plugin' );
+
+			if ( $this->debug->enabled )
+				$this->debug->mark( 'plugin initialization' );
 		}
 
 		public function show_debug_html() { 
@@ -179,14 +188,19 @@ if ( ! class_exists( 'Wpsso' ) ) {
 
 			$this->loader = new WpssoLoader( $this, $activate );	// module loader
 
+			if ( $this->debug->enabled )
+				$this->debug->log( 'running init_objects action' );
 			do_action( 'wpsso_init_objects', $activate );
 
 			/*
 			 * check and create the default options array
 			 * execute after all objects have been defines, so hooks into 'wpsso_get_defaults' are available
 			 */
-			if ( is_multisite() && ( ! is_array( $this->site_options ) || empty( $this->site_options ) ) )
+			if ( is_multisite() && ( ! is_array( $this->site_options ) || empty( $this->site_options ) ) ) {
+				if ( $this->debug->enabled )
+					$this->debug->log( 'setting site_options to site_defaults' );
 				$this->site_options = $this->opt->get_site_defaults();
+			}
 
 			/*
 			 * end here when called for plugin activation (the init_plugin() hook handles the rest)
@@ -202,11 +216,15 @@ if ( ! class_exists( 'Wpsso' ) ) {
 			/*
 			 * check and upgrade options if necessary
 			 */
+			if ( $this->debug->enabled )
+				$this->debug->log( 'checking options' );
 			$this->options = $this->opt->check_options( WPSSO_OPTIONS_NAME, $this->options );
 
-			if ( is_multisite() )
-				$this->site_options = $this->opt->check_options( WPSSO_SITE_OPTIONS_NAME, 
-					$this->site_options, true );
+			if ( is_multisite() ) {
+				if ( $this->debug->enabled )
+					$this->debug->log( 'checking site_options' );
+				$this->site_options = $this->opt->check_options( WPSSO_SITE_OPTIONS_NAME, $this->site_options, true );
+			}
 
 			/*
 			 * configure class properties based on plugin settings

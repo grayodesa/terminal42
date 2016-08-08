@@ -38,7 +38,23 @@ class WC_POS_Admin_Settings_Scanning extends WC_Settings_Page {
 	 * @return array
 	 */
 	public function get_settings() {
-		global $woocommerce;
+		global $woocommerce, $wpdb;
+
+		$barcode_fields = array(
+			'' => __('WooCommerce SKU', 'wc_point_of_sale'),
+		);
+
+		$pr_id = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'product' ORDER BY post_modified DESC LIMIT 1");
+		if( $pr_id ){
+			$post_meta = get_post_meta($pr_id);
+			if( $post_meta ){
+				foreach ($post_meta as $key => $value) {
+					$barcode_fields[$key] = $key; 
+				}
+			}
+		}
+
+		//
 
 		return apply_filters( 'woocommerce_point_of_sale_general_settings_fields', array(
 			
@@ -53,6 +69,20 @@ class WC_POS_Admin_Settings_Scanning extends WC_Settings_Page {
 					'desc_tip' => __( 'Listens to barcode scanners and adds item to basket. Carriage return in scanner recommended.', 'wc_point_of_sale' ),
 					'default'	=> 'no',
 					'autoload'  => false					
+				),
+
+			array(
+					'title' => __( 'Scanning Field', 'wc_point_of_sale' ),
+					'desc_tip' => __( 'Control what field is used when using the scanner on the register. Default is SKU.', 'wc_point_of_sale' ),
+					'id'   => 'woocommerce_pos_register_scan_field',
+					'std'  => '',
+					'class'    => 'wc-enhanced-select',
+					'css'      => 'min-width:300px;',
+					'type' => 'select',
+					'desc' => '',
+					'default'	=> '',
+					'autoload'  => false,
+					'options'  => $barcode_fields,
 				),
 
 			array(

@@ -28,82 +28,147 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			// https://www.facebook.com/translations/FacebookLocales.xml
 			'facebook' => array(
 				'af_ZA' => 'Afrikaans',
-				'sq_AL' => 'Albanian',
+				'ak_GH' => 'Akan',
+				'am_ET' => 'Amharic',
 				'ar_AR' => 'Arabic',
-				'hy_AM' => 'Armenian',
+				'as_IN' => 'Assamese',
+				'ay_BO' => 'Aymara',
 				'az_AZ' => 'Azerbaijani',
-				'eu_ES' => 'Basque',
 				'be_BY' => 'Belarusian',
-				'bn_IN' => 'Bengali',
-				'bs_BA' => 'Bosnian',
 				'bg_BG' => 'Bulgarian',
+				'bn_IN' => 'Bengali',
+				'br_FR' => 'Breton',
+				'bs_BA' => 'Bosnian',
 				'ca_ES' => 'Catalan',
-				'zh_HK' => 'Chinese (Hong Kong)',
-				'zh_CN' => 'Chinese (Simplified)',
-				'zh_TW' => 'Chinese (Traditional)',
-				'hr_HR' => 'Croatian',
+				'cb_IQ' => 'Sorani Kurdish',
+				'ck_US' => 'Cherokee',
+				'co_FR' => 'Corsican',
 				'cs_CZ' => 'Czech',
+				'cx_PH' => 'Cebuano',
+				'cy_GB' => 'Welsh',
 				'da_DK' => 'Danish',
-				'nl_NL' => 'Dutch',
+				'de_DE' => 'German',
+				'el_GR' => 'Greek',
 				'en_GB' => 'English (UK)',
+				'en_IN' => 'English (India)',
 				'en_PI' => 'English (Pirate)',
 				'en_UD' => 'English (Upside Down)',
 				'en_US' => 'English (US)',
 				'eo_EO' => 'Esperanto',
+				'es_CL' => 'Spanish (Chile)',
+				'es_CO' => 'Spanish (Colombia)',
+				'es_ES' => 'Spanish (Spain)',
+				'es_LA' => 'Spanish',
+				'es_MX' => 'Spanish (Mexico)',
+				'es_VE' => 'Spanish (Venezuela)',
 				'et_EE' => 'Estonian',
-				'fo_FO' => 'Faroese',
-				'tl_PH' => 'Filipino',
+				'eu_ES' => 'Basque',
+				'fa_IR' => 'Persian',
+				'fb_LT' => 'Leet Speak',
+				'ff_NG' => 'Fulah',
 				'fi_FI' => 'Finnish',
+				'fo_FO' => 'Faroese',
 				'fr_CA' => 'French (Canada)',
 				'fr_FR' => 'French (France)',
 				'fy_NL' => 'Frisian',
+				'ga_IE' => 'Irish',
 				'gl_ES' => 'Galician',
-				'ka_GE' => 'Georgian',
-				'de_DE' => 'German',
-				'el_GR' => 'Greek',
+				'gn_PY' => 'Guarani',
+				'gu_IN' => 'Gujarati',
+				'gx_GR' => 'Classical Greek',
+				'ha_NG' => 'Hausa',
 				'he_IL' => 'Hebrew',
 				'hi_IN' => 'Hindi',
+				'hr_HR' => 'Croatian',
+				'ht_HT' => 'Haitian Creole',
 				'hu_HU' => 'Hungarian',
-				'is_IS' => 'Icelandic',
+				'hy_AM' => 'Armenian',
 				'id_ID' => 'Indonesian',
-				'ga_IE' => 'Irish',
+				'ig_NG' => 'Igbo',
+				'is_IS' => 'Icelandic',
 				'it_IT' => 'Italian',
 				'ja_JP' => 'Japanese',
+				'ja_KS' => 'Japanese (Kansai)',
+				'jv_ID' => 'Javanese',
+				'ka_GE' => 'Georgian',
+				'kk_KZ' => 'Kazakh',
 				'km_KH' => 'Khmer',
+				'kn_IN' => 'Kannada',
 				'ko_KR' => 'Korean',
-				'ku_TR' => 'Kurdish',
+				'ku_TR' => 'Kurdish (Kurmanji)',
+				'ky_KG' => 'Kyrgyz',
 				'la_VA' => 'Latin',
-				'lv_LV' => 'Latvian',
-				'fb_LT' => 'Leet Speak',
+				'lg_UG' => 'Ganda',
+				'li_NL' => 'Limburgish',
+				'ln_CD' => 'Lingala',
+				'lo_LA' => 'Lao',
 				'lt_LT' => 'Lithuanian',
+				'lv_LV' => 'Latvian',
+				'mg_MG' => 'Malagasy',
+				'mi_NZ' => 'Māori',
 				'mk_MK' => 'Macedonian',
-				'ms_MY' => 'Malay',
 				'ml_IN' => 'Malayalam',
+				'mn_MN' => 'Mongolian',
+				'mr_IN' => 'Marathi',
+				'ms_MY' => 'Malay',
+				'mt_MT' => 'Maltese',
+				'my_MM' => 'Burmese',
+				'nb_NO' => 'Norwegian (bokmal)',
+				'nd_ZW' => 'Ndebele',
 				'ne_NP' => 'Nepali',
-				'nb_NO' => 'Norwegian (Bokmal)',
-				'nn_NO' => 'Norwegian (Nynorsk)',
-				'ps_AF' => 'Pashto',
-				'fa_IR' => 'Persian',
+				'nl_BE' => 'Dutch (België)',
+				'nl_NL' => 'Dutch',
+				'nn_NO' => 'Norwegian (nynorsk)',
+				'ny_MW' => 'Chewa',
+				'or_IN' => 'Oriya',
+				'pa_IN' => 'Punjabi',
 				'pl_PL' => 'Polish',
+				'ps_AF' => 'Pashto',
 				'pt_BR' => 'Portuguese (Brazil)',
 				'pt_PT' => 'Portuguese (Portugal)',
-				'pa_IN' => 'Punjabi',
+				'qc_GT' => 'Quiché',
+				'qu_PE' => 'Quechua',
+				'rm_CH' => 'Romansh',
 				'ro_RO' => 'Romanian',
 				'ru_RU' => 'Russian',
+				'rw_RW' => 'Kinyarwanda',
+				'sa_IN' => 'Sanskrit',
+				'sc_IT' => 'Sardinian',
+				'se_NO' => 'Northern Sámi',
+				'si_LK' => 'Sinhala',
 				'sk_SK' => 'Slovak',
 				'sl_SI' => 'Slovenian',
-				'es_LA' => 'Spanish',
-				'es_ES' => 'Spanish (Spain)',
+				'sn_ZW' => 'Shona',
+				'so_SO' => 'Somali',
+				'sq_AL' => 'Albanian',
 				'sr_RS' => 'Serbian',
-				'sw_KE' => 'Swahili',
 				'sv_SE' => 'Swedish',
+				'sw_KE' => 'Swahili',
+				'sy_SY' => 'Syriac',
+				'sz_PL' => 'Silesian',
 				'ta_IN' => 'Tamil',
 				'te_IN' => 'Telugu',
+				'tg_TJ' => 'Tajik',
 				'th_TH' => 'Thai',
+				'tk_TM' => 'Turkmen',
+				'tl_PH' => 'Filipino',
+				'tl_ST' => 'Klingon',
 				'tr_TR' => 'Turkish',
+				'tt_RU' => 'Tatar',
+				'tz_MA' => 'Tamazight',
 				'uk_UA' => 'Ukrainian',
+				'ur_PK' => 'Urdu',
+				'uz_UZ' => 'Uzbek',
 				'vi_VN' => 'Vietnamese',
-				'cy_GB' => 'Welsh',
+				'wo_SN' => 'Wolof',
+				'xh_ZA' => 'Xhosa',
+				'yi_DE' => 'Yiddish',
+				'yo_NG' => 'Yoruba',
+				'zh_CN' => 'Simplified Chinese (China)',
+				'zh_HK' => 'Traditional Chinese (Hong Kong)',
+				'zh_TW' => 'Traditional Chinese (Taiwan)',
+				'zu_ZA' => 'Zulu',
+				'zz_TR' => 'Zazaki',
 			),
 			// https://developers.google.com/+/web/api/supported-languages
 			'google' => array(
@@ -414,13 +479,6 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			else return null;
 		}
 
-		public static function a2aa( $a ) {
-			$aa = array();
-			foreach ( $a as $i )
-				$aa[][] = $i;
-			return $aa;
-		}
-
 		public static function crawler_name( $is_crawler_name = '' ) {
 
 			if ( self::$crawler_name === null ) {
@@ -434,6 +492,11 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 
 					// "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 					case ( strpos( $ua, 'compatible; googlebot/' ) !== false ):
+						self::$crawler_name = 'google';
+						break;
+
+					// Mozilla/5.0 (compatible; Google-Structured-Data-Testing-Tool +https://search.google.com/structured-data/testing-tool)"
+					case ( strpos( $ua, 'compatible; google-structured-data-testing-tool' ) !== false ):
 						self::$crawler_name = 'google';
 						break;
 
@@ -460,6 +523,13 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			if ( ! empty( $is_crawler_name ) )
 				return $is_crawler_name === self::$crawler_name ? true : false;
 			else return self::$crawler_name;
+		}
+
+		public static function a2aa( $a ) {
+			$aa = array();
+			foreach ( $a as $i )
+				$aa[][] = $i;
+			return $aa;
 		}
 
 		public static function is_assoc( $arr ) {
@@ -515,6 +585,14 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 					return $keys[0];
 			}
 			return false;
+		}
+
+		// move an associative array element to the end
+		public static function move_to_end( array &$array, $key ) {
+			$val = $array[$key];
+			unset( $array[$key] );
+			$array[$key] = $val;
+			return $array;
 		}
 
 		public static function before_key( array &$array, $match_key, $mixed, $add_value = '' ) {
@@ -883,7 +961,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 				case 'id':
 				case 'ID':
 					return isset( $post_obj->ID ) ? 
-						(int) $post_obj->ID : false;
+						(int) $post_obj->ID : 0;
 					break;
 				default:
 					return is_object( $post_obj ) ?
@@ -940,11 +1018,11 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return apply_filters( 'sucom_is_tag_page', $ret );
 		}
 
-		public static function get_term_object( $term_id = false, $tax_slug = false, $output = 'object' ) {
+		public static function get_term_object( $term_id = 0, $tax_slug = '', $output = 'object' ) {
 			$term_obj = false;	// return false by default
 
 			if ( is_numeric( $term_id ) ) {
-				$term_obj = get_term_by( 'id', $term_id, $tax_slug, OBJECT, 'raw' );
+				$term_obj = get_term( (int) $term_id, (string) $tax_slug, OBJECT, 'raw' );
 
 			} elseif ( apply_filters( 'sucom_is_term_page', is_tax() ) || is_tag() || is_category() ) {
 				$term_obj = get_queried_object();
@@ -952,7 +1030,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			} elseif ( is_admin() ) {
 				if ( ( $tax_slug = self::get_request_value( 'taxonomy' ) ) !== '' &&
 					( $term_id = self::get_request_value( 'tag_ID' ) ) !== '' )
-						$term_obj = get_term_by( 'id', $term_id, $tax_slug, OBJECT, 'raw' );
+						$term_obj = get_term( (int) $term_id, (string) $tax_slug, OBJECT, 'raw' );
 
 			}
 
@@ -963,7 +1041,11 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 				case 'ID':
 				case 'term_id':
 					return isset( $term_obj->term_id ) ? 
-						(int) $term_obj->term_id : false;
+						(int) $term_obj->term_id : 0;		// cast as integer
+					break;
+				case 'taxonomy':
+					return isset( $term_obj->taxonomy ) ? 
+						(string) $term_obj->taxonomy : '';	// cast as string
 					break;
 				default:
 					return is_object( $term_obj ) ? 
@@ -1037,7 +1119,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 				case 'id':
 				case 'ID':
 					return isset( $user_obj->ID ) ? 
-						(int) $user_obj->ID : false;
+						(int) $user_obj->ID : 0;
 					break;
 				default:
 					return is_object( $user_obj ) ?
@@ -1409,6 +1491,40 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 		public static function get_theme_slug_version( $stylesheet = null, $theme_root = null ) {
 			$theme = wp_get_theme( $stylesheet, $theme_root );
 			return $theme->get_template().'-'.$theme->Version;
+		}
+
+		public static function get_image_sizes() {
+			global $_wp_additional_image_sizes; 
+			$sizes = array(); 
+			foreach ( get_intermediate_image_sizes() as $size_name )
+				$sizes[$size_name] = self::get_size_info( $size_name );
+			return $sizes;
+		}
+
+		public static function get_size_info( $size_name = 'thumbnail' ) {
+			if ( is_integer( $size_name ) ) 
+				return;
+			if ( is_array( $size_name ) ) 
+				return;
+
+			global $_wp_additional_image_sizes;
+
+			if ( isset( $_wp_additional_image_sizes[$size_name]['width'] ) )
+				$width = intval( $_wp_additional_image_sizes[$size_name]['width'] );
+			else $width = get_option( $size_name.'_size_w' );
+
+			if ( isset( $_wp_additional_image_sizes[$size_name]['height'] ) )
+				$height = intval( $_wp_additional_image_sizes[$size_name]['height'] );
+			else $height = get_option( $size_name.'_size_h' );
+
+			if ( isset( $_wp_additional_image_sizes[$size_name]['crop'] ) )
+				$crop = $_wp_additional_image_sizes[$size_name]['crop'];
+			else $crop = get_option( $size_name.'_crop' );
+
+			if ( ! is_array( $crop ) )
+				$crop = empty( $crop ) ? false : true;
+
+			return array( 'width' => $width, 'height' => $height, 'crop' => $crop );
 		}
 	}
 }

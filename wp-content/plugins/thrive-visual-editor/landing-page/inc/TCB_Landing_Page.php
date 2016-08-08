@@ -202,9 +202,19 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				$lp_data['css'] .= 'background-color:#ffffff;';
 			}
 			if ( ! empty( $config['lp_bgp'] ) ) {
-				$lp_data['css'] .= "background-image:url('{$config['lp_bgp']}');background-repeat:repeat;background-size:auto;";
+				if ( $config['lp_bgp'] === 'none' ) {
+					$background_string = "background-image:none;";
+				} else {
+					$background_string = "background-image:url('{$config['lp_bgp']}');";
+				}
+				$lp_data['css'] .= $background_string . "background-repeat:repeat;background-size:auto;";
 			} elseif ( ! empty( $config['lp_bgi'] ) ) {
-				$lp_data['css'] .= "background-image:url('{$config['lp_bgi']}');background-repeat:no-repeat;background-size:cover;background-position:center center;";
+				if ( $config['lp_bgi'] === 'none' ) {
+					$background_string = "background-image:none;";
+				} else {
+					$background_string = "background-image:url('{$config['lp_bgi']}');";
+				}
+				$lp_data['css'] .= $background_string . "background-repeat:no-repeat;background-size:cover;background-position:center center;";
 			}
 			if ( ! empty( $config['lp_bga'] ) ) {
 				$lp_data['css'] .= "background-attachment:{$config['lp_bga']};";
@@ -344,8 +354,12 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				'l_cmw' => isset( $this->config['lightbox']['max_width'] ) ? $this->config['lightbox']['max_width'] : '600px',
 				'l_cmh' => isset( $this->config['lightbox']['max_height'] ) ? $this->config['lightbox']['max_height'] : '600px',
 			);
+			$all_lightboxes   = get_posts( array(
+				'posts_per_page' => - 1,
+				'post_type'      => 'tcb_lightbox',
+			) );
 
-			return tve_create_lightbox( 'Lightbox - ' . $landing_page->post_title . ' (' . $this->config['name'] . ')', $tcb_content, $lightbox_globals, array( 'tve_lp_lightbox' => $this->template ) );
+			return tve_create_lightbox( 'Lightbox - ' . $landing_page->post_title . ' (' . $this->config['name'] . ')' . '-' . ( count( $all_lightboxes ) + 1 ), $tcb_content, $lightbox_globals, array( 'tve_lp_lightbox' => $this->template ) );
 		}
 
 		/**

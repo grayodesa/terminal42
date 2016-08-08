@@ -228,8 +228,11 @@ class TCB_Event_Manager_Controller {
 		if ( $landing_page_template ) {
 			$config = tve_get_landing_page_config( $landing_page_template );
 		}
-
-		$lightbox_title = 'Lightbox - ' . $post->post_title . ( ! empty( $config['name'] ) ? ' (' . $config['name'] . ')' : '' );
+		$all_lightboxes = get_posts( array(
+			'posts_per_page' => - 1,
+			'post_type'      => 'tcb_lightbox',
+		) );
+		$lightbox_title = 'Lightbox - ' . $post->post_title . ( ! empty( $config['name'] ) ? ' (' . $config['name'] . ')' : '' ) . '-' . ( count( $all_lightboxes ) + 1 );
 		if ( $landing_page_template ) {
 			require_once dirname( dirname( dirname( __FILE__ ) ) ) . '/landing-page/inc/TCB_Landing_Page.php';
 			$tcb_landing_page = new TCB_Landing_Page( $post_id, $landing_page_template );

@@ -43,24 +43,23 @@ if ( ! class_exists( 'WpssoJsonProHeadReview' ) ) {
 			$ret = array();
 
 			if ( is_object( $mod['obj'] ) ) {	// just in case
-				$rev_opts = SucomUtil::keys_start_with( 'schema_review_', array_merge( 
+				$md_opts = SucomUtil::keys_start_with( 'schema_review_', array_merge( 
 					(array) $mod['obj']->get_defaults( $mod['id'] ), 
 					(array) $mod['obj']->get_options( $mod['id'] )
 				) );
-			} else $rev_opts = array();
-
+			} else $md_opts = array();
 
 			/*
 			 * Property:
 			 * 	itemReviewed
 			 */
-			if ( ! empty( $rev_opts['schema_review_item_type'] ) &&
-				$rev_opts['schema_review_item_type'] !== 'none' ) {
+			if ( ! empty( $md_opts['schema_review_item_type'] ) &&
+				$md_opts['schema_review_item_type'] !== 'none' ) {
 
-				$item_type_url = $this->p->schema->get_schema_type_url( $rev_opts['schema_review_item_type'] );
+				$item_type_url = $this->p->schema->get_schema_type_url( $md_opts['schema_review_item_type'] );
 				$ret['itemReviewed'] = WpssoSchema::get_item_type_context( $item_type_url );
 
-				WpssoSchema::add_data_itemprop_from_assoc( $ret['itemReviewed'], $rev_opts, array(
+				WpssoSchema::add_data_itemprop_from_assoc( $ret['itemReviewed'], $md_opts, array(
 					'url' => 'schema_review_item_url',
 				) );
 			}
@@ -69,12 +68,12 @@ if ( ! class_exists( 'WpssoJsonProHeadReview' ) ) {
 			 * Property:
 			 * 	reviewRating
 			 */
-			if ( ! empty( $rev_opts['schema_review_rating'] ) ) {
+			if ( ! empty( $md_opts['schema_review_rating'] ) ) {
 
 				$ret['reviewRating'] = WpssoSchema::get_item_type_context( 'http://schema.org/Rating',
-					array( 'ratingValue' => $rev_opts['schema_review_rating'] ) );
+					array( 'ratingValue' => $md_opts['schema_review_rating'] ) );
 
-				WpssoSchema::add_data_itemprop_from_assoc( $ret['reviewRating'], $rev_opts, array(
+				WpssoSchema::add_data_itemprop_from_assoc( $ret['reviewRating'], $md_opts, array(
 					'worstRating' => 'schema_review_rating_from',
 					'bestRating' => 'schema_review_rating_to',
 				) );

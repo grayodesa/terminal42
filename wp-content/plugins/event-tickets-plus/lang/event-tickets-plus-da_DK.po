@@ -534,23 +534,23 @@ msgid "Easy Digital Downloads"
 msgstr "Nemme digitale downloads"
 
 #: src/Tribe/Commerce/EDD/Main.php:481
-#: src/Tribe/Commerce/WooCommerce/Main.php:724
+#: src/Tribe/Commerce/WooCommerce/Main.php:741
 msgid "You'll receive your tickets in another email."
 msgstr "Du vil modtage dine billetter i en anden e-mail"
 
 #: src/Tribe/Commerce/EDD/Main.php:922 src/Tribe/Commerce/WPEC/Main.php:755
-#: src/Tribe/Commerce/WooCommerce/Main.php:1414
+#: src/Tribe/Commerce/WooCommerce/Main.php:1431
 msgid "(deleted)"
 msgstr "(slettet)"
 
 #: src/Tribe/Commerce/EDD/Main.php:1097
-#: src/Tribe/Commerce/WooCommerce/Main.php:1661
+#: src/Tribe/Commerce/WooCommerce/Main.php:1678
 msgid "Event sales report"
 msgstr "Begivenheds salgsrapport"
 
 #: src/Tribe/Commerce/EDD/Main.php:1155 src/Tribe/Commerce/Shopp/Main.php:1121
 #: src/Tribe/Commerce/WPEC/Main.php:1026
-#: src/Tribe/Commerce/WooCommerce/Main.php:1707
+#: src/Tribe/Commerce/WooCommerce/Main.php:1724
 msgid "This is a ticket for the event:"
 msgstr "Dette er en billet til begivenheden:"
 
@@ -611,17 +611,17 @@ msgid "We're sorry but there was insufficient inventory to completely fulfill yo
 msgstr ""
 
 #: src/Tribe/Commerce/WPEC/Main.php:819
-#: src/Tribe/Commerce/WooCommerce/Main.php:1483
+#: src/Tribe/Commerce/WooCommerce/Main.php:1500
 msgid "In trash (was %s)"
 msgstr "I papirkurven (var %s)"
 
 #: src/Tribe/Commerce/WPEC/Main.php:825
-#: src/Tribe/Commerce/WooCommerce/Main.php:1489
+#: src/Tribe/Commerce/WooCommerce/Main.php:1506
 msgid "Deleted"
 msgstr "Slettet"
 
 #: src/Tribe/Commerce/WPEC/Main.php:872
-#: src/Tribe/Commerce/WooCommerce/Main.php:1537
+#: src/Tribe/Commerce/WooCommerce/Main.php:1554
 msgid "Unknown"
 msgstr ""
 
@@ -649,7 +649,7 @@ msgstr "Emne"
 msgid "Defaults to <code>%s</code>"
 msgstr "Standard installinger for <code>%s>/code>"
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:1684
+#: src/Tribe/Commerce/WooCommerce/Main.php:1701
 msgid "Report"
 msgstr ""
 

@@ -49,7 +49,6 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 				return false;
 			} else { 
 				update_option( $ext.'_uapi'.self::$api_version.$msg, base64_encode( $val ) );	// save as string
-				//wp_cache_delete( 'alloptions', 'options' );	// just in case
 				return $val;
 			}
 		}
@@ -340,7 +339,7 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 						$this->p->debug->log( $ext.' plugin: update information saved in '.$info['opt_name'].' option' );
 					if ( $notice || $this->p->debug->enabled )
 						$this->p->notice->inf( sprintf( __( 'Plugin update information for %s has been retrieved and saved.',
-							$this->text_domain ), $info['name'] ), true );
+							$this->text_domain ), $info['name'] ), true, true, __FUNCTION__.'_'.$ext.'_'.$info['opt_name'], true );
 				} elseif ( $this->p->debug->enabled ) {
 					$this->p->debug->log( $ext.' plugin: failed saving update information in '.$info['opt_name'].' option' );
 					$this->p->debug->log( $option_data );
@@ -418,7 +417,7 @@ if ( ! class_exists( 'SucomUpdate' ) ) {
 			if ( is_wp_error( $result ) ) {
 
 				if ( isset( $this->p->notice ) && is_object( $this->p->notice ) )
-					$this->p->notice->err( sprintf( __( 'Update error: %s',
+					$this->p->notice->err( sprintf( __( 'Update error &mdash; %s',
 						$this->text_domain ), $result->get_error_message() ) );
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'update error: '.$result->get_error_message() );

@@ -16,6 +16,9 @@
 
 <?php foreach($issues as $i){ if($i['severity'] == 1){ ?>
 <p>* <?php echo htmlspecialchars($i['shortMsg']) ?></p>
+<?php if (isset($i['tmplData']['wpURL'])): ?>
+<p><?php if ($i['tmplData']['vulnerabilityPatched']) { ?><strong>Update includes security-related fixes.</strong> <?php } echo $i['tmplData']['wpURL']; ?>/changelog</p>
+<?php endif ?>
 <?php if (!empty($i['tmplData']['badURL'])): ?>
 <p><img src="<?php echo WORDFENCE_API_URL_BASE_NONSEC . "?" . http_build_query(array(
 		'v' => wfUtils::getWPVersion(), 
@@ -33,12 +36,15 @@
 
 <?php foreach($issues as $i){ if($i['severity'] == 2){  ?>
 <p>* <?php echo htmlspecialchars($i['shortMsg']) ?></p>
+		<?php if (isset($i['tmplData']['wpURL'])): ?>
+			<p><?php echo $i['tmplData']['wpURL']; ?>/changelog</p>
+		<?php endif ?>
 
 <?php } } } ?>
 
 
 <?php if(! $isPaid){ ?>
-	<p>NOTE: You are using the free version of Wordfence. Upgrade to Premium today for less than $5 per month!</p>
+	<p>NOTE: You are using the free version of Wordfence. Upgrade to Premium today for just $8.25 per month!</p>
 
 	<ul>
 		<li>Receive real-time Firewall and Scan engine rule updates for protection as threats emerge</li>

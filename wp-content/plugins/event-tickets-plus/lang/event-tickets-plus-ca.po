@@ -534,23 +534,23 @@ msgid "Easy Digital Downloads"
 msgstr "Easy Digital Downloads"
 
 #: src/Tribe/Commerce/EDD/Main.php:481
-#: src/Tribe/Commerce/WooCommerce/Main.php:724
+#: src/Tribe/Commerce/WooCommerce/Main.php:741
 msgid "You'll receive your tickets in another email."
 msgstr "Rebràs els teus tiquets en un altre correu electrònic."
 
 #: src/Tribe/Commerce/EDD/Main.php:922 src/Tribe/Commerce/WPEC/Main.php:755
-#: src/Tribe/Commerce/WooCommerce/Main.php:1414
+#: src/Tribe/Commerce/WooCommerce/Main.php:1431
 msgid "(deleted)"
 msgstr "(eliminat)"
 
 #: src/Tribe/Commerce/EDD/Main.php:1097
-#: src/Tribe/Commerce/WooCommerce/Main.php:1661
+#: src/Tribe/Commerce/WooCommerce/Main.php:1678
 msgid "Event sales report"
 msgstr "Informe de vendes d'esdeveniments"
 
 #: src/Tribe/Commerce/EDD/Main.php:1155 src/Tribe/Commerce/Shopp/Main.php:1121
 #: src/Tribe/Commerce/WPEC/Main.php:1026
-#: src/Tribe/Commerce/WooCommerce/Main.php:1707
+#: src/Tribe/Commerce/WooCommerce/Main.php:1724
 msgid "This is a ticket for the event:"
 msgstr "Tiquet per a l'esdeveniment:"
 
@@ -611,17 +611,17 @@ msgid "We're sorry but there was insufficient inventory to completely fulfill yo
 msgstr "Ho sentim, però no hi havia inventari suficient per satisfer la teva comanda al complet! Hem afegit tants tiquets com hem pogut, però et recomanem que revisis la teva comanda (a baix) en cas que necessitis fer alguns ajustos addicionals."
 
 #: src/Tribe/Commerce/WPEC/Main.php:819
-#: src/Tribe/Commerce/WooCommerce/Main.php:1483
+#: src/Tribe/Commerce/WooCommerce/Main.php:1500
 msgid "In trash (was %s)"
 msgstr "A la paperera (era %s)"
 
 #: src/Tribe/Commerce/WPEC/Main.php:825
-#: src/Tribe/Commerce/WooCommerce/Main.php:1489
+#: src/Tribe/Commerce/WooCommerce/Main.php:1506
 msgid "Deleted"
 msgstr "Eliminat"
 
 #: src/Tribe/Commerce/WPEC/Main.php:872
-#: src/Tribe/Commerce/WooCommerce/Main.php:1537
+#: src/Tribe/Commerce/WooCommerce/Main.php:1554
 msgid "Unknown"
 msgstr "Desconegut"
 
@@ -649,7 +649,7 @@ msgstr "Assumpte"
 msgid "Defaults to <code>%s</code>"
 msgstr "El valor predeterminat és <code>%s</code>"
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:1684
+#: src/Tribe/Commerce/WooCommerce/Main.php:1701
 msgid "Report"
 msgstr "Informe"
 

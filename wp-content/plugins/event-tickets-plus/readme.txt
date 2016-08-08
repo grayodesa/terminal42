@@ -4,7 +4,7 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Shopp, EDD, WPEC, WP-eCommerce, WPEC Tickets, Shopp Tickets, Easy Digital Downloads, EDDTickets
 Requires at least: 3.9
 Tested up to: 4.5.3
-Stable tag: 4.2.2
+Stable tag: 4.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,15 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.2.4] 2016-08-03 =
+
+* Fix - Avoid Organizer and Venue being unset when updating a WooCommerce managed event ticket in WooCommerce
+* Fix - Limit the potential for race conditions leading to duplicate "human readable" IDs (Thank you @Saha for alerting us in the forums on this issue)
+
+= [4.2.3] 2016-07-20 =
+
+* Fix - Hide attendee optout meta field from the WooCommerce Individual Order Items (thanks @Douglas for getting this report into us via the support forums.)
 
 = [4.2.2] 2016-07-06 =
 

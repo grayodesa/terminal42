@@ -446,7 +446,7 @@ function wc_pos_find_all_rates()
 			}
 
 		$rates[ $found_rate->tax_rate_id ] = array(
-			'rate'     => $found_rate->tax_rate,
+			'rate'     => (float)$found_rate->tax_rate,
 			'label'    => $found_rate->tax_rate_name,
 			'shipping' => $found_rate->tax_rate_shipping ? 'yes' : 'no',
 			'compound' => $found_rate->tax_rate_compound ? 'yes' : 'no',

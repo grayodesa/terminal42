@@ -135,12 +135,8 @@ class MC4WP_Field_Map {
 		$this->list_fields[ $list->id ]['GROUPINGS'] = array_filter( $this->list_fields[ $list->id ]['GROUPINGS'] );
 		$this->list_fields[ $list->id ] = array_filter( $this->list_fields[ $list->id ] );
 
-		// if we have values at this point, add global fields
-		if( ! empty( $this->list_fields[ $list->id ] ) ) {
-			// add global fields (fields belong to ALL lists automatically)
-			$this->list_fields[ $list->id ] = $this->merge( $this->list_fields[ $list->id ], $this->global_fields );
-		}
-
+		// add global fields (fields belong to ALL lists automatically)
+		$this->list_fields[ $list->id ] = $this->merge( $this->list_fields[ $list->id ], $this->global_fields );
 	}
 
 	/**
@@ -231,11 +227,17 @@ class MC4WP_Field_Map {
 
 		foreach( $global_field_names as $field_name ) {
 			if( isset( $this->raw_data[ $field_name ] ) ) {
+			    $value = $this->raw_data[ $field_name ];
 
-				$this->global_fields[ $field_name ] = $this->raw_data[ $field_name ];
-				unset( $this->custom_fields[ $field_name ] );
+                // MC_LANGUAGE expects a 2 char code.
+                if( $field_name === 'MC_LANGUAGE' ) {
+                    $value = substr( $value, 0, 2 );
+                }
 
-				$this->formatted_data[ $field_name ] = $this->raw_data[ $field_name ];
+				$this->global_fields[ $field_name ] = $value;
+				$this->formatted_data[ $field_name ] = $value;
+
+                unset( $this->custom_fields[ $field_name ] );
 			}
 		}
 	}

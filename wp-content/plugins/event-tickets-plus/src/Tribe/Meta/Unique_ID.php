@@ -108,11 +108,19 @@ class Tribe__Tickets_Plus__Meta__Unique_ID {
 	 * @return int
 	 */
 	protected function get_next_ticket_number( $event_id ) {
+		global $wpdb;
+
+		// We wrap this in a transaction to avoid race conditions leading to different
+		// tickets being issued the same ticket number
+		$wpdb->query( 'BEGIN WORK' );
+
 		if ( '' === ( $number = get_post_meta( $event_id, $this->progressive_ticket_number_event_meta_key, true ) ) ) {
 			$number = 0;
 		}
 		$number += 1;
 		update_post_meta( $event_id, $this->progressive_ticket_number_event_meta_key, $number );
+
+		$wpdb->query( 'COMMIT' );
 
 		return $number;
 	}

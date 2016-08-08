@@ -419,7 +419,7 @@ WDP.prepareOverlay = function() {
 		WDP.overlay.box = jQuery('<div class="box"></div>');
 		WDP.overlay.box_title = jQuery('<div class="title"><h3></h3></div>');
 		WDP.overlay.box_content = jQuery('<div class="content"></div>');
-		WDP.overlay.close = jQuery('<div class="close">&times;</div>');
+		WDP.overlay.close = jQuery('<div class="close" aria-label="Close">&times;</div>');
 
 		WDP.overlay.back.appendTo(WDP.overlay.wrapper);
 		WDP.overlay.scroll.appendTo(WDP.overlay.wrapper);
@@ -682,7 +682,7 @@ WDP.wpmuSelect = function(el) {
 				item.data("value", opt.val());
 
 				if (opt.val() == jq.val()) {
-					selectItem(item);
+					selectItem(item, true);
 				}
 			});
 		}
@@ -717,16 +717,18 @@ WDP.wpmuSelect = function(el) {
 	}
 
 	// Visually mark the specified option as "selected".
-	function selectItem(opt) {
+	function selectItem(opt, is_init) {
+		is_init = typeof is_init === "undefined" ? false : is_init;
 		value.text(opt.text());
-
 		jQuery(".current", items).removeClass("current");
 		opt.addClass("current");
 		stateClose();
 
 		// Also update the select list value.
 		jq.val(opt.data("value"));
-		jq.trigger("change");
+
+		if( !is_init )
+			jq.trigger("change");
 	}
 
 	// Element constructor.
@@ -737,7 +739,7 @@ WDP.wpmuSelect = function(el) {
 		populateList();
 		items.find("li").not('.optgroup-label').on("click", function onItemClick(ev) {
 			var opt = jQuery(ev.target);
-			selectItem(opt);
+			selectItem(opt, false);
 		});
 
 		handle.on("click", stateToggle);
@@ -1096,7 +1098,7 @@ WDP.showMessage = function(action) {
 			'<span class="the-msg-icon check-animation"></span>' +
 			'<p><span class="default-text">' + WDP.lang.default_msg_ok + '</span>' +
 			'<span class="extra-text" style="display:none"></span></p>' +
-			'<span class="close">&times;</span>' +
+			'<span class="close" aria-label="Close">&times;</span>' +
 			'</div>'
 		)
 
@@ -1105,7 +1107,7 @@ WDP.showMessage = function(action) {
 			'<i class="the-msg-icon wdv-icon wdv-icon-warning-sign"></i>' +
 			'<p><span class="default-text">' + WDP.lang.default_msg_err + '</span>' +
 			'<span class="extra-text" style="display:none"></span></p>' +
-			'<span class="close">&times;</span>' +
+			'<span class="close" aria-label="Close">&times;</span>' +
 			'</div>'
 		);
 

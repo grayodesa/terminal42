@@ -59,6 +59,7 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 			$tr_class = array(
 				'article' => $this->p->schema->get_schema_type_css_classes( 'article' ),
 				'event' => $this->p->schema->get_schema_type_css_classes( 'event' ),
+				'recipe' => $this->p->schema->get_schema_type_css_classes( 'recipe' ),
 				'review' => $this->p->schema->get_schema_type_css_classes( 'review' ),
 			);
 
@@ -136,6 +137,54 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 						( $org_req_msg ? true : false ) ).$org_req_msg,
 				),
 				/*
+				 * Schema Recipe
+				 */
+				'schema_recipe_prep_time' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Preperation Time', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_prep_time',
+					'content' => $form->get_input( 'schema_recipe_prep_days', 'short', '', 0, 0 ).' days, '.
+						$form->get_input( 'schema_recipe_prep_hours', 'short', '', 0, 0 ).' hours, '.
+						$form->get_input( 'schema_recipe_prep_mins', 'short', '', 0, 0 ).' mins, '.
+						$form->get_input( 'schema_recipe_prep_secs', 'short', '', 0, 0 ).' secs',
+				),
+				'schema_recipe_cook_time' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Cooking Time', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_cook_time',
+					'content' => $form->get_input( 'schema_recipe_cook_days', 'short', '', 0, 0 ).' days, '.
+						$form->get_input( 'schema_recipe_cook_hours', 'short', '', 0, 0 ).' hours, '.
+						$form->get_input( 'schema_recipe_cook_mins', 'short', '', 0, 0 ).' mins, '.
+						$form->get_input( 'schema_recipe_cook_secs', 'short', '', 0, 0 ).' secs',
+				),
+				'schema_recipe_total_time' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Total Time', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_total_time',
+					'content' => $form->get_input( 'schema_recipe_total_days', 'short', '', 0, 0 ).' days, '.
+						$form->get_input( 'schema_recipe_total_hours', 'short', '', 0, 0 ).' hours, '.
+						$form->get_input( 'schema_recipe_total_mins', 'short', '', 0, 0 ).' mins, '.
+						$form->get_input( 'schema_recipe_total_secs', 'short', '', 0, 0 ).' secs',
+				),
+				'schema_recipe_calories' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Total Calories', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_calories',
+					'content' => $form->get_input( 'schema_recipe_calories', 'medium' ),
+				),
+				'schema_recipe_yield' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Quantity', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_yield',
+					'content' => $form->get_input( 'schema_recipe_yield', 'long_name' ),
+				),
+				'schema_recipe_ingredients' => array(
+					'tr_class' => 'schema_type '.$tr_class['recipe'],
+					'label' => _x( 'Recipe Ingredients', 'option label', 'wpsso-schema-json-ld' ),
+					'th_class' => 'medium', 'tooltip' => 'meta-schema_recipe_ingredients',
+					'content' => $form->get_input_multi( 'schema_recipe_ingredient', 'long_name' ),
+				),
+				/*
 				 * Schema Review
 				 */
 				'schema_review_item_type' => array(
@@ -150,6 +199,7 @@ if ( ! class_exists( 'WpssoJsonProAdminPost' ) ) {
 					'th_class' => 'medium', 'tooltip' => 'meta-schema_review_item_url',
 					'content' => $form->get_input( 'schema_review_item_url', 'wide' ),
 				),
+				// used as schema.org/Rating, not schema.org/aggregateRating
 				'schema_review_rating' => array(
 					'tr_class' => 'schema_type '.$tr_class['review'],
 					'label' => _x( 'Reviewed Item Rating', 'option label', 'wpsso-schema-json-ld' ),

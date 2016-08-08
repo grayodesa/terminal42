@@ -115,8 +115,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				return $image;
 
 			// get post/user/term id, module name, and module object reference
-			$mod = $this->get_page_mod( $post_id, 
-				array( 'id' => $post_id, 'name' => 'post' ) );
+			$mod = $this->get_page_mod( $post_id, array( 'id' => $post_id, 'name' => 'post' ) );
 
 			$this->add_plugin_image_sizes( false, array(), $mod, true );
 
@@ -187,8 +186,11 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					elseif ( isset( $this->p->options[$opt_prefix.'_'.$key] ) )	// current plugin settings
 						$size_info[$key] = $this->p->options[$opt_prefix.'_'.$key];
 					else {
-						if ( ! isset( $def_opts ) )				// only read once if necessary
+						if ( ! isset( $def_opts ) ) {				// only read once if necessary
+							if ( $this->p->debug->enabled )
+								$this->p->debug->log( 'getting default option values' );
 							$def_opts = $this->p->opt->get_defaults();
+						}
 						$size_info[$key] = $def_opts[$opt_prefix.'_'.$key];	// fallback to default value
 					}
 					if ( $key === 'crop' )						// make sure crop is true or false
@@ -225,8 +227,10 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 								$size_info['crop_x'].'/'.$size_info['crop_y'] ).' added' );
 				}
 			}
-			if ( $this->p->debug->enabled )
+			if ( $this->p->debug->enabled ) {
 				$this->p->debug->mark( 'define image sizes' );	// end timer
+				$this->p->debug->log_arr( 'get_all_image_sizes', SucomUtil::get_image_sizes() );
+			}
 		}
 
 		public function add_ptns_to_opts( &$opts = array(), $prefixes, $default = 1 ) {
@@ -325,17 +329,21 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				$cache_salt = __METHOD__.'('.WPSSO_TOPICS_LIST.')';
 				$cache_id = $this->p->cf['lca'].'_'.md5( $cache_salt );
 				$cache_type = 'object cache';
-				$this->p->debug->log( $cache_type.': transient salt '.$cache_salt );
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( $cache_type.': transient salt '.$cache_salt );
 				$topics = get_transient( $cache_id );
 				if ( is_array( $topics ) ) {
-					$this->p->debug->log( $cache_type.': topics array retrieved from transient '.$cache_id );
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( $cache_type.': topics array retrieved from transient '.$cache_id );
 					return $topics;
 				}
 			}
-			if ( ( $topics = file( WPSSO_TOPICS_LIST, 
-				FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) ) === false ) {
-				$this->p->notice->err( sprintf( __( 'Error reading the %s topic list file.', 
-					'wpsso' ), WPSSO_TOPICS_LIST ) );
+			if ( ( $topics = file( WPSSO_TOPICS_LIST, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) ) === false ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'error reading %s topic list file' );
+				if ( is_admin() )
+					$this->p->notice->err( sprintf( __( 'Error reading %s topic list file.', 
+						'wpsso' ), WPSSO_TOPICS_LIST ) );
 				return $topics;
 			}
 			$topics = apply_filters( $this->p->cf['lca'].'_topics', $topics );
@@ -344,8 +352,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 			if ( ! empty( $cache_id ) ) {
 				set_transient( $cache_id, $topics, $this->p->options['plugin_object_cache_exp'] );
-				$this->p->debug->log( $cache_type.': topics array saved to transient '.
-					$cache_id.' ('.$this->p->options['plugin_object_cache_exp'].' seconds)');
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( $cache_type.': topics array saved to transient '.
+						$cache_id.' ('.$this->p->options['plugin_object_cache_exp'].' seconds)');
 			}
 			return $topics;
 		}
@@ -592,17 +601,20 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 						$m_atts['textContent'] = $m->textContent;
 					$ret[$m->tagName][] = $m_atts;
 				}
-			} else {
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'DOMDocument PHP class is missing' );
-				if ( is_admin() )
-					$this->p->notice->err( __( 'The DOMDocument PHP class is missing - unable to read head meta from HTML. Please contact your hosting provider to install the missing DOMDocument PHP class.', 'wpsso' ), true );
-			}
+			} else $this->missing_php_class_error( 'DOMDocument' );
 
-			return empty( $ret ) ? false : $ret;
+			return empty( $ret ) ? 
+				false : $ret;
 		}
 
-		public function get_body_html( $request ) {
+		public function missing_php_class_error( $classname ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( $classname.' PHP class is missing' );
+			if ( is_admin() )
+				$this->p->notice->err( sprintf( __( 'The %1$s PHP class is missing - please contact your hosting provider to install the missing %1$s PHP class.', 'wpsso' ), $classname ), true );
+		}
+
+		public function get_body_html( $request, $remove_script = true ) {
 			$html = '';
 
 			if ( strpos( $request, '//' ) === 0 )
@@ -635,7 +647,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			}
 
 			$html = preg_replace( '/^.*<body[^>]*>(.*)<\/body>.*$/Ums', '$1', $html );
-			$html = preg_replace( '/<script[^>]*>.*<\/script>/Ums', '', $html );
+
+			if ( $remove_script )
+				$html = preg_replace( '/<script[^>]*>.*<\/script>/Ums', '', $html );
 
 			return $html;
 		}
@@ -867,7 +881,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		}
 
 		public function add_image_url_sizes( $keys, array &$opts ) {
-			if ( self::get_const( 'WPSSO_GETIMGSIZE_DISABLE' ) )
+			if ( self::get_const( 'WPSSO_PHP_GETIMGSIZE_DISABLE' ) )
 				return $opts;
 
 			if ( ! is_array( $keys ) )
@@ -875,16 +889,22 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 
 			foreach ( $keys as $prefix ) {
 				$media_url = self::get_mt_media_url( $opts, $prefix );
+
 				if ( ! empty( $media_url ) && strpos( $media_url, '://' ) !== false ) {
-					list( $opts[$prefix.':width'], $opts[$prefix.':height'],
-						$image_type, $image_attr ) = @getimagesize( $media_url );
+					list( 
+						$opts[$prefix.':width'],
+						$opts[$prefix.':height'],
+						$image_type,
+						$image_attr 
+					) = @getimagesize( $media_url );
+
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'getimagesize() for '.$media_url.' returned '.
 							$opts[$prefix.':width'].'x'.$opts[$prefix.':height'] );
 				} else {
-					foreach ( array( 'width', 'height' ) as $wh )
-						if ( isset( $opts[$prefix.':'.$wh] ) )
-							$opts[$prefix.':'.$wh] = -1;
+					foreach ( array( 'width', 'height' ) as $attr )
+						if ( isset( $opts[$prefix.':'.$attr] ) )
+							$opts[$prefix.':'.$attr] = -1;
 				}
 			}
 			return $opts;
@@ -934,7 +954,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'exiting early: module object is defined' );
 				return $mod;
-			} elseif ( $this->p->debug->enabled )
+			}
+
+			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
 			// check for a recognized object
@@ -988,7 +1010,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			$mod['is_home'] = $mod['is_home_page'] || $mod['is_home_index'] ? true : false;	// home page (any)
 
 			if ( $this->p->debug->enabled )
-				$this->p->debug->log( '$mod '.trim( print_r( SucomDebug::pretty_array( $mod ), true ) ) );
+				$this->p->debug->log_arr( '$mod ', $mod );
 
 			return $mod;
 		}
@@ -998,7 +1020,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		public function get_sharing_url( $mod = false, $add_page = true ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'mod' => $mod,
 					'add_page' => $add_page,
 				) );
@@ -1020,13 +1042,9 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 					if ( ! empty( $url ) ) {
 						if ( $this->p->debug->enabled )
 							$this->p->debug->log( 'custom post sharing_url = '.$url );
-					} else {
-						$url = get_permalink( $mod['id'] );
-						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'post permalink url = '.$url );
-					}
+					} else $url = $this->check_sharing_url( get_permalink( $mod['id'] ), 'post permalink' );
 
-					if ( $add_page && get_query_var( 'page' ) > 1 ) {
+					if ( ! empty( $url ) && $add_page && get_query_var( 'page' ) > 1 ) {
 						global $wp_rewrite;
 						$post_obj = self::get_post_object( $mod['id'] );
 						$numpages = substr_count( $post_obj->post_content, '<!--nextpage-->' ) + 1;
@@ -1045,9 +1063,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			} else {
 				if ( $mod['is_home'] ) {
 					if ( 'page' === get_option( 'show_on_front' ) ) {	// show_on_front = posts | page
-						$url = get_permalink( get_option( 'page_for_posts' ) );
-						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'page for posts url = '.$url );
+						$url = $this->check_sharing_url( get_permalink( get_option( 'page_for_posts' ) ), 'page for posts' );
 					} else {
 						$url = apply_filters( $lca.'_home_url', home_url( '/' ) );
 						if ( $this->p->debug->enabled )
@@ -1061,11 +1077,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 						if ( ! empty( $url ) ) {
 							if ( $this->p->debug->enabled )
 								$this->p->debug->log( 'custom term sharing_url = '.$url );
-						} else {
-							$url = get_term_link( $mod['id'], $mod['tax_slug'] );
-							if ( $this->p->debug->enabled )
-								$this->p->debug->log( 'term link url = '.$url );
-						}
+						} else $url = $this->check_sharing_url( get_term_link( $mod['id'], $mod['tax_slug'] ), 'term link' );
 					} 
 					$url = apply_filters( $lca.'_term_url', $url, $mod, $add_page );
 
@@ -1077,33 +1089,29 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 						if ( ! empty( $url ) ) {
 							if ( $this->p->debug->enabled )
 								$this->p->debug->log( 'custom user sharing_url = '.$url );
-						} else {
-							$url = get_author_posts_url( $mod['id'] );
-							if ( $this->p->debug->enabled )
-								$this->p->debug->log( 'author posts url = '.$url );
-						}
+						} else $url = $this->check_sharing_url( get_author_posts_url( $mod['id'] ), 'author posts' );
 					}
 					$url = apply_filters( $lca.'_author_url', $url, $mod, $add_page );
 
 				} elseif ( is_search() ) {
-					$url = get_search_link();
+					$url = $this->check_sharing_url( get_search_link(), 'search link' );
+					$url = apply_filters( $lca.'_search_url', $url, $mod, $add_page );
 
 				} elseif ( function_exists( 'get_post_type_archive_link' ) && is_post_type_archive() ) {
-					$url = get_post_type_archive_link( get_query_var( 'post_type' ) );
-					if ( $this->p->debug->enabled )
-						$this->p->debug->log( 'post type archive url = '.$url );
+					$url = $this->check_sharing_url( get_post_type_archive_link( get_query_var( 'post_type' ) ), 'post type archive' );
 
 				} elseif ( is_archive() ) {
 					if ( is_date() ) {
 						if ( is_day() )
-							$url = get_day_link( get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+							$url = $this->check_sharing_url( get_day_link( get_query_var( 'year' ), 
+								get_query_var( 'monthnum' ), get_query_var( 'day' ) ), 'day link' );
 						elseif ( is_month() )
-							$url = get_month_link( get_query_var( 'year' ), get_query_var( 'monthnum' ) );
+							$url = $this->check_sharing_url( get_month_link( get_query_var( 'year' ), 
+								get_query_var( 'monthnum' ) ), 'month link' );
 						elseif ( is_year() )
-							$url = get_year_link( get_query_var( 'year' ) );
-						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'date archive url = '.$url );
+							$url = $this->check_sharing_url( get_year_link( get_query_var( 'year' ) ), 'year link' );
 					}
+					$url = apply_filters( $lca.'_archive_url', $url, $mod, $add_page );
 				}
 
 				if ( ! empty( $url ) && $add_page && get_query_var( 'paged' ) > 1 ) {
@@ -1138,9 +1146,23 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 			return apply_filters( $lca.'_sharing_url', $url, $mod, $add_page );
 		}
 
-		public function fix_relative_url( $url = '' ) {
-			if ( ! empty( $url ) && 
-				strpos( $url, '://' ) === false ) {
+		public function check_sharing_url( $url, $source = 'sharing' ) {
+			if ( is_string( $url ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( $source.' url = '.$url );
+				return $url;
+			} else {
+				if ( $this->p->debug->enabled ) {
+					$this->p->debug->log( $source.' url is '.gettype( $url ) );
+					if ( is_wp_error( $url ) )
+						$this->p->debug->log( $source.' url error: '.$url->get_error_message() );
+				}
+				return false;
+			}
+		}
+
+		public function fix_relative_url( $url ) {
+			if ( ! empty( $url ) && strpos( $url, '://' ) === false ) {
 
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'relative url found = '.$url );
@@ -1338,7 +1360,7 @@ if ( ! class_exists( 'WpssoUtil' ) && class_exists( 'SucomUtil' ) ) {
 		public function parse_readme( $ext, $expire_secs = 86400, $use_cache = true ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'ext' => $ext,
 					'expire_secs' => $expire_secs,
 					'use_cache' => $use_cache,

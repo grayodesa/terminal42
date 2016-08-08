@@ -72,16 +72,24 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 
 			switch ( $service ) {
 				case 'bitly':
-					if ( empty( $this->p->options['plugin_bitly_login' ] ) ||
+					if ( empty( $this->p->options['plugin_bitly_login' ] ) ) {
+						if ( $this->p->debug->enabled )
+							$this->p->debug->log( 'bitly login option is empty' );
+						break;
+					} elseif ( empty( $this->p->options['plugin_bitly_token' ] ) && 
 						empty( $this->p->options['plugin_bitly_api_key' ] ) ) {
 						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'bitly login and/or api_key options empty' );
+							$this->p->debug->log( 'bitly token and api_key options are empty' );
 						break;
 					} elseif ( class_exists( 'SuextBitly' ) ) {
-						$this->svc[$service] = new SuextBitly( $this->p->options['plugin_bitly_login'],
-							$this->p->options['plugin_bitly_api_key'], $this->p->debug );
+						$this->svc[$service] = new SuextBitly( 
+							$this->p->options['plugin_bitly_login'],
+							$this->p->options['plugin_bitly_token'], 
+							$this->p->options['plugin_bitly_api_key'], 
+							$this->p->debug
+						);
 					} elseif ( $this->p->debug->enabled ) {
-						$this->p->debug->log( 'SuextBitly class missing' );
+						$this->p->debug->log( 'SuextBitly class is missing' );
 					}
 					break;
 
@@ -179,7 +187,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 					$this->p->debug->log( 'exiting early: curl extension not available' );
 				return $long_url;
 
-			} elseif ( SucomUtil::get_const( $this->p->cf['uca'].'_CURL_DISABLE' ) )  {
+			} elseif ( SucomUtil::get_const( $this->p->cf['uca'].'_PHP_CURL_DISABLE' ) )  {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'exiting early: curl has been disabled' );
 				return $long_url;

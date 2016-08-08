@@ -190,9 +190,6 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 			$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
 			if ( apply_filters( $lca.'_add_metabox_user', $add_metabox, $user_id ) ) {
 
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'adding metabox for user' );
-
 				do_action( $lca.'_admin_user_header', $mod, $screen->id );
 
 				if ( $this->p->debug->enabled )
@@ -241,7 +238,6 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 
 			$lca = $this->p->cf['lca'];
 			$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
-
 			if ( apply_filters( $this->p->cf['lca'].'_add_metabox_user', $add_metabox, $user_id ) ) {
 				add_meta_box( $lca.'_social_settings', _x( 'Social Settings', 'metabox title', 'wpsso' ),
 					array( &$this, 'show_metabox_social_settings' ), 'user', 'normal', 'low' );
@@ -289,12 +285,17 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 				$this->p->debug->mark( $metabox.' table rows' );	// end timer
 		}
 
-		public function get_form_display_names() {
-			$user_ids = array();
-			foreach ( get_users() as $user ) 
-				$user_ids[$user->ID] = $user->display_name;
-			$user_ids[0] = 'none';
-			return $user_ids;
+		public function get_form_display_names( $roles = array( 'author', 'editor', 'administrator' ) ) {
+			foreach ( $roles as $role ) {
+				$query_args = array( 
+					'role' => $role,
+					'fields' => array( 'ID', 'display_name' ),
+				);
+				foreach ( get_users( $query_args ) as $user ) 
+					$user_ids[$user->ID] = $user->display_name;
+			}
+			asort( $user_ids );
+			return array_merge( array( 0 => 'none' ), $user_ids );
 		}
 
 		public function get_form_contact_fields( $fields = array() ) { 
@@ -662,6 +663,7 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 			$transients = array(
 				'WpssoHead::get_header_array' => array( 
 					$locale_salt.'_url:'.$sharing_url,
+					$locale_salt.'_url:'.$sharing_url.'_amp:true',
 					$locale_salt.'_url:'.$sharing_url.'_crawler:pinterest',
 				),
 				'WpssoMeta::get_mod_column_content' => array( 

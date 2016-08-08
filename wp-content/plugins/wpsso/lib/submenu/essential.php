@@ -34,7 +34,8 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 					array( &$this, 'show_metabox_advanced' ), $this->pagehook, 'normal' );
 
 			// issues a warning notice if the default image size is too small
-			if ( ! SucomUtil::get_const( 'WPSSO_CHECK_DEFAULT_IMAGE' ) )
+			// unless the WPSSO_CHECK_DEFAULT_IMAGE constant has been defined as false
+			if ( SucomUtil::get_const( 'WPSSO_CHECK_DEFAULT_IMAGE' ) !== false )
 				$og_image = $this->p->media->get_default_image( 1, $this->p->cf['lca'].'-opengraph', false );
 		}
 
@@ -131,7 +132,7 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 					'</td>';
 
 					$table_rows['schema_logo_url'] = $this->form->get_th_html( 
-						'<a href="https://developers.google.com/structured-data/customize/logos">'.
+						'<a href="https://developers.google.com/structured-data/customize/logos" target="_blank">'.
 						_x( 'Organization Logo Image URL', 'option label', 'wpsso' ).'</a>', null, 'schema_logo_url' ).
 					'<td>'.$this->form->get_input( 'schema_logo_url', 'wide' ).'</td>';
 
@@ -160,18 +161,6 @@ if ( ! class_exists( 'WpssoSubmenuEssential' ) && class_exists( 'WpssoAdmin' ) )
 					$table_rows['plugin_preserve'] = $this->form->get_th_html( _x( 'Preserve Settings on Uninstall',
 						'option label', 'wpsso' ), null, 'plugin_preserve' ).
 					'<td>'.$this->form->get_checkbox( 'plugin_preserve' ).'</td>';
-
-					$table_rows['plugin_debug'] = $this->form->get_th_html( _x( 'Add Hidden Debug Messages', 
-						'option label', 'wpsso' ), null, 'plugin_debug' ).
-					'<td>'.( SucomUtil::get_const( 'WPSSO_HTML_DEBUG' ) ? 
-						$this->form->get_no_checkbox( 'plugin_debug' ).' <em>WPSSO_HTML_DEBUG constant is true</em>' :
-						$this->form->get_checkbox( 'plugin_debug' ) ).'</td>';
-
-					if ( ! $this->p->check->aop( $this->p->cf['lca'], true, $this->p->is_avail['aop'] ) )
-						$table_rows['plugin_hide_pro'] = $this->form->get_th_html( _x( 'Hide All Pro Version Options',
-							'option label', 'wpsso' ), null, 'plugin_hide_pro' ).
-						'<td>'.$this->form->get_checkbox( 'plugin_hide_pro' ).'</td>';
-					else $this->form->get_hidden( 'plugin_hide_pro',  0, true );
 
 					break;
 			}

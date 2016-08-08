@@ -32,7 +32,7 @@ class MC4WP_Form_Listener {
 		}
 
 		try {
-			$form = mc4wp_get_form( $request->params->get( '_mc4wp_form_id' ) );
+			$form = mc4wp_get_form( $request->post->get( '_mc4wp_form_id' ) );
 		} catch( Exception $e ) {
 			return false;
 		}
@@ -91,7 +91,9 @@ class MC4WP_Form_Listener {
 		// do stuff on failure
 		if( ! $result ) {
 
-			if( $api->get_error_code() == 212 ) {
+			$error_code_unsubscribed = 212;
+			$error_code_bounced = 213;
+			if( $api->get_error_code() == $error_code_unsubscribed || $api->get_error_code() == $error_code_bounced ) {
 				$form->errors[] = 'previously_unsubscribed';
 				$this->get_log()->warning( sprintf( 'Form %d > %s has unsubscribed before and cannot be resubscribed by the plugin.', $form->ID, $form->data['EMAIL'] ) );
 			} elseif( $api->get_error_code() == 214 ) {
@@ -100,7 +102,7 @@ class MC4WP_Form_Listener {
 				$this->get_log()->warning( sprintf( "Form %d > %s is already subscribed to the selected list(s)", $form->ID, mc4wp_obfuscate_string( $form->data['EMAIL'] ) ) );
 			} else {
 				// log error
-				$this->get_log()->error( sprintf( 'Form %d > MailChimp API error: %s', $form->ID, $api->get_error_message() ) );
+				$this->get_log()->error( sprintf( 'Form %d > MailChimp API error: %s %s', $form->ID, $api->get_error_code(), $api->get_error_message() ) );
 
 				// add error code to form object
 				$form->errors[] = 'error';

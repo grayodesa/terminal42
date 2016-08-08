@@ -94,6 +94,13 @@ function tve_hooked_in_template_redirect() {
 		}
 	}
 
+	/**
+	 * SUPP-1749 if the domain mapping plugin is installed, Landing Pages will not be redirected to the corresponding domain. This ensures that the redirection will take place
+	 */
+	if ( is_plugin_active( 'wordpress-mu-domain-mapping/domain_mapping.php' ) ) {
+		return true;
+	}
+
 	return false;
 }
 
@@ -282,8 +289,9 @@ function tve_membership_plugin_can_display_content() {
 	if ( class_exists( 'BAccessControl' ) ) {
 		$control = SwpmAccessControl::get_instance();
 
-		return $control->can_i_read_post( $post );
-
+		if ( ! $control->can_i_read_post( $post ) ) {
+			return false;
+		}
 	}
 
 	/**
@@ -343,3 +351,23 @@ function tve_compat_survey_funnel() {
 	}
 
 }
+
+/**
+ * Fix thrive visual editor conflicts before footer
+ */
+function tve_fix_page_conflicts_before_footer() {
+
+	/**
+	 *  For SlickQuiz plugin
+	 */
+	if ( class_exists( 'SlickQuiz' ) ) {
+
+		remove_filter( 'the_content', 'tve_editor_content', 10 );
+
+		if ( is_editor_page() ) {
+			remove_filter( 'the_content', 'tve_editor_content', PHP_INT_MAX );
+		}
+	}
+}
+
+add_action( 'wp_footer', 'tve_fix_page_conflicts_before_footer', 2000 );

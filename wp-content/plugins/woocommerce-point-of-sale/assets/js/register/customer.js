@@ -142,8 +142,6 @@ jQuery(document).ready(function($) {
 		            fullname = username;
 	            }
 	            record.fullname = fullname;
-	            var md5email = md5( record.email );
-	            record.avatar_url = 'http://www.gravatar.com/avatar/' + md5email + '.jpg?s=64';
 		            
 				var source   = $('#tmpl-cart-customer-item').html();
 				var template = Handlebars.compile(source);

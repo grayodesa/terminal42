@@ -185,7 +185,7 @@
 					<tr>
 						<td>
 							<div data-bind="if: loc()">
-								<img data-bind="attr: { src: '//www.wordfence.com/images/flags/' + loc().countryCode.toLowerCase() + '.png',
+								<img data-bind="attr: { src: '<?php echo wfUtils::getBaseURL() . 'images/flags/'; ?>' + loc().countryCode.toLowerCase() + '.png',
 											alt: loc().countryName, title: loc().countryName }" width="16" height="11"
 								     class="wfFlag"/>
 								<a data-bind="text: (loc().city ? loc().city + ', ' : '') + loc().countryName,
@@ -240,7 +240,7 @@
 										</span>
 										<span data-bind="if: loc()">
 											<span data-bind="if: action() != 'loginOK' && user()"> in</span>
-											<img data-bind="attr: { src: '//www.wordfence.com/images/flags/' + loc().countryCode.toLowerCase() + '.png',
+											<img data-bind="attr: { src: '<?php echo wfUtils::getBaseURL() . 'images/flags/'; ?>' + loc().countryCode.toLowerCase() + '.png',
 												alt: loc().countryName, title: loc().countryName }" width="16"
 											     height="11"
 											     class="wfFlag"/>

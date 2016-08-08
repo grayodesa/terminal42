@@ -73,12 +73,7 @@ if ( ! $res->is_installed ) {
 		$action = __( 'Update', 'wpmudev' );
 		$action_url = '#update=' . $pid;
 		$action_class = 'has-update button-yellow';
-
-		if ( $res->can_update ) {
-			$show_badge = $res->type;
-		} else {
-			$action_class .= ' disabled';
-		}
+		$show_badge = $res->type;
 	} elseif ( $res->special ) {
 		// 2. This is a dropin/mu-plugin.
 		$action = __( 'Not available', 'wpmudev' );
@@ -108,17 +103,18 @@ if ( ! $res->is_installed ) {
 		} elseif ( 'theme' == $res->type ) {
 			if ( $res->is_network_admin ) {
 				// Multisite will disable (=hide) theme network-wide.
-				$action = __( 'Network Disable', 'wpmudev' );
+				$action      = __( 'Network Disable', 'wpmudev' );
+				$action_ajax = 'project-deactivate';
+				if ( ! $res->can_activate ) {
+					$action_class .= ' disabled';
+				}
+
 			} else {
 				// Show a badge for the active theme, but no deactivate button!
 				$show_badge = 'active-theme';
 			}
-			$action_ajax = 'project-deactivate';
-			$action_class = 'button-light';
 
-			if ( ! $res->can_activate ) {
-				$action_class .= ' disabled';
-			}
+			$action_class = 'button-light';
 		}
 	} else {
 		// 3.b Activate an inactive project (theme or plugin)

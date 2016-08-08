@@ -4,7 +4,7 @@
 	<?php $helpLink="http://docs.wordfence.com/en/Advanced_Blocking"; $helpLabel="Learn more about Advanced Blocking"; $pageTitle = "Advanced Blocking"; include('pageTitle.php'); ?>
 	<div class="wordfenceWrap" style="margin: 20px 20px 20px 30px;">
 		<p>
-			<?php if(! wfConfig::get('firewallEnabled')){ ?><div style="color: #F00; font-weight: bold;">Firewall is disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div><br /><?php } ?>
+			<?php if(! wfConfig::get('firewallEnabled')){ ?><div style="color: #F00; font-weight: bold;">Rate limiting rules and advanced blocking are disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div><br /><?php } ?>
 			<table class="wfConfigForm">
 				<tr><th>IP address range:</th><td><input id="ipRange" type="text" size="30" maxlength="255" value="<?php 
 					if( isset( $_GET['wfBlockRange'] ) && preg_match('/^[\da-f\.\s\t\-:]+$/i', $_GET['wfBlockRange']) ){ echo wp_kses($_GET['wfBlockRange'], array()); }

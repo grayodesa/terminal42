@@ -49,7 +49,39 @@ Should you find a bug, please do not hesitate to contact us through our support 
 1. Upload the 'woocommerce-point-of-sale' folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
-== Changelog =
+== Changelog ==
+= 3.1.5.3 - 2016.08.03 =
+* Feature added where you can define what the scanning field is scanned to return a product.
+
+= 3.1.5.2 - 2016.08.02 =
+* Fix bug with JSON validation for some users.
+* Fix bug with variations not loading properly in search bar.
+
+= 3.1.5.1 - 2016.08.01 =
+* Fix bug with card scanning feature.
+
+= 3.1.5 - 2016.07.28 =
+* Tweak to receipt text headers.
+* Tweak to product search requests.
+* Tweak to customer layout and hover points.
+* Fix bug where change is shown after purchase.
+* Fix bug where some users had stock updating twice.
+* Fix bug where some users had basket loading without correct settings.
+
+= 3.1.4.9 - 2016.07.21 =
+* Fix bug with customer loading after removing previous customer on guest orders.
+* Fix bug with WC 2.6.x update affecting tax from being applied.
+* Fix bug with rounding errors caused after WC 2.6.x update.
+* Fix bug with Gravatar HTTPS error.
+* Fix bug with quantity stock errors produced when quantity is approaching zero.
+
+= 3.1.4.8 - 2016.07.20 =
+* Fix bug with product discounts not being applied correctly.
+* Fix bug with adding, saving and loading orders with discount.
+
+= 3.1.4.7 - 2016.07.15 =
+* Fix bug with customer search not working for some users.
+
 = 3.1.4.6 - 2016.07.08 =
 * Fix bug of customers staying after the order is complete.
 * Fix bug with loading orders after they have been saved through custom order.

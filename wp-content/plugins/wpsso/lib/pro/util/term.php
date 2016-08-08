@@ -38,9 +38,17 @@ if ( ! class_exists( 'WpssoProUtilTerm' ) && class_exists( 'WpssoTerm' ) ) {
 		}
 
 		public function get_options( $term_id, $idx = false, $filter_options = true ) {
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->log_args( array( 
+					'term_id' => $term_id, 
+					'idx' => $idx, 
+					'filter_options' => $filter_options, 
+				) );
+			}
 
-			if ( ! isset( $this->opts[$term_id]['options_filtered'] ) || 
-				$this->opts[$term_id]['options_filtered'] !== true ) {
+			if ( empty( $this->opts[$term_id]['options_filtered'] ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'options_filtered key is empty' );
 
 				$renamed_keys = apply_filters( $this->p->cf['lca'].'_get_md_renamed_keys', array(
 				) );
@@ -70,8 +78,11 @@ if ( ! class_exists( 'WpssoProUtilTerm' ) && class_exists( 'WpssoTerm' ) ) {
 
 					if ( ! empty( $renamed_keys ) )
 						$this->opts[$term_id] = SucomUtil::rename_keys( $this->opts[$term_id], $renamed_keys );
+
 					$this->opts[$term_id]['options_version'] = $this->p->cf['opt']['version'];
+
 					self::update_term_meta( $term_id, WPSSO_META_NAME, $this->opts[$term_id] );
+
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'term_id '.$term_id.' settings upgraded' );
 				}
@@ -85,8 +96,12 @@ if ( ! class_exists( 'WpssoProUtilTerm' ) && class_exists( 'WpssoTerm' ) ) {
 
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( $this->opts[$term_id] );
-				}
-			}
+
+				} elseif ( $this->p->debug->enabled )
+					$this->p->debug->log( 'get_term_options filter skipped' );
+
+			} elseif ( $this->p->debug->enabled )
+				$this->p->debug->log( 'using cached options for term_id '.$term_id );
 
 			if ( $idx !== false ) {
 				if ( isset( $this->opts[$term_id][$idx] ) ) 
@@ -105,7 +120,7 @@ if ( ! class_exists( 'WpssoProUtilTerm' ) && class_exists( 'WpssoTerm' ) ) {
 				return false;
 			}
 
-			if ( ! current_user_can( $this->tax_obj->cap->edit_terms ) ) {
+			if ( ! current_user_can( $this->query_tax_obj->cap->edit_terms ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'insufficient privileges to save settings for term ID '.$term_id );
 				$this->p->notice->err( 'You have insufficient privileges to save settings for term ID '.$term_id.'.', true );

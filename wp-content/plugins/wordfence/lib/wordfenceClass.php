@@ -28,7 +28,7 @@ class wordfence {
 	 * @var WP_Error
 	 */
 	public static $authError;
-	private static $passwordCodePattern = '/\s+(wf[a-z0-9]+)$/i';
+	private static $passwordCodePattern = '/\s+wf([a-z0-9 ]+)$/i'; 
 	protected static $lastURLError = false;
 	protected static $curlContent = "";
 	protected static $curlDataWritten = 0;
@@ -82,11 +82,7 @@ class wordfence {
 		wfConfig::clearDiskCache();
 
 		if (!WFWAF_SUBDIRECTORY_INSTALL) {
-			try {
-				wfWAF::getInstance()->getStorageEngine()->setConfig('wafDisabled', true);
-			} catch (wfWAFStorageFileException $e) {
-				error_log($e->getMessage());
-			}
+			wfWAFConfig::set('wafDisabled', true);
 		}
 
 		if(wfConfig::get('deleteTablesOnDeact')){
@@ -491,11 +487,7 @@ SQL
 		}
 
 		if (!WFWAF_SUBDIRECTORY_INSTALL) {
-			try {
-				wfWAF::getInstance()->getStorageEngine()->setConfig('wafDisabled', false);
-			} catch (wfWAFStorageFileException $e) {
-				error_log($e);
-			}
+			wfWAFConfig::set('wafDisabled', false);
 		}
 
 		// Call this before creating the index in cases where the wp-cron isn't running.
@@ -610,6 +602,12 @@ SQL
 		add_action('wp_login','wordfence::loginAction');
 		add_action('wp_logout','wordfence::logoutAction');
 		add_action('lostpassword_post', 'wordfence::lostPasswordPost', '1');
+		
+		$allowSeparatePrompt = ini_get('output_buffering') > 0;
+		if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+			add_action('login_form', 'wordfence::showTwoFactorField');
+		}
+		
 		if(wfUtils::hasLoginCookie()){
 			add_action('user_profile_update_errors', 'wordfence::validateProfileUpdate', 0, 3 );
 			add_action('profile_update', 'wordfence::profileUpdateAction', '99', 2);
@@ -724,16 +722,10 @@ SQL
 		return $URL;
 	}
 	public static function enqueueAJAXWatcher() {
-		try {
-			$waf = wfWAF::getInstance();
-			$config = $waf->getStorageEngine();
-			$wafStatus = (!WFWAF_ENABLED ? 'disabled' : $config->getConfig('wafStatus'));
-			if (wfUtils::isAdmin() && $wafStatus != 'disabled') {
-				wp_enqueue_style('wordfenceAJAXcss', wfUtils::getBaseURL() . 'css/wordfenceBox.css', '', WORDFENCE_VERSION);
-				wp_enqueue_script('wordfenceAJAXjs', wfUtils::getBaseURL() . 'js/admin.ajaxWatcher.js', array('jquery'), WORDFENCE_VERSION);
-			}
-		} catch (wfWAFStorageFileException $e) {
-			error_log($e->getMessage());
+		$wafDisabled = !WFWAF_ENABLED || (class_exists('wfWAFConfig') && wfWAFConfig::isDisabled());
+		if (wfUtils::isAdmin() && !$wafDisabled) {
+			wp_enqueue_style('wordfenceAJAXcss', wfUtils::getBaseURL() . 'css/wordfenceBox.css', '', WORDFENCE_VERSION);
+			wp_enqueue_script('wordfenceAJAXjs', wfUtils::getBaseURL() . 'js/admin.ajaxWatcher.js', array('jquery'), WORDFENCE_VERSION);
 		}
 	}
 	public static function ajax_testAjax_callback(){
@@ -742,7 +734,7 @@ SQL
 	public static function ajax_doScan_callback(){
 		ignore_user_abort(true);
 		self::$wordfence_wp_version = false;
-		//This is messy, but not sure of a better way to do this without gauranteeing we get $wp_version
+		//This is messy, but not sure of a better way to do this without guaranteeing we get $wp_version
 		require(ABSPATH . 'wp-includes/version.php');
 		self::$wordfence_wp_version = $wp_version;
 		require('wfScan.php');
@@ -1177,122 +1169,394 @@ SQL
 		unset($data['author_url']);
 		return $data;
 	}
-	public static function authenticateFilter($authUser, $username, $passwd){
+	public static function showTwoFactorField() {
+		$existingContents = ob_get_contents();
+		if (!preg_match('/wftwofactornonce:([0-9]+)\/(.+?)\s/', $existingContents, $matches)) {
+			return;
+		}
+		
+		$userID = intval($matches[1]);
+		$twoFactorNonce = preg_replace('/[^a-f0-9]/i', '', $matches[2]);
+		if (!self::verifyTwoFactorIntermediateValues($userID, $twoFactorNonce)) {
+			return;
+		}
+		
+		//Strip out the username and password fields
+		$formPosition = strrpos($existingContents, '<form');
+		$formTagEnd = strpos($existingContents, '>', $formPosition);
+		if ($formPosition === false || $formTagEnd === false) {
+			return;
+		}
+		
+		ob_end_clean();
+		ob_start();
+		echo substr($existingContents, 0, $formTagEnd + 1);
+		
+		//Add the 2FA field
+		echo "<p>
+        <label for=\"wfAuthenticationCode\">Authentication Code<br>
+        <input type=\"text\" size=\"6\" class=\"input\" id=\"wordfence_authFactor\" name=\"wordfence_authFactor\" autofocus></label>
+        <input type=\"hidden\" id=\"wordfence_twoFactorUser\" name=\"wordfence_twoFactorUser\" value=\"" . $userID . "\">
+        <input type=\"hidden\" id=\"wordfence_twoFactorNonce\" name=\"wordfence_twoFactorNonce\" value=\"" . $twoFactorNonce . "\">
+    </p>";
+	}
+	private static function verifyTwoFactorIntermediateValues($userID, $twoFactorNonce) {
+		$user = get_user_by('ID', $userID);
+		if (!$user || get_class($user) != 'WP_User') { return false; } //Check that the user exists
+		
+		$expectedNonce = get_user_meta($user->ID, '_wf_twoFactorNonce', true);
+		$twoFactorNonceTime = get_user_meta($user->ID, '_wf_twoFactorNonceTime', true);
+		if (empty($twoFactorNonce) || empty($twoFactorNonceTime)) { return false; } //Ensure the two factor nonce and time have been set
+		if ($twoFactorNonce != $expectedNonce) { return false; } //Verify the nonce matches the expected
+		
+		$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
+		if (!$twoFactorUsers || !is_array($twoFactorUsers)) { return false; } //Make sure there are two factor users configured
+		foreach ($twoFactorUsers as &$t) { //Ensure the two factor nonce hasn't expired
+			if ($t[0] == $user->ID && $t[3] == 'activated') {
+				if (isset($t[5]) && $t[5] == 'authenticator') { $graceTime = WORDFENCE_TWO_FACTOR_GRACE_TIME_AUTHENTICATOR; }
+				else { $graceTime = WORDFENCE_TWO_FACTOR_GRACE_TIME_PHONE; }
+				return ((time() - $twoFactorNonceTime) < $graceTime);
+			}
+		}
+		return false;
+	}
+	public static function authenticateFilter($authUser, $username, $passwd) {
 		wfConfig::inc('totalLoginHits'); //The total hits to wp-login.php including logins, logouts and just hits.
 		$IP = wfUtils::getIP();
 		$secEnabled = wfConfig::get('loginSecurityEnabled');
-		if($secEnabled && (! self::getLog()->isWhitelisted($IP)) && wfConfig::get('isPaid') ){
-			$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
-			if(isset($twoFactorUsers) && is_array($twoFactorUsers) && sizeof($twoFactorUsers) > 0){
-				$userDat = (isset($_POST['wordfence_userDat']) ? $_POST['wordfence_userDat'] : false);
-				 if(is_object($userDat) && get_class($authUser) == 'WP_User'){ //Valid username and password either with or without the 'wf...' code. Users is now logged in at this point.
-					if(isset($_POST['wordfence_authFactor']) && $_POST['wordfence_authFactor']){ //user entered a valid user and password with ' wf....' appended
-						foreach($twoFactorUsers as &$t){
-							if($t[0] == $userDat->ID && $t[3] == 'activated'){
-								if($_POST['wordfence_authFactor'] == $t[2] && $t[4] > time()){
-									// Set this 2FA code to expire in 30 seconds (for other plugins hooking into the auth process)
-									$t[4] = time() + 30;
-									wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
-
-								} else if($_POST['wordfence_authFactor'] == $t[2]){
-									$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-									try {
-										$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]) );
-
-										if(isset($codeResult['notPaid']) && $codeResult['notPaid']){
-											break; //Let them sign in without two factor
+		
+		$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
+		$userDat = (isset($_POST['wordfence_userDat']) ? $_POST['wordfence_userDat'] : false);
+		$checkTwoFactor = $secEnabled &&
+			!self::getLog()->isWhitelisted($IP) &&
+			wfConfig::get('isPaid') &&
+			isset($twoFactorUsers) &&
+			is_array($twoFactorUsers) &&
+			sizeof($twoFactorUsers) > 0 &&
+			is_object($userDat) &&
+			get_class($userDat) == 'WP_User';
+		if ($checkTwoFactor) {
+			if (isset($_POST['wordfence_authFactor']) && $_POST['wordfence_authFactor']) { //User authenticated with name and password, 2FA code ready to check
+				$userID = $userDat->ID;
+				
+				if (get_class($authUser) == 'WP_User' && $authUser->ID == $userID) {
+					//Do nothing. This is the code path the old method of including the code in the password field will take -- since we already have a valid $authUser, skip the nonce verification portion
+				}
+				else if (isset($_POST['wordfence_twoFactorNonce'])) {
+					$twoFactorNonce = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_twoFactorNonce']);
+					if (!self::verifyTwoFactorIntermediateValues($userID, $twoFactorNonce)) {
+						self::$authError = new WP_Error('twofactor_required', __('<strong>VERIFICATION FAILED</strong>: Two factor authentication verification failed. Please try again.'));
+						return self::processBruteForceAttempt(self::$authError, $username, $passwd);
+					}
+				}
+				else { //Code path for old method, invalid password the second time
+					self::$authError = $authUser;
+					if (is_wp_error(self::$authError) && (self::$authError->get_error_code() == 'invalid_username' || self::$authError->get_error_code() == 'incorrect_password') && wfConfig::get('loginSec_maskLoginErrors')) {
+						self::$authError = new WP_Error('incorrect_password', sprintf(__('<strong>ERROR</strong>: The username or password you entered is incorrect. <a href="%2$s" title="Password Lost and Found">Lost your password</a>?'), $username, wp_lostpassword_url()));
+					}
+					
+					return self::processBruteForceAttempt(self::$authError, $username, $passwd);
+				}
+				
+				foreach ($twoFactorUsers as &$t) {
+					if ($t[0] == $userDat->ID && $t[3] == 'activated') {
+						if (isset($t[5])) { //New method TOTP
+							$mode = $t[5];
+							$code = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_authFactor']);
+							
+							$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+							try {
+								$codeResult = $api->call('twoFactorTOTP_verify', array(), array('totpid' => $t[6], 'code' => $code, 'mode' => $mode));
+								
+								if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+									break;
+								} //No longer a paid key, let them sign in without two factor
+								if (isset($codeResult['ok']) && $codeResult['ok']) {
+									break;
+								} //Everything's good, let the sign in continue
+								else {
+									if (get_class($authUser) == 'WP_User' && $authUser->ID == $userID) { //Using the old method of appending the code to the password
+										if ($mode == 'authenticator') {
+											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code from your authenticator app to the end of your password (e.g., <code>wf123456</code>).'));
 										}
-										if(isset($codeResult['ok']) && $codeResult['ok']){
-											$t[2] = $codeResult['code'];
-											$t[4] = time() + 1800; //30 minutes until code expires
-											wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
-											self::$authError = new WP_Error('twofactor_required', __('<strong>CODE EXPIRED. CHECK YOUR PHONE:</strong> The code you entered has expired. Codes are only valid for 30 minutes for security reasons. We have sent you a new code. Please sign in using your username and your password followed by a space and the new code we sent you.'));
-											return self::$authError;
-										} else {
-											break; //No new code was received. Let them sign in with the expired code.
+										else {
+											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code sent to your phone to the end of your password (e.g., <code>wf123456</code>).'));
 										}
-
-									} catch (Exception $e) {
-										// Couldn't connect to noc1, let them sign in since the password was correct.
-										break;
 									}
-								} else { //Bad code, so cancel the login and return an error to user.
-									self::$authError = new WP_Error( 'twofactor_required', __( '<strong>INVALID CODE</strong>: You need to enter your password followed by a space and the code we sent to your phone. The code should start with \'wf\' and should be four characters. e.g. wfAB12. In this case you would enter your password as: \'mypassword wfAB12\' without quotes.'));
-									return self::$authError;
+									else {
+										$loginNonce = wfWAFUtils::random_bytes(20);
+										if ($loginNonce === false) { //Should never happen but is technically possible
+											self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
+											return self::$authError;
+										}
+										
+										$loginNonce = bin2hex($loginNonce);
+										update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+										update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+										
+										if ($mode == 'authenticator') {
+											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated by your authenticator app. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+										}
+										else {
+											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated sent to your phone. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+										}
+									}
+									return self::processBruteForceAttempt(self::$authError, $username, $passwd);
 								}
-							} //No user matches and has TF activated so let user sign in.
-						}
-					} else { //valid login with no code entered
-						//Verify at least one administrator has 2FA enabled
-						$requireAdminTwoFactor = false;
-						foreach($twoFactorUsers as &$t) {
-							$userID = $t[0];
-							$testUser = get_user_by('ID', $userID);
-							if (is_object($testUser) && wfUtils::isAdmin($testUser) && $t[3] == 'activated') {
-								$requireAdminTwoFactor = true;
-								break;
 							}
+							catch (Exception $e) {
+								if (self::isDebugOn()) {
+									error_log('TOTP validation error: ' . $e->getMessage());
+								}
+								break;
+							} // Couldn't connect to noc1, let them sign in since the password was correct.
 						}
-						$requireAdminTwoFactor = $requireAdminTwoFactor && wfConfig::get('loginSec_requireAdminTwoFactor');
-						
-						foreach($twoFactorUsers as &$t) {
-							if($t[0] == $userDat->ID && $t[3] == 'activated'){ //Yup, enabled, so lets send the code
+						else { //Old method phone authentication
+							$authFactor = $_POST['wordfence_authFactor'];
+							if (strlen($authFactor) == 4) {
+								$authFactor = 'wf' . $authFactor;
+							}
+							if ($authFactor == $t[2] && $t[4] > time()) { // Set this 2FA code to expire in 30 seconds (for other plugins hooking into the auth process)
+								$t[4] = time() + 30;
+								wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
+							}
+							else if ($authFactor == $t[2]) {
 								$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
 								try {
-									$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]) );
-									if(isset($codeResult['notPaid']) && $codeResult['notPaid']){
+									$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]));
+									
+									if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+										break;
+									} //No longer a paid key, let them sign in without two factor
+									if (isset($codeResult['ok']) && $codeResult['ok']) {
+										$t[2] = $codeResult['code'];
+										$t[4] = time() + 1800; //30 minutes until code expires
+										wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
+										
+										$loginNonce = wfWAFUtils::random_bytes(20);
+										if ($loginNonce === false) { //Should never happen but is technically possible
+											self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
+											return self::$authError;
+										}
+										
+										$loginNonce = bin2hex($loginNonce);
+										update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+										update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+										
+										self::$authError = new WP_Error('twofactor_required', __('<strong>CODE EXPIRED. CHECK YOUR PHONE:</strong> The code you entered has expired. Codes are only valid for 30 minutes for security reasons. We have sent you a new code. Please sign in using your username, password, and the new code we sent you.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+										return self::$authError;
+									}
+									else {
+										break;
+									} //No new code was received. Let them sign in with the expired code.
+								}
+								catch (Exception $e) {
+									break;
+								} // Couldn't connect to noc1, let them sign in since the password was correct.
+							}
+							else { //Bad code, so cancel the login and return an error to user.
+								$loginNonce = wfWAFUtils::random_bytes(20);
+								if ($loginNonce === false) { //Should never happen but is technically possible
+									self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
+									return self::$authError;
+								}
+								
+								$loginNonce = bin2hex($loginNonce);
+								update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+								update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+								
+								self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter your password and the code we sent to your phone. The code should start with \'wf\' and should be four characters (e.g., wfAB12).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+								return self::processBruteForceAttempt(self::$authError, $username, $passwd);
+							}
+						}
+					}
+				}
+				delete_user_meta($userDat->ID, '_wf_twoFactorNonce');
+				delete_user_meta($userDat->ID, '_wf_twoFactorNonceTime');
+				$authUser = $userDat; //Log in as the user we saved in the wp_authenticate action
+			}
+			else if (get_class($authUser) == 'WP_User') { //User authenticated with name and password, prompt for the 2FA code
+				//Verify at least one administrator has 2FA enabled
+				$requireAdminTwoFactor = false;
+				foreach ($twoFactorUsers as &$t) {
+					$userID = $t[0];
+					$testUser = get_user_by('ID', $userID);
+					if (is_object($testUser) && wfUtils::isAdmin($testUser) && $t[3] == 'activated') {
+						$requireAdminTwoFactor = true;
+						break;
+					}
+				}
+				$requireAdminTwoFactor = $requireAdminTwoFactor && wfConfig::get('loginSec_requireAdminTwoFactor');
+				
+				foreach ($twoFactorUsers as &$t) {
+					if ($t[0] == $userDat->ID && $t[3] == 'activated') { //Yup, enabled, so require the code
+						$loginNonce = wfWAFUtils::random_bytes(20);
+						if ($loginNonce === false) { //Should never happen but is technically possible, allow login
+							$requireAdminTwoFactor = false;
+							break;
+						}
+						
+						$loginNonce = bin2hex($loginNonce);
+						update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+						update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+						
+						if (isset($t[5])) { //New method TOTP authentication
+							if ($t[5] == 'authenticator') {
+								if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
+									$retries = get_option('limit_login_retries', array());
+									$ip = limit_login_get_address();
+									
+									if (!is_array($retries)) {
+										$retries = array();
+									}
+									if (isset($retries[$ip]) && is_int($retries[$ip])) {
+										$retries[$ip]--;
+									}
+									else {
+										$retries[$ip] = 0;
+									}
+									update_option('limit_login_retries', $retries);
+								}
+								
+								$allowSeparatePrompt = ini_get('output_buffering') > 0;
+								if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+									self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+									return self::$authError;
+								}
+								else {
+									self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
+									return self::$authError;
+								}
+							}
+							else {
+								//Phone TOTP
+								$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+								try {
+									$codeResult = $api->call('twoFactorTOTP_sms', array(), array('totpid' => $t[6]));
+									if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+										$requireAdminTwoFactor = false;
 										break; //Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
 									}
-								} catch (Exception $e) {
+								}
+								catch (Exception $e) {
+									if (self::isDebugOn()) {
+										error_log('TOTP SMS error: ' . $e->getMessage());
+									}
+									$requireAdminTwoFactor = false;
 									// Couldn't connect to noc1, let them sign in since the password was correct.
 									break;
 								}
-								if(isset($codeResult['ok']) && $codeResult['ok']){
-									$t[2] = $codeResult['code'];
-									$t[4] = time() + 1800; //30 minutes until code expires
-									wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
-
+								
+								if (isset($codeResult['ok']) && $codeResult['ok']) {
 									if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
 										$retries = get_option('limit_login_retries', array());
 										$ip = limit_login_get_address();
-
+										
 										if (!is_array($retries)) {
 											$retries = array();
 										}
 										if (isset($retries[$ip]) && is_int($retries[$ip])) {
 											$retries[$ip]--;
-										} else {
+										}
+										else {
 											$retries[$ip] = 0;
 										}
 										update_option('limit_login_retries', $retries);
 									}
-
-									self::$authError = new WP_Error( 'twofactor_required', __( '<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space and the code to the end of your password.' ) );
-									return self::$authError;
-								} else { //oops, our API returned an error.
+									
+									$allowSeparatePrompt = ini_get('output_buffering') > 0;
+									if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+										self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+										return self::$authError;
+									}
+									else {
+										self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
+										return self::$authError;
+									}
+								}
+								else { //oops, our API returned an error.
+									$requireAdminTwoFactor = false;
 									break; //Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
 								}
 							}
 						}
-						
-						if ($requireAdminTwoFactor && wfUtils::isAdmin($authUser)) {
-							$username = $authUser->user_login;
-							self::getLog()->logLogin('loginFailValidUsername', 1, $username);
-							wordfence::alert("Admin Login Blocked", "A user with username \"$username\" who has administrator access tried to sign in to your WordPress site. Access was denied because all administrator accounts are required to have Cellphone Sign-in enabled but this account does not.", wfUtils::getIP());
-							self::$authError = new WP_Error( 'twofactor_disabled_required', __( '<strong>Cellphone Sign-in Required</strong>: Cellphone Sign-in is required for all administrator accounts. Please contact the site administrator to enable it for your account.' ) );
-							return self::$authError;
+						else { //Old method phone authentication
+							$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+							try {
+								$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]));
+								if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+									$requireAdminTwoFactor = false;
+									break; //Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
+								}
+							}
+							catch (Exception $e) {
+								$requireAdminTwoFactor = false;
+								// Couldn't connect to noc1, let them sign in since the password was correct.
+								break;
+							}
+							
+							if (isset($codeResult['ok']) && $codeResult['ok']) {
+								$t[2] = $codeResult['code'];
+								$t[4] = time() + 1800; //30 minutes until code expires
+								wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
+								
+								if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
+									$retries = get_option('limit_login_retries', array());
+									$ip = limit_login_get_address();
+									
+									if (!is_array($retries)) {
+										$retries = array();
+									}
+									if (isset($retries[$ip]) && is_int($retries[$ip])) {
+										$retries[$ip]--;
+									}
+									else {
+										$retries[$ip] = 0;
+									}
+									update_option('limit_login_retries', $retries);
+								}
+								
+								$allowSeparatePrompt = ini_get('output_buffering') > 0;
+								if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+									self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+									return self::$authError;
+								}
+								else {
+									self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space and the code to the end of your password (e.g., <code>wfABCD</code>).'));
+									return self::$authError;
+								}
+							}
+							else { //oops, our API returned an error.
+								$requireAdminTwoFactor = false;
+								break; //Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
+							}
 						}
-						
-						//User is not configured for two factor. Sign in without two factor.
 					}
 				}
+				
+				if ($requireAdminTwoFactor && wfUtils::isAdmin($authUser)) {
+					$username = $authUser->user_login;
+					self::getLog()->logLogin('loginFailValidUsername', 1, $username);
+					wordfence::alert("Admin Login Blocked", "A user with username \"$username\" who has administrator access tried to sign in to your WordPress site. Access was denied because all administrator accounts are required to have Cellphone Sign-in enabled but this account does not.", wfUtils::getIP());
+					self::$authError = new WP_Error('twofactor_disabled_required', __('<strong>Cellphone Sign-in Required</strong>: Cellphone Sign-in is required for all administrator accounts. Please contact the site administrator to enable it for your account.'));
+					return self::$authError;
+				}
+				
+				//User is not configured for two factor. Sign in without two factor.
 			}
-		}
-
+		} //End: if ($checkTwoFactor)
+		
+		return self::processBruteForceAttempt($authUser, $username, $passwd);
+	}
+	
+	public static function processBruteForceAttempt($authUser, $username, $passwd) {
+		$IP = wfUtils::getIP();
+		$secEnabled = wfConfig::get('loginSecurityEnabled');
+		
 		if(self::getLog()->isWhitelisted($IP)){
 			return $authUser;
 		}
-		if(wfConfig::get('other_WFNet') && is_wp_error($authUser) && ($authUser->get_error_code() == 'invalid_username' || $authUser->get_error_code() == 'incorrect_password') ){
+		if(wfConfig::get('other_WFNet') && is_wp_error($authUser) && ($authUser->get_error_code() == 'invalid_username' || $authUser->get_error_code() == 'incorrect_password' || $authUser->get_error_code() == 'twofactor_invalid') ){
 			if($maxBlockTime = self::wfsnIsBlocked($IP, 'brute')){
 				self::getLog()->blockIP($IP, "Blocked by Wordfence Security Network", true, false, $maxBlockTime);
 				$secsToGo = wfConfig::get('blockedTime');
@@ -1322,7 +1586,7 @@ SQL
 				}
 			}
 			$tKey = 'wflginfl_' . bin2hex(wfUtils::inet_pton($IP));
-			if(is_wp_error($authUser) && ($authUser->get_error_code() == 'invalid_username' || $authUser->get_error_code() == 'incorrect_password') ){
+			if(is_wp_error($authUser) && ($authUser->get_error_code() == 'invalid_username' || $authUser->get_error_code() == 'incorrect_password' || $authUser->get_error_code() == 'twofactor_invalid') ){
 				$tries = get_transient($tKey);
 				if($tries){
 					$tries++;
@@ -1397,19 +1661,34 @@ SQL
 			require('wfLockedOut.php');
 		}
 	}
-	public static function authActionNew($username, &$passwd){ //As of php 5.4 we must denote passing by ref in the function definition, not the function call (as WordPress core does, which is a bug in WordPress).
+	public static function authActionNew(&$username, &$passwd){ //As of php 5.4 we must denote passing by ref in the function definition, not the function call (as WordPress core does, which is a bug in WordPress).
 		if(self::isLockedOut(wfUtils::getIP())){
 			require('wfLockedOut.php');
 		}
+		
+		if (isset($_POST['wordfence_twoFactorUser'])) { //Final stage of login -- get and verify 2fa code, make sure we load the appropriate user
+			$userID = intval($_POST['wordfence_twoFactorUser']);
+			$twoFactorNonce = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_twoFactorNonce']);
+			if (self::verifyTwoFactorIntermediateValues($userID, $twoFactorNonce)) {
+				$user = get_user_by('ID', $userID);
+				$username = $user->user_login;
+				$passwd = $twoFactorNonce;
+				$_POST['wordfence_userDat'] = $user;
+				return;
+			}
+		}
+		
+		//Intermediate stage of login
 		if(! $username){ return; }
 		$userDat = get_user_by('login', $username);
 		if (!$userDat) {
 			$userDat = get_user_by('email', $username);
 		}
+		
 		$_POST['wordfence_userDat'] = $userDat;
 		if(preg_match(self::$passwordCodePattern, $passwd, $matches)){
 			$_POST['wordfence_authFactor'] = $matches[1];
-			$passwd = preg_replace('/^(.+)\s+(wf[a-z0-9]+)$/i', '$1', $passwd);
+			$passwd = preg_replace('/^(.+)\s+wf([a-z0-9 ]+)$/i', '$1', $passwd);
 			$_POST['pwd'] = $passwd;
 		}
 	}
@@ -1417,15 +1696,30 @@ SQL
 		if(self::isLockedOut(wfUtils::getIP())){
 			require('wfLockedOut.php');
 		}
+		
+		if (isset($_POST['wordfence_twoFactorUser'])) { //Final stage of login -- get and verify 2fa code, make sure we load the appropriate user
+			$userID = intval($_POST['wordfence_twoFactorUser']);
+			$twoFactorNonce = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_twoFactorNonce']);
+			if (self::verifyTwoFactorIntermediateValues($userID, $twoFactorNonce)) {
+				$user = get_user_by('ID', $userID);
+				$username = $user->user_login;
+				$passwd = $twoFactorNonce;
+				$_POST['wordfence_userDat'] = $user;
+				return;
+			}
+		}
+		
+		//Intermediate stage of login
 		if(! $username){ return; }
 		$userDat = get_user_by('login', $username);
 		if (!$userDat) {
 			$userDat = get_user_by('email', $username);
 		}
+		
 		$_POST['wordfence_userDat'] = $userDat;
 		if(preg_match(self::$passwordCodePattern, $passwd, $matches)){
 			$_POST['wordfence_authFactor'] = $matches[1];
-			$passwd = preg_replace('/^(.+)\s+(wf[a-z0-9]+)$/i', '$1', $passwd);
+			$passwd = preg_replace('/^(.+)\s+wf([a-z0-9 ]+)$/i', '$1', $passwd);
 			$_POST['pwd'] = $passwd;
 		}
 	}
@@ -1502,56 +1796,141 @@ SQL
 		}
 		$username = sanitize_text_field($_POST['username']);
 		$phone = sanitize_text_field($_POST['phone']);
+		$mode = sanitize_text_field($_POST['mode']);
 		$user = get_user_by('login', $username);
 		if(! $user){
 			return array('errorMsg' => "The username you specified does not exist.");
 		}
-		if(! preg_match('/^\+\d[\d\-]+$/', $phone)){
-			return array('errorMsg' => "The phone number you entered must start with a '+', then country code and then area code and number. It can only contain the starting plus sign and then numbers and dashes. It can not contain spaces. For example, a number in the United States with country code '1' would look like this: +1-123-555-1234");
+		
+		$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
+		if (!is_array($twoFactorUsers)) {
+			$twoFactorUsers = array();
 		}
-		$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-		try {
-			$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $phone));
-		} catch(Exception $e){
-			return array('errorMsg' => "Could not contact Wordfence servers to generate a verification code: " . wp_kses($e->getMessage(), array()) );
+		for ($i = 0; $i < sizeof($twoFactorUsers); $i++) {
+			if ($twoFactorUsers[$i][0] == $user->ID) {
+				return array('errorMsg' => "The username you specified is already enabled.");
+			}
 		}
-		if(isset($codeResult['ok']) && $codeResult['ok']){
-			$code = $codeResult['code'];
-		} else if(isset($codeResult['errorMsg']) && $codeResult['errorMsg']){
-			return array('errorMsg' => wp_kses($codeResult['errorMsg'], array()));
-		} else {
-			wordfence::status(4, 'info', "Could not gen verification code: " . var_export($codeResult, true));
-			return array('errorMsg' => "We could not generate a verification code.");
+		
+		if ($mode != 'phone' && $mode != 'authenticator') {
+			return array('errorMsg' => "Unknown authentication mode.");
 		}
-		self::twoFactorAdd($user->ID, $phone, $code);
-		return array(
-			'ok' => 1,
-			'userID' => $user->ID,
-			'username' => $username,
-			'phone' => $phone
+		
+		if ($mode == 'phone') {
+			if (!preg_match('/^\+\d[\d\-]+$/', $phone)) {
+				return array('errorMsg' => "The phone number you entered must start with a '+', then country code and then area code and number. It can only contain the starting plus sign and then numbers and dashes. It can not contain spaces. For example, a number in the United States with country code '1' would look like this: +1-123-555-1234");
+			}
+			$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+			try {
+				$codeResult = $api->call('twoFactorTOTP_register', array(), array('phone' => $phone, 'mode' => $mode));
+			}
+			catch (Exception $e) {
+				return array('errorMsg' => "Could not contact Wordfence servers to generate a verification code: " . wp_kses($e->getMessage(), array()));
+			}
+			
+			$recoveryCodes = preg_replace('/[^a-f0-9]/i', '', $codeResult['recoveryCodes']);
+			
+			if (isset($codeResult['ok']) && $codeResult['ok']) {
+				$secretID = $codeResult['id'];
+			}
+			else if (isset($codeResult['errorMsg']) && $codeResult['errorMsg']) {
+				return array('errorMsg' => wp_kses($codeResult['errorMsg'], array()));
+			}
+			else {
+				wordfence::status(4, 'info', "Could not gen verification code: " . var_export($codeResult, true));
+				return array('errorMsg' => "We could not generate a verification code.");
+			}
+			self::twoFactorAdd($user->ID, $phone, '', 'phone', $secretID);
+			return array(
+				'ok' => 1,
+				'userID' => $user->ID,
+				'username' => $username,
+				'mode' => $mode,
+				'phone' => $phone,
+				'recoveryCodes' => $recoveryCodes,
 			);
+		}
+		else if ($mode == 'authenticator') {
+			$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+			try {
+				$codeResult = $api->call('twoFactorTOTP_register', array(), array('mode' => $mode));
+			}
+			catch (Exception $e) {
+				return array('errorMsg' => "Could not contact Wordfence servers to generate a verification code: " . wp_kses($e->getMessage(), array()));
+			}
+			
+			/* Expected Fields:
+				'ok' => 1,
+				'secret' => $secret,
+				'base32Secret' => $base32Secret,
+				'recoveryCodes' => $codes,
+				'uriQueryString' => $uriQueryString,
+				'id' => $recordID,
+			*/
+			
+			$secret = preg_replace('/[^a-f0-9]/i', '', $codeResult['secret']);
+			$base32Secret = preg_replace('/[^a-z2-7]/i', '', $codeResult['base32Secret']); //Encoded in base32
+			$recoveryCodes = preg_replace('/[^a-f0-9]/i', '', $codeResult['recoveryCodes']);
+			$uriQueryString = preg_replace('/[^a-z0-9=&]/i', '', $codeResult['uriQueryString']);
+			
+			if (isset($codeResult['ok']) && $codeResult['ok']) {
+				$secretID = $codeResult['id'];
+			}
+			else if (isset($codeResult['errorMsg']) && $codeResult['errorMsg']) {
+				return array('errorMsg' => wp_kses($codeResult['errorMsg'], array()));
+			}
+			else {
+				wordfence::status(4, 'info', "Could not gen verification code: " . var_export($codeResult, true));
+				return array('errorMsg' => "We could not generate a verification code.");
+			}
+			self::twoFactorAdd($user->ID, '', '', 'authenticator', $secretID);
+			return array(
+				'ok' => 1,
+				'userID' => $user->ID,
+				'username' => $username,
+				'homeurl' => preg_replace('#.*?//#', '', get_home_url()),
+				'mode' => $mode,
+				'secret' => $secret,
+				'base32Secret' => $base32Secret,
+				'recoveryCodes' => $recoveryCodes,
+				'uriQueryString' => $uriQueryString,
+			);
+		}
+		
+		return array('errorMsg' => "Unknown two factor authentication mode.");
 	}
-	public static function ajax_twoFacActivate_callback(){
+	public static function ajax_twoFacActivate_callback() {
 		$userID = sanitize_text_field($_POST['userID']);
 		$code = sanitize_text_field($_POST['code']);
 		$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
-		if(! is_array($twoFactorUsers)){
+		if (!is_array($twoFactorUsers)) {
 			$twoFactorUsers = array();
 		}
 		$found = false;
 		$user = false;
-		for($i = 0; $i < sizeof($twoFactorUsers); $i++){
-			if($twoFactorUsers[$i][0] == $userID){
-				if($twoFactorUsers[$i][2] == $code){
+		for ($i = 0; $i < sizeof($twoFactorUsers); $i++) {
+			if ($twoFactorUsers[$i][0] == $userID) {
+				$mode = 'phone';
+				if (isset($twoFactorUsers[$i][5]) && $twoFactorUsers[$i][5] == 'authenticator') {
+					$mode = 'authenticator';
+				}
+				$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+				try {
+					$codeResult = $api->call('twoFactorTOTP_verify', array(), array('totpid' => $twoFactorUsers[$i][6], 'code' => $code, 'mode' => $mode));
+				}
+				catch (Exception $e) {
+					return array('errorMsg' => "Could not contact Wordfence servers to generate a verification code: " . wp_kses($e->getMessage(), array()));
+				}
+				
+				if (isset($codeResult['ok']) && $codeResult['ok']) {
 					$twoFactorUsers[$i][3] = 'activated';
-					// Set the expiration earlier to invalidate this code
 					$twoFactorUsers[$i][4] = 0;
 					$found = true;
 					$user = $twoFactorUsers[$i];
-
 					break;
-				} else {
-					return array('errorMsg' => "That is not the correct code. Please look for an SMS containing an activation code on the phone with number: " . wp_kses($twoFactorUsers[$i][1], array()) );
+				}
+				else {
+					return array('errorMsg' => "The code you entered is invalid. Cellphone sign-in will not be enabled for this user until you enter a valid code.");
 				}
 			}
 		}
@@ -1560,15 +1939,26 @@ SQL
 		}
 		wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
 		$WPuser = get_userdata($userID);
+		if ($mode == 'authenticator') {
+			return array(
+				'ok' => 1,
+				'userID' => $userID,
+				'username' => $WPuser->user_login,
+				'status' => 'activated',
+				'mode' => 'authenticator'
+			);
+		}
+		
 		return array(
 			'ok' => 1,
 			'userID' => $userID,
 			'username' => $WPuser->user_login,
 			'phone' => $user[1],
-			'status' => 'activated'
+			'status' => 'activated',
+			'mode' => 'phone'
 			);
 	}
-	private static function twoFactorAdd($ID, $phone, $code){
+	private static function twoFactorAdd($ID, $phone, $code, $mode = 'phone', $totpID){
 		$twoFactorUsers = wfConfig::get_ser('twoFactorUsers', array());
 		if(! is_array($twoFactorUsers)){
 			$twoFactorUsers = array();
@@ -1579,21 +1969,32 @@ SQL
 				$i--;
 			}
 		}
-		$twoFactorUsers[] = array($ID, $phone, $code, 'notActivated', time() + (86400 * 30)); //expiry of code is 30 days in future
+		$twoFactorUsers[] = array($ID, $phone, $code /* deprecated parameter */, 'notActivated', time() + (86400 * 30) /* deprecated parameter */, $mode, $totpID); //expiry of code is 30 days in future
 		wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
 	}
-	public static function ajax_loadTwoFactor_callback(){
+	public static function ajax_loadTwoFactor_callback() {
 		$users = wfConfig::get_ser('twoFactorUsers', array());
 		$ret = array();
-		foreach($users as $user){
+		foreach ($users as $user) {
 			$WPuser = get_userdata($user[0]);
-			if($user){
-				$ret[] = array(
-					'userID' => $user[0],
-					'username' => $WPuser->user_login,
-					'phone' => $user[1],
-					'status' => $user[3]
+			if ($user) {
+				if (isset($user[5]) && $user[5] == 'authenticator') { 
+					$ret[] = array(
+						'userID' => $user[0],
+						'username' => $WPuser->user_login,
+						'status' => $user[3],
+						'mode' => 'authenticator'
 					);
+				}
+				else {
+					$ret[] = array(
+						'userID' => $user[0],
+						'username' => $WPuser->user_login,
+						'phone' => $user[1],
+						'status' => $user[3],
+						'mode' => 'phone'
+					);
+				}
 			}
 		}
 		return array('ok' => 1, 'users' => $ret);
@@ -2126,7 +2527,7 @@ SQL
 		}
 
 		$whiteIPs = array();
-		foreach(explode(',', preg_replace('/[\r\n\s\t]+/', '', $opts['whitelisted'])) as $whiteIP){
+		foreach(explode(',', preg_replace('/[\r\n\s\t]+/', ',', $opts['whitelisted'])) as $whiteIP){
 			if(strlen($whiteIP) > 0){
 				$whiteIPs[] = $whiteIP;
 			}
@@ -2316,11 +2717,8 @@ SQL
 		foreach (self::$diagnosticParams as $param) {
 			wfConfig::set($param, array_key_exists($param, $_POST) ? '1' : '0');
 		}
-		try {
-			wfWAF::getInstance()->getStorageEngine()
-				->setConfig('betaThreatDefenseFeed', wfConfig::get('betaThreatDefenseFeed'));
-		} catch (wfWAFStorageFileException $e) {
-			error_log($e->getMessage());
+		if (class_exists('wfWAFConfig')) {
+			wfWAFConfig::set('betaThreatDefenseFeed', wfConfig::get('betaThreatDefenseFeed'));
 		}
 		return array('ok' => 1, 'reload' => false, 'paidKeyMsg' => '');
 	}
@@ -3600,6 +3998,7 @@ HTML;
 			wp_enqueue_script('jquery.wftmpl', wfUtils::getBaseURL() . 'js/jquery.tmpl.min.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('jquery.wfcolorbox', wfUtils::getBaseURL() . 'js/jquery.colorbox-min.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('jquery.wfdataTables', wfUtils::getBaseURL() . 'js/jquery.dataTables.min.js', array('jquery'), WORDFENCE_VERSION);
+			wp_enqueue_script('jquery.qrcode', wfUtils::getBaseURL() . 'js/jquery.qrcode.min.js', array('jquery'), WORDFENCE_VERSION);
 			//wp_enqueue_script('jquery.tools', wfUtils::getBaseURL() . 'js/jquery.tools.min.js', array('jquery'));
 			wp_enqueue_script('wordfenceAdminjs', wfUtils::getBaseURL() . 'js/admin.js', array('jquery'), WORDFENCE_VERSION);
 			wp_enqueue_script('wordfenceAdminExtjs', wfUtils::getBaseURL() . 'js/tourTip.js', array('jquery'), WORDFENCE_VERSION);

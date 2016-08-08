@@ -43,7 +43,7 @@ class WPMUDEV_Dashboard_Ui {
 	 */
 	public function __construct() {
 		// Redirect to login screen on first plugin activation.
-		add_action( 'load-plugins.php', array( $this, 'first_redirect' ) );
+		add_action( 'load-plugins.php', array( $this, 'login_redirect' ) );
 
 		// Localize the plugin.
 		add_action( 'plugins_loaded', array( $this, 'localization' ) );
@@ -156,32 +156,31 @@ class WPMUDEV_Dashboard_Ui {
 	 * @since  1.0.0
 	 * @internal Action hook
 	 */
-	public function first_redirect() {
-		$redirect = true;
+	public function login_redirect() {
 
 		// We only redirect right after plugin activation.
-		if ( (empty( $_GET['action'] ) || 'activate' != $_GET['action'] ) || empty( $_GET['activate-multi'] ) ) {
+		if ( ( empty( $_GET['activate'] ) || 'true' != $_GET['activate'] ) || ! empty( $_GET['activate-multi'] ) ) {
 			$redirect = false;
+		} elseif ( WPMUDEV_Dashboard::$api->has_key() ) {
+			$redirect = false;
+		} else {
+			$redirect = true; //this means we are on the right page and not logged in
 		}
-		// This is not a valid request.
-		if ( defined( 'DOING_AJAX' ) ) {
-			$redirect = false;
-		} elseif ( ! current_user_can( 'install_plugins' ) ) {
-			// User is not allowed to login to the dashboard.
-			$redirect = false;
-		} elseif ( isset( $_GET['page'] ) && 'wpmudev' == $_GET['page'] ) {
-			// User is already on Login page.
-			$redirect = false;
 
-			// Save the flag to not redirect again.
-			WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 1 );
-		} elseif ( WPMUDEV_Dashboard::$site->get_option( 'redirected_v4' ) ) {
-			// We already redirected the user to login page before.
-			$redirect = false;
+		if ( $redirect ) {
+			// This is not a valid request.
+			if ( defined( 'DOING_AJAX' ) ) {
+				$redirect = false;
+			} elseif ( ! current_user_can( 'install_plugins' ) ) {
+				// User is not allowed to login to the dashboard.
+				$redirect = false;
+			} elseif ( WPMUDEV_Dashboard::$site->get_option( 'redirected_v4' ) ) {
+				// We already redirected the user to login page before.
+				$redirect = false;
+			}
 		}
 
 		/* ----- Save the flag and redirect if needed ----- */
-
 		if ( $redirect ) {
 			WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 1 );
 
@@ -829,6 +828,7 @@ class WPMUDEV_Dashboard_Ui {
 	 * @since  4.1.0
 	 */
 	public function modify_core_updates_page() {
+		$is_logged_in = WPMUDEV_Dashboard::$api->has_key();
 		$projects = WPMUDEV_Dashboard::$site->get_cached_projects();
 		$themepack = WPMUDEV_Dashboard::$site->get_farm133_themepack();
 
@@ -869,7 +869,7 @@ class WPMUDEV_Dashboard_Ui {
 		}
 		</style>
 		<script>
-		;(function(){
+		(function(){
 			var no_update = <?php echo json_encode( $disable ); ?>;
 			if ( ! no_update ) { return; }
 			for ( var ind in no_update ) {
@@ -879,15 +879,24 @@ class WPMUDEV_Dashboard_Ui {
 				var row = chk.closest('tr');
 				var infos = row.find('td').last();
 				var url = no_update[ind];
-				var note = "<?php esc_attr_e( 'Auto-Update not possible.', 'wpmudev' ) ?>";
 
 				chk.prop('disabled', true).prop('checked', false).attr('name', '').addClass('disabled');
-				row.addClass('wpmudev-disabled');
+				//row.addClass('wpmudev-disabled');
 
+			<?php if ( ! $is_logged_in ) { ?>
+
+				var note = '<a href="<?php echo esc_url( $this->page_urls->dashboard_url ); ?>"><?php esc_attr_e( 'Login to WPMU DEV Dashboard', 'wpmudev' ); ?></a> <?php esc_attr_e( 'to update.', 'wpmudev' ) ?>';
+				infos.append('<div class="wpmudev-info">' + note + '</div>');
+
+			<?php } else { ?>
+
+				var note = "<?php esc_attr_e( 'Auto-update not possible.', 'wpmudev' ) ?>";
 				if ( url && url.length ) {
-					note += ' <a href="' + url + '"><?php esc_attr_e( 'More infos', 'wpmudev' ); ?></a>';
+					note += ' <a href="' + url + '"><?php esc_attr_e( 'More info &raquo;', 'wpmudev' ); ?></a>';
 				}
 				infos.append('<div class="wpmudev-info">' + note + '</div>');
+
+			<?php } ?>
 			}
 		}());
 		</script>
@@ -908,7 +917,7 @@ class WPMUDEV_Dashboard_Ui {
 			foreach ( $updates as $item ) {
 				if ( ! empty( $item['autoupdate'] ) && 2 != $item['autoupdate'] ) {
 					if ( 'theme' == $item['type'] ) {
-						$hook = 'after_theme_row_' . $item['filename'];
+						$hook = 'after_theme_row_' . dirname( $item['filename'] );
 					} else {
 						$hook = 'after_plugin_row_' . $item['filename'];
 					}
@@ -955,7 +964,8 @@ class WPMUDEV_Dashboard_Ui {
 		$project = false;
 
 		foreach ( $updates as $id => $plugin ) {
-			if ( $plugin['filename'] == $file ) {
+			$slug = 'theme' == $plugin['type'] ? dirname( $plugin['filename'] ) : $plugin['filename'];
+			if ( $slug == $file ) {
 				$project_id = $id;
 				$project = $plugin;
 				break;
@@ -1032,7 +1042,7 @@ class WPMUDEV_Dashboard_Ui {
 			if ( $autoupdate ) {
 				// All clear: One-Click-Update is available for this plugin!
 				$url_action = WPMUDEV_Dashboard::$upgrader->auto_update_url( $project_id );
-				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s">automatically update</a>.', 'wpmudev' );
+				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s" class="update-link">update now</a>.', 'wpmudev' );
 			} else {
 				// Can only be manually installed.
 				$url_action = $plugin_url;
@@ -1043,7 +1053,7 @@ class WPMUDEV_Dashboard_Ui {
 			if ( ! WPMUDEV_Dashboard::$api->has_key() ) {
 				// Ah, the user is not logged in... update currently not available.
 				$url_action = $this->page_urls->dashboard_url;
-				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s" target="_blank" title="Setup your WPMU DEV account to update">configure to update</a>.', 'wpmudev' );
+				$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a> or <a href="%5$s" target="_blank" title="Setup your WPMU DEV account to update">login to update</a>.', 'wpmudev' );
 			} else {
 				// User is logged in but apparently no license for the plugin.
 				$url_action = apply_filters(
@@ -1058,7 +1068,7 @@ class WPMUDEV_Dashboard_Ui {
 			$row_text = __( 'There is a new version of %1$s available on WPMU DEV. <a href="%2$s" class="thickbox" title="%3$s">View version %4$s details</a>.', 'wpmudev' );
 		}
 
-		?><tr class="plugin-update-tr">
+		?><tr class="plugin-update-tr" id="<?php echo dirname( $filename ); ?>-update" data-slug="<?php echo dirname( $filename ); ?>" data-plugin="<?php echo esc_attr( $filename ); ?>">
 		<td colspan="3" class="plugin-update colspanchange">
 			<div class="update-message">
 				<?php
@@ -1100,9 +1110,6 @@ class WPMUDEV_Dashboard_Ui {
 			$this->load_template( 'no_access' );
 		}
 
-		// User arrives here: First redirect is done.
-		WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 1 );
-
 		if ( ! empty( $_GET['clear_key'] ) ) {
 			// User requested to log-out.
 			WPMUDEV_Dashboard::$site->logout();
@@ -1124,6 +1131,9 @@ class WPMUDEV_Dashboard_Ui {
 				$key_valid = true;
 				WPMUDEV_Dashboard::$site->set_option( 'limit_to_user', $current_user->ID );
 				WPMUDEV_Dashboard::$api->refresh_profile();
+
+				// User is logged in: First redirect is done.
+				WPMUDEV_Dashboard::$site->set_option( 'redirected_v4', 1 );
 
 				// Login worked, so remove the API key again from the URL so it
 				// does not get stored in the browser history.

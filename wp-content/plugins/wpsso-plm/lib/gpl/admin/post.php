@@ -15,22 +15,8 @@ if ( ! class_exists( 'WpssoPlmGplAdminPost' ) ) {
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
 			$this->p->util->add_plugin_filters( $this, array( 
-				'post_social_settings_tabs' => 2,	// $tabs, $mod
 				'post_plm_rows' => 4,			// $table_rows, $form, $head, $mod
-			), 200 );
-		}
-
-		public function filter_post_social_settings_tabs( $tabs, $mod ) {
-			if ( empty( $this->p->options['plm_add_to_'.$mod['post_type']] ) )
-				return $tabs;
-			$new_tabs = array();
-			foreach ( $tabs as $key => $val ) {
-				$new_tabs[$key] = $val;
-				if ( $key === 'media' )
-					$new_tabs['plm'] = _x( 'Place / Location',
-						'metabox tab', 'wpsso-plm' );
-			}
-			return $new_tabs;
+			) );
 		}
 
 		public function filter_post_plm_rows( $table_rows, $form, $head, $mod ) {

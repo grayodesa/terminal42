@@ -7,3 +7,5 @@
 [2016-04-06 19:14:38] WARNING: Form 1914 > lubovodessa283@gmail.com is already subscribed to the selected list(s)
 [2016-04-11 15:50:35] WARNING: Form 1914 > knika8@mail.ru is already subscribed to the selected list(s)
 [2016-06-09 10:54:17] WARNING: Form 1914 > *********mail.com is already subscribed to the selected list(s)
+[2016-07-18 11:13:49] ERROR: WooCommerce Checkout > MailChimp API Error: List_RoleEmailMember: usdm@pisem.net is an invalid email address and cannot be imported.
+[2016-07-18 16:55:23] WARNING: Form 1914 > ********mail.ru is already subscribed to the selected list(s)

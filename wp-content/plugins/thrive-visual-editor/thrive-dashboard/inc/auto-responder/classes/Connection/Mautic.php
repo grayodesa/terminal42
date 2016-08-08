@@ -138,9 +138,9 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 		 * just try getting a list as a connection test
 		 */
 		try {
-			/** @var Thrive_Dash_Api_Mautic_Leads $leadApi */
-			$leadApi = Thrive_Dash_Api_Mautic::getContext( 'leads', $mautic, $credentials['baseUrl'] . '/api/' );
-			$leadApi->getLists();
+			/** @var Thrive_Dash_Api_Mautic_Contacts $contactsApi */
+			$contactsApi = Thrive_Dash_Api_Mautic::getContext( 'contacts', $mautic, $credentials['baseUrl'] . '/api/' );
+			$contactsApi->getSegments();
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}
@@ -176,11 +176,12 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 		$this->checkResetCredentials();
 
-		/** @var Thrive_Dash_Api_Mautic_Leads $leadApi */
-		$leadApi = Thrive_Dash_Api_Mautic::getContext( "leads", $api, $this->param( 'baseUrl' ) . '/api/' );
+		/** @var Thrive_Dash_Api_Mautic_Contacts $contactsApi */
+		$contactsApi = Thrive_Dash_Api_Mautic::getContext( 'contacts', $api, $this->param( 'baseUrl' ) . '/api/' );
+
 
 		try {
-			$lists = $leadApi->getLists();
+			$lists = $contactsApi->getSegments();
 
 			return $lists;
 		} catch ( Exception $e ) {
@@ -213,9 +214,9 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 		$this->checkResetCredentials();
 
-		/** @var Thrive_Dash_Api_Mautic_Leads $leads */
+		/** @var Thrive_Dash_Api_Mautic_Contacts $contacts */
 		/** @var Thrive_Dash_Api_Mautic_Lists $list */
-		$leads = Thrive_Dash_Api_Mautic::getContext( 'leads', $api, $this->param( 'baseUrl' ) . '/api/' );
+		$contacts = Thrive_Dash_Api_Mautic::getContext( 'contacts', $api, $this->param( 'baseUrl' ) . '/api/' );
 		$list  = Thrive_Dash_Api_Mautic::getContext( 'lists', $api, $this->param( 'baseUrl' ) . '/api/' );
 
 
@@ -226,9 +227,9 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 		try {
 			$args['ipAddress'] = $_SERVER['REMOTE_ADDR'];
 			$args['email']     = $arguments['email'];
-			$lead              = $leads->create( $args );
+			$lead              = $contacts->create( $args );
 
-			$result = $list->addLead( $list_identifier, $lead['lead']['id'] );
+			$list->addLead( $list_identifier, $lead['contact']['id'] );
 
 			return true;
 		} catch ( Exception $e ) {

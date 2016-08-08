@@ -537,23 +537,23 @@ msgid "Easy Digital Downloads"
 msgstr "Easy Digital Downloads"
 
 #: src/Tribe/Commerce/EDD/Main.php:481
-#: src/Tribe/Commerce/WooCommerce/Main.php:724
+#: src/Tribe/Commerce/WooCommerce/Main.php:741
 msgid "You'll receive your tickets in another email."
 msgstr "Vstupenky obdržíte v dalším emailu."
 
 #: src/Tribe/Commerce/EDD/Main.php:922 src/Tribe/Commerce/WPEC/Main.php:755
-#: src/Tribe/Commerce/WooCommerce/Main.php:1414
+#: src/Tribe/Commerce/WooCommerce/Main.php:1431
 msgid "(deleted)"
 msgstr "(smazáno)"
 
 #: src/Tribe/Commerce/EDD/Main.php:1097
-#: src/Tribe/Commerce/WooCommerce/Main.php:1661
+#: src/Tribe/Commerce/WooCommerce/Main.php:1678
 msgid "Event sales report"
 msgstr "Přehled prodejů vstupenek"
 
 #: src/Tribe/Commerce/EDD/Main.php:1155 src/Tribe/Commerce/Shopp/Main.php:1121
 #: src/Tribe/Commerce/WPEC/Main.php:1026
-#: src/Tribe/Commerce/WooCommerce/Main.php:1707
+#: src/Tribe/Commerce/WooCommerce/Main.php:1724
 msgid "This is a ticket for the event:"
 msgstr "Toto je vstupenka na akci:"
 
@@ -614,17 +614,17 @@ msgid "We're sorry but there was insufficient inventory to completely fulfill yo
 msgstr "Je nám líto, ale k úplnému splnění vaší objednávky nemáme dostatečné množství zásob. Vložili jsme co nejvíce vstupenek, ale přesto vám doporučujeme si zkontrolovat objednávku (viz níže) a provést její případné úpravy."
 
 #: src/Tribe/Commerce/WPEC/Main.php:819
-#: src/Tribe/Commerce/WooCommerce/Main.php:1483
+#: src/Tribe/Commerce/WooCommerce/Main.php:1500
 msgid "In trash (was %s)"
 msgstr "V koši (bylo %s)"
 
 #: src/Tribe/Commerce/WPEC/Main.php:825
-#: src/Tribe/Commerce/WooCommerce/Main.php:1489
+#: src/Tribe/Commerce/WooCommerce/Main.php:1506
 msgid "Deleted"
 msgstr "Smazáno"
 
 #: src/Tribe/Commerce/WPEC/Main.php:872
-#: src/Tribe/Commerce/WooCommerce/Main.php:1537
+#: src/Tribe/Commerce/WooCommerce/Main.php:1554
 msgid "Unknown"
 msgstr "Neznámý"
 
@@ -652,7 +652,7 @@ msgstr "Předmět"
 msgid "Defaults to <code>%s</code>"
 msgstr "Výchozí je <code>%s</code>"
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:1684
+#: src/Tribe/Commerce/WooCommerce/Main.php:1701
 msgid "Report"
 msgstr "Přehled"
 

@@ -98,6 +98,7 @@ if ( ! class_exists( 'WpssoPlmSubmenuPlmGeneral' ) && class_exists( 'WpssoAdmin'
 					$address_names = SucomUtil::get_multi_key_locale( 'plm_addr_name', $this->p->options, false );
 					list( $first_num, $last_num, $next_num ) = SucomUtil::get_first_last_next_nums( $address_names );
 					$address_names[$next_num] = WpssoPlmConfig::$cf['form']['plm_addr_select']['new'];
+					$this->form->defaults['plm_addr_id'] = $first_num;	// set default value
 
 					$business_types = $this->p->schema->get_schema_types_select( $this->p->cf['head']['schema_type']['place']['local.business'], false );
 					$half_hours = SucomUtil::get_hours_range( 0, 86400, 60 * 30, '' );
@@ -119,8 +120,8 @@ if ( ! class_exists( 'WpssoPlmSubmenuPlmGeneral' ) && class_exists( 'WpssoAdmin'
 							'<tr class="plm_addr_id plm_addr_id_'.$id.'" style="display:none">';
 		
 						$table_rows['plm_addr_delete_'.$id] = "\n".$tr_addr_id.$this->form->get_th_html().
-						'<td colspan="3">'.$this->form->get_checkbox( 'plm_addr_delete_'.$id ).' '.
-						_x( 'delete this address', 'option comment', 'wpsso-plm' ).'</td>';
+						'<td colspan="3">'.$this->form->get_checkbox( 'plm_addr_delete_'.$id ).' <em>'.
+						_x( 'delete this address', 'option comment', 'wpsso-plm' ).'</em></td>';
 
 						$table_rows['plm_addr_name_'.$id] = "\n".$tr_addr_id.$this->form->get_th_html( _x( 'Address Name',
 							'option label', 'wpsso-plm' ), '', 'plm_addr_name' ). 

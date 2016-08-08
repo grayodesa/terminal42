@@ -6,9 +6,10 @@ class wfUpdateCheck {
 	private $core_update_version = 0;
 	private $plugin_updates = array();
 	private $theme_updates = array();
+	private $api = null;
 
 	public function __construct() {
-
+		$this->api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
 	}
 
 	/**
@@ -67,6 +68,10 @@ class wfUpdateCheck {
 			require_once(ABSPATH . WPINC . '/update.php');
 		}
 
+		if (!function_exists('plugins_api')) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin-install.php');
+		}
+
 		wp_update_plugins(); // Check for Plugin updates
 		$update_plugins = get_site_transient('update_plugins');
 
@@ -79,6 +84,17 @@ class wfUpdateCheck {
 				$data = get_plugin_data($pluginFile);
 				$data['pluginFile'] = $pluginFile;
 				$data['newVersion'] = $vals->new_version;
+				$data['slug'] = $vals->slug;
+				$data['wpURL'] = rtrim($vals->url, '/');
+
+				//Check the vulnerability database
+				$result = $this->api->call('plugin_vulnerability_check', array(), array(
+					'slug' => $vals->slug,
+					'fromVersion' => $data['Version'],
+					'toVersion' => $vals->new_version,
+				));
+				$data['vulnerabilityPatched'] = isset($result['vulnerable']) && $result['vulnerable'];
+
 				$this->plugin_updates[] = $data;
 			}
 		}

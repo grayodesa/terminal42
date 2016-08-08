@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
                         firstLineOnly: false,
                         success: ADDONS.goodCardScan,
                         error: ADDONS.badCardScan,
-                        debug: false,
+                        debug: true,
                         prefixCharacter: ';'
                     });
                 }
@@ -69,6 +69,19 @@ jQuery(document).ready(function($) {
                     var v3 = $('#authorize-net-cim-cc-exp-year').val();
                     if( v1 == '' || v2 == '' || v3 == '' ){
                         valid = false;
+                    }
+                    break;
+                case 'authorize_net_cim_credit_card':
+                    var v1 = $('#wc-authorize-net-cim-credit-card-account-number').val();
+                    var v2 = $('#wc-authorize-net-cim-credit-card-expiry').val();
+                    if( v1 == '' || v2 == '' ){
+                        valid = false;
+                    }
+                    if( $('#wc-authorize-net-cim-credit-card-csc').length ){
+                        var v3 = $('#wc-authorize-net-cim-credit-card-csc').val();
+                        if( v3 == '' ){
+                            valid = false;
+                        }
                     }
                     break;
                 case 'authorize_net_cim_echeck':
@@ -261,10 +274,11 @@ jQuery(document).ready(function($) {
                       return false;
                 break;
                 case 'authorize_net_cim':
+                case 'authorize_net_cim_credit_card':
                     var data = {
-                        'wc-authorize-net-cim-credit-card-account-number'   : jQuery('#wc-authorize-net-cim-credit-card-account-number').val(),
-                        'wc-authorize-net-cim-credit-card-csc'  : jQuery('#wc-authorize-net-cim-credit-card-csc').length ? jQuery('#wc-authorize-net-cim-credit-card-csc').val() : '',
-                        'wc-authorize-net-cim-credit-card-expiry' : jQuery('#wc-authorize-net-cim-credit-card-expiry').val(),
+                        'wc-authorize-net-cim-credit-card-account-number': jQuery('#wc-authorize-net-cim-credit-card-account-number').val(),
+                        'wc-authorize-net-cim-credit-card-expiry'        : jQuery('#wc-authorize-net-cim-credit-card-expiry').val(),
+                        'wc-authorize-net-cim-credit-card-csc'           : jQuery('#wc-authorize-net-cim-credit-card-csc').length ? jQuery('#wc-authorize-net-cim-credit-card-csc').val() : '',
                     };
                     if( typeof cart.order.create_post == 'undefined'){
                         cart.order.create_post = [];
@@ -320,7 +334,7 @@ jQuery(document).ready(function($) {
             }
             return cart;
         },
-        goodCardScan : function (cardData) {
+        goodCardScan : function (cardData) {            
             var payment_method = $('.select_payment_method:checked:not(:disabled)').val();
             switch(payment_method){
                 case 'stripe':
@@ -340,6 +354,11 @@ jQuery(document).ready(function($) {
                     $('#braintree-cc-exp-month').val(cardData.exp_month);
                     $('#braintree-cc-exp-year').val(cardData.exp_year);
                     $('#braintree-cc-cvv').focus();
+                    break;
+                case 'authorize_net_cim_credit_card':
+                    $('#wc-authorize-net-cim-credit-card-account-number').val(cardData.account);
+                    $('#wc-authorize-net-cim-credit-card-expiry').val(cardData.exp_month+'/'+cardData.s_exp_year);
+                    $('#wc-authorize-net-cim-credit-card-csc').focus();
                     break;
                 case 'authorize_net_cim':
                     $('#authorize-net-cim-cc-number').val(cardData.account);
@@ -375,9 +394,19 @@ jQuery(document).ready(function($) {
                     $('#paypal_pro_payflow-card-expiry').val(cardData.exp_month+'/'+cardData.s_exp_year);
                     $('#paypal_pro_payflow-card-cvc').focus();
                     break;
+                default:
+                    var $wrap = $('#modal-order_payment .popup_section').filter('#'+payment_method);
+                    $('.wc-credit-card-form-card-number', $wrap).val(cardData.account);
+                    $('.wc-credit-card-form-card-expiry', $wrap).val(cardData.exp_month+'/'+cardData.s_exp_year);
+                    $('.wc-credit-card-form-card-cvc', $wrap).focus();
+                    break;
             }
         },
         crlearCardfields : function (cardData) {
+            $('.wc-credit-card-form-card-number').val('');
+            $('.wc-credit-card-form-card-expiry').val('');
+            $('.wc-credit-card-form-card-cvc').val('');
+
             $('#stripe-card-number').val('');
             $('#stripe-card-expiry').val('');
             $('#stripe-card-cvc').val('');
@@ -421,6 +450,7 @@ jQuery(document).ready(function($) {
         },
         cardParser : function(rawData) {
             var swipeData = new SwipeParserObj(rawData);
+            console.log(swipeData);
             return swipeData.obj();
         },
         badCardScan : function () {

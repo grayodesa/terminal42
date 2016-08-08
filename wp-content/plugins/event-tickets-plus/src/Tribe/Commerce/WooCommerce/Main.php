@@ -211,8 +211,12 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets_Pl
 		add_action( 'woocommerce_payment_successful_result', array( $this, 'maybe_complete_order' ), 10, 2 );
 		add_action( 'woocommerce_email_after_order_table', array( $this, 'add_tickets_msg_to_email' ), 10, 2  );
 		add_action( 'woocommerce_add_order_item_meta', array( $this, 'set_attendee_optout_choice' ), 15, 2 );
-		add_action( 'woocommerce_product_quick_edit_save', array( $this, 'syncronize_product_editor_changes' ) );
-		add_action( 'woocommerce_process_product_meta_simple', array( $this, 'syncronize_product_editor_changes' ) );
+		add_filter( 'woocommerce_hidden_order_itemmeta', array( $this, 'hide_attendee_optout_choice' ), 15 );
+
+		if ( class_exists( 'Tribe__Events__API' ) ) {
+			add_action( 'woocommerce_product_quick_edit_save', array( $this, 'syncronize_product_editor_changes' ) );
+			add_action( 'woocommerce_process_product_meta_simple', array( $this, 'syncronize_product_editor_changes' ) );
+		}
 
 		// Enqueue styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 11 );
@@ -258,8 +262,21 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets_Pl
 		if ( ! isset( $item['attendee_optout'] ) ) {
 			return;
 		}
-
 		wc_add_order_item_meta( $item_id, self::ATTENDEE_OPTOUT_KEY, $item['attendee_optout'] );
+	}
+
+
+	/**
+	 * Hide the Attendee Output Choice in the Order Page
+	 *
+	 * @param $order_items
+	 *
+	 * @return array
+	 */
+	public function hide_attendee_optout_choice( $order_items ) {
+		$order_items[] = self::ATTENDEE_OPTOUT_KEY;
+
+		return $order_items;
 	}
 
 	/**
@@ -351,7 +368,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets_Pl
 		}
 
 		// Trigger an update
-		Tribe__Events__API::saveEventMeta( $event->ID, array() );
+		Tribe__Events__API::update_event_cost( $event->ID );
 	}
 
 	/**

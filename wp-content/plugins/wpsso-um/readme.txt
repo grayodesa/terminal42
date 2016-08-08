@@ -4,13 +4,13 @@ Plugin Slug: wpsso-um
 Text Domain: wpsso-um
 Domain Path: /languages
 Contributors: jsmoriss
-Donate Link: https://wpsso.com/
+Donate Link: https://wpsso.com/?utm_source=wpssoum-readme-donate
 Tags: wpsso, update, manager
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
 Requires At Least: 3.1
-Tested Up To: 4.5.2
-Stable Tag: 1.5.5-1
+Tested Up To: 4.5.3
+Stable Tag: 1.5.6-1
 
 WPSSO extension to provide updates for the WordPress Social Sharing Optimization (WPSSO) Pro plugin and its Pro extensions.
 
@@ -47,7 +47,7 @@ The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the 
 
 == Screenshots ==
 
-01. The WPSSO Pro Update Manager settings &mdash; customize the update check frequency (once a day by default) and/or choose to install one of the development versions (development and up, alpha and up, beta and up, release-candidate and up, or stable).
+01. Update Manager settings &mdash; customize the update check frequency (once a day by default) and/or choose to install one of the development versions (development and up, alpha and up, beta and up, release-candidate and up, or stable).
 
 == Changelog ==
 
@@ -56,6 +56,19 @@ The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the 
 * [GitHub](https://github.com/SurniaUlula/wpsso-um)
 
 = Changelog / Release Notes =
+
+**Version 1.5.6-1 (2016/07/18)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* Added 'wpsso_init_options' and 'wpsso_init_objects' hooks to load the filters library earlier.
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* None
 
 **Version 1.5.5-1 (2016/06/16)**
 
@@ -71,6 +84,10 @@ Official announcement: N/A
 	* None
 
 == Upgrade Notice ==
+
+= 1.5.6-1 =
+
+(2016/07/18) Added 'wpsso_init_options' and 'wpsso_init_objects' hooks to load the filters library earlier.
 
 = 1.5.5-1 =
 

@@ -183,11 +183,11 @@ if ( ! class_exists( 'WpssoProEcomWoocommerce' ) ) {
 					$this->add_product_mt( $og_ecom, $product );
 
 					if ( get_option('woocommerce_enable_review_rating') === 'yes' ) {
-						$og_ecom['product:rating:average'] = $product->get_average_rating();
-						$og_ecom['product:rating:count'] = $product->get_rating_count();
+						$og_ecom['product:rating:average'] = (float) $product->get_average_rating();
+						$og_ecom['product:rating:count'] = (int) $product->get_rating_count();
 						$og_ecom['product:rating:worst'] = 1;
 						$og_ecom['product:rating:best'] = 5;
-						$og_ecom['product:review:count'] = $product->get_review_count();
+						$og_ecom['product:review:count'] = (int) $product->get_review_count();
 					}
 
 					if ( apply_filters( $this->p->cf['lca'].'_og_add_product_mt_offer', false ) &&
@@ -270,7 +270,9 @@ if ( ! class_exists( 'WpssoProEcomWoocommerce' ) ) {
 				return false;	// abort
 			}
 
-			$id = $product->get_id();
+			$id = method_exists( $product, 'get_id' ) ?	// since wc 2.5
+				$product->get_id() : $product->id;
+
 			$og[$mt_pre.':id'] = $id;
 			$og[$mt_pre.':sku'] = $product->get_sku();
 
@@ -301,15 +303,15 @@ if ( ! class_exists( 'WpssoProEcomWoocommerce' ) ) {
 			if ( $product->has_dimensions() ) {
 				$og[$mt_pre.':dimensions'] = $product->get_dimensions();
 				if ( function_exists( 'wc_get_dimension' ) ) {
-					$og[$mt_pre.':width'] = wc_get_dimension( $product->get_width(), $dim_unit );
-					$og[$mt_pre.':height'] = wc_get_dimension( $product->get_height(), $dim_unit );
-					$og[$mt_pre.':length'] = wc_get_dimension( $product->get_length(), $dim_unit );
+					$og[$mt_pre.':width'] = (float) wc_get_dimension( $product->get_width(), $dim_unit );
+					$og[$mt_pre.':height'] = (float) wc_get_dimension( $product->get_height(), $dim_unit );
+					$og[$mt_pre.':length'] = (float) wc_get_dimension( $product->get_length(), $dim_unit );
 				}
 			}
 
 			if ( $product->has_weight() ) {
 				if ( function_exists( 'wc_get_weight' ) ) {
-					$og[$mt_pre.':weight'] = wc_get_weight( $product->get_weight(), $weight_unit );
+					$og[$mt_pre.':weight'] = (float) wc_get_weight( $product->get_weight(), $weight_unit );
 				}
 			}
 

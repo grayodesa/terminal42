@@ -38,7 +38,7 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 			if ( ! $bool )	// don't recheck already rejected images
 				return false;
 
-			$size_info = $this->p->media->get_size_info( $size_name );
+			$size_info = SucomUtil::get_size_info( $size_name );
 			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
 			$is_sufficient_h = $img_height >= $size_info['height'] ? true : false;
@@ -82,7 +82,7 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 			if ( ! $bool )	// don't recheck already rejected images
 				return false;
 
-			$size_info = $this->p->media->get_size_info( $size_name );
+			$size_info = SucomUtil::get_size_info( $size_name );
 			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $og_image['og:image:width'] >= $size_info['width'] ? true : false;
 			$is_sufficient_h = $og_image['og:image:height'] >= $size_info['height'] ? true : false;

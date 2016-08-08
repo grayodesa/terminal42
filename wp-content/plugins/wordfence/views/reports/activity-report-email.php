@@ -295,7 +295,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 				<div style="float: right;text-align: right;line-height:1.1;color: #666666;margin:20px 0 0;">
 					Activity for week of<br> <strong><?php echo date_i18n(get_option('date_format')) ?></strong>
 				</div>
-				<a href="http://www.wordfence.com/zz7/"><img src="http://www.wordfence.com/wp-content/themes/wordfence/img/logo.png" alt=""/></a>
+				<a href="http://www.wordfence.com/zz7/"><img src="<?php echo wfUtils::getBaseURL(); ?>images/logo.png" alt=""/></a>
 
 				<h2>Top 10 IP's Blocked</h2>
 
@@ -315,7 +315,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 								<td><code><?php echo wfUtils::inet_ntop($row->IP) ?></code></td>
 								<td>
 									<?php if ($row->countryCode): ?>
-										<img src="http://www.wordfence.com/images/flags/<?php echo esc_attr(strtolower($row->countryCode)) ?>.png" class="wfFlag" height="11" width="16">
+										<img src="<?php echo wfUtils::getBaseURL() . 'images/flags/' . esc_attr(strtolower($row->countryCode)) ?>.png" class="wfFlag" height="11" width="16">
 										&nbsp;
 										<?php echo esc_html($row->countryCode) ?>
 									<?php else: ?>
@@ -349,7 +349,7 @@ $title = 'Wordfence Activity for the week of ' . date_i18n(get_option('date_form
 							<tr class="<?php echo wfHelperString::cycle('odd', 'even') ?>">
 								<td>
 									<?php if ($row->countryCode): ?>
-										<img src="http://www.wordfence.com/images/flags/<?php echo strtolower($row->countryCode) ?>.png" class="wfFlag" height="11" width="16">
+										<img src="<?php echo wfUtils::getBaseURL() . 'images/flags/' . strtolower($row->countryCode) ?>.png" class="wfFlag" height="11" width="16">
 										&nbsp;
 										<?php echo esc_html($row->countryCode) ?>
 									<?php else: ?>

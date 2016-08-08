@@ -32,6 +32,7 @@ class wfConfig {
 			"scansEnabled_core" => true,
 			"scansEnabled_themes" => false,
 			"scansEnabled_plugins" => false,
+			"scansEnabled_coreUnknown" => true,
 			"scansEnabled_malware" => true,
 			"scansEnabled_fileContents" => true,
 			"scansEnabled_posts" => true,

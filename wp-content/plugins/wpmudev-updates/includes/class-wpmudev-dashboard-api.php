@@ -497,8 +497,10 @@ class WPMUDEV_Dashboard_Api {
 		);
 
 		// Extract and collect details we need.
-		if ( isset( $plugin_data->response ) ) {
+		if ( isset( $plugin_data->response ) && is_array( $plugin_data->response ) ) {
 			foreach ( $plugin_data->response as $slug => $infos ) {
+				if ( ! isset( $infos->plugin ) ) continue;
+
 				$item = get_plugin_data( WP_PLUGIN_DIR . '/' . $infos->plugin );
 				$core_updates['plugins'][ $slug ] = array(
 					'name' => $item['Name'],
@@ -508,7 +510,7 @@ class WPMUDEV_Dashboard_Api {
 			}
 		}
 
-		if ( isset( $theme_data->response ) ) {
+		if ( isset( $theme_data->response ) && is_array( $theme_data->response ) ) {
 			foreach ( $theme_data->response as $slug => $infos ) {
 				$item = wp_get_theme( $slug );
 				$core_updates['themes'][ $slug ] = array(
@@ -713,15 +715,15 @@ class WPMUDEV_Dashboard_Api {
 			} else {
 				if ( is_multisite() ) {
 					if ( 'theme' == $item['type'] ) {
-						// If the theme is available on main site it's "active".
 						$slug = dirname( $item['filename'] );
-						$active = ! empty( $ms_allowed[ $slug ] );
+						$active = ! empty( $ms_allowed[ $slug ] ) || ( $theme->stylesheet == $slug || $theme->template == $slug ); //network enabled or on main site
 					} else {
-						$active = is_plugin_active_for_network( $item['filename'] );
+						$active = is_plugin_active_for_network( $item['filename'] ) || is_plugin_active( $item['filename'] ); //network or main site
 					}
 				} else {
 					if ( 'theme' == $item['type'] ) {
 						$slug = dirname( $item['filename'] );
+						// If the theme is available on main site it's "active".
 						$active = ( $theme->stylesheet == $slug || $theme->template == $slug );
 					} else {
 						$active = is_plugin_active( $item['filename'] );
@@ -1088,7 +1090,6 @@ class WPMUDEV_Dashboard_Api {
 	 *
 	 * This means:
 	 * - FULL members will NOT see any LITE projects.
-	 * - NON-FULL members will ONLY see LITE and FREE projects.
 	 *
 	 * @since  4.0.0
 	 * @param  array $data Response from the API.
@@ -1105,11 +1106,6 @@ class WPMUDEV_Dashboard_Api {
 			if ( 'full' == $my_level ) {
 				// Remove lite from the projects list.
 				if ( 'lite' == $project['paid'] ) {
-					unset( $data['projects'][ $id ] );
-				}
-			} elseif ( $id != $single_id ) {
-				// Remove projects that are neither free nor lite.
-				if ( 'free' != $project['paid'] && 'lite' != $project['paid'] ) {
 					unset( $data['projects'][ $id ] );
 				}
 			}

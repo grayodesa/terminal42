@@ -137,7 +137,7 @@ if ( ! class_exists( 'WpssoProSocialBuddypress' ) ) {
 		public function filter_title_seed( $title, $mod, $add_hashtags, $md_idx ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'title strlen' => strlen( $title ),
 					'mod' => $mod,
 					'add_hashtags' => $add_hashtags,
@@ -176,7 +176,7 @@ if ( ! class_exists( 'WpssoProSocialBuddypress' ) ) {
 		public function filter_content_seed( $content, $mod, $md_idx ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'content strlen' => strlen( $content ),
 					'mod' => $mod,
 					'md_idx' => $md_idx,

@@ -44,7 +44,7 @@ Abandoned Cart PRO plugin enables to do the following additional things:
 
 **Pro Version:**
 
-**[Abandoned Cart Pro for WooCommerce 3.3](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "Abandoned Cart Pro for WooCommerce")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
+**[Abandoned Cart Pro for WooCommerce 3.4](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "Abandoned Cart Pro for WooCommerce")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
 
 
 **Email Sending Setup:**
@@ -87,7 +87,21 @@ The documentation can be found **[here](https://www.tychesoftwares.com/woocommer
 
 4. Lists Recovered Orders.
 
+5. Product Report Tab.
+
 == Changelog ==
+
+= 3.0 =
+
+* Enhancements - In this version, the code has been refined throughout the plugin & the folder structure has also been modified.
+
+* Enhancements - Earlier rounding off of the decimal values was hardcoded in the plugin. Now, it will round the decimal values based on the WooCommerce setting named "Number of Decimals" which is located at WooCommerce -> Settings menu.
+
+* Bugs Fixed - When setting "Email admin On Order Recovery" is enabled & order is recovered from the abandoned cart reminder notifications using "Cash On Delivery" payment gateway. Then the order is not considered as recovered & the order was not displayed in the "Recovered Orders" tab. This has been fixed.
+
+* Bugs Fixed - Earlier the abandoned cart reminder emails & abandoned orders details page was not displaying the selected attributes for the variable products. This has been fixed.
+
+* Bugs Fixed - The "Abandoned Date" column of the abandoned orders tab was not considering the time for sorting. This has been fixed.
 
 = 2.9 =
 

@@ -97,10 +97,10 @@ if ( ! class_exists( 'WpssoProEcomYotpoWc' ) ) {
 				if ( isset( $resp['response']['bottomline']['average_score'] ) &&
 					isset( $resp['response']['bottomline']['total_reviews'] ) ) {
 
-					$og_ecom['product:rating:average'] = $resp['response']['bottomline']['average_score'];
+					$og_ecom['product:rating:average'] = (float) $resp['response']['bottomline']['average_score'];
 					$og_ecom['product:rating:worst'] = 1;
 					$og_ecom['product:rating:best'] = 5;
-					$og_ecom['product:review:count'] = $resp['response']['bottomline']['total_reviews'];
+					$og_ecom['product:review:count'] = (int) $resp['response']['bottomline']['total_reviews'];
 				} else {
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'error: average_score and/or total_reviews missing from response' );

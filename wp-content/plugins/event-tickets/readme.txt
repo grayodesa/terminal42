@@ -4,7 +4,7 @@ Contributors: ModernTribe, borkweb, zbtirrell, barry.hughes, bordoni, brianjesse
 Tags: events, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Event Tickets, Event Tickets Plus
 Requires at least: 3.9
 Tested up to: 4.5.3
-Stable tag: 4.2.2
+Stable tag: 4.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,16 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18v2" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.2.4] 2016-08-03 =
+
+* Tweak - Changed "Event Add-Ons" to load faster [64286]
+
+= [4.2.3] 2016-07-20 =
+
+* Tweak - Add prompt for ratings on admin Event screens
+* Fix - Provide fallback page if App Shop API fails to load
+* Fix - Events related links should appear under the Events menu (Thanks @Abby for the original report of this on our support forums)
 
 = [4.2.2] 2016-07-06 =
 

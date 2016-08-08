@@ -10,7 +10,7 @@
 			<h3>Password Auditing is only available to Premium Members</h3>
 			<p>Wordfence Password Auditing uses our high performance password auditing cluster to test the strength of your admin and user passwords. We securely simulate a high-performance password cracking attack on your password database and will alert you to weak passwords. We then provide a way to change weak passwords or alert members that they need to improve their password strength.</p>
 
-			<p>Upgrade to Premium today for less than $5 per month:</p>
+			<p>Upgrade to Premium today for just $8.25 per month:</p>
 			<ul>
 				<li>Receive real-time Firewall and Scan engine rule updates for protection as threats emerge</li>
 				<li>Other advanced features like IP reputation monitoring, an advanced comment spam filter, advanced scanning options, cell phone sign-in and country blocking give you the best protection available</li>

@@ -295,7 +295,7 @@ if ( ! class_exists( 'WDEV_Plugin_Ui' ) ) {
 					</div>
 					<?php if ( $show_actions ) : ?>
 					<div class="frash-notice-cta">
-						<?php echo wp_kses( $msg['cta'], $allowed ); ?>
+						<?php echo $msg['cta']; ?>
 						<?php if ( $msg['can_dismiss'] ) : ?>
 						<button class="frash-notice-dismiss" data-msg="<?php echo esc_attr( $msg_dismiss ); ?>">
 							<?php esc_html_e( 'Dismiss', 'wpmudev' ); ?>

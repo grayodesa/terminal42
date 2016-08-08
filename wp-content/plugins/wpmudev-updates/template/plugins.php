@@ -112,6 +112,6 @@ $this->render_header( $page_title );
 jQuery(function(){
 	window.WDP = window.WDP || {};
 	WDP.data = WDP.data || {};
-	WDP.data.hash_show_popup = <?php echo json_encode( wp_create_nonce( 'show-popup' ) ); ?>;
+	WDP.data.hash_show_popup = <?php echo json_encode( wp_create_nonce( 'show-popup' ) ); ?>;	 		 		 	 	 	 	 	 	
 });
 </script>

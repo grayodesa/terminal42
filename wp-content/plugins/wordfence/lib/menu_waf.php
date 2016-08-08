@@ -74,7 +74,7 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 					Premium version of the Threat Defense Feed is updated in real-time protecting you immediately. As a
 					free user <strong>you are receiving the community version</strong> of the feed which is updated 30
 					days later.
-					Upgrade now for less than $5 a month!</p>
+					Upgrade now for just $8.25 per month!</p>
 
 				<p class="center"><a class="button button-primary"
 				                     href="https://www.wordfence.com/wafOptions1/wordfence-signup/">

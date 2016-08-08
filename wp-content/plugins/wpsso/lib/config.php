@@ -20,11 +20,11 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			'feed_cache_exp' => 86400,	// 24 hours
 			'plugin' => array(
 				'wpsso' => array(
-					'version' => '3.33.4-1',	// plugin version
-					'opt_version' => '440',		// increment when changing default options
+					'version' => '3.33.8-2',	// plugin version
+					'opt_version' => '443',		// increment when changing default options
 					'short' => 'WPSSO',		// short plugin name
 					'name' => 'WordPress Social Sharing Optimization (WPSSO)',
-					'desc' => 'A fast, light-weight, comprehensive plugin to manage all aspects of social meta tags & Schema markup for Google + all social websites.',
+					'desc' => 'Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.',
 					'slug' => 'wpsso',
 					'base' => 'wpsso/wpsso.php',
 					'update_auth' => 'tid',
@@ -570,14 +570,17 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'add_meta_itemprop_openinghoursspecification.validthrough' => 1,
 					'add_meta_itemprop_menu' => 1,
 					'add_meta_itemprop_acceptsreservations' => 1,
-					'add_meta_itemprop_ratingvalue' => 1,
-					'add_meta_itemprop_ratingcount' => 1,
-					'add_meta_itemprop_worstrating' => 1,
-					'add_meta_itemprop_bestrating' => 1,
-					'add_meta_itemprop_reviewcount' => 1,
+					'add_meta_itemprop_ratingvalue' => 1,	// Schema AggregateRating
+					'add_meta_itemprop_ratingcount' => 1,	// Schema AggregateRating
+					'add_meta_itemprop_worstrating' => 1,	// Schema AggregateRating
+					'add_meta_itemprop_bestrating' => 1,	// Schema AggregateRating
+					'add_meta_itemprop_reviewcount' => 1,	// Schema AggregateRating
 					'add_meta_itemprop_startdate' => 1,	// Schema Event
 					'add_meta_itemprop_enddate' => 1,	// Schema Event
 					'add_meta_itemprop_location' => 1,	// Schema Event
+					'add_meta_itemprop_totaltime' => 1,	// Schema Recipe
+					'add_meta_itemprop_recipeyield' => 1,	// Schema Recipe
+					'add_meta_itemprop_ingredients' => 1,	// Schema Recipe
 					/*
 					 * Advanced Settings
 					 */
@@ -602,7 +605,22 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_vimeo_api' => 1,
 					'plugin_wistia_api' => 1,
 					'plugin_youtube_api' => 1,
-					// Social Settings Tab
+					// Theme Integration Tab
+					'plugin_html_attr_filter_name' => 'language_attributes',
+					'plugin_html_attr_filter_prio' => 100,
+					'plugin_head_attr_filter_name' => 'head_attributes',
+					'plugin_head_attr_filter_prio' => 100,
+					'plugin_check_head' => 1,			// Check for Duplicate Meta Tags
+					'plugin_filter_lang' => 1,			// Use WP Locale for Language
+					'plugin_auto_img_resize' => 1,			// Recreate Missing WP Media Sizes
+					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
+					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
+					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
+					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
+					'plugin_widgets' => 1,				// Enable Plugin Widget(s)
+					'plugin_page_excerpt' => 0,			// Enable WP Excerpt for Pages
+					'plugin_page_tags' => 0,			// Enable WP Tags for Pages
+					// Social Settings Meta Tab
 					'plugin_og_img_col_post' => 1,
 					'plugin_og_img_col_term' => 1,
 					'plugin_og_img_col_user' => 1,
@@ -620,21 +638,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_cf_img_url' => '_format_image_url',
 					'plugin_cf_vid_url' => '_format_video_url',
 					'plugin_cf_vid_embed' => '_format_video_embed',
-					// Theme Integration Tab
-					'plugin_html_attr_filter_name' => 'language_attributes',
-					'plugin_html_attr_filter_prio' => 100,
-					'plugin_head_attr_filter_name' => 'head_attributes',
-					'plugin_head_attr_filter_prio' => 100,
-					'plugin_check_head' => 1,			// Check for Duplicate Meta Tags
-					'plugin_filter_lang' => 1,			// Use WP Locale for Language
-					'plugin_auto_img_resize' => 1,			// Create Missing WP Media Images
-					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
-					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
-					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
-					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
-					'plugin_widgets' => 1,				// Enable Plugin Widget(s)
-					'plugin_page_excerpt' => 0,			// Enable WP Excerpt for Pages
-					'plugin_page_tags' => 0,			// Enable WP Tags for Pages
+					'plugin_cf_recipe_ingredients' => '_recipe_ingredients',
 					// File and Object Cache Tab
 					'plugin_object_cache_exp' => 259200,		// Object Cache Expiry (259200 secs = 3 days)
 					'plugin_verify_certs' => 0,			// Verify SSL Certificates
@@ -645,6 +649,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_shortlink' => 1,
 					'plugin_min_shorten' => 23,
 					'plugin_bitly_login' => '',
+					'plugin_bitly_token' => '',
 					'plugin_bitly_api_key' => '',
 					'plugin_google_api_key' => '',
 					'plugin_google_shorten' => 0,
@@ -702,20 +707,31 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					 * Advanced Settings
 					 */
 					// Plugin Settings Tab
-					'plugin_debug' => 0,				// Add Hidden Debug Messages
-					'plugin_debug:use' => 'default',
+					'plugin_clear_on_save' => 1,			// Clear All Cache(s) on Save Settings
+					'plugin_clear_on_save:use' => 'default',
 					'plugin_preserve' => 0,				// Preserve Settings on Uninstall
 					'plugin_preserve:use' => 'default',
+					'plugin_debug' => 0,				// Add Hidden Debug Messages
+					'plugin_debug:use' => 'default',
+					'plugin_hide_pro' => 0,				// Hide All Pro Version Options
+					'plugin_hide_pro:use' => 'default',
 					'plugin_show_opts' => 'basic',			// Options to Show by Default
 					'plugin_show_opts:use' => 'default',
-					'plugin_cache_info' => 0,			// Report Cache Purge Count
-					'plugin_cache_info:use' => 'default',
+					// Content and Filters Tab
+					// Social Settings Tab
+					// WP / Theme Integration Tab
+					'plugin_check_head' => 1,			// Check for Duplicate Meta Tags
+					'plugin_check_head:use' => 'default',
 					'plugin_filter_lang' => 1,			// Use WP Locale for Language
 					'plugin_filter_lang:use' => 'default',
-					'plugin_auto_img_resize' => 1,			// Auto-Resize Media Images
+					'plugin_auto_img_resize' => 1,			// Recreate Missing WP Media Sizes
 					'plugin_auto_img_resize:use' => 'default',
 					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
 					'plugin_check_img_dims:use' => 'default',
+					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
+					'plugin_upscale_images:use' => 'default',
+					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
+					'plugin_upscale_img_max:use' => 'default',
 					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
 					'plugin_shortcodes:use' => 'default',
 					'plugin_widgets' => 1,				// Enable Plugin Widget(s)
@@ -727,10 +743,12 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					// File and Object Cache Tab
 					'plugin_object_cache_exp' => 259200,		// Object Cache Expiry (259200 secs = 3 days)
 					'plugin_object_cache_exp:use' => 'default',
-					'plugin_file_cache_exp' => 0,			// File Cache Expiry
-					'plugin_file_cache_exp:use' => 'default',
 					'plugin_verify_certs' => 0,			// Verify SSL Certificates
 					'plugin_verify_certs:use' => 'default',
+					'plugin_cache_info' => 0,			// Report Cache Purge Count
+					'plugin_cache_info:use' => 'default',
+					'plugin_file_cache_exp' => 0,			// File Cache Expiry
+					'plugin_file_cache_exp:use' => 'default',
 					// Pro Licenses and Extension Plugins
 					'plugin_wpsso_tid' => '',
 					'plugin_wpsso_tid:use' => 'default',
@@ -1230,7 +1248,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 
 				if ( $do_filter ) {
 
-					self::$cf = apply_filters( self::$cf['lca'].'_get_config', self::$cf );
+					self::$cf = apply_filters( self::$cf['lca'].'_get_config', self::$cf, self::get_version() );
 
 					self::$cf['config_filtered'] = true;
 
@@ -1280,8 +1298,10 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			self::set_variable_constants();
 		}
 
-		public static function set_variable_constants() { 
-			foreach ( self::get_variable_constants() as $name => $value )
+		public static function set_variable_constants( $constants = null ) { 
+			if ( $constants === null )
+				$constants = self::get_variable_constants();
+			foreach ( $constants as $name => $value )
 				if ( ! defined( $name ) )
 					define( $name, $value );
 		}
@@ -1338,16 +1358,8 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			 * WPSSO curl settings
 			 */
 			if ( defined( 'WPSSO_PLUGINDIR' ) )
-				$var_const['WPSSO_CURL_CAINFO'] = WPSSO_PLUGINDIR.'share/curl/ca-bundle.crt';
-			$var_const['WPSSO_CURL_USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0';
-
-			// disable 3rd-party caching for duplicate meta tag checks
-			if ( ! empty( $_GET['WPSSO_META_TAGS_DISABLE'] ) ) {
-				$var_const['DONOTCACHEPAGE'] = true;		// wp super cache and w3tc
-				$var_const['COMET_CACHE_ALLOWED'] = false;	// comet cache
-				$var_const['QUICK_CACHE_ALLOWED'] = false;	// quick cache
-				$var_const['ZENCACHE_ALLOWED'] = false;		// zencache
-			}
+				$var_const['WPSSO_PHP_CURL_CAINFO'] = WPSSO_PLUGINDIR.'share/curl/ca-bundle.crt';
+			$var_const['WPSSO_PHP_CURL_USERAGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
 
 			foreach ( $var_const as $name => $value )
 				if ( defined( $name ) )

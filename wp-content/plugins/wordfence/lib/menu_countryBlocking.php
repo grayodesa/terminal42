@@ -13,7 +13,7 @@ WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 		<h3>Country Blocking is only available to Premium Members</h3>
 		<p>Country blocking is a premium feature that lets you block attacks or malicious activity that originates in a specific country</p>
 
-		<p>Upgrade to Premium today for less than $5 per month:</p>
+		<p>Upgrade to Premium today for just $8.25 per month:</p>
 		<ul>
 			<li>Receive real-time Firewall and Scan engine rule updates for protection as threats emerge</li>
 			<li>Other advanced features like IP reputation monitoring, an advanced comment spam filter, advanced scanning options and cell phone sign-in give you the best protection available</li>
@@ -40,7 +40,7 @@ WFAD.countryMap = <?php echo json_encode($wfBulkCountries); ?>;
 	<div class="wordfenceWrap" style="margin: 20px 20px 20px 30px;">
 		<table class="wfConfigForm">
 		<tr><td colspan="2"><h2>Country Blocking Options</h2></td></tr>
-		<?php if(! wfConfig::get('firewallEnabled')){ ?><tr><td colspan="2"><div style="color: #F00; font-weight: bold;">Firewall is disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div></td></tr><?php } ?>
+		<?php if(! wfConfig::get('firewallEnabled')){ ?><tr><td colspan="2"><div style="color: #F00; font-weight: bold;">Rate limiting rules and advanced blocking are disabled. You can enable it on the <a href="admin.php?page=WordfenceSecOpt">Wordfence Options page</a> at the top.</div></td></tr><?php } ?>
 		<tr><th>What to do when we block someone:</th><td>
 			<select id="wfBlockAction">
 				<option value="block"<?php if(wfConfig::get('cbl_action') == 'block'){ echo ' selected'; } ?>>Show the standard Wordfence blocked message</option>

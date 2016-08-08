@@ -15,7 +15,7 @@ class Thrive_Dash_Api_Mautic_Lists extends Thrive_Dash_Api_Mautic_Api {
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $endpoint = 'lists';
+	protected $endpoint = 'segments';
 
 	/**
 	 * Add a lead to the list
@@ -26,7 +26,7 @@ class Thrive_Dash_Api_Mautic_Lists extends Thrive_Dash_Api_Mautic_Api {
 	 * @return array|mixed
 	 */
 	public function addLead( $id, $leadId ) {
-		return $this->makeRequest( $this->endpoint . '/' . $id . '/lead/add/' . $leadId, array(), 'POST' );
+		return $this->makeRequest( $this->endpoint . '/' . $id . '/contact/add/' . $leadId, array(), 'POST' );
 	}
 
 
@@ -39,6 +39,6 @@ class Thrive_Dash_Api_Mautic_Lists extends Thrive_Dash_Api_Mautic_Api {
 	 * @return array|mixed
 	 */
 	public function removeLead( $id, $leadId ) {
-		return $this->makeRequest( $this->endpoint . '/' . $id . '/lead/remove/' . $leadId, array(), 'POST' );
+		return $this->makeRequest( $this->endpoint . '/' . $id . '/contact/remove/' . $leadId, array(), 'POST' );
 	}
 }

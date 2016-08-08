@@ -13,8 +13,7 @@ if ( ! class_exists( 'WpssoPlmAddress' ) ) {
 	class WpssoPlmAddress {
 
 		private $p;
-
-		private static $md_opts = array();	// meta data cache
+		private static $mod_md_opts = array();	// get_md_options() meta data cache
 
 		public static $place_mt = array(
 			'plm_addr_name' => 'place:name',
@@ -177,11 +176,11 @@ if ( ! class_exists( 'WpssoPlmAddress' ) ) {
 			if ( $wpsso->debug->enabled )
 				$wpsso->debug->mark();
 
-			if ( ! isset( self::$md_opts[$mod['name']][$mod['id']] ) )	// make sure a cache entry exists
-				self::$md_opts[$mod['name']][$mod['id']] = array();
-			else return self::$md_opts[$mod['name']][$mod['id']];		// return the cache entry
+			if ( ! isset( self::$mod_md_opts[$mod['name']][$mod['id']] ) )	// make sure a cache entry exists
+				self::$mod_md_opts[$mod['name']][$mod['id']] = array();
+			else return self::$mod_md_opts[$mod['name']][$mod['id']];	// return the cache entry
 
-			$md_opts =& self::$md_opts[$mod['name']][$mod['id']];		// shortcut variable
+			$md_opts =& self::$mod_md_opts[$mod['name']][$mod['id']];	// shortcut variable
 
 			$md_opts = $mod['obj']->get_options( $mod['id'] );
 			if ( is_array( $md_opts  ) ) {
@@ -198,19 +197,26 @@ if ( ! class_exists( 'WpssoPlmAddress' ) ) {
 			return $md_opts;
 		}
 
+		public static function get_addr_names() {
+
+			$wpsso =& Wpsso::get_instance();
+			if ( $wpsso->debug->enabled )
+				$wpsso->debug->mark();
+
+			return SucomUtil::get_multi_key_locale( 'plm_addr_name', $wpsso->options, false );
+		}
+
 		// get a specific address id
 		// if $id is 'custom', then $mixed must be the $mod array
 		public static function get_addr_id( $id, $mixed = 'current' ) {
 
 			$wpsso =& Wpsso::get_instance();
-			
 			if ( $wpsso->debug->enabled ) {
-				$wpsso->debug->args( array( 
+				$wpsso->debug->log_args( array( 
 					'id' => $id,
 					'mixed' => $mixed,
 				) );
 			}
-
 
 			$addr_opts = array();
 
@@ -224,8 +230,7 @@ if ( ! class_exists( 'WpssoPlmAddress' ) ) {
 						$addr_opts[$key] = SucomUtil::get_locale_opt( $key, $md_opts, $mixed );
 
 			} elseif ( is_numeric( $id ) ) {
-				foreach ( SucomUtil::preg_grep_keys( '/^(plm_addr_.*)_'.$id.'(#.*)?$/', 
-					$wpsso->options, false, '$1' ) as $key => $value )
+				foreach ( SucomUtil::preg_grep_keys( '/^(plm_addr_.*)_'.$id.'(#.*)?$/', $wpsso->options, false, '$1' ) as $key => $value )
 						$addr_opts[$key] = SucomUtil::get_locale_opt( $key.'_'.$id, $wpsso->options, $mixed );
 			}
 

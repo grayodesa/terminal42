@@ -55,7 +55,7 @@ $w = new wfConfig();
 						</table>
 					<?php else: ?>
 						<div class="wf-premium-callout">
-							<h3>Upgrade to Wordfence Premium today for less than $5 per month</h3>
+							<h3>Upgrade to Wordfence Premium today for just $8.25 per month:</h3>
 							<ul>
 								<li>Receive real-time Firewall and Scan engine rule updates for protection as threats emerge</li>
 								<li>Advanced features like IP reputation monitoring, country blocking, an advanced comment spam filter and cell phone sign-in give you the best protection available</li>
@@ -465,6 +465,13 @@ $w = new wfConfig();
 					           name="scansEnabled_plugins" value="1" <?php $w->cb( 'scansEnabled_plugins' ); ?>/></td>
 				</tr>
 				<tr>
+					<th>Scan wp-admin and wp-includes for files not bundled with WordPress<a
+							href="http://docs.wordfence.com/en/Wordfence_options#Scan_wordpress_core_for_unknown_files"
+							target="_blank" class="wfhelp"></a></th>
+					<td><input type="checkbox" id="scansEnabled_coreUnknown" class="wfConfigElem"
+					           name="scansEnabled_coreUnknown" value="1" <?php $w->cb( 'scansEnabled_coreUnknown' ); ?>/></td>
+				</tr>
+				<tr>
 					<th>Scan for signatures of known malicious files<a
 							href="http://docs.wordfence.com/en/Wordfence_options#Scan_for_signatures_of_known_malicious_files"
 							target="_blank" class="wfhelp"></a></th>
@@ -840,11 +847,10 @@ $w = new wfConfig();
 					<th>Whitelisted IP addresses that bypass all rules:<a
 							href="http://docs.wordfence.com/en/Wordfence_options#Whitelisted_IP_addresses_that_bypass_all_rules"
 							target="_blank" class="wfhelp"></a></th>
-					<td><input type="text" name="whitelisted" id="whitelisted"
-					           value="<?php $w->f( 'whitelisted' ); ?>" size="40"/></td>
+					<td><textarea name="whitelisted" id="whitelisted" cols="40" rows="4"><?php echo esc_html(preg_replace('/,/', "\n", $w->get('whitelisted'))); ?></textarea></td>
 				</tr>
 				<tr>
-					<th colspan="2" style="color: #999;">Whitelisted IP's must be separated by commas. You can specify
+					<th colspan="2" style="color: #999;">Whitelisted IP's must be separated by commas or placed on separate lines. You can specify
 						ranges using the following format: 123.23.34.[1-50]<br/>Wordfence automatically whitelists <a
 							href="http://en.wikipedia.org/wiki/Private_network" target="_blank">private networks</a>
 						because these are not routable on the public Internet.<br/><br/></th>

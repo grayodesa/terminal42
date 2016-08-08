@@ -27,7 +27,7 @@
 			</select>
 			<label for="tvd-aw-api-country"><?php echo __( 'Authentication Type', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
 		</div>
-		<p><?php echo __( 'When using OAuth2 as the Authentication Type you need to reauthorize the connection after a certain amount of time (15 days by default) for more information please read the following', TVE_DASH_TRANSLATE_DOMAIN ) ?> <a href="#" target="_blank"><strong><?php echo __( 'Knowledge Base Article', TVE_DASH_TRANSLATE_DOMAIN ) ?></strong></a></p>
+		<p><?php echo __( 'When using OAuth2 as the Authentication Type you need to reauthorize the connection after a certain amount of time (14 days by default) for more information please read the following', TVE_DASH_TRANSLATE_DOMAIN ) ?> <a href="https://thrivethemes.com/tkb_item/how-to-correctly-use-the-oauth2-authentication-type-in-our-mautic-integration" target="_blank"><strong><?php echo __( 'Knowledge Base Article', TVE_DASH_TRANSLATE_DOMAIN ) ?></strong></a></p>
 	</form>
 </div>
 <div class="tvd-card-action">

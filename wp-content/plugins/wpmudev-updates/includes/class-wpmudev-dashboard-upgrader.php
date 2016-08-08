@@ -742,6 +742,8 @@ class WPMUDEV_Dashboard_Upgrader {
 		}
 
 		if ( $is_dev ) {
+			WPMUDEV_Dashboard::$site->after_local_files_changed(); //might be overkill
+
 			if ( ! $this->is_async ) {
 				// API call to inform wpmudev site about the change.
 				WPMUDEV_Dashboard::$site->refresh_local_projects( 'remote' );
@@ -753,8 +755,8 @@ class WPMUDEV_Dashboard_Upgrader {
 			// Check if the update was successful.
 			$project = WPMUDEV_Dashboard::$site->get_project_infos( $pid );
 
-			if ( $project->version_installed != $project->version_latest ) {
-				$this->set_error( $pid, 'UPG.06', __( 'Maybe wrong folder permissions', 'wpmudev' ) );
+			if ( version_compare( $project->version_installed, $project->version_latest, '<' ) ) {
+				$this->set_error( $pid, 'UPG.06', __( 'There was an unknown error', 'wpmudev' ) );
 				return false;
 			}
 		}

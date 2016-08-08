@@ -63,7 +63,7 @@ if ( ! class_exists( 'WpssoProMediaGravatar' ) ) {
 				$this->p->debug->mark();
 
 			$user_email = get_the_author_meta( 'user_email', $user_id );
-			$size_info = $this->p->media->get_size_info( $size_name );
+			$size_info = SucomUtil::get_size_info( $size_name );
 			$img_size = $size_info['width'] > 2048 ? 2048 : $size_info['width'];
 
 			if ( empty( $user_email ) ) {

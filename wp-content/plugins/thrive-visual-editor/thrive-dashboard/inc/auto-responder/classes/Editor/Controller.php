@@ -208,7 +208,7 @@ class Thrive_Dash_List_Editor_Controller {
 	public function apiListsAction() {
 		$api = $this->_param( 'api' );
 
-		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::$AVAILABLE ) ) {
+		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::available() ) ) {
 			exit();
 		}
 		$connection = Thrive_Dash_List_Manager::connectionInstance( $api );
@@ -229,7 +229,7 @@ class Thrive_Dash_List_Editor_Controller {
 		$api = $this->_param( 'api' );
 		$list_id = $this->_param( 'list' );
 
-		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::$AVAILABLE ) ) {
+		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::available() ) ) {
 			exit();
 		}
 

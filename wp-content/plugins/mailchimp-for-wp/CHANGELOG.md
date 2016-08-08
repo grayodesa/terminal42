@@ -1,13 +1,24 @@
 Changelog
 =========
 
+#### 3.1.12 - July 28. 2016
+
+**Improvements**
+
+- Smarter scrolling after submitting form & reloading page.
+- Format output of `{subscriber_count}` tag.
+- You can now use `<img>` in your form messages.
+- Add MailChimp API error code to debug log lines.
+- Add plugin name + version to User-Agent header for all MailChimp API requests.
+- Make sure value of MC_LANGUAGE field is limited to 2 characters.
+
+
 #### 3.1.11 - July 5, 2016
 
 **Improvements**
 
 - Update JavaScript dependencies for admin screens.
 - Test debug log & show notice when it's not writable.
-- Reset browser appearance of `<select>` elements in form themes.
 
 **Additions**
 

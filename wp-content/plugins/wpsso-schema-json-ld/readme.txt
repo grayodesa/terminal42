@@ -1,30 +1,33 @@
-=== WPSSO Schema JSON-LD Markup - Schema / Rich Snippet Markup for Google / Pinterest ===
+=== WPSSO Schema JSON-LD Markup - Schema / Structured Data / Rich Snippet Markup ===
 Plugin Name: WPSSO Schema JSON-LD Markup (WPSSO JSON)
 Plugin Slug: wpsso-schema-json-ld
 Text Domain: wpsso-schema-json-ld
 Domain Path: /languages
 Contributors: jsmoriss
 Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
-Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippets, article, product, event, review, rating, pinterest, google, seo, news, amp, co-authors, co-authors plus
+Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippet, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest
 License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
 Requires At Least: 3.1
-Tested Up To: 4.5.3
-Stable Tag: 1.9.1-1
+Tested Up To: 4.6
+Stable Tag: 1.10.0-1
 
-WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.
+WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).
 
 == Description ==
 
-<p><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" /><strong>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup.</strong></p>
+<p style="margin:0;">
+<img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" />
+<blockquote class="top_info">
+<p>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup, including images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, recipe details, event information, etc.</p>
+<p>Overrides any missing or incomplete Schema markup in your theme templates.</p>
+<p>Choose another Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</p>
+<p>Include all WooCommerce product variations and their details in the Schema Product markup! (Pro version)</p>
+<p><strong>Specific Schema markup for Pinterest</strong> &mdash; Pinterest does not (presently) read the popular JSON-LD format. The WPSSO plugin and its WPSSO JSON extension include provisions for Pinterest to provide Schema markup using meta tags instead.</p>
+</blockquote>
+</p>
 
-<p><strong>Corrects incomplete and innacurate Schema markup in theme templates.</strong></p>
-
-<p><strong>Choose a different Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</strong></p>
-
-<p><strong>Include all WooCommerce product variations in the Schema markup!</strong> (Pro version)</p>
-
-<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Rich Snippet markup (images, videos, author, co-authors, ratings, publisher, place, product, etc.) for Google Search, Pinterest, and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema markup in theme templates.</p>
+<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Structured Data / Rich Snippet markup (images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, etc.) for Google Search and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema / Structured Data / Rich Snippet markup in theme templates.</p>
 
 = Quick List of Features =
 
@@ -48,7 +51,7 @@ Adds an additional "Schema Markup" settings page to the SSO menu:
 * Default Item Type for Home Page
 * Default Item Type by Post Type (for Posts, Pages, Media, and custom post types).
 
-Adds Google / Schema JSON-LD markup:
+Adds Schema / Structured Data JSON-LD markup:
 
 * Schema Type [schema.org/BlogPosting](http://schema.org/BlogPosting)
 * Schema Type [schema.org/WebPage](http://schema.org/WebPage)
@@ -111,7 +114,7 @@ Adds additional custom options in the Social Settings metabox:
 * Article Publisher
 * Schema Description
 
-Adds Google / Schema JSON-LD markup:
+Adds Schema / Structured Data JSON-LD markup:
 
 * Schema Type [schema.org/CreativeWork](http://schema.org/CreativeWork)
 	* Schema Type [schema.org/Article](http://schema.org/Article)
@@ -195,7 +198,7 @@ Adds Google / Schema JSON-LD markup:
 > 	* WorstRating
 > 	* BestRating
 
-* Schema Type [schema.org/Event](http://schema.org/Event) (**supported Event / Calendar plugin required**)
+* Schema Type [schema.org/Event](http://schema.org/Event)
 	* Schema Type [schema.org/BusinessEvent](http://schema.org/BusinessEvent)
 	* Schema Type [schema.org/ChildrensEvent](http://schema.org/ChildrensEvent)
 	* Schema Type [schema.org/DanceEvent](http://schema.org/DanceEvent)
@@ -947,17 +950,21 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 
 = Additional Documentation =
 
-* None
+* [Developer Resources](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/)
+	* [Filters](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/)
+		* [Filter Examples](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/)
+			* [Modify the aggregateRating Property](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-aggregaterating-property/)
 
 == Screenshots ==
 
-01. Social Settings metabox on Posts, Pages, Taxonomy / Terms, and User editing pages &mdash; Allows you to modify the default Schema type, title, headline (for Articles), description, image, video, preview an example share, preview the meta tags, and validate the webpage markup with online tools.
-02. A selection of Google Structured Data / Schema Markup options are shown based on the Schema Item Type. This example shows the Schema Item Type http://schema.org/Review, along with its reviewed item type (product, restaurant, book, etc.), the item URL, and the item rating.
-03. Google's Structured Data Testing Tool showing results for an example of the Schema Item Type http://schema.org/TechArticle.
+01. (Pro version) Social Settings metabox on Posts, Pages, Taxonomy / Terms, and User editing pages &mdash; Allows you to modify the default Schema type, title, headline (for Articles), description, image, video, preview an example share, preview the meta tags, and validate the webpage markup with online tools.
+02. (Pro version) A selection of Google Structured Data / Schema Markup options are shown based on the Schema Item Type. This example shows the Schema Item Type http://schema.org/Review, along with its reviewed item type (product, restaurant, book, etc.), the item URL, and the item rating.
+03. (Pro version) An example of WPSSO JSON's Schema Recipe markup on Pinterest.
+04. (Pro version) Google's Structured Data Testing Tool showing results for an example of the Schema Item Type http://schema.org/TechArticle.
 
 == Changelog ==
 
-<blockquote id="changelog_top_info">
+<blockquote class="top_info">
 <p>New versions of the plugin are released approximately every week (more or less). New features are added, tested, and released incrementally, instead of grouping them together in a major version release. When minor bugs fixes and/or code improvements are applied, new versions are also released. This release schedule keeps the code stable and reliable, at the cost of more frequent updates.</p>
 
 <p>See <a href="https://en.wikipedia.org/wiki/Release_early,_release_often">release early, release often (RERO) software development philosophy</a> on Wikipedia for more information on the benefits of smaller / more frequent releases.</p>
@@ -965,78 +972,42 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 
 = Free / Basic Version Repository =
 
-* [GitHub](https://github.com/SurniaUlula/wpsso-schema-json-ld)
+* [GitHub](https://surniaulula.github.io/wpsso-schema-json-ld/)
 * [WordPress.org](https://wordpress.org/plugins/wpsso-schema-json-ld/developers/)
 
 = Changelog / Release Notes =
 
-**Version 1.9.1-1 (2016/07/06)**
+**Version 1.10.0-1 (2016/07/29)**
 
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Added a "headline" attribute for the Schema BlogPosting type (Free version).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* Renamed the `WpssoSchema::add_author_and_coauthor_data()` method to `add_author_coauthor_data()`.
-
-**Version 1.9.0-1 (2016/07/03)**
-
-Official announcement: N/A
+Official announcement: http://wpsso.com/2016/07/29/wpsso-json-update-google-pinterest-recipe-markup/
 
 * *New Features*
-	* Added new options to the Social Settings metabox for the http://schema.org/Review type:
-		* Reviewed Item Type
-		* Reviewed Item URL
-		* Reviewed Item Rating
-* *Improvements*
-	* Added the 'wpsso-schema-article' image size for Schema Article sub-types (including BlogPosting).
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
-
-**Version 1.8.1-1 (2016/06/30)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
+	* Added new recipe input fields to the Social Settings metabox, shown when the Schema Recipe type is selected (Pro version).
+		* "Recipe Preperation Time"
+		* "Recipe Cook Time"
+		* "Recipe Total Time"
+		* "Recipe Total Calories"
+		* "Recipe Quantity"
+		* "Recipe Ingredients"
+	* Added a new "Recipe Ingredients Custom Field" option in the Schema Markup settings page.
+	* Added new properties for the schema.org/Recipe type:
+		* 'prepTime'
+		* 'cookTime'
+		* 'totalTime'
+		* 'nutrition'
+		* 'recipeYield'
+		* 'ingredients'
 * *Improvements*
 	* None
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Adjusted notices for the new notice methods in WPSSO v3.33.2-1.
-
-**Version 1.8.0-1 (2016/06/21)**
-
-Official announcement: N/A
-
-* *New Features*
-	* Added support for the http://schema.org/Event type and its sub-types (including event image and video media).
-	* Added the "Event Organizer" and "Event Performer" options in the Social Settings metabox (requires the WPSSO ORG extension).
-* *Improvements*
-	* None
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
+	* Added a new filter to include 3rd party aggregate ratings:
+		* apply_filters( 'wpsso_json_prop_http_schema_org_aggregaterating', $rating, $mod );
 
 == Upgrade Notice ==
 
-= 1.9.1-1 =
+= 1.10.0-1 =
 
-(2016/07/06) Renamed the WpssoSchema::add_author_and_coauthor_data() method.
-
-= 1.9.0-1 =
-
-(2016/07/03) Added new options to the Social Settings metabox for the http://schema.org/Review type. Added support for the 'wpsso-schema-article' image size.
-
-= 1.8.1-1 =
-
-(2016/06/30) Adjusted notices for the new notice methods in WPSSO v3.33.2-1.
+(2016/07/29) Enhanced support for Schema Recipe markup for Pinterest and Google. Added new recipe input fields and recipe integration option in the WPSSO JSON settings page.
 

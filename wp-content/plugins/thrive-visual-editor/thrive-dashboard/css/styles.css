@@ -2639,6 +2639,8 @@ table.tvd-collection {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
+    .tvd-truncate-on-small.tvd-no-message:hover:after {
+      display: none; }
     .tvd-truncate-on-small:after {
       box-shadow: none !important;
       background: transparent;
@@ -3125,6 +3127,9 @@ table.tvd-collection {
 .tvd-icon-archive:before {
   content: '\e90b'; }
 
+.tvd-icon-stop:before {
+  content: '\f28d'; }
+
 .tvd-container {
   max-width: 1400px;
   width: 90%; }
@@ -3559,14 +3564,28 @@ table.tvd-collection {
 .tvd-row:empty {
   margin-bottom: 0; }
 
+#wpbody .tvd-header {
+  background: #14A571;
+  margin: 0 0 0 -20px;
+  padding: 25px 20px; }
+  #wpbody .tvd-header #tvd-nav {
+    background: #14A571; }
+    #wpbody .tvd-header #tvd-nav .nav-wrapper i {
+      color: #fff; }
+    #wpbody .tvd-header #tvd-nav .tve-logo img {
+      vertical-align: middle; }
+
 #wpbody nav {
   background-color: #fff;
   color: #9fb4bf;
   width: 100%;
   height: 56px;
   line-height: 56px; }
-  #wpbody nav li > a {
-    color: #9fb4bf; }
+  #wpbody nav .nav-wrapper > ul > li > a {
+    color: #fff; }
+  #wpbody nav .nav-wrapper > ul > li:hover > a {
+    color: #fff;
+    opacity: 0.8; }
   #wpbody nav .nav-wrapper {
     position: relative;
     height: 100%; }
@@ -3743,6 +3762,9 @@ html body #wpbody, html body .tvd-modal {
 
 #wpbody .tvd-break-word, .tvd-modal .tvd-break-word {
   word-break: break-all; }
+
+#wpbody .tvd-line-height, .tvd-modal .tvd-line-height {
+  line-height: 31px; }
 
 .tvd-margin-left {
   margin-left: 1.5em; }
@@ -7147,7 +7169,7 @@ time picker styles
   share the love
 */
 #tvd-share-modal {
-  background: #fc7062;
+  background: #fff;
   border-radius: 100%;
   cursor: pointer;
   display: inline-block;
@@ -7161,7 +7183,7 @@ time picker styles
   #wpbody #tvd-share-modal {
     padding: 0; }
   #tvd-share-modal .tvd-icon-heart {
-    color: #fff;
+    color: #fc7062;
     font-size: 12px;
     line-height: 24px !important;
     text-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);

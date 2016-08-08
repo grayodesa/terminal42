@@ -20,6 +20,8 @@ require_once WFWAF_LIB_PATH . 'utils.php';
 require_once WFWAF_LIB_PATH . 'storage.php';
 require_once WFWAF_LIB_PATH . 'storage/file.php';
 
+require_once WFWAF_LIB_PATH . 'config.php';
+
 require_once WFWAF_LIB_PATH . 'rules.php';
 require_once WFWAF_LIB_PATH . 'parser/lexer.php';
 require_once WFWAF_LIB_PATH . 'parser/parser.php';

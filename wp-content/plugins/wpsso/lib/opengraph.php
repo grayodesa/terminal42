@@ -56,8 +56,11 @@ if ( ! class_exists( 'WpssoOpengraph' ) ) {
 
 		public function add_html_attributes( $html_attr ) {
 
-			if ( $this->p->debug->enabled )
-				$this->p->debug->mark();
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->log_args( array (
+					'html_attr' => $html_attr,
+				) );
+			}
 
 			$prefix_ns = apply_filters( $this->p->cf['lca'].'_og_prefix_ns', array(
 				'og' => 'http://ogp.me/ns#',
@@ -160,6 +163,8 @@ if ( ! class_exists( 'WpssoOpengraph' ) ) {
 				// get the current or configured language for og:locale
 				$lang = empty( $this->p->options['fb_lang'] ) ? 
 					SucomUtil::get_locale( $mod ) : $this->p->options['fb_lang'];
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'getting og:locale for lang = '.$lang );
 				$og['og:locale'] = apply_filters( $lca.'_pub_lang', $lang, 'facebook', $mod );
 			}
 
@@ -264,7 +269,7 @@ if ( ! class_exists( 'WpssoOpengraph' ) ) {
 						// add richpin to process both image sizes
 						if ( is_admin() )
 							$img_sizes = SucomUtil::before_key( $img_sizes, 'og', array( 'rp' => $lca.'-richpin' ) );
-						// use only pinterest image size
+						// use only pinterest (rich pin) image size
 						elseif ( $crawler_name === 'pinterest' )
 							$img_sizes = SucomUtil::replace_key( $img_sizes, 'og', array( 'rp' => $lca.'-richpin' ) );
 					}
@@ -306,7 +311,7 @@ if ( ! class_exists( 'WpssoOpengraph' ) ) {
 		public function get_all_videos( $num = 0, array &$mod, $check_dupes = true, $md_pre = 'og', $force_prev = false ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array( 
+				$this->p->debug->log_args( array( 
 					'num' => $num,
 					'mod' => $mod,
 					'check_dupes' => $check_dupes,
@@ -404,7 +409,7 @@ if ( ! class_exists( 'WpssoOpengraph' ) ) {
 		public function get_all_images( $num = 0, $size_name = 'thumbnail', array &$mod, $check_dupes = true, $md_pre = 'og' ) {
 
 			if ( $this->p->debug->enabled ) {
-				$this->p->debug->args( array(
+				$this->p->debug->log_args( array(
 					'num' => $num,
 					'size_name' => $size_name,
 					'mod' => $mod,

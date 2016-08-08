@@ -34,7 +34,8 @@ class wordfenceScanner {
 	protected $api = false;
 	protected static $excludePatterns = array();
 	protected static $builtinExclusions = array(
-											array('pattern' => 'wp-includes/version.php', 'include' => self::EXCLUSION_PATTERNS_KNOWN_FILES), //Excluded from the known files scan because non-en_US installations will have extra content that fails the check, still in malware scan
+											array('pattern' => 'wp\-includes\/version\.php', 'include' => self::EXCLUSION_PATTERNS_KNOWN_FILES), //Excluded from the known files scan because non-en_US installations will have extra content that fails the check, still in malware scan
+											array('pattern' => '(?:wp\-includes|wp\-admin)\/(?:[^\/]+\/+)*(?:\.htaccess|\.htpasswd|php_errorlog|error_log|[^\/]+?\.log|\._|\.DS_Store|\.listing|dwsync\.xml)', 'include' => self::EXCLUSION_PATTERNS_KNOWN_FILES),
 											);
 	/** @var wfScanEngine */
 	protected $scanEngine;
@@ -125,6 +126,11 @@ class wordfenceScanner {
 				$exParts = explode("\n", wfUtils::cleanupOneEntryPerLine(wfConfig::get('scan_exclude')));
 			}
 		}
+		
+		foreach ($exParts as &$exPart) {
+			$exPart = preg_quote(trim($exPart), '/');
+			$exPart = preg_replace('/\\\\\*/', '.*', $exPart);
+		}
 
 		foreach (self::$builtinExclusions as $pattern) {
 			if (($pattern['include'] & $whichPatterns) > 0) {
@@ -133,11 +139,6 @@ class wordfenceScanner {
 		}
 
 		if (!empty($exParts)) {
-			foreach($exParts as &$exPart){
-				$exPart = preg_quote(trim($exPart), '/');
-				$exPart = preg_replace('/\\\\\*/', '.*', $exPart);
-			}
-
 			//self::$excludePattern = '/^(?:' . implode('|', array_filter($exParts)) . ')$/i';
 			self::$excludePatterns[$whichPatterns] = '/(?:' . implode('|', array_filter($exParts)) . ')$/i';
 		}
@@ -194,17 +195,25 @@ class wordfenceScanner {
 				if(preg_match('/\.(?:php(?:\d+)?|phtml)(\.|$)/i', $file)) {
 					$isPHP = true;
 				}
+				$isHTML = false;
+				if(preg_match('/\.(?:html?)(\.|$)/i', $file)) {
+					$isHTML = true;
+				}
+				$isJS = false;
+				if(preg_match('/\.(?:js)(\.|$)/i', $file)) {
+					$isJS = true;
+				}
 				$dontScanForURLs = false;
 				if( (! wfConfig::get('scansEnabled_highSense')) && (preg_match('/^(?:\.htaccess|wp\-config\.php)$/', $file) || $file === ini_get('user_ini.filename'))) {
 					$dontScanForURLs = true;
 				}
 				
 				$isScanImagesFile = false;
-				if (!$isPHP && preg_match('/^(?:jpg|jpeg|mp3|avi|m4v|gif|png|sql|js|tbz2?|bz2?|xz|zip|tgz|gz|tar|log|err\d+)$/', $fileExt)) {
+				if (!$isPHP && preg_match('/^(?:jpg|jpeg|mp3|avi|m4v|mov|mp4|gif|png|tiff?|svg|sql|js|tbz2?|bz2?|xz|zip|tgz|gz|tar|log|err\d+)$/', $fileExt)) {
 					if (wfConfig::get('scansEnabled_scanImages')) {
 						$isScanImagesFile = true;
 					}
-					else {
+					else if (!$isJS) {
 						continue;
 					}
 				}
@@ -261,8 +270,8 @@ class wordfenceScanner {
 						$extraMsg = ' This file was detected because you have enabled HIGH SENSITIVITY scanning. This option is more aggressive than the usual scans, and may cause false positives.';
 					}
 					
-					if($isPHP || wfConfig::get('scansEnabled_scanImages') ){
-						if(strpos($data, '$allowed'.'Sites') !== false && strpos($data, "define ('VER"."SION', '1.") !== false && strpos($data, "TimThum"."b script created by") !== false){
+					$treatAsBinary = ($isPHP || $isHTML || wfConfig::get('scansEnabled_scanImages'));
+					if ($treatAsBinary && strpos($data, '$allowed'.'Sites') !== false && strpos($data, "define ('VER"."SION', '1.") !== false && strpos($data, "TimThum"."b script created by") !== false) {
 							if(! $this->isSafeFile($this->path . $file)){
 								$this->addResult(array(
 									'type' => 'file',
@@ -276,12 +285,18 @@ class wordfenceScanner {
 									), $dataForFile),
 								));
 								break;
+						}
 							}
-						} else if(strpos($file, 'lib/wordfenceScanner.php') === false){ // && preg_match($this->patterns['sigPattern'], $data, $matches)){
+					else if(strpos($file, 'lib/wordfenceScanner.php') === false) {
 							$regexMatched = false;
-							foreach($this->patterns['rules'] as $rule){
-								if(preg_match('/(' . $rule[2] . ')/i', $data, $matches)){
-									if(! $this->isSafeFile($this->path . $file)){
+						foreach ($this->patterns['rules'] as $rule) {
+							$type = (isset($rule[4]) && !empty($rule[4])) ? $rule[4] : 'server';
+							if ($type == 'server' && !$treatAsBinary) { continue; }
+							else if (($type == 'both' || $type == 'browser') && $fileExt == 'js') { $extraMsg = ''; }
+							else if (($type == 'both' || $type == 'browser') && !$treatAsBinary) { continue; }
+							
+							if (preg_match('/(' . $rule[2] . ')/i', $data, $matches)) {
+								if (!$this->isSafeFile($this->path . $file)) {
 										$this->addResult(array(
 											'type' => 'file',
 											'severity' => 1,
@@ -294,24 +309,25 @@ class wordfenceScanner {
 											), $dataForFile),
 										));
 										$regexMatched = true;
+										$this->scanEngine->recordMetric('malwareSignature', $rule[0], array('file' => $file, 'match' => $matches[1]), false);
 										break;
 									}
 								}
 							}
-							if($regexMatched){ break; }
+						if ($regexMatched) { break; }
 						}
-						if(wfConfig::get('scansEnabled_highSense')){
+					if ($treatAsBinary && wfConfig::get('scansEnabled_highSense')) {
 							$badStringFound = false;
-							if(strpos($data, $this->patterns['badstrings'][0]) !== false){
-								for($i = 1; $i < sizeof($this->patterns['badstrings']); $i++){
-									if(strpos($data, $this->patterns['badstrings'][$i]) !== false){
+						if (strpos($data, $this->patterns['badstrings'][0]) !== false) {
+							for ($i = 1; $i < sizeof($this->patterns['badstrings']); $i++) {
+								if (strpos($data, $this->patterns['badstrings'][$i]) !== false) {
 										$badStringFound = $this->patterns['badstrings'][$i];
 										break;
 									}
 								}
 							}
-							if($badStringFound){
-								if(! $this->isSafeFile($this->path . $file)){
+						if ($badStringFound) {
+							if (!$this->isSafeFile($this->path . $file)) {
 									$this->addResult(array(
 										'type' => 'file',
 										'severity' => 1,
@@ -327,13 +343,9 @@ class wordfenceScanner {
 								}
 							}
 						}
-						if(! $dontScanForURLs){
+					
+					if (!$dontScanForURLs) {
 							$this->urlHoover->hoover($file, $data);
-						}
-					} else {
-						if(! $dontScanForURLs){
-							$this->urlHoover->hoover($file, $data);
-						}
 					}
 
 					if($totalRead > 2 * 1024 * 1024){

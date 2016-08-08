@@ -3,11 +3,11 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Place / Location and Local Business Meta (WPSSO PLM)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>2.0.7-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>2.0.10-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
-<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.5.3</td></tr>
+<tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.6</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
-<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/">https://wpsso.com/</a></td></tr>
+<tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpssoplm-readme-donate">https://wpsso.com/?utm_source=wpssoplm-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
 <tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, place, location, venue, longitude, latitude, address, local, business, hours, seo</td></tr>
 </table>
@@ -61,7 +61,7 @@
 <p><strong>WPSSO PLM Pro / Power-User Features</strong></p>
 
 <ul>
-<li>Extends the features of WPSSO Pro (requires a licensed and active WPSSO Pro plugin).</li>
+<li>Extends the features of WPSSO Pro (requires a licensed WPSSO Pro plugin).</li>
 <li>Add a custom "Place / Location" settings tab to Posts, Pages, and Custom Post Types. Allows the selection of an existing Address, or entering custom Address information.</li>
 </ul>
 
@@ -108,9 +108,9 @@
 
 <p>The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the WPSSO PLM extension.</p>
 
-<p>Use the Free version of WPSSO PLM with <em>both</em> the Free and Pro versions of WPSSO. The <a href="http://wpsso.com/extend/plugins/wpsso-plm/">WPSSO PLM Pro</a> extension (along with all WPSSO Pro extensions) requires the <a href="http://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> plugin as well.</p>
+<p>Use the Free version of WPSSO PLM with <em>both</em> the Free and Pro versions of WPSSO. The <a href="http://wpsso.com/extend/plugins/wpsso-plm/?utm_source=wpssoplm-readme-extends">WPSSO PLM Pro</a> extension (along with all WPSSO Pro extensions) requires the <a href="http://wpsso.com/extend/plugins/wpsso/?utm_source=wpssoplm-readme-extends">WPSSO Pro</a> plugin as well.</p>
 
-<p>Purchase the <a href="http://wpsso.com/extend/plugins/wpsso-plm/">WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro</a> extension (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
+<p><a href="http://wpsso.com/extend/plugins/wpsso-plm/?utm_source=wpssoplm-readme-purchase">Purchase the WPSSO Place / Location and Local Business Meta (WPSSO PLM) Pro extension</a> (includes a <em>No Risk 30 Day Refund Policy</em>).</p>
 
 
 <h2>Installation</h2>

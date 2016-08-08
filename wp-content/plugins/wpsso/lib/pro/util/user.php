@@ -46,6 +46,13 @@ if ( ! class_exists( 'WpssoProUtilUser' ) && class_exists( 'WpssoUser' ) ) {
 		}
 
 		public function get_options( $user_id, $idx = false, $filter_options = true ) {
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->log_args( array( 
+					'user_id' => $user_id, 
+					'idx' => $idx, 
+					'filter_options' => $filter_options, 
+				) );
+			}
 
 			$lca = $this->p->cf['lca'];
 			$user_id = $user_id === false ? 
@@ -54,8 +61,9 @@ if ( ! class_exists( 'WpssoProUtilUser' ) && class_exists( 'WpssoUser' ) ) {
 			if ( empty( $user_id ) )
 				return false;
 
-			if ( ! isset( $this->opts[$user_id]['options_filtered'] ) || 
-				$this->opts[$user_id]['options_filtered'] !== true ) {
+			if ( empty( $this->opts[$user_id]['options_filtered'] ) ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'options_filtered key is empty' );
 
 				$renamed_keys = apply_filters( $lca.'_get_md_renamed_keys', array(
 				) );
@@ -107,8 +115,12 @@ if ( ! class_exists( 'WpssoProUtilUser' ) && class_exists( 'WpssoUser' ) ) {
 
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( $this->opts[$user_id] );
-				}
-			}
+
+				} elseif ( $this->p->debug->enabled )
+					$this->p->debug->log( 'get_user_options filter skipped' );
+
+			} elseif ( $this->p->debug->enabled )
+				$this->p->debug->log( 'using cached options for user_id '.$user_id );
 
 			if ( $idx !== false ) {
 				if ( isset( $this->opts[$user_id][$idx] ) ) 

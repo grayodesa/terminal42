@@ -266,7 +266,7 @@ jQuery(function(){
 				);
 
 				// Update number in the counter-badges in the menu.
-				jQuery(document).trigger( 'wpmu:update-done' );
+				jQuery(document).trigger( 'wpmu:update-done', pid );
 			},
 			'json'
 		).always(function() {

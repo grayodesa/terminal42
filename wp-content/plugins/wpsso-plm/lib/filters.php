@@ -38,15 +38,16 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 				'og_seed' => 3,				// open graph meta tags
 				'json_array_type_ids' => 2,		// $type_ids, $mod
 				'schema_head_type' => 3,		// $type_id, $mod
-				'schema_meta_itemprop' => 3,		// $mt_schema, $use_post, $mod
+				'schema_meta_itemprop' => 2,		// $mt_schema, $mod
 				'schema_noscript_array' => 3,		// $ret, $mod, $mt_og
 				'get_place_options' => 3,		// $opts, $mod, $place_id
 			) );
 
 			if ( is_admin() ) {
 				$this->p->util->add_plugin_filters( $this, array( 
-					'option_type' => 2,
 					'save_options' => 3,
+					'option_type' => 2,
+					'post_social_settings_tabs' => 2,	// $tabs, $mod
 					'messages_tooltip_post' => 3,
 					'messages_tooltip' => 2,
 				) );
@@ -210,7 +211,7 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			return $type_id;
 		}
 
-		public function filter_schema_meta_itemprop( $mt_schema, $use_post, $mod ) {
+		public function filter_schema_meta_itemprop( $mt_schema, $mod ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
@@ -288,6 +289,34 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			} else return $opts;
 		}
 
+		public function filter_save_options( $opts, $options_name, $network ) {
+
+			$address_names = SucomUtil::get_multi_key_locale( 'plm_addr_name', $opts, false );	// $add_none = false
+			list( $first_num, $last_num, $next_num ) = SucomUtil::get_first_last_next_nums( $address_names );
+
+			foreach ( $address_names as $num => $name ) {
+				$name = trim( $name );
+
+				if ( ! empty( $opts['plm_addr_delete_'.$num] ) ||
+					( $name === '' && $num === $last_num ) ) {	// remove the empty "New Address"
+
+					if ( isset( $opts['plm_addr_id'] ) &&
+						$opts['plm_addr_id'] === $num )
+							unset( $opts['plm_addr_id'] );
+
+					// remove address id, including all localized keys
+					$opts = SucomUtil::preg_grep_keys( '/^plm_addr_.*_'.$num.'(#.*)?$/', $opts, true );	// $invert = true
+
+				} elseif ( $name === '' )	// just in case
+					$opts['plm_addr_name_'.$num] = sprintf( _x( 'Address #%d',
+						'option value', 'wpsso-plm' ), $num );
+
+				else $opts['plm_addr_name_'.$num] = $name;
+			}
+
+			return $opts;
+		}
+
 		public function filter_option_type( $type, $key ) {
 
 			if ( ! empty( $type ) )
@@ -326,32 +355,11 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			return $type;
 		}
 
-		public function filter_save_options( $opts, $options_name, $network ) {
-
-			$address_names = SucomUtil::get_multi_key_locale( 'plm_addr_name', $opts, false );	// $add_none = false
-			list( $first_num, $last_num, $next_num ) = SucomUtil::get_first_last_next_nums( $address_names );
-
-			foreach ( $address_names as $num => $name ) {
-				$name = trim( $name );
-
-				if ( ! empty( $opts['plm_addr_delete_'.$num] ) ||
-					( $name === '' && $num === $last_num ) ) {	// remove the empty "New Address"
-
-					if ( isset( $opts['plm_addr_id'] ) &&
-						$opts['plm_addr_id'] === $num )
-							unset( $opts['plm_addr_id'] );
-
-					// remove address id, including all localized keys
-					$opts = SucomUtil::preg_grep_keys( '/^plm_addr_.*_'.$num.'(#.*)?$/', $opts, true );	// $invert = true
-
-				} elseif ( $name === '' )	// just in case
-					$opts['plm_addr_name_'.$num] = sprintf( _x( 'Address #%d',
-						'option value', 'wpsso-plm' ), $num );
-
-				else $opts['plm_addr_name_'.$num] = $name;
-			}
-
-			return $opts;
+		public function filter_post_social_settings_tabs( $tabs, $mod ) {
+			if ( empty( $this->p->options['plm_add_to_'.$mod['post_type']] ) )
+				return $tabs;
+			else return SucomUtil::after_key( $tabs, 'header', 'plm',
+				_x( 'Place / Location', 'metabox tab', 'wpsso-plm' ) );
 		}
 
 		public function filter_messages_tooltip_post( $text, $idx, $atts ) {

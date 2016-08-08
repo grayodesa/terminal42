@@ -11,7 +11,7 @@
 		</div>
 		<div class="tvd-col tvd-s10">
 			<div class="tvd-input-field">
-				<input class="tvd-api-add-chip" id="tvd-s-api-lists" type="text" data-name="connection[lists][]"/>
+				<input class="tvd-api-add-chip" id="tvd-s-api-lists" type="text" data-name="connection[lists][]" name="connection[lists][]"/>
 				<label for="tvd-s-api-lists"><?php echo __( "List ID", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
 			</div>
 		</div>
@@ -20,9 +20,10 @@
 			   data-tooltip="<?php echo __( "Write the list ID and press the enter key", TVE_DASH_TRANSLATE_DOMAIN ) ?>"></i>
 		</div>
 		<div class="tvd-api-chip-wrapper tvd-col tvd-s12">
+			<?php /** @var $this Thrive_Dash_List_Connection_Sendy */ ?>
 			<?php $lists = $this->param( 'lists' ); ?>
 			<?php if ( ! empty( $lists ) ) : ?>
-				<?php foreach ( $this->param( 'lists' ) as $key => $value ) : ?>
+				<?php foreach ( $lists as $key => $value ) : ?>
 					<div class="tvd-chip"><?php echo $value ?><i class="tvd-icon-close2"></i></div><input
 						type="hidden" name="connection[lists][]"
 						value="<?php echo $value ?>"/>

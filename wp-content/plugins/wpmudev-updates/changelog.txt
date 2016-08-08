@@ -5,6 +5,27 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+4.1.1 - 07/21/2016 - Aaron
+----------------------------------------------------------------------
+- Enable shiny updates on core plugins list for WPMU DEV plugins
+- Fix support search location and icon click
+- Fix core update messages not being customized with our changelog
+- Fix WPMU DEV plugins on core updates page not showing WP version compatibility
+- Fix missing Upfront changelogs on Network Themes list
+- Show changelog when updating Upfront on WPMU DEV Dashboard->Themes page
+- Fix date time display when a geographic timezone is selected in settings instead of offset
+- Fix out of date upgrade membership urls
+- Change popular plugins widget selection criteria
+- Show all products to legacy single members
+- Fix available updates not showing for single members for products outside their membership
+- Fix updates not showing in core areas when logged out of Dashboard
+- Fix theme details button for active theme popup self closing in single site
+- Make popup close buttons accessible to screen readers
+- Fix false permissions error when updating WPMU DEV Dashboard on WPMU DEV Dash->Plugins list
+- Fix redirect to login page on Dashboard activation
+- Update core available update count bubbles after updating products in the Dashboard
+- Fix broken "Requires xxx" messages on incompatible plugins
+
 4.1.0 - 06/06/2016 - Philipp
 ----------------------------------------------------------------------
 Enables the brand new "Update All" function in Hub! Also includes several small bugfixes and improvements.
@@ -21,6 +42,7 @@ Enables the brand new "Update All" function in Hub! Also includes several small 
 - Fix display of special characters inside Notes-field for support access.
 - Fix rare fatal error about `Call function has_cap() on boolean` during plugin activation.
 - A handful of other small improvements, like fixing typos
+- Improve action syncing with Hub when performed on core pages
 
 4.0.9 - 3/28/2016 - Philipp
 ----------------------------------------------------------------------
@@ -376,4 +398,4 @@ Added option to disable admin notices.
 Initial Release.
 
 
-373982-1466155928-au
+373982-1469171938-au

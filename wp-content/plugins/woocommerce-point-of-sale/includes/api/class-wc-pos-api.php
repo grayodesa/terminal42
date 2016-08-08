@@ -171,6 +171,8 @@ class WC_Pos_API {
 		$parent_image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_data['id'] ), 'shop_thumbnail' );
 		$product_data['thumbnail_src'] = $parent_image ? current($parent_image) : wc_placeholder_img_src();	
 		
+		$product_data['post_meta'] = get_post_meta($product->id);
+
 		$product_data['points_earned'] = '';
 		$product_data['points_max_discount'] = '';
 		if( isset( $GLOBALS['wc_points_rewards'] ) ){
@@ -183,6 +185,8 @@ class WC_Pos_API {
 				$image = wp_get_attachment_image_src( get_post_thumbnail_id( $variation['id'] ), 'shop_thumbnail' );
 				$product_data['variations'][$key]['thumbnail_src'] = $image ? current($image) : $product_data['thumbnail_src'];
 
+				$product_data['variations'][$key]['post_meta'] = get_post_meta($variation['id']);
+				
 				$product_data['variations'][$key]['points_earned'] = '';
 				if( isset( $GLOBALS['wc_points_rewards'] ) ){
 					$variation_product = wc_get_product($variation['id']);
@@ -263,6 +267,9 @@ class WC_Pos_API {
 
 		if( isset( $GLOBALS['wc_points_rewards'] ) ){
 			$customer_data['points_balance'] = WC_Points_Rewards_Manager::get_users_points( $customer->ID );            
+        }
+        if( function_exists('get_avatar_url') ){
+			$customer_data['avatar_url'] = get_avatar_url( $customer->ID, array( 'size' => 64 ) );         
         }
 		return $customer_data;
 	}
@@ -356,6 +363,7 @@ class WC_Pos_API {
 		if ( $the_order->payment_method_title ) {
 			$order_data['order_total'] .= '<small class="meta">' . __( 'Via', 'woocommerce' ) . ' ' . esc_html( $the_order->payment_method_title ) . '</small>';
 		}
+
 		if( sizeof($order_data['line_items']) > 0 ){
 			foreach ($order_data['line_items'] as $key => $item) {
 				$parents = get_post_ancestors( $item['product_id'] );
@@ -365,26 +373,40 @@ class WC_Pos_API {
 		        }
 		        
 		        $dp = ( isset( $filter['dp'] ) ? intval( $filter['dp'] ) : 2 );
-		        $order_data['line_items'][$key]['price'] = wc_format_decimal( $this->get_item_total( $item ), $dp );
+		        $order_data['line_items'][$key]['price'] = wc_format_decimal( $this->get_item_price( $item ), $dp );
 
 			}
 		}
 
-		$order_data['print_url'] = wp_nonce_url( admin_url( 'admin.php?print_pos_receipt=true&order_id=' . $the_order->id ), 'print_pos_receipt' );
+		if( sizeof($order_data['coupon_lines']) > 0 ){
+			foreach ($order_data['coupon_lines'] as $key => $coupon) {
+				if( $coupon['code'] == 'POS Discount'){
+					$pamount = wc_get_order_item_meta($coupon['id'], 'discount_amount_percent', true);
+					if( $pamount && !empty($pamount) ){
+						$order_data['coupon_lines'][$key]['percent'] = (float)$pamount;
+					}
+				}
+
+			}
+		}
+		
+
+		$order_data['print_url']     = wp_nonce_url( admin_url( 'admin.php?print_pos_receipt=true&order_id=' . $the_order->id ), 'print_pos_receipt' );
+		$order_data['stock_reduced'] = get_post_meta( $the_order->id, '_order_stock_reduced', true ) ? true : false;
 		
 		return $order_data;	
 	}
 
-	public function get_item_total( $item ) {
+	public function get_item_price( $item ) {
 		$round = false;
 		$inc_tax = wc_prices_include_tax();
 
 		$qty = ( ! empty( $item['quantity'] ) ) ? $item['quantity'] : 1;
 
 		if ( $inc_tax ) {
-			$price = ( $item['total'] + $item['total_tax'] ) / max( 1, $qty );
+			$price = ( $item['subtotal'] + $item['subtotal_tax'] ) / max( 1, $qty );
 		} else {
-			$price = $item['total'] / max( 1, $qty );
+			$price = $item['subtotal'] / max( 1, $qty );
 		}
 
 		$price = $round ? round( $price, wc_get_price_decimals() ) : $price;
