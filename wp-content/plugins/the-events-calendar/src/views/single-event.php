@@ -73,7 +73,7 @@ $event_id = get_the_ID();
 		<?php if ( get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option( 'showComments', false ) ) comments_template() ?>
 	<?php endwhile; ?>
 	<div align="center">
-		<h3>Цены на билеты, указанные на сайте не включают НДС.</h3>
+		<h6>Цены на билеты, указанные на сайте не включают НДС.</h6>
 	</div>
 	<!-- Event footer -->
 	<div id="tribe-events-footer">
