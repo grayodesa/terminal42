@@ -71,6 +71,12 @@ if (!function_exists('essb_is_mobile')) {
 	}
 }
 
+if (!function_exists('essb_is_tablet')) {
+	function essb_is_tablet() {
+		return essb_manager()->isTablet();
+	}
+}
+
 if (!function_exists('essb_is_plugin_activated_on')) {
 	function essb_is_plugin_activated_on() {
 		global $essb_options;

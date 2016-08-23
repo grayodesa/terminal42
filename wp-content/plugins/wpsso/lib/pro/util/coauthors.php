@@ -50,24 +50,29 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 				$this->p->debug->mark();
 
 			$coauthors = get_coauthors( $mod_id );
-
-			if ( empty( $coauthors )  || 
-				! is_array( $coauthors ) ) {
-
+			if ( empty( $coauthors ) || ! is_array( $coauthors ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'no coauthors found for post id '.$mod_id );
 				return $mod;
 			}
 
+			// make sure the first (top) author listed is the post / page author
+			$author = reset( $coauthors );
+			if ( ! empty( $author->ID ) && (int) $author->ID !== $mod['post_author'] ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'setting author id '.$author->ID.' as primary author' );
+				$mod['post_author'] = (int) $author->ID;
+			}
+
 			foreach ( $coauthors as $author ) {
 				if ( (int) $author->ID === $mod['post_author'] ) {
 					if ( $this->p->debug->enabled )
-						$this->p->debug->log( 'skipping user id '.$author->ID.' (primary author)' );
-					continue;
+						$this->p->debug->log( 'skipping coauthor id '.$author->ID.' (primary author)' );
+				} else {
+					$mod['post_coauthors'][] = (int) $author->ID;
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( 'adding coauthor id '.$author->ID );
 				}
-				$mod['post_coauthors'][] = (int) $author->ID;
-				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'adding coauthor user id '.$author->ID );
 			}
 
 			return $mod;
@@ -76,9 +81,12 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 		// hooked to 'sucom_get_user_object'
 		public function filter_get_user_object( $user_obj, $user_id ) {
 			global $coauthors_plus;
-			if ( ! is_object( $user_obj ) && $user_id )
+
+			if ( ! is_object( $user_obj ) && $user_id ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'getting object for coauthor id '.$user_id );
 				return $coauthors_plus->get_coauthor_by( 'id', $user_id );
-			else return $user_obj;
+			} else return $user_obj;
 		}
 
 		public function filter_get_other_user_images( $og_ret, $num, $size_name, $user_id, $check_dupes, $force_regen, $md_pre ) {
@@ -91,7 +99,6 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->mark( 'guest author / post id '.$user_id.' images' );
 			}
-
 			return $og_ret;
 		}
 
@@ -106,7 +113,6 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->mark( 'guest author / post id '.$user_id.' meta' );
 			}
-
 			return $opts;
 		}
 
@@ -177,7 +183,7 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 
 		public function add_contact_methods( $fields = array(), $groups = null ) { 
 
-			// use the same check as the co-authors plugin
+			// use the same check as the coauthors plugin
 			if ( ! in_array( 'contact-info', $groups ) && 
 				'all' !== $groups[0] )
 					return $fields;
@@ -194,7 +200,7 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 						! isset( $cm['group'] ) || 
 							$cm['group'] !== 'contact-info' )
 								continue;
-					// adjust for wp / co-authors key differences
+					// adjust for wp / coauthors key differences
 					switch ( $cm['key'] ) {
 						case 'yahooim':
 							$cm_opt = 'wp_cm_yim_';

@@ -8,6 +8,7 @@ if (!defined('WFWAF_AUTO_PREPEND')) {
 	define('WFWAF_AUTO_PREPEND', true);
 }
 
+require_once dirname(__FILE__) . '/wfWAFUserIPRange.php';
 require_once dirname(__FILE__) . '/../vendor/wordfence/wf-waf/src/init.php';
 
 class wfWAFWordPressRequest extends wfWAFRequest {
@@ -65,7 +66,6 @@ class wfWAFWordPressObserver extends wfWAFBaseObserver {
 		// Whitelisted IPs (Wordfence config)
 		$whitelistedIPs = wfWAF::getInstance()->getStorageEngine()->getConfig('whitelistedIPs');
 		if ($whitelistedIPs) {
-			require_once dirname(__FILE__) . '/wfWAFUserIPRange.php';
 			if (!is_array($whitelistedIPs)) {
 				$whitelistedIPs = explode(',', $whitelistedIPs);
 			}
@@ -73,6 +73,23 @@ class wfWAFWordPressObserver extends wfWAFBaseObserver {
 				$ipRange = new wfWAFUserIPRange($whitelistedIP);
 				if ($ipRange->isIPInRange(wfWAF::getInstance()->getRequest()->getIP())) {
 					throw new wfWAFAllowException('Wordfence whitelisted IP.');
+				}
+			}
+		}
+	}
+	
+	public function afterRunRules()
+	{
+		//wfWAFLogException
+		$watchedIPs = wfWAF::getInstance()->getStorageEngine()->getConfig('watchedIPs');
+		if ($watchedIPs) {
+			if (!is_array($watchedIPs)) {
+				$watchedIPs = explode(',', $watchedIPs);
+			}
+			foreach ($watchedIPs as $watchedIP) {
+				$ipRange = new wfWAFUserIPRange($watchedIP);
+				if ($ipRange->isIPInRange(wfWAF::getInstance()->getRequest()->getIP())) {
+					throw new wfWAFLogException('Wordfence watched IP.');
 				}
 			}
 		}

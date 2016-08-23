@@ -3,14 +3,15 @@ Plugin Name: WPSSO Schema JSON-LD Markup (WPSSO JSON)
 Plugin Slug: wpsso-schema-json-ld
 Text Domain: wpsso-schema-json-ld
 Domain Path: /languages
-Contributors: jsmoriss
-Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
-Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippet, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest
 License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
+Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
+Assets URI: https://surniaulula.github.io/wpsso-schema-json-ld/assets/
+Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippet, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest
+Contributors: jsmoriss
 Requires At Least: 3.1
 Tested Up To: 4.6
-Stable Tag: 1.10.0-1
+Stable Tag: 1.10.1-1
 
 WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).
 
@@ -64,7 +65,7 @@ Adds Schema / Structured Data JSON-LD markup:
 > * Author as [schema.org/Person](http://schema.org/Person)
 > 	* Author URL from Profile
 > 	* Author Name
-> 	* Author Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> 	* Author Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 		* Author Image URL
 > 		* Author Image Width
 > 		* Author Image Height
@@ -79,11 +80,11 @@ Adds Schema / Structured Data JSON-LD markup:
 >		* Twitter URL
 >		* YouTube URL
 >		* Website URL
-> * Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
+> * Videos as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
 > 	* Video URL
 > 	* Video Name (Title)
 > 	* Video Description
@@ -141,7 +142,7 @@ Adds Schema / Structured Data JSON-LD markup:
 > 	* Author URL from Profile
 > 	* Author Name
 > 	* Author Description
-> 	* Author Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> 	* Author Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 		* Author Image URL
 > 		* Author Image Width
 > 		* Author Image Height
@@ -172,11 +173,11 @@ Adds Schema / Structured Data JSON-LD markup:
 >		* MySpace Business Page URL
 >		* Pinterest Company Page URL
 >		* Twitter Business Page URL
-> * CreativeWork Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * CreativeWork Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * CreativeWork Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
+> * CreativeWork Videos as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
 > 	* Video URL
 > 	* Video Name (Title)
 > 	* Video Description
@@ -250,11 +251,11 @@ Adds Schema / Structured Data JSON-LD markup:
 > 		* elevation
 > 		* latitude
 > 		* longitude
-> * Event Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Event Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * Event Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
+> * Event Videos as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
 > 	* Video URL
 > 	* Video Name (Title)
 > 	* Video Description
@@ -309,11 +310,11 @@ Adds Schema / Structured Data JSON-LD markup:
 >	* MySpace Business Page URL
 >	* Pinterest Company Page URL
 >	* Twitter Business Page URL
-> * Organization Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Organization Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * Organization Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
+> * Organization Videos as [schema.org/VideoObject](http://schema.org/VideoObject) (**[WPSSO Pro](https://wpsso.com/extend/plugins/wpsso/) required**)
 > 	* Video URL
 > 	* Video Name (Title)
 > 	* Video Description
@@ -334,7 +335,7 @@ Adds Schema / Structured Data JSON-LD markup:
 > * URL from Profile
 > * Name
 > * Description
-> * Person Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Person Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
@@ -446,11 +447,11 @@ Adds Schema / Structured Data JSON-LD markup:
 > 	* closes
 > 	* validFrom
 > 	* validThrough
-> * Place Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Place Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * Place Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject)
+> * Place Videos as [schema.org/VideoObject](http://schema.org/VideoObject)
 > 	* Video URL
 > 	* Video Name
 > 	* Video Description
@@ -514,11 +515,11 @@ Adds Schema / Structured Data JSON-LD markup:
 > 	* WorstRating
 > 	* BestRating
 > 	* ReviewCount
-> * Product Image(s) as [schema.org/ImageObject](http://schema.org/ImageObject)
+> * Product Images as [schema.org/ImageObject](http://schema.org/ImageObject)
 > 	* Image URL
 > 	* Image Width
 > 	* Image Height
-> * Product Video(s) as [schema.org/VideoObject](http://schema.org/VideoObject)
+> * Product Videos as [schema.org/VideoObject](http://schema.org/VideoObject)
 > 	* Video URL
 > 	* Video Name
 > 	* Video Description
@@ -953,6 +954,7 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 * [Developer Resources](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/)
 	* [Filters](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/)
 		* [Filter Examples](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/)
+			* [Assign a Custom Field Value to a Schema Property](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/assign-a-custom-field-value-to-a-schema-property/)
 			* [Modify the aggregateRating Property](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-aggregaterating-property/)
 
 == Screenshots ==
@@ -964,18 +966,25 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 
 == Changelog ==
 
-<blockquote class="top_info">
-<p>New versions of the plugin are released approximately every week (more or less). New features are added, tested, and released incrementally, instead of grouping them together in a major version release. When minor bugs fixes and/or code improvements are applied, new versions are also released. This release schedule keeps the code stable and reliable, at the cost of more frequent updates.</p>
-
-<p>See <a href="https://en.wikipedia.org/wiki/Release_early,_release_often">release early, release often (RERO) software development philosophy</a> on Wikipedia for more information on the benefits of smaller / more frequent releases.</p>
-</blockquote>
-
 = Free / Basic Version Repository =
 
 * [GitHub](https://surniaulula.github.io/wpsso-schema-json-ld/)
 * [WordPress.org](https://wordpress.org/plugins/wpsso-schema-json-ld/developers/)
 
 = Changelog / Release Notes =
+
+**Version 1.10.1-1 (2016/08/18)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* Added support for an "areaServed" property (as a "circle" GeoShape) in the Schema http://schema.org/LocalBusiness markup (Pro version).
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* Removed the '$use_post' argument in the json data filters.
 
 **Version 1.10.0-1 (2016/07/29)**
 
@@ -1007,7 +1016,7 @@ Official announcement: http://wpsso.com/2016/07/29/wpsso-json-update-google-pint
 
 == Upgrade Notice ==
 
-= 1.10.0-1 =
+= 1.10.1-1 =
 
-(2016/07/29) Enhanced support for Schema Recipe markup for Pinterest and Google. Added new recipe input fields and recipe integration option in the WPSSO JSON settings page.
+(2016/08/18) Added support for an "areaServed" property (as a "circle" GeoShape) in the Schema Local Business markup (Pro version).
 

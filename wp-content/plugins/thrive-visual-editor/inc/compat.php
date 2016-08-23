@@ -371,3 +371,19 @@ function tve_fix_page_conflicts_before_footer() {
 }
 
 add_action( 'wp_footer', 'tve_fix_page_conflicts_before_footer', 2000 );
+
+/**
+ * Remove the content filter for sensei plugin 
+ */
+function tve_wc_sensei_no_content_filter() {
+
+	if ( class_exists( 'Sensei_Course' ) ) {
+
+		if ( ! is_editor_page() ) {
+			remove_filter( 'the_content', 'tve_editor_content', 10 );
+		}
+	}
+
+}
+
+add_action( 'wc_sensei_no_content_filter', 'tve_wc_sensei_no_content_filter', 2000 );

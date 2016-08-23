@@ -28,11 +28,22 @@ class ESSBUrlHelper {
 			$pageURL .= "s";
 		}
 		$pageURL .= "://";
-		if ($_SERVER["SERVER_PORT"] != "80") {
-			$pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+		
+		$current_request_uri = $_SERVER['REQUEST_URI'];
+		$current_request_uri = str_replace('&u=', '&u0=', $current_request_uri);
+		$current_request_uri = str_replace('&t=', '&t0=', $current_request_uri);
+		$current_request_uri = str_replace('&title=', '&title0=', $current_request_uri);
+		$current_request_uri = str_replace('&url=', '&url0=', $current_request_uri);
+		
+		
+		if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
+			$pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $current_request_uri;
 		} else {
-			$pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+			$pageURL .= $_SERVER["SERVER_NAME"] . $current_request_uri;
 		}
+		
+		
+		
 		return $pageURL;
 	}
 	
@@ -93,7 +104,7 @@ class ESSBUrlHelper {
 			$params = http_build_query(
 					array(							
 							'access_token' => $api,
-							'uri' => urlencode($encoded_url),
+							'uri' => ($encoded_url),
 							'format' => 'json',
 					)
 			);
@@ -117,13 +128,13 @@ class ESSBUrlHelper {
 		$result = $url;
 	
 		$rest_url = 'https://api-ssl.bitly.com/v3/shorten?' . $params;
-			
+					
 		$response = wp_remote_get( $rest_url );
 		// if we get a valid response, save the url as meta data for this post
 		if( !is_wp_error( $response ) ) {
 	
 			$json = json_decode( wp_remote_retrieve_body( $response ) );
-			
+			//print_r($json);
 			if( isset( $json->data->url ) ) {
 	
 				$result = $json->data->url;

@@ -102,6 +102,8 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	 * @return array|bool for error
 	 */
 	protected function _getLists() {
+
+		/** @var Thrive_Dash_Api_Sendinblue $sendinblue */
 		$sendinblue = $this->getApi();
 
 		$data = array(

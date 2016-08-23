@@ -51,7 +51,7 @@ class Tribe__Tickets_Plus__Attendees_List {
 		add_action( 'wootickets_generate_ticket_attendee', array( $myself, 'purge_transient' ), 10, 3 );
 		add_action( 'event_tickets_shopp_ticket_created', array( $myself, 'shopp_purge_transient' ), 10, 2 );
 		add_action( 'event_tickets_edd_ticket_created', array( $myself, 'edd_purge_transient' ), 10, 2 );
-		add_action( 'event_tickets_wpec_ticket_created', array( $myself, 'wpec_purge_transient' ), 10, 2 );
+		add_action( 'event_tickets_wpec_ticket_created', array( $myself, 'wpec_purge_transient' ), 10, 5 );
 	}
 
 	/**

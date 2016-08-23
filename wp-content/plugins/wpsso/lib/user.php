@@ -100,6 +100,9 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 		}
 
 		public function filter_og_img_user_column_content( $value, $column_name, $mod ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
+
 			if ( ! empty( $value ) )
 				return $value;
 
@@ -122,9 +125,9 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 
 			if ( ! empty( $og_image ) && is_array( $og_image ) ) {
 				$image = reset( $og_image );
-				if ( ! empty( $image['og:image'] ) )
-					$value = $this->get_og_img_column_html( $image );
-			}
+				$value = $this->get_og_img_column_html( $image );
+			} elseif ( $this->p->debug->enabled )
+				$this->p->debug->log( 'no image found for column value' );
 
 			return $value;
 		}
@@ -240,7 +243,7 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 			$add_metabox = empty( $this->p->options[ 'plugin_add_to_user' ] ) ? false : true;
 			if ( apply_filters( $this->p->cf['lca'].'_add_metabox_user', $add_metabox, $user_id ) ) {
 				add_meta_box( $lca.'_social_settings', _x( 'Social Settings', 'metabox title', 'wpsso' ),
-					array( &$this, 'show_metabox_social_settings' ), 'user', 'normal', 'low' );
+					array( &$this, 'show_metabox_social_settings' ), $lca.'-user', 'normal', 'low' );
 			}
 		}
 
@@ -253,7 +256,7 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 				_x( 'Free', 'package type', 'wpsso' );
 			echo '<h3 id="'.$lca.'-metaboxes">'.$this->p->cf['plugin'][$lca]['name'].' '.$pkg_type.'</h3>'."\n";
 			echo '<div id="poststuff">';
-			do_meta_boxes( 'user', 'normal', $user );
+			do_meta_boxes( $lca.'-user', 'normal', $user );
 			echo '</div>'."\n";
 		}
 
@@ -418,48 +421,57 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 		// returns an array of urls (or author names for the pinterest crawler)
 		public function get_og_profile_urls( $user_ids, $crawler_name = null ) {
 			$ret = array();
+
+			if ( empty( $user_ids ) )
+				return $ret;
+
 			if ( $crawler_name === null )
 				$crawler_name = SucomUtil::crawler_name();
-			if ( ! empty( $user_ids ) ) {
-				if ( ! is_array( $user_ids ) )
-					$user_ids = array( $user_ids );
-				foreach ( $user_ids as $user_id ) {
-					if ( ! empty( $user_id ) ) {
 
-						if ( $crawler_name === 'pinterest' )
-							$val = $this->get_author_meta( $user_id, $this->p->options['rp_author_name'] );
-						else $val = $this->get_author_website( $user_id, $this->p->options['og_author_field'] );
+			if ( ! is_array( $user_ids ) )
+				$user_ids = array( $user_ids );
 
-						if ( ! empty( $val ) )	// make sure we don't add empty values
-							$ret[] = $val;
-					}
-				}
+			foreach ( $user_ids as $user_id ) {
+				if ( empty( $user_id ) )
+					continue;
+
+				if ( $crawler_name === 'pinterest' )
+					$val = $this->get_author_meta( $user_id, $this->p->options['rp_author_name'] );
+				else $val = $this->get_author_website( $user_id, $this->p->options['og_author_field'] );
+
+				if ( ! empty( $val ) )	// make sure we don't add empty values
+					$ret[] = $val;
 			}
+
 			return $ret;
 		}
 
 		public function get_author_meta( $user_id, $field_id ) {
-			$name = '';
+			$value = '';
 			$is_user = SucomUtil::user_exists( $user_id );
 			if ( $is_user ) {
 				switch ( $field_id ) {
 					case 'none':
 						break;
 					case 'fullname':
-						$name = get_the_author_meta( 'first_name', $user_id ).' '.
+						$value = get_the_author_meta( 'first_name', $user_id ).' '.
 							get_the_author_meta( 'last_name', $user_id );
 						break;
+					case 'description':
+						$value = preg_replace( '/[\s\n\r]+/s', ' ', 
+							get_the_author_meta( $field_id, $user_id ) );
+						break;
 					default:
-						$name = get_the_author_meta( $field_id, $user_id );
+						$value = get_the_author_meta( $field_id, $user_id );
 						break;
 				}
-				$name = trim( $name );	// just in case
+				$value = trim( $value );	// just in case
 			} elseif ( $this->p->debug->enabled )
 				$this->p->debug->log( 'user id '.$user_id.' is not a wordpress user' );
-			$name = apply_filters( $this->p->cf['lca'].'_get_author_meta', $name, $user_id, $field_id, $is_user );
+			$value = apply_filters( $this->p->cf['lca'].'_get_author_meta', $value, $user_id, $field_id, $is_user );
 			if ( $this->p->debug->enabled )
-				$this->p->debug->log( 'user id '.$user_id.' '.$field_id.': '.$name );
-			return $name;
+				$this->p->debug->log( 'user id '.$user_id.' '.$field_id.': '.$value );
+			return $value;
 		}
 
 		public function get_author_website( $user_id, $field_id = 'url' ) {

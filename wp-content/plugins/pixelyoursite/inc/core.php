@@ -18,6 +18,17 @@ if( !function_exists( 'pys_get_woo_ajax_addtocart_params' ) ) {
 }
 
 /**
+ * Return array of product tags.
+ */
+if( !function_exists( 'pys_get_post_tags' ) ) {
+
+	function pys_get_post_tags( $post_id ) {
+		return array(); // PRO feature
+	}
+
+}
+
+/**
  * Build WooCommerce related events code.
  */
 if( !function_exists( 'pys_get_woo_code' ) ) {
@@ -34,7 +45,7 @@ if( !function_exists( 'pys_get_woo_code' ) ) {
 
 			$params['content_ids']  = '[' . pys_get_product_content_id( $post->ID ) . ']';
 
-			return pys_build_event_pixel_code( 'WooCommerce', $params, 'ViewContent' );
+			return pys_build_event_pixel_code( $params, 'ViewContent' );
 
 		}
 
@@ -53,7 +64,7 @@ if( !function_exists( 'pys_get_woo_code' ) ) {
 
 			$params['content_ids'] = '[' . implode( ',', $ids ) . ']';
 
-			return pys_build_event_pixel_code( 'WooCommerce', $params, 'AddToCart' );
+			return pys_build_event_pixel_code( $params, 'AddToCart' );
 
 		}
 
@@ -62,7 +73,7 @@ if( !function_exists( 'pys_get_woo_code' ) ) {
 
 			$params = pys_get_woo_checkout_params( false );
 
-			return pys_build_event_pixel_code( 'WooCommerce', $params, 'InitiateCheckout' );
+			return pys_build_event_pixel_code( $params, 'InitiateCheckout' );
 
 		}
 
@@ -85,7 +96,7 @@ if( !function_exists( 'pys_get_woo_code' ) ) {
 
 			$params['content_ids'] = '[' . implode( ',', $ids ) . ']';
 
-			return pys_build_event_pixel_code( 'WooCommerce', $params, 'Purchase' );
+			return pys_build_event_pixel_code( $params, 'Purchase' );
 
 		}
 
@@ -119,7 +130,7 @@ if( !function_exists( 'pys_add_code_to_woo_cart_link' ) ) {
 				return $tag;
 			}
 
-			$code = pys_build_event_pixel_code( null, $params, 'AddToCart' );
+			$code = pys_build_event_pixel_code( $params, 'AddToCart' );
 
 			return pys_insert_attribute( 'data-pixelcode', $code['js'], $tag, true );
 
@@ -143,9 +154,7 @@ if( !function_exists( 'pys_get_additional_matching_code' ) ) {
 	 * @return string
 	 */
 	function pys_get_additional_matching_code() {
-
-		return '';
-
+		return ''; // PRO feature
 	}
 
 }

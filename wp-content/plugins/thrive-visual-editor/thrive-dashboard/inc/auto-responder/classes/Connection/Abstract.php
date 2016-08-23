@@ -388,15 +388,23 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 	public function prepareJSON() {
 		$properties = array(
-			'key'         => $this->getKey(),
-			'connected'   => $this->isConnected(),
-			'credentials' => $this->getCredentials(),
-			'title'       => $this->getTitle(),
-			'type'        => $this->getType(),
-			'logoUrl'     => $this->getLogoUrl()
+			'key'             => $this->getKey(),
+			'connected'       => $this->isConnected(),
+			'credentials'     => $this->getCredentials(),
+			'title'           => $this->getTitle(),
+			'type'            => $this->getType(),
+			'logoUrl'         => $this->getLogoUrl(),
+			'success_message' => $this->customSuccessMessage(),
 		);
 
 		return $properties;
 	}
 
+	/**
+	 * Custom message for success state
+	 * @return string
+	 */
+	public function customSuccessMessage() {
+		return '';
+	}
 }

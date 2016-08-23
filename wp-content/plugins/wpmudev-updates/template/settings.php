@@ -138,7 +138,7 @@ if ( WPMUDEV_LIMIT_TO_USER ) {
 				<label class="toggle-label" for="chk_autoupdate"></label>
 			</span>
 			<label class="inline-label" for="chk_autoupdate">
-				<?php esc_html_e( 'Enable automatic updates for the WPMU DEV plugin', 'wpmudev' ); ?>
+				<?php esc_html_e( 'Enable automatic updates of the WPMU DEV Dashboard plugin', 'wpmudev' ); ?>
 			</label>
 		</p>
 	</div>

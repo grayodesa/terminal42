@@ -594,7 +594,7 @@ class WPMUDEV_Dashboard_Upgrader {
 		$resp['type'] = $project->type;
 		$resp['filename'] = $project->filename;
 
-		// Upfront special: If updating a child theme first update parent.
+		// Upfront special: If updating a child theme or upfront dependant first update parent.
 		if ( $project->need_upfront ) {
 			$upfront = WPMUDEV_Dashboard::$site->get_project_infos( WPMUDEV_Dashboard::$site->id_upfront );
 
@@ -781,7 +781,7 @@ class WPMUDEV_Dashboard_Upgrader {
 
 		$project = WPMUDEV_Dashboard::$site->get_project_infos( $pid );
 
-		// Make sure Upfront is available before an upfront theme is installed.
+		// Make sure Upfront is available before an upfront theme or plugin is installed.
 		if ( $project->need_upfront && ! WPMUDEV_Dashboard::$site->is_upfront_installed() ) {
 			$this->install( WPMUDEV_Dashboard::$site->id_upfront );
 		}

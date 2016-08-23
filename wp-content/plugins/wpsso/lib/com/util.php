@@ -377,13 +377,13 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			else return false;
 		}
 
-		public static function sanitize_use_post( $mixed ) {
+		public static function sanitize_use_post( $mixed, $default = false ) {
 			if ( is_array( $mixed ) )
 				$use_post = isset( $mixed['use_post'] ) ?
-					$mixed['use_post'] : false;
+					$mixed['use_post'] : $default;
 			elseif ( is_object( $mixed ) )
 				$use_post = isset( $mixed->use_post ) ?
-					$mixed->use_post : false;
+					$mixed->use_post : $default;
 			else $use_post = $mixed;
 				
 			if ( empty( $use_post ) ||		// boolean false or 0
@@ -515,7 +515,7 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 						self::$crawler_name = 'w3c';
 						break;
 					default:
-						self::$crawler_name = 'unknown';
+						self::$crawler_name = 'none';
 						break;
 				}
 			}
@@ -1355,6 +1355,16 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 			return $content;
 		}
 
+		// used to decode facebook video urls
+		public static function replace_unicode_escape( $str ) {
+			return preg_replace_callback( '/\\\\u([0-9a-f]{4})/i', 
+				array( __CLASS__, 'replace_unicode_escape_callback' ), $str );
+		}
+
+		private static function replace_unicode_escape_callback( $match ) {
+			return mb_convert_encoding( pack( 'H*', $match[1] ), 'UTF-8', 'UCS-2' );
+		}
+
 		public static function json_encode_array( array $data, $options = 0, $depth = 32 ) {
 			if ( function_exists( 'wp_json_encode' ) )
 				return wp_json_encode( $data, $options, $depth );
@@ -1525,6 +1535,32 @@ if ( ! class_exists( 'SucomUtil' ) ) {
 				$crop = empty( $crop ) ? false : true;
 
 			return array( 'width' => $width, 'height' => $height, 'crop' => $crop );
+		}
+
+		// returns the class and id attributes
+		public static function get_atts_css_attr( array $atts, $css_name, $css_extra = '' ) {
+			$css_class = $css_name.'-'.
+				( empty( $atts['css_class'] ) ?
+					'button' : $atts['css_class'] );
+
+			if ( ! empty( $css_extra ) ) 
+				$css_class = $css_extra.' '.$css_class;
+
+			return 'class="'.$css_class.'" id="'.self::get_atts_src_id( $atts, $css_name ).'"';
+		}
+
+		public static function get_atts_src_id( array $atts, $src_name ) {
+			$src_id = $src_name.'-'.
+				( empty( $atts['css_id'] ) ?
+					'button' : $atts['css_id'] );
+
+			if ( ! empty( $atts['use_post'] ) || is_singular() || in_the_loop() ) {
+				global $post;
+				if ( ! empty( $post->ID ) )
+					$src_id .= '-post-'.$post->ID;
+			}
+
+			return $src_id;
 		}
 	}
 }

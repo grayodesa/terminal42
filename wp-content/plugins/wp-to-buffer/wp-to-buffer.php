@@ -2,7 +2,7 @@
 /**
 * Plugin Name: WP to Buffer
 * Plugin URI: http://www.wpcube.co.uk/plugins/wp-to-buffer-pro
-* Version: 3.0.2
+* Version: 3.0.4
 * Author: WP Cube
 * Author URI: http://www.wpcube.co.uk
 * Description: Send WordPress Pages, Posts or Custom Post Types to your Buffer (bufferapp.com) account for scheduled publishing to social networks.
@@ -32,7 +32,7 @@
 * @package WP Cube
 * @subpackage WP to Buffer
 * @author Tim Carr
-* @version 3.0.2
+* @version 3.0.3
 * @copyright WP Cube
 */
 class WPToBuffer {
@@ -47,7 +47,7 @@ class WPToBuffer {
         $this->plugin->name         = 'wp-to-buffer'; // Plugin Folder
         $this->plugin->settingsName = 'wp-to-buffer';
         $this->plugin->displayName  = 'WP to Buffer'; // Plugin Name
-        $this->plugin->version      = '3.0.2';
+        $this->plugin->version      = '3.0.4';
         $this->plugin->folder       = plugin_dir_path( __FILE__ );
         $this->plugin->url          = plugin_dir_url( __FILE__ );
 
@@ -128,13 +128,7 @@ class WPToBuffer {
     */
     function register_publish_hooks() {   
 
-    	$types = get_post_types( array(
-    		'public' => true,
-    	) );
-    	foreach ( $types as $type ) {
-    		add_action( 'publish_' . $type, array( &$this, 'publish_now' ) );
-			add_action( 'publish_future_' . $type, array( &$this, 'publish_future' ) );	
-    	}
+    	add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 
     }
     
@@ -207,31 +201,34 @@ class WPToBuffer {
         }
 
     } 
-    
+
     /**
-    * Alias function called when a post is published or updated
-    *
-    * Passes on the request to the main Publish function
-    *
-    * @param int $postID Post ID
-    */
-    function publish_now( $postID ) {
+     * Handles all Post transitions, checking to see whether a Post is going to be published
+     * or updated.
+     *
+     * @since 3.1.6
+     *
+     * @param   string      $new_status     New Status
+     * @param   string      $old_status     Old Status
+     * @param   WP_Post     $post           Post
+     */
+    public function transition_post_status( $new_status, $old_status, $post ) {
 
-    	$this->publish( $postID );
+        // New Post Screen loading
+        // Draft saved
+        if ( $new_status == 'auto-draft' || $new_status == 'draft' || $new_status == 'inherit' ) {
+            return;
+        }
 
-    }
-    
-    /**
-    * Alias function called when a post, set to be published in the future, reaches the time
-    * when it is being published
-    *
-    * Passes on the request to the main Publish function
-    *
-    * @param int $postID Post ID
-    */
-    function publish_future( $postID ) {
+        // Publish
+        if ( $new_status == 'publish' && $new_status != $old_status ) {
+            $this->publish( $post->ID, 'publish' );
+        }
 
-    	$this->publish( $postID, true );
+        // Update
+        if ( $new_status == 'publish' && $old_status == 'publish' ) {
+            $this->publish( $post->ID, 'update' );
+        }
 
     }
     
@@ -240,55 +237,26 @@ class WPToBuffer {
     *
     * @param int $postID Post ID
     */
-    function publish( $postID, $isPublishAction = false ) {
+    function publish( $postID, $updateType ) {
     	$defaults = get_option($this->plugin->settingsName); // Get settings
         if (!isset($defaults['accessToken']) OR empty($defaults['accessToken'])) return false; // No access token so cannot publish to Buffer
         
         // Get post
         $post = get_post($postID);
-        
-        // If request has come from XMLRPC, force $isPublishAction
-        if (defined('XMLRPC_REQUEST')) {
-        	$isPublishAction = true;
-        }
-        
-        // Assume we don't publish to Buffer
-    	$updateType = '';
-    	$doPostToBuffer = false;
-        
+  
         // Check at least one account is enabled
-        if (!isset($defaults['ids'])) {
+        if ( ! isset( $defaults['ids'] ) ) {
         	return false;
         }
-        if (!isset($defaults['ids'][$post->post_type])) {
+        if ( ! isset( $defaults['ids'][ $post->post_type ] ) ) {
         	return false;
         }
 
-		// Determine if this is a publish or update action
-        if ($_POST['original_post_status'] == 'draft' OR 
-        	$_POST['original_post_status'] == 'auto-draft' OR 
-        	$_POST['original_post_status'] == 'pending' OR
-        	$_POST['original_post_status'] == 'future' OR
-        	$isPublishAction) {
-        	
-        	// Publish?
-        	if ($defaults['enabled'][$post->post_type]['publish'] != '1') return false; // No Buffer needed for publish
-        	$updateType = 'publish';
-        	$doPostToBuffer = true; 
+        // Check the publish/update action is enabled
+        if ( $defaults['enabled'][ $post->post_type ][ $updateType ] != '1' ) {
+            return false;
         }
-        
-		if ($_POST['original_post_status'] == 'publish') {
-        	// Update?
-        	if ($defaults['enabled'][$post->post_type]['update'] != '1') return false; // No Buffer needed for update
-        	$updateType = 'update';
-        	$doPostToBuffer = true;
-        }
-        
-        // If not posting to Buffer, exit
-        if (!$doPostToBuffer) {
-	    	return false;
-	    }
-        
+
 		// 1. Get post categories if any exist
 		$catNames = '';
 		$cats = wp_get_post_categories($postID, array('fields' => 'ids'));
@@ -350,12 +318,12 @@ class WPToBuffer {
 
         // 6a. Shorten Links
         $params['shorten'] = true;
-		
+
 		// 7. Send to Buffer
 		delete_post_meta($postID, $this->plugin->settingsName.'-success');
 		delete_post_meta($postID, $this->plugin->settingsName.'-error');
 		$result = $this->request($defaults['accessToken'], 'updates/create.json', 'post', $params);
-		
+        
 		if (is_object($result)) {
 			update_post_meta($postID, $this->plugin->settingsName.'-success', 1);
 		} else {
@@ -464,13 +432,11 @@ class WPToBuffer {
 			case 'get':
 				$result = wp_remote_get('https://api.bufferapp.com/1/'.$cmd.'?access_token='.$accessToken, array(
 		    		'body' => $params,
-		    		'sslverify' => false
 		    	));
 				break;
 			case 'post':
 				$result = wp_remote_post('https://api.bufferapp.com/1/'.$cmd.'?access_token='.$accessToken, array(
 		    		'body' => $params,
-		    		'sslverify' => false
 		    	));
 				break;
 		}

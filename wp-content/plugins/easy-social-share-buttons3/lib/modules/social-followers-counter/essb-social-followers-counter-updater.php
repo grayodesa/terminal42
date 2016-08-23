@@ -141,9 +141,9 @@ class ESSBSocialFollowersCounterUpdater {
 	
 	private function update_facebook_page() {
 		try {
-			$response = $this->remote_update ( 'https://graph.facebook.com/v2.2/' . ESSBSocialFollowersCounterHelper::get_option ( 'facebook_id' ) . '?fields=likes&&access_token=' . ESSBSocialFollowersCounterHelper::get_option ( 'facebook_access_token' ) );
-			if (isset ( $response ['likes'] )) {
-				return $response ['likes'];
+			$response = $this->remote_update ( 'https://graph.facebook.com/v2.7/' . ESSBSocialFollowersCounterHelper::get_option ( 'facebook_id' ) . '?fields=fan_count&access_token=' . ESSBSocialFollowersCounterHelper::get_option ( 'facebook_access_token' ) );
+			if (isset ( $response ['fan_count'] )) {
+				return $response ['fan_count'];
 			}
 		} catch ( Exception $e ) {
 			return 0;

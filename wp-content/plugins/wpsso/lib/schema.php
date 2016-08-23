@@ -443,8 +443,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 				if ( $is_main === null )
 					$is_main = $top_type_id === $head_type_id ? true : false;
 
-				$is_main = apply_filters( $lca.'_json_is_main_entity', 
-					$is_main, $use_post, $mod, $mt_og, $user_id );
+				$is_main = apply_filters( $lca.'_json_is_main_entity', $is_main, $mod, $mt_og, $user_id );
 
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'is_main_entity: '.( $is_main ? 'true' : 'false' ) );
@@ -469,13 +468,13 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 							if ( $this->p->debug->enabled )
 								$this->p->debug->log( 'calling class method '.$rel_filter_name );
 							$json_data = call_user_func( array( __CLASS__, 'filter_json_data_'.$rel_filter_name ),
-								$json_data, $use_post, $mod, $mt_og, $user_id, false );	// $is_main = always false for method
+								$json_data, $mod, $mt_og, $user_id, false );	// $is_main = always false for method
 						} elseif ( $this->p->debug->enabled )
 							$this->p->debug->log( $rel_filter_name.' class method is disabled' );
 					} elseif ( $has_filter ) {
 						if ( apply_filters( $lca.'_add_json_'.$rel_filter_name, $is_enabled ) ) {
 							$json_data = apply_filters( $lca.'_json_data_'.$rel_filter_name,
-								$json_data, $use_post, $mod, $mt_og, $user_id, $is_main );
+								$json_data, $mod, $mt_og, $user_id, $is_main );
 						} elseif ( $this->p->debug->enabled )
 							$this->p->debug->log( $rel_filter_name.' filter is disabled' );
 					} elseif ( $this->p->debug->enabled )
@@ -508,7 +507,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 		/*
 		 * http://schema.org/WebSite for Google
 		 */
-		public function filter_json_data_http_schema_org_website( $json_data, $use_post, $mod, $mt_og, $user_id, $is_main ) {
+		public function filter_json_data_http_schema_org_website( $json_data, $mod, $mt_og, $user_id, $is_main ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -543,7 +542,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 		/*
 		 * http://schema.org/Organization social markup for Google
 		 */
-		public function filter_json_data_http_schema_org_organization( $json_data, $use_post, $mod, $mt_og, $user_id, $is_main ) {
+		public function filter_json_data_http_schema_org_organization( $json_data, $mod, $mt_og, $user_id, $is_main ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -558,7 +557,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 		/*
 		 * http://schema.org/Person social markup for Google
 		 */
-		public function filter_json_data_http_schema_org_person( $json_data, $use_post, $mod, $mt_og, $user_id, $is_main ) {
+		public function filter_json_data_http_schema_org_person( $json_data, $mod, $mt_og, $user_id, $is_main ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -902,7 +901,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			$authors_added += self::add_single_person_data( $json_data['author'], $mod, $user_id, false );	// list_element = false
 
 			// list of contributors / co-authors
-			if ( isset( $mod['post_coauthors'] ) && is_array( $mod['post_coauthors'] ) )
+			if ( ! empty( $mod['post_coauthors'] ) )
 				foreach ( $mod['post_coauthors'] as $author_id )
 					$coauthors_added += self::add_single_person_data( $json_data['contributor'], $mod, $author_id, true );	// list_element = true
 
@@ -1015,7 +1014,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 				return 0;	// return count of images added
 			}
 
-			// get the preferred URL (og:image:secure_url, og:image:url, og:image)
+			// get the preferred url (og:image:secure_url, og:image:url, og:image)
 			$media_url = SucomUtil::get_mt_media_url( $opts, $prefix );
 
 			if ( empty( $media_url ) ) {
@@ -1214,7 +1213,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			return apply_filters( $this->p->cf['lca'].'_schema_noscript_array', $ret, $mod, $mt_og, $head_type_url );
 		}
 
-		public function is_noscript_enabled( $crawler_name = 'unknown' ) {
+		public function is_noscript_enabled( $crawler_name = 'none' ) {
 
 			if ( $this->p->is_avail['amp_endpoint'] && is_amp_endpoint() ) {
 				if ( $this->p->debug->enabled )
@@ -1317,7 +1316,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 
 			$ret = $this->get_single_author_noscript( $mod, $mod['post_author'], 'author' );
 
-			if ( isset( $mod['post_coauthors'] ) && is_array( $mod['post_coauthors'] ) )
+			if ( ! empty( $mod['post_coauthors'] ) )
 				foreach ( $mod['post_coauthors'] as $author_id )
 					$ret = array_merge( $ret, $this->get_single_author_noscript( $mod, $author_id, 'contributor' ) );
 
@@ -1351,6 +1350,7 @@ if ( ! class_exists( 'WpssoSchema' ) ) {
 			$url = $user_mod['obj']->get_author_website( $author_id, 'url' );
 			$name = $user_mod['obj']->get_author_meta( $author_id, $this->p->options['schema_author_name'] );
 			$desc = $user_mod['obj']->get_options_multi( $author_id, array( 'schema_desc', 'og_desc' ) );
+
 			if ( empty( $desc ) )
 				$desc = $user_mod['obj']->get_author_meta( $author_id, 'description' );
 

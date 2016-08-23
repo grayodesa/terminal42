@@ -32,7 +32,7 @@ if ( ! class_exists( 'WpssoJsonProHeadWebsite' ) ) {
 
 			// use the WpssoSchema method / filter
 			$this->p->util->add_plugin_filters( $this->p->schema, array(
-				'json_data_http_schema_org_website' => 6,	// $json_data, $use_post, $mod, $mt_og, $user_id, $is_main
+				'json_data_http_schema_org_website' => 5,	// $json_data, $mod, $mt_og, $user_id, $is_main
 			) );
 		}
 	}

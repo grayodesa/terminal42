@@ -87,6 +87,7 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 			$form->get_th_html( _x( 'Check for Embedded Media from',
 				'option label', 'wpsso' ), null, 'plugin_embedded_media' ).
 			'<td>'.
+			'<p>'.$form->get_checkbox( 'plugin_facebook_api' ).' Facebook Videos</p>'.
 			'<p>'.$form->get_checkbox( 'plugin_slideshare_api' ).' Slideshare Presentations</p>'.
 			'<p>'.$form->get_checkbox( 'plugin_vimeo_api' ).' Vimeo Videos</p>'.
 			'<p>'.$form->get_checkbox( 'plugin_wistia_api' ).' Wistia Videos</p>'.
@@ -99,9 +100,9 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 		public function filter_plugin_social_rows( $table_rows, $form, $network = false ) {
 
 			foreach ( array( 
-				'og_img' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
+				'og_img' => sprintf( _x( 'Add %s Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Img', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
-				'og_desc' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
+				'og_desc' => sprintf( _x( 'Add %s Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Desc', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
 			) as $key => $label ) {
 
@@ -190,7 +191,7 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_filter_lang' ).'</td>';
 
 			$table_rows['plugin_auto_img_resize'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Recreate Missing WP Media Sizes',
+			$form->get_th_html( _x( 'Create Missing WP Media Sizes',
 				'option label', 'wpsso' ), null, 'plugin_auto_img_resize' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_auto_img_resize' ).'</td>';
 
@@ -199,12 +200,12 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_check_img_dims' ).
 				' <em>'._x( 'recommended', 'option comment', 'wpsso' ).'</em></td>';
 
-			$table_rows['plugin_upscale_images'] = $form->get_th_html( _x( 'Allow Upscaling of WP Media Images',
+			$table_rows['plugin_upscale_images'] = $form->get_th_html( _x( 'Allow Upscale of WP Media Images',
 				'option label', 'wpsso' ), null, 'plugin_upscale_images' ).
 			'<td colspan="2">'.$form->get_checkbox( 'plugin_upscale_images' ).'</td>';
 
 			$table_rows['plugin_upscale_img_max'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Maximum Image Upscale Percentage',
+			$form->get_th_html( _x( 'Maximum Image Upscale Percent',
 				'option label', 'wpsso' ), null, 'plugin_upscale_img_max' ).
 			'<td colspan="2">'.$form->get_input( 'plugin_upscale_img_max', 'short' ).' %</td>';
 
@@ -261,15 +262,15 @@ if ( ! class_exists( 'WpssoProAdminAdvanced' ) ) {
 				'option label', 'wpsso' ), null, 'plugin_shortener' ).
 			'<td>'.$form->get_select( 'plugin_shortener', $this->p->cf['form']['shorteners'] ).'</td>';
 
-			$table_rows['plugin_shortlink'] = $form->get_th_html( _x( '<em>Get Shortlink</em> Gives Shortened URL',
-				'option label', 'wpsso' ), null, 'plugin_shortlink' ).
-			'<td>'.$form->get_checkbox( 'plugin_shortlink' ).'</td>';
-
 			$table_rows['plugin_min_shorten'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Minimum URL Length to Shorten',
 				'option label', 'wpsso' ), null, 'plugin_min_shorten' ). 
 			'<td>'.$form->get_input( 'plugin_min_shorten', 'short' ).' '.
 				_x( 'characters', 'option comment', 'wpsso' ).'</td>';
+
+			$table_rows['plugin_shortlink'] = $form->get_th_html( _x( 'Use Shortened URL for WP Shortlink',
+				'option label', 'wpsso' ), null, 'plugin_shortlink' ).
+			'<td>'.$form->get_checkbox( 'plugin_shortlink' ).'</td>';
 
 			$table_rows['subsection_plugin_bitly'] = '<tr class="hide_in_basic">'.
 				'<td></td><td class="subsection"><h4>'.

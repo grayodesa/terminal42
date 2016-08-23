@@ -50,6 +50,15 @@ Should you find a bug, please do not hesitate to contact us through our support 
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+= 3.1.5.5 - 2016.08.05 =
+* Fix bug with PayPal gateway not working.
+
+= 3.1.5.4 - 2016.08.04 =
+* Feature added where you get an error note if there is no SKU found.
+* Feature added where notes are automatically displayed when loading an order.
+* Tweak to email prompt showing for guest users.
+* Fix bug with users having the 'Invalid Order' bug.
+
 = 3.1.5.3 - 2016.08.03 =
 * Feature added where you can define what the scanning field is scanned to return a product.
 

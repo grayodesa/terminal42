@@ -33,6 +33,8 @@ if ( ! class_exists( 'WpssoProMediaYoutube' ) ) {
 		}
 
 		public function filter_video_info( $og_video, $embed_url, $embed_width = 0, $embed_height = 0 ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 
 			// if there's already a video defined (youtube or vimeo, for example), then go with that
 			if ( empty( $embed_url ) ||
@@ -123,6 +125,9 @@ if ( ! class_exists( 'WpssoProMediaYoutube' ) ) {
 										if ( ! empty( $a['content'] ) ) {
 											$og_key = 'og:video:'.substr( $a['property'], 3 );
 											$og_video[$og_key] = $a['content'];
+											if ( $this->p->debug->enabled )
+												$this->p->debug->log( 'adding '.$og_key.' = '.
+													$og_video[$og_key] );
 										}
 										break;
 									case 'itemprop-datePublished':

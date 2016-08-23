@@ -33,6 +33,8 @@ if ( ! class_exists( 'WpssoProMediaVimeo' ) ) {
 		}
 
 		public function filter_video_info( $og_video, $embed_url, $embed_width = 0, $embed_height = 0 ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 
 			// if there's already a video defined (youtube or vimeo, for example), then go with that
 			if ( empty( $embed_url ) ||
@@ -41,7 +43,8 @@ if ( ! class_exists( 'WpssoProMediaVimeo' ) ) {
 						if ( $this->p->debug->enabled )
 							$this->p->debug->log( 'exiting early: previous video information found' );
 						return $og_video;
-			}
+			} elseif ( strpos( $embed_url, 'vimeo.com' ) === false )
+				return $og_video;
 
 			/*
 			 * Vimeo video API

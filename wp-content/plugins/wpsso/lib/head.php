@@ -22,16 +22,23 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 
 		public function __construct( &$plugin ) {
 			$this->p =& $plugin;
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
+
 			$this->p->util->add_plugin_filters( $this, array( 
 				'head_cache_salt' => 2,		// modify the cache salt for certain crawlers
 			) );
+
 			add_action( 'wp_head', array( &$this, 'add_header' ), WPSSO_HEAD_PRIORITY );
 			add_action( 'amp_post_template_head', array( $this, 'add_header' ), WPSSO_HEAD_PRIORITY );
 
-			// disable page caching for pinterest
+			if ( ! empty( $this->p->options['add_link_rel_shortlink'] ) )
+				remove_action( 'wp_head', 'wp_shortlink_wp_head' );
+
+			// disable page caching for the pinterest crawler (allows for customized meta tags)
 			$crawler_name = SucomUtil::crawler_name();
 			if ( $crawler_name === 'pinterest' )
-				WpssoConfig::set_variable_constants( self::$dnc_const );
+				WpssoConfig::set_variable_constants( self::$dnc_const );	// define "do not cache" constants
 		}
 
 		public function filter_head_cache_salt( $salt, $crawler_name ) {
@@ -125,7 +132,7 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 					case 'property-article:author:name':
 					case ( strpos( $mt_match, 'name-schema:' ) === 0 ? true : false ):
 
-						if ( ! isset( $head_info[$mt[3]] ) )
+						if ( ! isset( $head_info[$mt[3]] ) )	// only save the first meta tag value
 							$head_info[$mt[3]] = $mt[5];
 						break;
 
@@ -133,7 +140,7 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 						$mt_match, $m ) ? true : false ):
 
 						if ( ! empty( $mt[5] ) )
-							$has_media[$m[1]] = true;		// optimize media loop
+							$has_media[$m[1]] = true;	// optimize media loop
 						break;
 				}
 			}
@@ -318,15 +325,21 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 			$link_rel = array();
 
 			if ( ! empty( $this->p->options['add_link_rel_author'] ) ) {
-				if ( ! empty( $author_id ) &&
-					is_object( $this->p->m['util']['user'] ) )	// just in case
-						$link_rel['author'] = $this->p->m['util']['user']->get_author_website( $author_id, 
-							$this->p->options['seo_author_field'] );
+				if ( ! empty( $author_id ) && is_object( $this->p->m['util']['user'] ) )	// just in case
+					$link_rel['author'] = $this->p->m['util']['user']->get_author_website( $author_id, 
+						$this->p->options['seo_author_field'] );
 			}
 
 			if ( ! empty( $this->p->options['add_link_rel_publisher'] ) ) {
 				if ( ! empty( $this->p->options['seo_publisher_url'] ) )
 					$link_rel['publisher'] = $this->p->options['seo_publisher_url'];
+			}
+
+			if ( ! empty( $this->p->options['add_link_rel_shortlink'] ) ) {
+				if ( $mod['is_post'] )
+					$link_rel['shortlink'] = wp_get_shortlink( $mod['id'], 'post' );
+				else $link_rel['shortlink'] = apply_filters( $lca.'_shorten_url',
+					$mt_og['og:url'], $this->p->options['plugin_shortener'] );
 			}
 
 			$link_rel = apply_filters( $lca.'_link_rel', $link_rel, $use_post, $mod );
@@ -575,6 +588,7 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 
 					switch ( $match_name ) {
 						case 'og:url':
+						case 'og:secure_url':
 						case 'og:image':
 						case 'og:image:url':
 						case 'og:image:secure_url':
@@ -586,6 +600,7 @@ if ( ! class_exists( 'WpssoHead' ) ) {
 						case 'twitter:image':
 						case 'twitter:player':
 						case 'canonical':
+						case 'shortlink':
 						case 'menu':
 						case 'url':
 							$parts[5] = SucomUtil::esc_url_encode( $parts[5] );

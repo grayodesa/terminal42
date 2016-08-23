@@ -1770,7 +1770,7 @@ class wfLiveTrafficQuery {
 		$limit = absint($this->getLimit());
 		$offset = absint($this->getOffset());
 
-		$wheres = array();
+		$wheres = array("h.action != 'logged:waf'");
 		if ($startDate) {
 			$wheres[] = $wpdb->prepare('h.ctime > %f', $startDate);
 		}

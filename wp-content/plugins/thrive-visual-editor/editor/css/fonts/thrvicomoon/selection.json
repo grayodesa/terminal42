@@ -8,6 +8,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"my-library-books"
 				],
@@ -22,7 +23,7 @@
 				"name": "my-library-books"
 			},
 			"setIdx": 0,
-			"setId": 56,
+			"setId": 12,
 			"iconIdx": 0
 		},
 		{
@@ -32,6 +33,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"grid": 20
 			},
 			"attrs": [],
@@ -43,7 +45,7 @@
 				"name": "uniE602"
 			},
 			"setIdx": 1,
-			"setId": 55,
+			"setId": 11,
 			"iconIdx": 0
 		},
 		{
@@ -53,6 +55,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"arrow-right",
 					"right",
@@ -69,7 +72,7 @@
 				"name": "arrow-right"
 			},
 			"setIdx": 1,
-			"setId": 55,
+			"setId": 11,
 			"iconIdx": 1
 		},
 		{
@@ -79,6 +82,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"pinterest",
 					"social"
@@ -94,7 +98,7 @@
 				"name": "pinterest3"
 			},
 			"setIdx": 1,
-			"setId": 55,
+			"setId": 11,
 			"iconIdx": 2
 		},
 		{
@@ -106,6 +110,7 @@
 					{}
 				],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"forward"
 				],
@@ -122,7 +127,7 @@
 				"name": "forward"
 			},
 			"setIdx": 2,
-			"setId": 54,
+			"setId": 10,
 			"iconIdx": 0
 		},
 		{
@@ -132,6 +137,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"spinner",
 					"loading",
@@ -152,7 +158,7 @@
 				"name": "spinner"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 0
 		},
 		{
@@ -162,6 +168,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"spinner",
 					"loading",
@@ -182,7 +189,7 @@
 				"name": "spinner2"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 1
 		},
 		{
@@ -192,6 +199,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"spinner",
 					"loading",
@@ -212,7 +220,7 @@
 				"name": "spinner8"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 2
 		},
 		{
@@ -222,6 +230,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"spinner",
 					"loading",
@@ -242,7 +251,7 @@
 				"name": "spinner9"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 3
 		},
 		{
@@ -254,6 +263,7 @@
 					{}
 				],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"cross",
 					"cancel",
@@ -274,7 +284,7 @@
 				"name": "cross"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 4
 		},
 		{
@@ -286,6 +296,7 @@
 					{}
 				],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"pinterest",
 					"brand",
@@ -304,7 +315,7 @@
 				"name": "pinterest"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 5
 		},
 		{
@@ -314,6 +325,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"spinner",
 					"loading",
@@ -337,7 +349,7 @@
 				"name": "spinner11"
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 6
 		},
 		{
@@ -347,6 +359,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"zoom-in",
 					"magnifier",
@@ -365,7 +378,7 @@
 				"code": 59648
 			},
 			"setIdx": 3,
-			"setId": 53,
+			"setId": 9,
 			"iconIdx": 7
 		},
 		{
@@ -375,6 +388,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"play",
 					"player"
@@ -383,16 +397,45 @@
 			},
 			"attrs": [],
 			"properties": {
-				"id": 0,
+				"id": 8,
 				"order": 30,
 				"prevSize": 32,
 				"ligatures": "play2, player",
 				"name": "play2",
 				"code": 59649
 			},
-			"setIdx": 23,
-			"setId": 33,
-			"iconIdx": 0
+			"setIdx": 3,
+			"setId": 9,
+			"iconIdx": 8
+		},
+		{
+			"icon": {
+				"paths": [
+					"M864 128l-480 480-224-224-160 160 384 384 640-640z"
+				],
+				"attrs": [],
+				"isMulticolor": false,
+				"isMulticolor2": false,
+				"tags": [
+					"checkmark",
+					"tick",
+					"correct",
+					"accept",
+					"ok"
+				],
+				"grid": 16
+			},
+			"attrs": [],
+			"properties": {
+				"id": 26,
+				"order": 99,
+				"prevSize": 32,
+				"code": 58902,
+				"name": "checkmark"
+			},
+			"setIdx": 9,
+			"setId": 3,
+			"iconIdx": 26
 		},
 		{
 			"icon": {
@@ -405,6 +448,7 @@
 					}
 				],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"align-justify"
 				],
@@ -423,7 +467,7 @@
 				"name": "align-justify"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 0
 		},
 		{
@@ -438,6 +482,7 @@
 					}
 				],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"grid": 14
 			},
 			"attrs": [
@@ -453,7 +498,7 @@
 				"name": "uniE603"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 1
 		},
 		{
@@ -464,6 +509,7 @@
 				"width": 585,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"sort",
 					"unsorted"
@@ -480,7 +526,7 @@
 				"name": "sort"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 2
 		},
 		{
@@ -491,6 +537,7 @@
 				"width": 585,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"sort-desc",
 					"sort-down"
@@ -507,7 +554,7 @@
 				"name": "sort-desc"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 3
 		},
 		{
@@ -518,6 +565,7 @@
 				"width": 585,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"sort-asc",
 					"sort-up"
@@ -534,7 +582,7 @@
 				"name": "sort-asc"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 4
 		},
 		{
@@ -545,6 +593,7 @@
 				"width": 951,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"twitter"
 				],
@@ -560,7 +609,7 @@
 				"name": "twitter"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 5
 		},
 		{
@@ -571,6 +620,7 @@
 				"width": 585,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"facebook"
 				],
@@ -586,7 +636,7 @@
 				"name": "facebook"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 6
 		},
 		{
@@ -597,6 +647,7 @@
 				"width": 951,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"google-plus"
 				],
@@ -612,7 +663,7 @@
 				"name": "google-plus"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 7
 		},
 		{
@@ -622,6 +673,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"linkedin"
 				],
@@ -637,7 +689,7 @@
 				"name": "linkedin2"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 8
 		},
 		{
@@ -648,6 +700,7 @@
 				"width": 805,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"xing"
 				],
@@ -663,7 +716,7 @@
 				"name": "xing2"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 9
 		},
 		{
@@ -673,6 +726,7 @@
 				],
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"repeat",
 					"rotate-right"
@@ -689,7 +743,7 @@
 				"name": "repeat"
 			},
 			"setIdx": 4,
-			"setId": 52,
+			"setId": 8,
 			"iconIdx": 10
 		},
 		{
@@ -700,6 +754,7 @@
 				"width": 804.0000019073486,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"play"
 				],
@@ -714,8 +769,8 @@
 				"prevSize": 28,
 				"code": 61515
 			},
-			"setIdx": 24,
-			"setId": 32,
+			"setIdx": 4,
+			"setId": 8,
 			"iconIdx": 11
 		},
 		{
@@ -726,6 +781,7 @@
 				"width": 877.7140070597306,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"play-circle"
 				],
@@ -740,8 +796,8 @@
 				"prevSize": 28,
 				"code": 61764
 			},
-			"setIdx": 24,
-			"setId": 32,
+			"setIdx": 4,
+			"setId": 8,
 			"iconIdx": 12
 		},
 		{
@@ -752,6 +808,7 @@
 				"width": 1024.0000312328339,
 				"attrs": [],
 				"isMulticolor": false,
+				"isMulticolor2": false,
 				"tags": [
 					"youtube-play"
 				],
@@ -766,8 +823,8 @@
 				"prevSize": 28,
 				"code": 61802
 			},
-			"setIdx": 24,
-			"setId": 32,
+			"setIdx": 4,
+			"setId": 8,
 			"iconIdx": 13
 		}
 	],

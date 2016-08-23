@@ -5,6 +5,7 @@
  * Text Domain: wpsso-plm
  * Domain Path: /languages
  * Plugin URI: http://surniaulula.com/extend/plugins/wpsso-plm/
+ * Assets URI: https://surniaulula.github.io/wpsso-plm/assets/
  * Author: JS Morisset
  * Author URI: http://surniaulula.com/
  * License: GPLv3
@@ -12,7 +13,7 @@
  * Description: WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
  * Requires At Least: 3.1
  * Tested Up To: 4.6
- * Version: 2.0.10-1
+ * Version: 2.1.0-1
  * 
  * Version Numbers: {major}.{minor}.{bugfix}-{stage}{level}
  *
@@ -39,7 +40,7 @@ if ( ! class_exists( 'WpssoPlm' ) ) {
 		private static $instance = null;
 		private static $req_short = 'WPSSO';
 		private static $req_name = 'WordPress Social Sharing Optimization (WPSSO)';
-		private static $req_min_version = '3.33.8-1';
+		private static $req_min_version = '3.34.0-1';
 		private static $req_has_min_ver = true;
 
 		public static function &get_instance() {

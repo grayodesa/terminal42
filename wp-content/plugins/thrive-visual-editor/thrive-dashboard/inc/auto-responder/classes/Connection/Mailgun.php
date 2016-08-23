@@ -159,6 +159,42 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$mailgun = $this->getApi();
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'mailgun' );
+		if ( isset( $credentials ) ) {
+			$domain = $credentials['domain'];
+		} else {
+			return false;
+		}
+		$from_email = get_option( 'admin_email' );
+		try {
+			$messsage = array(
+				'from'      => $from_email,
+				'to'        => $data['emails'],
+				'subject'   => $data['subject'],
+				'text'      => empty ( $data['text_content'] ) ? '' : $data['text_content'],
+				'html'      => empty ( $data['html_content'] ) ? '' : $data['html_content'],
+				'multipart' => true
+			);
+
+			$mailgun->sendMessage( "$domain", $messsage );
+
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data

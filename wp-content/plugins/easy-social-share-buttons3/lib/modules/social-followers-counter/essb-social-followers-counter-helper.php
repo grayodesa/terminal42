@@ -278,6 +278,7 @@ class ESSBSocialFollowersCounterHelper {
 		$settings['youtube']['id'] = array('type' => 'textbox', 'text' => 'Channel/User');
 		$settings['youtube']['text'] = array('type' => 'textbox', 'text' => 'Text below number', 'description' => 'Text that will appear below number of followers (fans, likes, subscribers, followers and etc.)', 'default' => 'Subscribers');
 		$settings['youtube']['account_type'] = array('type' => 'select', 'text' => 'Account Type', 'values' => array('channel' => 'Channel', 'user' => 'User'));
+		$settings['youtube']['icon_type'] = array('type' => 'select', 'text' => 'Icon Type', 'values' => array('' => 'YouTube Logo', 'play' => 'YouTube Play Icon'));
 		$settings['youtube']['url_type'] = array('type' => 'select', 'text' => 'Channel URL Type', 'values' => array('channel' => 'Full channel url (/channel/)', 'c' => 'Short channel url (/c/)'), "description" => "Choose channel url type according to how you see your address in browser. Default is long format channel which works in more than 90%.");
 		$settings['youtube']['api_key'] = array('type' => 'textbox', 'text' => 'API Key', 'description' => 'If you have set a Google+ API key you can use it same here - all you need is to enable access to YouTube API in Google Console.', 'authfield' => true);
 		$settings['youtube']['uservalue'] = array('type' => 'textbox', 'text' => 'Manual user value of followers');

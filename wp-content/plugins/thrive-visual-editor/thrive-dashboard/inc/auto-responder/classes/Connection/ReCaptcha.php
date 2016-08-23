@@ -91,6 +91,13 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 		return $this->param( 'site_key' );
 	}
 
+	/**
+	 * @return string
+	 */
+	public function customSuccessMessage() {
+		return ' ';
+	}
+
 	/*
 	 * Those functions do not apply
 	 */

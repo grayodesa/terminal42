@@ -29,9 +29,10 @@ class Tribe__Events__Pro__Recurrence__Meta_Builder {
 	}
 
 	public function build_meta() {
-		if ( empty( $this->data ) || empty( $this->data['recurrence'] ) ) {
+		if ( empty( $this->data ) || empty( $this->data['recurrence'] ) || ! is_array( $this->data['recurrence'] ) ) {
 			return $this->get_zero_array();
 		}
+
 		$recurrence_meta       = $this->get_zero_array();
 
 		if ( isset( $this->data['recurrence']['recurrence-description'] ) ) {

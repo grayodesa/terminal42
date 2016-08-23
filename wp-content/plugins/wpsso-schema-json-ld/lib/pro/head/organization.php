@@ -31,24 +31,24 @@ if ( ! class_exists( 'WpssoJsonProHeadOrganization' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_organization' => 6,	// $json_data, $use_post, $mod, $mt_og, $user_id, $is_main
+				'json_data_http_schema_org_organization' => 5,	// $json_data, $mod, $mt_og, $user_id, $is_main
 			) );
 		}
 
-		public function filter_json_data_http_schema_org_organization( $json_data, $use_post, $mod, $mt_og, $user_id, $is_main ) {
+		public function filter_json_data_http_schema_org_organization( $json_data, $mod, $mt_og, $user_id, $is_main ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
 			$ret = $this->p->schema->filter_json_data_http_schema_org_organization( $json_data,
-				$use_post, $mod, $mt_og, $user_id, $is_main );
+				$mod, $mt_og, $user_id, $is_main );
 
 			/*
 			 * Property:
 			 *	image as http://schema.org/ImageObject
 			 *	video as http://schema.org/VideoObject
 			 */
-			WpssoJsonSchema::add_media_data( $ret, $use_post, $mod, $mt_og, $user_id );
+			WpssoJsonSchema::add_media_data( $ret, $mod, $mt_og, $user_id );
 
 			return WpssoSchema::return_data_from_filter( $json_data, $ret );
 		}

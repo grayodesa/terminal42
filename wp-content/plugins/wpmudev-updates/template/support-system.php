@@ -74,7 +74,7 @@ $variables = $wpdb->get_results( "
 $dbh = $wpdb->dbh;
 if ( is_resource( $dbh ) ) {
 	$driver  = 'mysql';
-	$version = mysql_get_server_info( $dbh );
+	$version = function_exists( 'mysqli_get_server_info' ) ? mysqli_get_server_info( $dbh ) : mysql_get_server_info( $dbh );	 		 		 	 	 	 	 	 	
 } elseif ( is_object( $dbh ) ) {
 	$driver  = get_class( $dbh );
 	if ( method_exists( $dbh, 'db_version' ) ) {
@@ -170,9 +170,9 @@ $lt = localtime();
 
 $dump_server['Software Name'] = $server[0];
 $dump_server['Software Version'] = $server_version;
-$dump_server['Server IP'] = $_SERVER['SERVER_ADDR'];
-$dump_server['Server Hostname'] = $_SERVER['SERVER_NAME'];
-$dump_server['Server Admin'] = $_SERVER['SERVER_ADMIN'];
+$dump_server['Server IP'] = @$_SERVER['SERVER_ADDR'];
+$dump_server['Server Hostname'] = @$_SERVER['SERVER_NAME'];
+$dump_server['Server Admin'] = @$_SERVER['SERVER_ADMIN'];
 $dump_server['Server local time'] = date( 'Y-m-d H:i:s (\U\T\C P)' );
 $dump_server['Operating System'] = @php_uname( 's' );
 $dump_server['OS Hostname'] = @php_uname( 'n' );

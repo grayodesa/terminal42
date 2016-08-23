@@ -69,6 +69,7 @@ class ESSBCore {
 		add_shortcode ( 'easy-social-share-flyin', array($this, 'essb_shortcode_share_flyin'));
 		
 		add_shortcode ( 'easy-subscribe', array($this, 'essb_shortcode_subscribe'));
+		add_shortcode ( 'easy-popular-posts', array($this, 'essb_shortcode_popular_posts'));
 		
 		// @since 3.3 myEventOn fix for display buttons in widgets
 		if (class_exists( 'EventON' )) {
@@ -1181,6 +1182,13 @@ class ESSBCore {
 			}
 		}
 		
+		if (essb_is_tablet()) {
+			if (ESSBOptionValuesHelper::options_value($this->options, $location.'_tablet_deactivate')) {
+				$is_singular = false;
+				$is_lists_authorized = false;
+			}
+		}
+		
 		if ($is_exclusive_active) {
 			$is_singular = true;
 		}
@@ -2021,6 +2029,7 @@ class ESSBCore {
 		
 		// apply shortcode options
 		if ($is_shortcode) {
+			//print_r($shortcode_options);
 			if ($shortcode_options['forceurl']) {
 				$post_share_details['url'] = ESSBUrlHelper::get_current_page_url();
 			}
@@ -2700,6 +2709,12 @@ class ESSBCore {
 				$more_social_networks = ESSBCoreHelper::generate_list_networks($listAllNetworks);
 
 				$more_social_networks_order = ESSBCoreHelper::generate_network_list();
+				
+				// fix for missing print code
+				if (in_array('print', $more_social_networks) && !$this->activated_resources['print']) {
+					essb_resource_builder()->add_js(ESSBResourceBuilderSnippets::js_build_window_print_code(), true, 'essb-printing-code');
+					$this->activated_resources['print'] = 'true';
+				}
 				
 				if ($position == "sharebottom") {
 					$more_social_networks = $share_bottom_networks;
@@ -3830,18 +3845,38 @@ class ESSBCore {
 	}
 	
 	
-	function essb_shortcode_subscribe($atts) {
+	function essb_shortcode_subscribe($atts, $content = '') {
 		$mode = '';
+		$design = '';
+		$twostep = 'false';
+		$twostep_inline = 'false';
 		
 		if (is_array($atts)) {
 			$mode = ESSBOptionValuesHelper::options_value($atts, 'mode');
+			$design = ESSBOptionValuesHelper::options_value($atts, 'design');
+			$twostep = ESSBOptionValuesHelper::options_value($atts, 'twostep');
+			$twostep_inline = ESSBOptionValuesHelper::options_value($atts, 'twostep_inline');
+			$twostep_text = ESSBOptionValuesHelper::options_value($atts, 'twostep_text');
+			
+			if ($content == '' && $twostep_text != '') {
+				$content = $twostep_text;
+			}
 		}
 		
 		if (!class_exists('ESSBNetworks_Subscribe')) {
 			include_once (ESSB3_PLUGIN_ROOT . 'lib/networks/essb-subscribe.php');
 		}
 			
-		return ESSBNetworks_Subscribe::draw_inline_subscribe_form($mode);		
+		if ($twostep == 'true') {
+			return ESSBNetworks_Subscribe::draw_inline_subscribe_form_twostep($mode, $design, $content, $twostep_inline);
+		}
+		else {
+			return ESSBNetworks_Subscribe::draw_inline_subscribe_form($mode, $design);
+		}		
+	}
+	
+	function essb_shortcode_popular_posts($atts) {
+		return essb_popular_posts($atts, false);
 	}
 }
 

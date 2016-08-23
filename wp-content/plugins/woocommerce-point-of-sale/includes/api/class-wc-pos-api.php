@@ -30,17 +30,16 @@ class WC_Pos_API {
 
 	public function init_hooks()
 	{
+		remove_filter( 'comments_clauses', array( 'WC_Comments', 'exclude_order_comments' ), 10, 1 );
 
 		// Add custom wc api authentication	    
 		add_filter( 'woocommerce_api_check_authentication', array( $this, 'wc_api_authentication' ), 20, 1 );
-
 		// and we're going to filter on the way out
 		add_filter( 'woocommerce_api_product_response', array( $this, 'filter_product_response' ), 99, 3 );
 		add_filter( 'woocommerce_api_customer_response', array( $this, 'filter_customer_response' ), 99, 4 );
 		add_action( 'woocommerce_api_coupon_response', array($this, 'api_coupon_response'), 99, 4 );
 		add_filter( 'woocommerce_api_order_response', array( $this, 'filter_order_response' ), 999, 4 );
 		add_filter( 'woocommerce_api_query_args', array( $this, 'filter_api_query_args' ), 99, 2 );
-
 
 		// modify WP_User_Query to support created_at date filtering
 		add_action( 'pre_user_query', array( $this, 'modify_user_query' ) );
@@ -327,7 +326,11 @@ class WC_Pos_API {
 			$order_data['customer_message'] =  '<span class="na">&ndash;</span>';
 		}
 
+		$order_notes = '<span class="na">&ndash;</span>';
+		
 		if ( $post->comment_count ) {
+			$comment_count = absint($post->comment_count);
+
 
 			// check the status of the post
 			$status = ( 'trash' !== $post->post_status ) ? '' : 'post-trashed';
@@ -337,27 +340,20 @@ class WC_Pos_API {
 				'number'    => 1,
 				'status'    => $status
 			) );
+			var_dump($latest_notes);
 
 			$latest_note = current( $latest_notes );
 
-			if( $latest_note ){
-
-				if ( $post->comment_count == 1 ) {
-					$order_data['order_notes'] = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( $latest_note->comment_content ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
-				} elseif ( isset( $latest_note->comment_content ) ) {
-					$order_data['order_notes'] = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( $latest_note->comment_content . '<br/><small style="display:block">' . sprintf( _n( 'plus %d other note', 'plus %d other notes', ( $post->comment_count - 1 ), 'woocommerce' ), $post->comment_count - 1 ) . '</small>' ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
-				} else {
-					$order_data['order_notes'] = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( sprintf( _n( '%d note', '%d notes', $post->comment_count, 'woocommerce' ), $post->comment_count ) ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
-				}
-
-			}else{
-				$order_data['order_notes'] = '<span class="na">&ndash;</span>';	
+			if ( isset( $latest_note->comment_content ) && $comment_count == 1 ) {
+				$order_notes = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( $latest_note->comment_content ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
+			} elseif ( isset( $latest_note->comment_content ) ) {
+				$order_notes = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( $latest_note->comment_content . '<br/><small style="display:block">' . sprintf( _n( 'plus %d other note', 'plus %d other notes', ( $comment_count - 1 ), 'woocommerce' ), $comment_count - 1 ) . '</small>' ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
+			} else {
+				$order_notes = '<span class="note-on tips" data-tip="' . wc_sanitize_tooltip( sprintf( _n( '%d note', '%d notes', $comment_count, 'woocommerce' ), $comment_count ) ) . '">' . __( 'Yes', 'woocommerce' ) . '</span>';
 			}
-
-		} else {
-			$order_data['order_notes'] = '<span class="na">&ndash;</span>';
 		}
 
+		$order_data['order_notes'] = $order_notes;
 		$order_data['order_total'] = $the_order->get_formatted_order_total();
 
 		if ( $the_order->payment_method_title ) {

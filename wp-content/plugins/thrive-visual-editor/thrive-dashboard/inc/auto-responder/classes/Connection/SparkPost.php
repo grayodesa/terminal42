@@ -152,6 +152,48 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$sparkpost = $this->getApi();
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'sparkpost' );
+		if ( isset( $credentials ) ) {
+			$domain = $credentials['domain'];
+		}
+
+		$recipients = array();
+
+		foreach ( $data['emails'] as $email ) {
+			$item         = array(
+				'address' => array(
+					'email' => $email,
+				)
+			);
+			$recipients[] = $item;
+		}
+
+		try {
+			$options = array(
+				'from'       => $domain,
+				'html'       => empty ( $data['html_content'] ) ? '' : $data['html_content'],
+				'text'       => empty ( $data['text_content'] ) ? '' : $data['text_content'],
+				'subject'    => $data['subject'],
+				'recipients' => $recipients,
+			);
+			$sparkpost->transmission->send( $options );
+		} catch ( Thrive_Dash_Api_SparkPost_Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data
@@ -201,18 +243,13 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 			$visitor_name = '';
 		}
 
-		$use_sandbox = array();
-		if ( $this->sandbox ) {
-			$use_sandbox = array( 'sandbox' => true );
-		}
-
 		$text_content = strip_tags( $html_content );
 		$options      = array(
 			'from'       => $from,
 			'html'       => $html_content,
 			'text'       => $text_content,
 			'subject'    => $subject,
-			'options'    => $use_sandbox,
+			'options'    => array(),
 			'recipients' => array(
 				array(
 					'address' => array(

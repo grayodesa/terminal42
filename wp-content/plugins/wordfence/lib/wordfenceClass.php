@@ -1845,6 +1845,7 @@ SQL
 				'ok' => 1,
 				'userID' => $user->ID,
 				'username' => $username,
+				'homeurl' => preg_replace('#.*?//#', '', get_home_url()),
 				'mode' => $mode,
 				'phone' => $phone,
 				'recoveryCodes' => $recoveryCodes,
@@ -5726,7 +5727,7 @@ to your httpd.conf if using Apache, or find documentation on how to disable dire
 		$limit = 500;
 		$lastSendTime = wfConfig::get('lastAttackDataSendTime');
 		$attackData = $wpdb->get_results($wpdb->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->base_prefix}wfHits
-WHERE action in ('blocked:waf', 'learned:waf')
+WHERE action in ('blocked:waf', 'learned:waf', 'logged:waf')
 AND attackLogTime > %.6f
 LIMIT %d", $lastSendTime, $limit));
 		$totalRows = $wpdb->get_var('SELECT FOUND_ROWS()');
@@ -5790,6 +5791,10 @@ LIMIT %d", $lastSendTime, $limit));
 							wfConfig::set('lastAttackDataSendTime', $lastSendTime);
 							if ($totalRows > $limit) {
 								self::scheduleSendAttackData();
+							}
+							
+							if (array_key_exists('data', $jsonData) && array_key_exists('watchedIPList', $jsonData['data'])) {
+								$waf->getStorageEngine()->setConfig('watchedIPs', $jsonData['data']['watchedIPList']);
 							}
 						}
 					}
@@ -5870,7 +5875,12 @@ LIMIT %d", $lastSendTime, $limit));
 						}
 					}
 
-					$hit->action = 'blocked:waf';
+					if ($failedRules == 'logged') {
+						$hit->action = 'logged:waf';
+					}
+					else {
+						$hit->action = 'blocked:waf';
+					}
 
 					/** @var wfWAFRule $rule */
 					$ruleIDs = explode('|', $failedRules);
@@ -5886,6 +5896,12 @@ LIMIT %d", $lastSendTime, $limit));
 						if ($rule) {
 							$hit->actionDescription = $rule->getDescription();
 							$actionData['category'] = $rule->getCategory();
+							$actionData['ssl'] = $ssl;
+							$actionData['fullRequest'] = base64_encode($requestString);
+						}
+						else if ($ruleIDs[0] == 'logged') {
+							$hit->actionDescription = 'Watched IP Traffic: ' . $ip;
+							$actionData['category'] = 'logged';
 							$actionData['ssl'] = $ssl;
 							$actionData['fullRequest'] = base64_encode($requestString);
 						}

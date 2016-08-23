@@ -497,12 +497,18 @@ class ESSBResourceBuilderSnippets {
 		}
 		
 		$is_active_subscribe = ESSBOptionValuesHelper::options_bool_value($essb_options, 'activate_mailchimp_customizer');
-		if ($is_active_subscribe) {
+		$is_active_subscribe2 = ESSBOptionValuesHelper::options_bool_value($essb_options, 'activate_mailchimp_customizer2');
+		$is_active_subscribe3 = ESSBOptionValuesHelper::options_bool_value($essb_options, 'activate_mailchimp_customizer3');
+		$is_active_subscribe4 = ESSBOptionValuesHelper::options_bool_value($essb_options, 'activate_mailchimp_customizer4');
+		if ($is_active_subscribe || $is_active_subscribe2 || $is_active_subscribe3 || $is_active_subscribe4) {
 			if (!function_exists('essb_rs_css_build_customizer_mailchimp')) {
 				include_once (ESSB_RESOURCE_BUILDER_FOLDER . 'essb_rs_css_build_customizer_mailchimp.php');
 			}
 				
-			self::snippet_add(essb_rs_css_build_customizer_mailchimp());
+			self::snippet_add(essb_rs_css_build_customizer_mailchimp(array("design1" => $is_active_subscribe, 
+					"design2" => $is_active_subscribe2,
+					"design3" => $is_active_subscribe3,
+					"design4" => $is_active_subscribe4)));
 		}
 	
 		$global_user_defined_css = isset ( $options ['customizer_css'] ) ? $options ['customizer_css'] : '';

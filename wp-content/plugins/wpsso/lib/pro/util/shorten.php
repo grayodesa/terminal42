@@ -46,7 +46,6 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 		}
 
 		public function filter_shorten_url( $long_url, $service = '' ) {
-
 			$short_url = $this->get_short( $long_url, $service );
 
 			if ( empty( $short_url ) )
@@ -85,8 +84,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 						$this->svc[$service] = new SuextBitly( 
 							$this->p->options['plugin_bitly_login'],
 							$this->p->options['plugin_bitly_token'], 
-							$this->p->options['plugin_bitly_api_key'], 
-							$this->p->debug
+							$this->p->options['plugin_bitly_api_key']
 						);
 					} elseif ( $this->p->debug->enabled ) {
 						$this->p->debug->log( 'SuextBitly class is missing' );
@@ -100,8 +98,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 							$this->p->debug->log( 'google api_key and/or shorten options empty' );
 						break;
 					} elseif ( class_exists( 'SuextGoogl' ) ) {
-						$this->svc[$service] = new SuextGoogl( $this->p->options['plugin_google_api_key'],
-							$this->p->debug );
+						$this->svc[$service] = new SuextGoogl( $this->p->options['plugin_google_api_key'] );
 					} elseif ( $this->p->debug->enabled ) {
 						$this->p->debug->log( 'SuextGoogl class missing' );
 					}
@@ -113,7 +110,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 							$this->p->debug->log( 'owly api_key option empty' );
 						break;
 					} elseif ( class_exists( 'SuextOwly' ) ) {
-						$this->svc[$service] = SuextOwly::factory( array(
+						$this->svc[$service] = new SuextOwly( array(
 							'key' => $this->p->options['plugin_owly_api_key'],
 							'protocol' => 'https:',
 						) );
@@ -146,10 +143,12 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 						break;
 					// username, password, and token are optional for public shortening configs
 					} elseif ( class_exists( 'SuextYourls' ) ) {
-						$this->svc[$service] = new SuextYourls( $this->p->options['plugin_yourls_api_url'],
+						$this->svc[$service] = new SuextYourls(
+							$this->p->options['plugin_yourls_api_url'],
 							$this->p->options['plugin_yourls_username'],
 							$this->p->options['plugin_yourls_password'],
-							$this->p->options['plugin_yourls_token'] );
+							$this->p->options['plugin_yourls_token']
+						);
 					} elseif ( $this->p->debug->enabled ) {
 						$this->p->debug->log( 'SuextYourls class missing' );
 					}
@@ -219,7 +218,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 			}
 
 			if ( $this->p->debug->enabled )
-				$this->p->debug->log( 'long url to shorten with '.$service.' = '.$long_url );
+				$this->p->debug->log( 'shortening long_url with '.$service.' = '.$long_url );
 
 			switch ( $service ) {
 				case 'bitly':
@@ -234,6 +233,10 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 					break;
 				case 'tinyurl':
 					$short_url = $this->svc[$service]->create( $long_url );
+					if ( empty( $short_url ) && $this->p->debug->enabled ) {
+						$response = $this->svc[$service]->getLastResponse();
+						$this->p->debug->log( $response );
+					}
 					break;
 				default:
 					if ( $this->p->debug->enabled )
@@ -243,7 +246,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 
 			if ( empty( $short_url ) ) {
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'failed to shorten long url = '.$long_url );
+					$this->p->debug->log( 'failed to shorten long_url = '.$long_url );
 				$short_url = false;
 			} else {
 				if ( $this->p->debug->enabled )

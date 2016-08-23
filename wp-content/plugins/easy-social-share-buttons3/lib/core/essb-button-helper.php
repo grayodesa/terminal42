@@ -348,6 +348,11 @@ class ESSBButtonHelper {
 		
 		global $essb_networks, $essb_options;		
 		
+		// @3.6.1 fix for missing counters directive
+		if (!isset($style['counters'])) {
+			$style['counters'] = false;
+		}
+		
 		$content = "";		
 		
 		$leading_width_mode_fullwidth = false;
@@ -756,6 +761,8 @@ class ESSBButtonHelper {
 				
 				
 				$use_tweet = $share ['twitter_tweet'];
+				
+				$use_tweet = str_replace('&#8211;', '-', $use_tweet);
 				$use_tweet = str_replace('#', '%23', $use_tweet);
 				$use_tweet = str_replace('|', '%7C', $use_tweet);
 				
@@ -863,6 +870,8 @@ class ESSBButtonHelper {
 					$share['mail_body'] = '';
 				}
 				$url = sprintf('mailto:?subject=%1$s&amp;body=%2$s', $share['mail_subject'], $share['mail_body']);
+				// correction made by Dane Morgan (Thank You :))
+				//$url = sprintf('mailto:?subject=%1$s&body=%2$s', urlencode( str_replace('amp;', '', $share['mail_subject'] ) ), urlencode($share['mail_body']));
 				$api_command = "essb_tracking_only('', 'mail', '".$salt."', true);";
 				break;
 			case "mail_form" :

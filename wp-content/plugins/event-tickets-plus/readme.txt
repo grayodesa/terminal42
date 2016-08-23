@@ -3,8 +3,8 @@
 Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, shane.pearlman, thatdudebutch,  zbtirrell
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Shopp, EDD, WPEC, WP-eCommerce, WPEC Tickets, Shopp Tickets, Easy Digital Downloads, EDDTickets
 Requires at least: 3.9
-Tested up to: 4.5.3
-Stable tag: 4.2.4
+Tested up to: 4.6
+Stable tag: 4.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,10 +142,15 @@ Our Premium Plugins:
 
 == Changelog ==
 
+= [4.2.5] 2016-08-17 =
+
+* Fix - Resolved warnings during WPEC checkouts that prevented proper page redirection after ticket purchases (props to @sewhouston in the support forums for reporting this!) [65111]
+* Tweak - Allow for basic HTML tag support in attendee meta fields (Shout out to @lpoindexter for reporting this on in the forums.) [46454]
+
 = [4.2.4] 2016-08-03 =
 
 * Fix - Avoid Organizer and Venue being unset when updating a WooCommerce managed event ticket in WooCommerce
-* Fix - Limit the potential for race conditions leading to duplicate "human readable" IDs (Thank you @Saha for alerting us in the forums on this issue)
+* Fix - Limit the potential for race conditions leading to duplicate "human readable" IDs [63489]
 
 = [4.2.3] 2016-07-20 =
 

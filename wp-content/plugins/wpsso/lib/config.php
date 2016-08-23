@@ -20,8 +20,8 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			'feed_cache_exp' => 86400,	// 24 hours
 			'plugin' => array(
 				'wpsso' => array(
-					'version' => '3.33.8-2',	// plugin version
-					'opt_version' => '443',		// increment when changing default options
+					'version' => '3.34.1-1',	// plugin version
+					'opt_version' => '445',		// increment when changing default options
 					'short' => 'WPSSO',		// short plugin name
 					'name' => 'WordPress Social Sharing Optimization (WPSSO)',
 					'desc' => 'Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.',
@@ -110,6 +110,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 								'polylang' => '(plugin) Polylang',
 							),
 							'media' => array(
+								'facebook' => '(api) Facebook Video API',
 								'gravatar' => '(api) Author Gravatar Image',
 								'ngg' => '(plugin) NextGEN Gallery',
 								'rtmedia' => '(plugin) rtMedia for WordPress, BuddyPress and bbPress',
@@ -450,6 +451,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					// enable/disable header html tags
 					'add_link_rel_author' => 1,
 					'add_link_rel_publisher' => 1,
+					'add_link_rel_shortlink' => 1,
 					// facebook
 					'add_meta_property_fb:admins' => 1,
 					'add_meta_property_fb:app_id' => 1,
@@ -601,10 +603,11 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_content_img_max' => 5,			// Maximum Images from Content
 					'plugin_content_vid_max' => 5,			// Maximum Videos from Content
 					'plugin_gravatar_api' => 1,			// Include Author Gravatar Image
-					'plugin_slideshare_api' => 1,			// Check for Embedded Media from
-					'plugin_vimeo_api' => 1,
-					'plugin_wistia_api' => 1,
-					'plugin_youtube_api' => 1,
+					'plugin_facebook_api' => 1,			// Check for Embedded Media from: Facebook
+					'plugin_slideshare_api' => 1,			// Check for Embedded Media from: Slideshare
+					'plugin_vimeo_api' => 1,			// Check for Embedded Media from: Vimeo
+					'plugin_wistia_api' => 1,			// Check for Embedded Media from: Wistia
+					'plugin_youtube_api' => 1,			// Check for Embedded Media from: Youtube
 					// Theme Integration Tab
 					'plugin_html_attr_filter_name' => 'language_attributes',
 					'plugin_html_attr_filter_prio' => 100,
@@ -612,10 +615,10 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_head_attr_filter_prio' => 100,
 					'plugin_check_head' => 1,			// Check for Duplicate Meta Tags
 					'plugin_filter_lang' => 1,			// Use WP Locale for Language
-					'plugin_auto_img_resize' => 1,			// Recreate Missing WP Media Sizes
+					'plugin_auto_img_resize' => 1,			// Create Missing WP Media Sizes
 					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
-					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
-					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
+					'plugin_upscale_images' => 0,			// Allow Upscale of Smaller Images
+					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percent
 					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
 					'plugin_widgets' => 1,				// Enable Plugin Widget(s)
 					'plugin_page_excerpt' => 0,			// Enable WP Excerpt for Pages
@@ -646,7 +649,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_file_cache_exp' => 0,			// File Cache Expiry
 					// Service API Keys Tab
 					'plugin_shortener' => 'none',
-					'plugin_shortlink' => 1,
+					'plugin_shortlink' => 1,			// Use Shortnened URL for WP Shortlink
 					'plugin_min_shorten' => 23,
 					'plugin_bitly_login' => '',
 					'plugin_bitly_token' => '',
@@ -728,9 +731,9 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'plugin_auto_img_resize:use' => 'default',
 					'plugin_check_img_dims' => 0,			// Enforce Image Dimensions Check
 					'plugin_check_img_dims:use' => 'default',
-					'plugin_upscale_images' => 0,			// Allow Upscaling of Smaller Images
+					'plugin_upscale_images' => 0,			// Allow Upscale of Smaller Images
 					'plugin_upscale_images:use' => 'default',
-					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percentage
+					'plugin_upscale_img_max' => 33,			// Maximum Image Upscale Percent
 					'plugin_upscale_img_max:use' => 'default',
 					'plugin_shortcodes' => 1,			// Enable Plugin Shortcode(s)
 					'plugin_shortcodes:use' => 'default',
@@ -1126,7 +1129,18 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 						'landmarks.or.historical.buildings' => 'http://schema.org/LandmarksOrHistoricalBuildings',
 						'local.business' => array( 
 							'animal.shelter' => 'http://schema.org/AnimalShelter',
-							'automotive.business' => 'http://schema.org/AutomotiveBusiness',
+							'automotive.business' => array(
+								'auto.body.shop' => 'http://schema.org/AutoBodyShop',
+								'auto.dealer' => 'http://schema.org/AutoDealer',
+								'auto.parts.store' => 'http://schema.org/AutoPartsStore',
+								'auto.rental' => 'http://schema.org/AutoRental',
+								'auto.repair' => 'http://schema.org/AutoRepair',
+								'auto.wash' => 'http://schema.org/AutoWash',
+								'automotive.business' => 'http://schema.org/AutomotiveBusiness',
+								'gas.station' => 'http://schema.org/GasStation',
+								'motorcycle.dealer' => 'http://schema.org/MotorcycleDealer',
+								'motorcycle.repair' => 'http://schema.org/MotorcycleRepair ',
+							),
 							'child.care' => 'http://schema.org/ChildCare',
 							'dry.cleaning.or.laundry' => 'http://schema.org/DryCleaningOrLaundry',
 							'emergency.service' => 'http://schema.org/EmergencyService',
@@ -1370,6 +1384,8 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 
 		public static function require_libs( $plugin_filepath ) {
 			
+			require_once( WPSSO_PLUGINDIR.'lib/com/nodebug.php' );
+			require_once( WPSSO_PLUGINDIR.'lib/com/nonotice.php' );
 			require_once( WPSSO_PLUGINDIR.'lib/com/exception.php' );	// extends Exception
 			require_once( WPSSO_PLUGINDIR.'lib/com/util.php' );
 			require_once( WPSSO_PLUGINDIR.'lib/com/cache.php' );

@@ -31,55 +31,62 @@ if ( ! class_exists( 'WpssoJsonProHeadLocalBusiness' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_localbusiness' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_localbusiness' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
-		public function filter_json_data_http_schema_org_localbusiness( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_localbusiness( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
 			$ret = array();
-			$opening_hours = array();
 
-			// save time and check for prefix in meta tags
-			if ( ! preg_grep( '/^place:business:day:/', array_keys( $mt_og ) ) )
-				return $json_data;
+			if ( ! empty( $mt_og['place:location:latitude'] ) &&
+				! empty( $mt_og['place:location:longitude'] ) &&
+				! empty( $mt_og['place:business:service_radius'] ) ) {
 
-			/*
-			 * Array (
-			 *	[place:business:day:monday:open] => 09:00
-			 *	[place:business:day:monday:close] => 17:00
-			 *	[place:business:day:publicholidays:open] => 09:00
-			 *	[place:business:day:publicholidays:close] => 17:00
-			 *	[place:business:season:from] => 2016-04-01
-			 *	[place:business:season:to] => 2016-05-01
-			 * )
-			 */
-			foreach ( $this->p->cf['form']['weekdays'] as $day => $label ) {
-				if ( ! empty( $mt_og['place:business:day:'.$day.':open'] ) &&
-					! empty( $mt_og['place:business:day:'.$day.':close'] ) ) {
-
-					$dayofweek = array(
-						'@context' => 'http://schema.org',
-						'@type' => 'OpeningHoursSpecification',
-						'dayOfWeek' => $label,
-					);
-					foreach ( array(
-						'opens' => 'place:business:day:'.$day.':open',
-						'closes' => 'place:business:day:'.$day.':close',
-						'validFrom' => 'place:business:season:from',
-						'validThrough' => 'place:business:season:to',
-					) as $prop_name => $mt_key )
-						if ( isset( $mt_og[$mt_key] ) )
-							$dayofweek[$prop_name] = $mt_og[$mt_key];
-					$opening_hours[] = $dayofweek;
-				}
+				$ret['areaServed'] = WpssoSchema::get_item_type_context( 'http://schema.org/GeoShape',
+					array( 'circle' => $mt_og['place:location:latitude'].' '.
+						$mt_og['place:location:longitude'].' '.
+						$mt_og['place:business:service_radius'] ) );
 			}
 
-			if ( ! empty( $opening_hours ) )
-				$ret['openingHoursSpecification'] = $opening_hours;
+			if ( preg_grep( '/^place:business:day:/', array_keys( $mt_og ) ) ) {
+				/*
+				 * Array (
+				 *	[place:business:day:monday:open] => 09:00
+				 *	[place:business:day:monday:close] => 17:00
+				 *	[place:business:day:publicholidays:open] => 09:00
+				 *	[place:business:day:publicholidays:close] => 17:00
+				 *	[place:business:season:from] => 2016-04-01
+				 *	[place:business:season:to] => 2016-05-01
+				 * )
+				 */
+				$opening_hours = array();
+				foreach ( $this->p->cf['form']['weekdays'] as $day => $label ) {
+					if ( ! empty( $mt_og['place:business:day:'.$day.':open'] ) &&
+						! empty( $mt_og['place:business:day:'.$day.':close'] ) ) {
+	
+						$dayofweek = array(
+							'@context' => 'http://schema.org',
+							'@type' => 'OpeningHoursSpecification',
+							'dayOfWeek' => $label,
+						);
+						foreach ( array(
+							'opens' => 'place:business:day:'.$day.':open',
+							'closes' => 'place:business:day:'.$day.':close',
+							'validFrom' => 'place:business:season:from',
+							'validThrough' => 'place:business:season:to',
+						) as $prop_name => $mt_key )
+							if ( isset( $mt_og[$mt_key] ) )
+								$dayofweek[$prop_name] = $mt_og[$mt_key];
+						$opening_hours[] = $dayofweek;
+					}
+				}
+				if ( ! empty( $opening_hours ) )
+					$ret['openingHoursSpecification'] = $opening_hours;
+			}
 
 			return WpssoSchema::return_data_from_filter( $json_data, $ret );
 		}

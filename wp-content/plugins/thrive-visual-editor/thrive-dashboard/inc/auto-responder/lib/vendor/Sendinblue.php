@@ -25,9 +25,11 @@ class Thrive_Dash_Api_Sendinblue {
 
 		switch ( $method ) {
 			case 'GET':
+				$input = json_decode($input);
 				$fn = 'tve_dash_api_remote_get';
 				break;
 			default:
+
 				$fn = 'tve_dash_api_remote_post';
 				break;
 		}
@@ -36,7 +38,6 @@ class Thrive_Dash_Api_Sendinblue {
 			'body'      => $input,
 			'headers'   => array(
 				'Content-Type' => 'application/json',
-				//'Accept' => 'application/json',
 				'api-key'      => $this->api_key,
 			),
 			'sslverify' => false,

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Events Calendar Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2016-05-26 04:55:47+0000\n"
+"PO-Revision-Date: 2016-08-10 22:53:45+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,11 +12,11 @@ msgstr ""
 
 #: src/Tribe/CSV_Importer/Fields.php:25
 msgid "Venue Latitude"
-msgstr ""
+msgstr "Latitude du lieu de l'événement"
 
 #: src/Tribe/CSV_Importer/Fields.php:26
 msgid "Venue Longitude"
-msgstr ""
+msgstr "Longitude du lieu de l'événement"
 
 #: src/Tribe/APM_Filters/APM_Filters.php:161
 msgid "Download for free"
@@ -44,7 +44,7 @@ msgstr "La latitude et la longitude pour le lieu de votre événement n'ont pas 
 
 #: src/Tribe/Main.php:1704
 msgid "Events Calendar PRO"
-msgstr ""
+msgstr "Events Calendar PRO"
 
 #: src/Tribe/Recurrence/Single_Event_Overrides.php:82
 msgid "Times:"
@@ -60,7 +60,7 @@ msgstr "Pas un post d'événement."
 
 #: src/Tribe/Recurrence/Validator.php:136
 msgid "Recurrence meta should not be empty."
-msgstr ""
+msgstr "Le méta de récurrence ne devrait pas être vide."
 
 #: src/admin-views/event-recurrence.php:37
 msgid "that will occur on"
@@ -104,7 +104,7 @@ msgstr "Utilisez le panneau de votre customizer suivante pour changer le style d
 
 #: src/Tribe/Customizer/Section_Day_List_View.php:72
 msgid "Day/List View"
-msgstr "Jour / Liste Voir"
+msgstr "Vue par jour / liste"
 
 #: src/Tribe/Customizer/Section_Day_List_View.php:73
 #: src/Tribe/Customizer/Section_Month_Week_View.php:144
@@ -116,7 +116,7 @@ msgstr "Les options sélectionnées ici remplacer ce qui a été sélectionné d
 
 #: src/Tribe/Customizer/Section_Day_List_View.php:105
 msgid "Price Background Color"
-msgstr "Prix ​​Couleur de fond"
+msgstr "Couleur d'arrière-plan du prix"
 
 #: src/Tribe/Customizer/Section_General_Theme.php:77
 msgid "General Theme"
@@ -128,11 +128,11 @@ msgstr "Configurations globales pour le style de Le calendrier des événements"
 
 #: src/Tribe/Customizer/Section_General_Theme.php:109
 msgid "Accent Color"
-msgstr "Accent de couleur"
+msgstr "Couleur d'accent"
 
 #: src/Tribe/Customizer/Section_Global_Elements.php:119
 msgid "Global Elements"
-msgstr "éléments Mondial"
+msgstr "Éléments globaux"
 
 #: src/Tribe/Customizer/Section_Global_Elements.php:120
 msgid "Options selected here will override what was selected in the \"General Theme\" section"
@@ -144,31 +144,31 @@ msgstr "Couleur des liens"
 
 #: src/Tribe/Customizer/Section_Global_Elements.php:173
 msgid "Filter Bar Color"
-msgstr "Filtrez Color Bar"
+msgstr "Couleur de la barre de filtre"
 
 #: src/Tribe/Customizer/Section_Global_Elements.php:195
 msgid "Button Color"
-msgstr "bouton Couleur"
+msgstr "Couleur du bouton"
 
 #: src/Tribe/Customizer/Section_Month_Week_View.php:143
 msgid "Month/Week View"
-msgstr "Mois / Semaine Voir"
+msgstr "Vue par mois /semaine"
 
 #: src/Tribe/Customizer/Section_Month_Week_View.php:175
 msgid "Calendar Table Color"
-msgstr "Calendrier Table des couleurs"
+msgstr "Couleur du tableau du calendrier"
 
 #: src/Tribe/Customizer/Section_Month_Week_View.php:197
 msgid "Calendar Hightlight Color"
-msgstr "Calendrier Hightlight couleur"
+msgstr "Couleur d'accent du calendrier"
 
 #: src/Tribe/Customizer/Section_Photo_View.php:74
 msgid "Photo View"
-msgstr "photo Vue"
+msgstr "Vue photo"
 
 #: src/Tribe/Customizer/Section_Photo_View.php:106
 msgid "Photo Background Color"
-msgstr "Photo couleur de fond"
+msgstr "Couleur d'arrière-plan de la photo "
 
 #: src/Tribe/Customizer/Section_Single_Event.php:78
 #: src/admin-views/widget-admin-countdown.php:21
@@ -177,11 +177,11 @@ msgstr "Un seul événement"
 
 #: src/Tribe/Customizer/Section_Single_Event.php:110
 msgid "Post Title Color"
-msgstr "Titre du post Couleur"
+msgstr "Couleur du titre de l'événement"
 
 #: src/Tribe/Customizer/Section_Single_Event.php:132
 msgid "Details Background Color"
-msgstr "Détails Couleur de fond"
+msgstr "Couleur de détail d'arrière-plan"
 
 #: src/Tribe/Customizer/Section_Widget.php:36
 msgid "Widgets"
@@ -189,11 +189,11 @@ msgstr "Widgets"
 
 #: src/Tribe/Customizer/Section_Widget.php:68
 msgid "Calendar Header Color"
-msgstr "Calendrier tête Couleur"
+msgstr "Couleur de l'en-tête du calendrier"
 
 #: src/Tribe/Customizer/Section_Widget.php:90
 msgid "Calendar Date Bar Color"
-msgstr "Date du calendrier Color Bar"
+msgstr "Couleur de la bande des dates du calendrier"
 
 #: src/Tribe/Recurrence/Strings.php:14
 msgid "Daily until %1$s"
@@ -234,7 +234,7 @@ msgstr "Affiche les événements par jour pour la semaine ."
 
 #: src/Tribe/This_Week_Widget.php:22
 msgid "This Week Events"
-msgstr "Cette Semaine Événements"
+msgstr "Événements de la semaine"
 
 #: src/admin-views/event-recurrence.php:134
 msgid "Use this field if you want to override the auto-generated descriptions of event recurrence"
@@ -253,7 +253,7 @@ msgstr "jours"
 #: src/admin-views/recurrence/time.php:48
 msgctxt "custom recurrence duration"
 msgid "hours"
-msgstr "des heures"
+msgstr "heures"
 
 #: src/admin-views/recurrence/time.php:59
 msgctxt "custom recurrence duration"
@@ -290,7 +290,7 @@ msgstr "Disposition horizontale"
 
 #: src/admin-views/widget-admin-this-week.php:36
 msgid "Highlight Color:"
-msgstr "Mettez en surbrillance Couleur:"
+msgstr "Couleur de surbrillance"
 
 #: src/admin-views/widget-admin-this-week.php:68
 msgid "Number of events to show per day:"
@@ -317,11 +317,11 @@ msgstr[1] "Voir tous les %1$s de %2$s les"
 
 #: src/views/pro/widgets/this-week/loop-grid-day.php:67
 msgid "No Events Today"
-msgstr "Pas d'événements aujourd'hui"
+msgstr "Aucun événement aujourd'hui"
 
 #: src/views/pro/widgets/this-week/nav.php:15
 msgid "This Week Navigation"
-msgstr "Cette semaine de navigation"
+msgstr "Navigation des événements de la semaine"
 
 #: src/Tribe/Main.php:382
 msgid "All %1$s for %2$s"
@@ -711,7 +711,7 @@ msgstr "Masquer les jours de fin de semaine lors de la vue par semaine."
 #: src/admin-views/widget-admin-this-week.php:135
 #: src/admin-views/widget-calendar.php:60
 msgid "Match all"
-msgstr "Correspondre tous"
+msgstr "Correspondre à tout"
 
 #: src/Tribe/Main.php:647
 msgid "Check this to only show weekdays on Week View"
@@ -741,7 +741,7 @@ msgstr "Sélectionner…"
 
 #: src/Tribe/Main.php:680
 msgid "%sOur New User Primer%s was designed for folks in your exact position. Featuring both step-by-step videos and written walkthroughs that feature accompanying screenshots, the primer aims to take you from zero to hero in no time."
-msgstr "%sNotre Guide du Nouvel Utilisateur%s a été conçu pour les gens dans votre situation. Présentant une procédure étape par étape accompagné de vidéos et de captures d'écran, ce guide a pour objectif de vous amener rapidement à maitriser ce plugin."
+msgstr "%sNotre guide du nouvel utilisateur%s a été conçu pour les gens dans votre situation. Présentant une procédure étape par étape accompagnée de vidéos et de captures d'écran, ce guide a pour objectif de vous amener rapidement à maîtriser ce plug-in."
 
 #: src/admin-views/widget-admin-advanced-list.php:141
 #: src/admin-views/widget-admin-venue.php:36
@@ -885,7 +885,7 @@ msgstr "Brouillon du lieu mis à jour <a target=\"_blank\" href=\"%s\">Prévisua
 #: src/functions/template-tags/general.php:606
 #: src/functions/template-tags/general.php:629
 msgid "Date out of range."
-msgstr "Date hors de portée (out of range)."
+msgstr "Date hors de portée"
 
 #: src/Tribe/Main.php:1342
 msgid "Organizer updated. <a href=\"%s\">View organizer</a>"
@@ -893,7 +893,7 @@ msgstr "Organisateur mis à jour. <a href=\"%s\">Voir l'organisateur</a>"
 
 #: src/functions/template-tags/general.php:750
 msgid "Recurring %s"
-msgstr "%s Récurent"
+msgstr "Récurrent %s"
 
 #: src/Tribe/Main.php:1343
 msgid "Organizer published. <a href=\"%s\">View organizer</a>"
@@ -901,7 +901,7 @@ msgstr "Organisateur publié. <a href=\"%s\">Voir l'organisateur</a>"
 
 #: src/functions/template-tags/general.php:753
 msgid "(See all)"
-msgstr "(Voir tout)"
+msgstr "(Voir tous les événements)"
 
 #: src/Tribe/Main.php:1344
 msgid "Organizer submitted. <a target=\"_blank\" href=\"%s\">Preview organizer</a>"
@@ -937,7 +937,7 @@ msgstr "<span>&laquo;</span> Précédent %s"
 
 #: src/Tribe/Main.php:1412
 msgid "View All Add-Ons"
-msgstr "Voir tous les Add-Ons"
+msgstr "Voir toutes les extensions"
 
 #: src/views/pro/map/nav.php:32 src/views/pro/photo/nav.php:31
 msgid "Next %s <span>&raquo;</span>"
@@ -1375,7 +1375,7 @@ msgstr "Case à cocher - Pour des choix multiples"
 
 #: src/admin-views/event-meta-options.php:15
 msgid "Radio Button - to select only one"
-msgstr "Bouton Radio - pour une sélection unique"
+msgstr "Bouton radio - pour une sélection unique"
 
 #: src/admin-views/event-meta-options.php:16
 msgid "Dropdown Menu - for a dropdown menu"
@@ -1411,7 +1411,7 @@ msgstr "Bouton radio"
 
 #: src/admin-views/event-meta-options.php:52
 msgid "Checkbox"
-msgstr "Checkbox"
+msgstr "Case à cocher"
 
 #: src/admin-views/event-meta-options.php:65
 msgid "Enter the field label as you want it to appear (this will be the label in the same way \"Start Date,\" \"Organizer,\" etc appear in the event details box on the frontend). Select whether the field will be a text field; URL field; radio buttons; checkboxes; or a dropdown. All of these with the exception of text and URL allow for multiple options to be included, which you can add — one per-line — in the right-hand column. If you feel flummoxed, we've got you covered with a %s."
@@ -1419,7 +1419,7 @@ msgstr "Insérez un label de champs comme vous désirez le voir s'afficher (ce s
 
 #: src/admin-views/event-meta-options.php:69
 msgid "Editor \"Custom Fields\" meta box"
-msgstr "Éditeur \"Champs personnalisés\" Boite de métas"
+msgstr "Boîte méta pour l'éditeur de \"champs personnalisés\""
 
 #: src/admin-views/event-meta-options.php:71
 msgid "Show"
@@ -1479,7 +1479,7 @@ msgstr "et se terminera"
 
 #: src/admin-views/event-recurrence.php:30
 msgid "On"
-msgstr "Le"
+msgstr "le"
 
 #: src/admin-views/event-recurrence.php:31
 msgid "After"
@@ -1612,7 +1612,7 @@ msgstr "Mer"
 
 #: src/Tribe/APM_Filters/Date_Filter.php:13
 msgid "On and After"
-msgstr "Le et après"
+msgstr "Cette date et après"
 
 #: src/admin-views/recurrence/weeks.php:16
 msgid "Th"
@@ -1620,7 +1620,7 @@ msgstr "Jeu"
 
 #: src/Tribe/APM_Filters/Date_Filter.php:14
 msgid "On and Before"
-msgstr "Le et avant"
+msgstr "Cette date et avant"
 
 #: src/admin-views/recurrence/weeks.php:20
 msgid "F"
@@ -1644,7 +1644,7 @@ msgstr "Di"
 
 #: src/Tribe/APM_Filters/Title_Filter.php:12
 msgid "Search"
-msgstr "Recherche"
+msgstr "Rechercher"
 
 #: src/admin-views/recurrence/months.php:5
 #: src/admin-views/recurrence/years.php:86

@@ -94,7 +94,7 @@ $w = new wfConfig();
 						class="wfhelp"></a></th>
 				<td><input type="checkbox" id="loginSecurityEnabled" class="wfConfigElem" name="loginSecurityEnabled"
 				           value="1" <?php $w->cb( 'loginSecurityEnabled' ); ?> />&nbsp;This option enables all "Login
-					Security" options. You can modify individual options further down this page.
+					Security" options, including two-factor authentication, strong password enforcement, and invalid login throttling. You can modify individual options further down this page.
 				</td>
 			</tr>
 			<tr>

@@ -1031,6 +1031,10 @@ pre.wf-pre {
 	overflow: auto;
 }
 
+.wf-center {
+	text-align: center;
+}
+
 
 /*
 	Whitelist table
@@ -1068,4 +1072,8 @@ tr.wf-table-filters input {
 #wfTwoFactorRecoveryCodes li {
 	font-family: monospace;
 	text-align: center;
+}
+
+#wfTwoFactorDownload .dashicons {
+	line-height: 26px;
 }

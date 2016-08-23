@@ -117,7 +117,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		$postmark = $this->getApi();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'postmark' );
-		if ( isset( $credentials ) ) {
+		if ( is_array( $credentials ) && ! empty( $credentials['email'] ) ) {
 			$from_email = $credentials['email'];
 		} else {
 			return false;
@@ -136,6 +136,24 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		}
 
 		return true;
+	}
+
+	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		/**
+		 * we should never fucking do that
+		 * pls find a way to send all the emails at once
+		 */
+		foreach ( $data['emails'] as $email ) {
+			$data['email'] = $email;
+			$this->sendCustomEmail( $data );
+		}
 	}
 
 

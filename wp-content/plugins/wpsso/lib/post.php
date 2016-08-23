@@ -32,8 +32,11 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 				add_action( 'edit_attachment', array( &$this, 'save_options' ), WPSSO_META_SAVE_PRIORITY );
 				add_action( 'edit_attachment', array( &$this, 'clear_cache' ), WPSSO_META_CACHE_PRIORITY );
 
-				if ( ! empty( $this->p->options['plugin_shortlink'] ) )
+				if ( ! empty( $this->p->options['plugin_shortlink'] ) ) {
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( 'adding get_shortlink filter' );
 					add_action( 'get_shortlink', array( &$this, 'get_shortlink' ), 9000, 4 );
+				}
 			}
 
 			// add the columns when doing AJAX as well to allow Quick Edit to add the required columns
@@ -44,9 +47,12 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 				$post_type_names = $this->p->util->get_post_types( 'names' );
 				if ( is_array( $post_type_names ) ) {
 					foreach ( $post_type_names as $post_type ) {
+						// https://codex.wordpress.org/Plugin_API/Filter_Reference/manage_$post_type_posts_columns
 						add_filter( 'manage_'.$post_type.'_posts_columns', 
 							array( $this, 'add_column_headings' ), 10, 1 );
-						add_action( 'manage_'.$post_type.'_posts_custom_column', 
+
+						// https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
+						add_action( 'manage_'.$post_type.'_posts_custom_column', 	// since wp v3.1
 							array( $this, 'show_column_content',), 10, 2 );
 					}
 				}
@@ -81,6 +87,15 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 		}
 
 		public function get_shortlink( $shortlink, $post_id, $context, $allow_slugs ) {
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->log_args( array( 
+					'shortlink' => $shortlink, 
+					'post_id' => $post_id, 
+					'context' => $context, 
+					'allow_slugs' => $allow_slugs, 
+				) );
+			}
+
 			if ( isset( $this->p->options['plugin_shortener'] ) &&
 				$this->p->options['plugin_shortener'] !== 'none' ) {
 
@@ -101,9 +116,11 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 						return $shortlink;
 					}
 
-					$long_url = $this->p->util->get_sharing_url( $post_id );
+					$long_url = $this->p->util->get_sharing_url( $post_id, false );	// $add_page = false
+
 					$short_url = apply_filters( $this->p->cf['lca'].'_shorten_url',
 						$long_url, $this->p->options['plugin_shortener'] );
+
 					if ( $long_url !== $short_url )	// just in case
 						return $short_url;
 			}
@@ -120,6 +137,9 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 		}
 
 		public function filter_og_img_post_column_content( $value, $column_name, $mod ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
+
 			if ( ! empty( $value ) )
 				return $value;
 
@@ -139,13 +159,11 @@ if ( ! class_exists( 'WpssoPost' ) ) {
 			if ( empty( $og_image ) )
 				$og_image = $this->p->media->get_default_image( 1, $size_name, $check_dupes, $force_regen );
 
-			if ( ! empty( $og_image ) && 
-				is_array( $og_image ) ) {
-
+			if ( ! empty( $og_image ) && is_array( $og_image ) ) {
 				$image = reset( $og_image );
-				if ( ! empty( $image['og:image'] ) )
-					$value = $this->get_og_img_column_html( $image );
-			}
+				$value = $this->get_og_img_column_html( $image );
+			} elseif ( $this->p->debug->enabled )
+				$this->p->debug->log( 'no image found for column value' );
 
 			return $value;
 		}

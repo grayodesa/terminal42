@@ -20,6 +20,7 @@ require_once TVE_DASH_PATH . '/inc/util.php';
 require_once TVE_DASH_PATH . '/inc/hooks.php';
 require_once TVE_DASH_PATH . '/inc/functions.php';
 require_once TVE_DASH_PATH . '/inc/plugin-updates/plugin-update-checker.php';
+require_once TVE_DASH_PATH . '/inc/notification-manager/class-td-nm.php';
 
 if ( is_admin() ) {
 	$features = tve_dash_get_features();
@@ -31,7 +32,7 @@ if ( is_admin() ) {
 	}
 }
 
-if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || apply_filters( 'tve_leads_include_auto_responder', false ) ) {
+if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || apply_filters( 'tve_leads_include_auto_responder', true ) ) {  // I changed this for NM. We should always include autoresponder code in the solution
 	require_once TVE_DASH_PATH . '/inc/auto-responder/misc.php';
 }
 

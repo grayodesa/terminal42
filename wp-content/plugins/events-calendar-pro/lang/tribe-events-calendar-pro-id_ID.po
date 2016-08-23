@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Events Calendar Pro package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-06-09 14:17:17+0000\n"
+"PO-Revision-Date: 2016-08-10 20:22:13+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/Tribe/APM_Filters/APM_Filters.php:161
 msgid "Download for free"
-msgstr ""
+msgstr "Download Gratis"
 
 #: src/Tribe/APM_Filters/APM_Filters.php:167
 msgid "Dismiss"
@@ -266,11 +266,11 @@ msgstr ""
 
 #: src/admin-views/widget-admin-countdown.php:19
 msgid "Type:"
-msgstr ""
+msgstr "Tipe"
 
 #: src/admin-views/widget-admin-countdown.php:22
 msgid "Next Event"
-msgstr ""
+msgstr "Agenda Selanjutnya"
 
 #: src/admin-views/widget-admin-countdown.php:40
 msgid "On &#8220;Next Event&#8221; type of countdown, this text will only show when there are no events to show."
@@ -307,21 +307,21 @@ msgstr ""
 #: src/views/pro/widgets/modules/single-event.php:101
 msgctxt "list separator for final two elements"
 msgid "and"
-msgstr ""
+msgstr "dan"
 
 #: src/views/pro/widgets/this-week/loop-grid-day.php:49
 msgid "View %1$s %2$s"
 msgid_plural "View All %1$s %2$s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Lihat semua %1$s %2$s"
+msgstr[1] "Lihat %1$s %2$s"
 
 #: src/views/pro/widgets/this-week/loop-grid-day.php:67
 msgid "No Events Today"
-msgstr ""
+msgstr "Tidak ada Agenda hari ini"
 
 #: src/views/pro/widgets/this-week/nav.php:15
 msgid "This Week Navigation"
-msgstr ""
+msgstr "Navigasi minggu ini"
 
 #: src/Tribe/Main.php:382
 msgid "All %1$s for %2$s"
@@ -597,14 +597,14 @@ msgstr ""
 
 #: src/admin-views/event-recurrence.php:7
 msgid "Recurrence Rules:"
-msgstr ""
+msgstr "Aturan Berulang"
 
 #: src/admin-views/event-recurrence.php:67
 #: src/admin-views/recurrence/months.php:35
 #: src/admin-views/recurrence/weeks.php:35
 #: src/admin-views/recurrence/years.php:111
 msgid "Same time"
-msgstr ""
+msgstr "waktu yang sama"
 
 #: src/admin-views/event-recurrence.php:82
 msgid "Add Another Rule"
@@ -617,7 +617,7 @@ msgstr ""
 #: src/admin-views/event-recurrence.php:17
 #: src/admin-views/event-recurrence.php:95
 msgid "Date"
-msgstr ""
+msgstr "Waktu"
 
 #: src/admin-views/event-recurrence.php:103
 msgid "will not occur on"
@@ -814,7 +814,7 @@ msgstr "Penyelenggara default saat ini adalah: %s"
 
 #: src/Tribe/Main.php:1188
 msgid "Event: "
-msgstr ""
+msgstr "Kegiatan"
 
 #: src/functions/template-tags/general.php:338
 msgid "The current default venue is: %s"
@@ -893,7 +893,7 @@ msgstr "Penyelenggara diperbarui. <a href=\"%s\">View penyelenggara</a>"
 
 #: src/functions/template-tags/general.php:750
 msgid "Recurring %s"
-msgstr ""
+msgstr "berulang %s"
 
 #: src/Tribe/Main.php:1343
 msgid "Organizer published. <a href=\"%s\">View organizer</a>"
@@ -933,7 +933,7 @@ msgstr "Dukungan"
 
 #: src/views/pro/map/nav.php:25 src/views/pro/photo/nav.php:25
 msgid "<span>&laquo;</span> Previous %s"
-msgstr ""
+msgstr "<span>&laquo;</span> Sebelumnya %s"
 
 #: src/Tribe/Main.php:1412
 msgid "View All Add-Ons"
@@ -941,7 +941,7 @@ msgstr "Lihat Semua Add-On"
 
 #: src/views/pro/map/nav.php:32 src/views/pro/photo/nav.php:31
 msgid "Next %s <span>&raquo;</span>"
-msgstr ""
+msgstr "Selanjutnya %s <span>&raquo;</span>"
 
 #: src/Tribe/Main.php:1604
 msgid "Week"
@@ -957,7 +957,7 @@ msgstr "Foto"
 
 #: src/views/pro/related-events.php:26
 msgid "Related %s"
-msgstr ""
+msgstr "Terkait %s"
 
 #: src/Tribe/Main.php:1639
 msgid "Week Of"
@@ -965,7 +965,7 @@ msgstr "Minggu"
 
 #: src/views/pro/single-organizer.php:32 src/views/pro/single-venue.php:32
 msgid "&larr; Back to %s"
-msgstr ""
+msgstr "&larr; Kembali ke %s"
 
 #: src/Tribe/Mini_Calendar_Widget.php:8
 msgid "The events calendar mini calendar widget"
@@ -990,7 +990,7 @@ msgstr "Navigasi Minggu"
 
 #: src/Tribe/Recurrence/Queue_Realtime.php:89
 msgid "Completed!"
-msgstr ""
+msgstr "Selesai !"
 
 #: src/views/pro/widgets/countdown-widget.php:20
 msgid "days"
@@ -1036,7 +1036,7 @@ msgstr "Pisahkan dari Series"
 
 #: src/views/pro/widgets/list-widget.php:67
 msgid "There are no upcoming %s at this time."
-msgstr ""
+msgstr "Tidak ada yang akan datang %s pada saat ini"
 
 #: src/Tribe/Recurrence/Meta.php:162
 msgid "Edit Future Events"
@@ -1048,7 +1048,7 @@ msgstr "—"
 
 #: src/views/pro/widgets/venue-widget.php:39
 msgid "No upcoming %s."
-msgstr ""
+msgstr "tak ada yang datang %s."
 
 #: src/Tribe/Recurrence/Meta.php:213
 msgid "Break this event out of its series and edit it independently"
@@ -1294,7 +1294,7 @@ msgstr ""
 
 #: src/Tribe/Recurrence/Scripts.php:39
 msgid "Are you sure you want to trash all occurrences of these events?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin pindahkan ke file sampah semua agenda ini?"
 
 #: src/Tribe/Single_Event_Meta.php:146
 #: src/views/pro/modules/meta/additional-fields.php:18
@@ -1492,7 +1492,7 @@ msgstr "Tidak Pernah"
 #: src/admin-views/event-recurrence.php:42
 msgctxt "occurence count text"
 msgid "events"
-msgstr ""
+msgstr "Agenda"
 
 #: src/admin-views/event-recurrence.php:45
 msgid "You must select a recurrence end date"
@@ -1929,7 +1929,7 @@ msgstr "Kota"
 
 #: src/functions/template-tags/widgets.php:234
 msgid "%s for week of %s"
-msgstr ""
+msgstr "%s untuk minggu %s"
 
 #: src/admin-views/widget-admin-advanced-list.php:35
 msgid "State (US) Or Province (Int)"

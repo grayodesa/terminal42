@@ -12,7 +12,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Main' ) ) {
 		/**
 		 * Current version of this plugin
 		 */
-		const VERSION = '4.2.4';
+		const VERSION = '4.2.5';
 
 		/**
 		 * Min required Tickets Core version

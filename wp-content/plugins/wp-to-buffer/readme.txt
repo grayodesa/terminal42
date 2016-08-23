@@ -3,7 +3,7 @@ Contributors: n7studios,wpcube
 Donate link: https://www.wpcube.co.uk/plugins/wordpress-to-buffer-pro
 Tags: buffer, bufferapp, buffer app, buffer my post, buffer old post, buffer post, post to buffer, promote old posts, promote posts, promote custom posts, promote selected posts, share posts, bulk share posts, share old posts, social, media, sharing, social media, social sharing, schedule, auto post, auto publish, facebook, facebook post, facebook selected posts, facebook plugin, auto facebook post, post facebook, post to facebook, twitter, twitter post, tweet post twitter selected posts, tweet selected posts twitter plugin, auto twitter post, auto tweet post post twitter, post to twitter, linkedin, linkedin post, linkedin selected posts, linkedin plugin, auto linkedin post, post linkedin, post to linkedin, google, google post, google selected posts, google plugin, auto google post, post google, post to google, pinterest, pinterest post, pinterest selected posts, pinterest plugin, auto pinterest post, post pinterest, post to pinterest, best wordpress social plugin, best wordpress social sharing plugin, best social plugin, best social sharing plugin, best facebook social plugin, best twitter social plugin, best linkedin social plugin, best pinterest social plugin, best google+ social plugin
 Requires at least: 3.6
-Tested up to: 4.3.1
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -66,6 +66,13 @@ Find out more about us at <a href="https://www.wpcube.co.uk" rel="friend" title=
 4. Post level settings meta box.
 
 == Changelog ==
+
+= 3.0.4 =
+* Fix: Removed var_dump()
+
+= 3.0.3 =
+* Fix: Changed from publish_post to transition_post_status for better detection of Post/Page Publish/Update
+* Fix: Removed sslverify = false on wp_remote_* requests
 
 = 3.0.2 =
 * Fix: Dashboard Feed URL

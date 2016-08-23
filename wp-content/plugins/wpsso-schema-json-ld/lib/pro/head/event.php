@@ -31,11 +31,11 @@ if ( ! class_exists( 'WpssoJsonProHeadEvent' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_event' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_event' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
-		public function filter_json_data_http_schema_org_event( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_event( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -71,7 +71,7 @@ if ( ! class_exists( 'WpssoJsonProHeadEvent' ) ) {
 			 *	image as http://schema.org/ImageObject
 			 *	video as http://schema.org/VideoObject
 			 */
-			WpssoJsonSchema::add_media_data( $ret, $use_post, $mod, $mt_og, $user_id );
+			WpssoJsonSchema::add_media_data( $ret, $mod, $mt_og, $user_id );
 
 			return WpssoSchema::return_data_from_filter( $json_data, $ret );
 		}

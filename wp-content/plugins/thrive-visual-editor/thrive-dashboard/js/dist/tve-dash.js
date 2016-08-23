@@ -73,7 +73,7 @@ var TVE_Dash = TVE_Dash || {};
 					e.preventDefault();
 					e.stopPropagation();
 				} );
-
+				
 				$element.zclip( {
 					path: TVE_Dash_Const.dash_url + '/js/util//jquery.zclip.1.1.1/ZeroClipboard.swf',
 					copy: function () {

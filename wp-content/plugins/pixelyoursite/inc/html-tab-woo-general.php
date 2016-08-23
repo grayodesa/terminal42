@@ -53,8 +53,12 @@
           
           <input type="checkbox">Enable Additional Parameters</input>
           <span class="help">Product name will be pulled as <code>content_name</code>, and Product Category as <code>category_name</code> for all WooCommerce events.</span>
-          <span class="help">The nubmer of items is <code>num_items</code> for InitiateCheckout and Purchase events.</span> 
-          
+	        <span class="help" style="margin-bottom: 20px;">The number of items is <code>num_items</code> for InitiateCheckout and Purchase events.</span>
+
+	        <input type="checkbox" name="" disabled>Track tags
+	        <span class="help">Will pull <code>tags</code> param on all WooCommerce events.</span>
+
+
         </td>
         <td>
           
@@ -308,15 +312,6 @@
           <input type="text">
         </td>
       </tr>
-
-	    <tr class="tall">
-		    <td class="alignright"><p class="label big">Advanced Matching on Purchase event:</p></td>
-		    <td>
-			    <input type="checkbox" name="" value="1" class="disabled">
-			    Enable - <strong>This is a PRO feature</strong> - <a href="http://www.pixelyoursite.com/facebook-pixel-plugin">Update NOW</a>
-			    <span class="help">Advance Matching can lead to 10% increase in attributed conversions and 20% increase in reach of retargeting campaigns - <a href="http://www.pixelyoursite.com/enable-advance-matching-woocommerce" target="_blank">Click to read more</a> </span>
-		    </td>
-	    </tr>
 
 	    <tr>
 		    <td class="alignright"><p class="label big">Custom Audience Optimization:</p></td>

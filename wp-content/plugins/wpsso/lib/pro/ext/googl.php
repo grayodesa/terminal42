@@ -34,14 +34,7 @@ if ( ! class_exists( 'SuextGoogl' ) ) {
 	
 		public $extended;
 
-		function __construct( $apiKey = null, &$debug = '' ) {
-
-			if ( is_object( $debug ) )
-				$this->debug = $debug;
-			else $this->debug = new SuextGooglNoDebug();
-
-			if ( $this->debug->enabled )
-				$this->debug->mark();
+		function __construct( $apiKey = null ) {
 
 			$extended = false;
 			$this->target = 'https://www.googleapis.com/urlshortener/v1/url?';
@@ -52,8 +45,8 @@ if ( ! class_exists( 'SuextGoogl' ) ) {
 			}
 	
 			$this->ch = curl_init();
-			curl_setopt($this->ch, CURLOPT_URL, $this->target);
-			curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt( $this->ch, CURLOPT_URL, $this->target );
+			curl_setopt( $this->ch, CURLOPT_RETURNTRANSFER, true );
 		}
 	
 		public function shorten($url, $extended = false) {
@@ -69,13 +62,13 @@ if ( ! class_exists( 'SuextGoogl' ) ) {
 			curl_setopt($this->ch, CURLOPT_HTTPHEADER, Array('Content-Type: application/json'));
 
 			$decoded = json_decode(curl_exec($this->ch));
-			if ( $extended || $this->extended) {
-				return decoded;
-			} elseif ( ! empty( $decoded->id ) ) {
+			if ($extended || $this->extended) {
+				return $decoded;
+			} elseif ( !empty( $decoded->id ) ) {
 				$ret = $decoded->id;
 				self::$buffer[$url] = $ret;
 				return $ret;
-			}
+			} else return false;
 		}
 	
 		public function expand($url, $extended = false) {
@@ -83,26 +76,16 @@ if ( ! class_exists( 'SuextGoogl' ) ) {
 			curl_setopt($this->ch, CURLOPT_HTTPGET, true);
 			curl_setopt($this->ch, CURLOPT_URL, $this->target.'shortUrl='.$url);
 			
-			if ( $extended || $this->extended )
+			if ($extended || $this->extended)
 				return json_decode(curl_exec($this->ch));
-			else
-				return json_decode(curl_exec($this->ch))->longUrl;
+			else return json_decode(curl_exec($this->ch))->longUrl;
 		}
 	
 		function __destruct() {
-
-			curl_close($this->ch);
+			curl_close( $this->ch );
 			$this->ch = null;
 		}
 	}
 }
-
-if ( ! class_exists( 'SuextGooglNoDebug' ) ) {
-	class SuextGooglNoDebug {
-		public $enabled = false;
-		public function mark() { return; }
-		public function log() { return; }
-	}
-}	
 
 ?>

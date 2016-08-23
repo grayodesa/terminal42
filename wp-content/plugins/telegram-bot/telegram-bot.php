@@ -3,7 +3,7 @@
 Plugin Name:  Telegram Bot & Channel
 Plugin URI:  http://wptele.ga
 Description: Stream your content to Telegram. Create your bot, Manage your responders and Send your news directly from your WordPress website! Zapier compatible
-Version:      1.4
+Version:      1.4.2
 Author:       Marco Milesi
 Author URI:  http://marcomilesi.ml
 Contributors: Milmor
@@ -159,6 +159,12 @@ function telegram_parsetext($text, $type, $chat_id) {
         $text = str_replace('%LAST_NAME%', get_post_meta($o->ID, 'telegram_last_name', true), $text);
         $text = str_replace('%LOCATION_LATITUDE%', get_post_meta($o->ID, 'telegram_last_latitude', true), $text);
         $text = str_replace('%LOCATION_LONGITUDE%', get_post_meta($o->ID, 'telegram_last_longitude', true), $text);
+    } else {
+        $o = get_page_by_title( $chat_id, OBJECT, 'telegram_groups');
+        if ($o) {
+            $text = str_replace('%FIRST_NAME%', get_post_meta($o->ID, 'telegram_name', true), $text);
+            $text = str_replace('%LAST_NAME%', get_post_meta($o->ID, '', true), $text);
+        }
     }
     //return $text; return do_shortcode( $text ); return html_entity_decode( apply_filters('the_content', $text ) );
     return strip_tags( html_entity_decode( apply_filters('the_content', $text ) ) );
@@ -197,7 +203,7 @@ function telegram_get_reply_markup($id) {
 }
 
 function telegram_sendmessage($chat_id, $text) {
-    if ( !$text ) { return; }
+    if ( !$text || !$chat_id ) { return; }
     
     if (  is_int( $text ) && get_post_type( $text ) == 'telegram_commands' ) {
         $reply_markup = json_encode( telegram_get_reply_markup($text) );

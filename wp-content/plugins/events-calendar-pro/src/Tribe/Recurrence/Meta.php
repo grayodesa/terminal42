@@ -443,11 +443,16 @@ class Tribe__Events__Pro__Recurrence__Meta {
 	 * @param integer $event_id id of the event to update
 	 * @param array   $data     data defining the recurrence of this event
 	 *
-	 * @return void
+	 * @return bool `true` on success, `false` on failure
 	 */
 	public static function updateRecurrenceMeta( $event_id, $data ) {
 		if ( ! isset( $data['recurrence'] ) ) {
-			return;
+			return false;
+		}
+
+		// do not update recurrence meta on preview
+		if ( isset( $data['wp-preview'] ) && $data['wp-preview'] === 'dopreview' ) {
+			return false;
 		}
 
 		$meta_builder    = new Tribe__Events__Pro__Recurrence__Meta_Builder( $event_id, $data );
@@ -456,7 +461,8 @@ class Tribe__Events__Pro__Recurrence__Meta {
 		$updated = update_post_meta( $event_id, '_EventRecurrence', $recurrence_meta );
 
 		$events_saver = new Tribe__Events__Pro__Recurrence__Events_Saver( $event_id, $updated );
-		$events_saver->save_events();
+
+		return $events_saver->save_events();
 	}//end updateRecurrenceMeta
 
 	/**

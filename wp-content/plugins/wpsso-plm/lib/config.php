@@ -15,7 +15,7 @@ if ( ! class_exists( 'WpssoPlmConfig' ) ) {
 		public static $cf = array(
 			'plugin' => array(
 				'wpssoplm' => array(
-					'version' => '2.0.10-1',		// plugin version
+					'version' => '2.1.0-1',		// plugin version
 					'opt_version' => '11',		// increment when changing default options
 					'short' => 'WPSSO PLM',		// short plugin name
 					'name' => 'WPSSO Place / Location and Local Business Meta (WPSSO PLM)',
@@ -83,7 +83,7 @@ if ( ! class_exists( 'WpssoPlmConfig' ) ) {
 					'plm_addr_country' => '',			// Country
 					'plm_addr_latitude' => '',			// Latitude
 					'plm_addr_longitude' => '',			// Longitude
-					'plm_addr_altitude' => '',			// Altitude in Meters
+					'plm_addr_altitude' => '',			// Altitude
 					'plm_addr_business_type' => 'local.business',
 					'plm_addr_day_sunday' => 0,
 					'plm_addr_day_sunday_open' => '09:00',
@@ -109,8 +109,9 @@ if ( ! class_exists( 'WpssoPlmConfig' ) ) {
 					'plm_addr_day_publicholidays' => 0,
 					'plm_addr_day_publicholidays_open' => '09:00',
 					'plm_addr_day_publicholidays_close' => '17:00',
-					'plm_addr_menu_url' => '',
+					'plm_addr_service_radius' => '',
 					'plm_addr_accept_res' => '',
+					'plm_addr_menu_url' => '',
 				),
 			),
 		);

@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Visual Editor
 Plugin URI: http://www.thrivethemes.com
-Version: 1.200.14
+Version: 1.200.18
 Author: <a href="http://www.thrivethemes.com">Thrive Themes</a>
 Description: Live front end editor for your Wordpress content
 */
@@ -105,6 +105,13 @@ function tve_frontend_enqueue_scripts() {
 		}
 	}
 
+	/**
+	 * Enqueue some dash scripts in the editor page
+	 */
+	if ( is_editor_page() ) {
+		tve_enqueue_script( 'jquery-zclip', TVE_DASH_URL . '/js/util/jquery.zclip.1.1.1/jquery.zclip.js', array( 'jquery' ) );
+	}
+
 	tve_enqueue_style_family();
 
 	tve_enqueue_script( "tve_frontend", tve_editor_js() . '/thrive_content_builder_frontend' . $js_suffix, array( 'jquery' ), false, true );
@@ -123,6 +130,10 @@ function tve_frontend_enqueue_scripts() {
 		'page_events'      => isset( $events ) ? $events : array(),
 		'is_single'        => (string) ( (int) is_singular() ),
 		'social_fb_app_id' => tve_get_social_fb_app_id(),
+		'dash_url'         => TVE_DASH_URL,
+		'translations'     => array(
+			'Copy' => __( 'Copy', 'thrive-cb' ),
+		),
 	);
 	tve_enqueue_social_scripts();
 	// hide tve more tag from front end display

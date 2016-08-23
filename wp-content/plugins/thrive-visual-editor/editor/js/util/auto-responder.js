@@ -49,16 +49,21 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			var _type = lead_generation.getConnectionType(),
 				edit = $btn && $btn.attr( 'data-edit-custom' ) ? '1' : 0;
 			delete lead_generation.edit_api;
+
 			ajax( {
 				route: 'dashboard',
 				connection_type: _type,
 				edit_custom_html: edit,
 				connections: lead_generation.getApiConnections(),
+				custom_messages: lead_generation.getCustomMessages(),
 				connections_str: lead_generation.api_config_str,
+				custom_messages_str: lead_generation.custom_messages_str,
 				thank_you_url: lead_generation.api_form_data.thank_you_url,
 				submit_option: lead_generation.api_form_data.submit_option,
 				asset_option: lead_generation.asset_option,
+				error_message_option: lead_generation.error_message_option,
 				asset_group: lead_generation.asset_group,
+				state: lead_generation.state,
 				use_captcha: lead_generation.use_captcha,
 				api_fields: lead_generation.api_form_data.elements || null,
 				api_fields_order: lead_generation.api_form_data.element_order || null
@@ -71,11 +76,64 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					jQuery( ".tve_lead_generate_fields" ).trigger( 'click' );
 				} else if ( _type == 'api' && response.elements ) {
 					lead_generation.setApiData( response );
+					TVE_Content_Builder.auto_responder.bindZClip( $lb.find( 'a.tve-copy-to-clipboard' ) );
+
 				}
 				lead_generation.set_captcha_data();
 				$lb.find( '.tve_lightbox_buttons' ).hide();
 
 				TVE_Editor_Page.overlay( true );
+			} );
+		},
+
+		/**
+		 * bind the zclip js lib over a "copy" button
+		 *
+		 * @param $element jQuery elem
+		 */
+		bindZClip: function ( $element ) {
+			function bind_it() {
+				//bind zclip on links that copy the shortcode in clipboard
+				try {
+					$element.closest( '.tve-copy-row' ).find( 'input.tve-copy' ).on( 'click', function ( e ) {
+						this.select();
+						e.preventDefault();
+						e.stopPropagation();
+					} );
+
+					$element.zclip( {
+						path: tve_frontend_options.dash_url + '/js/util//jquery.zclip.1.1.1/ZeroClipboard.swf',
+						copy: function () {
+							return jQuery( this ).parents( '.tve-copy-row' ).find( 'input' ).val();
+						},
+						afterCopy: function () {
+							var $link = jQuery( this );
+							$link.prev().select();
+							$link.removeClass( 'tve_editor_button_blue' ).addClass( 'tve_editor_button_success' ).find( '.tve-copy-text' ).html( '<span class="thrv-icon-checkmark"></span>' );
+							setTimeout( function () {
+								$link.removeClass( 'tve_editor_button_success' ).addClass( 'tve_editor_button_blue' ).find( '.tve-copy-text' ).html( tve_frontend_options.translations.Copy )
+							}, 3000 );
+							$link.parent().prev().select();
+						}
+					} );
+				} catch ( e ) {
+					console.log( e );
+					console.error && console.error( 'Error embedding zclip - most likely another plugin is messing this up' ) && console.error( e );
+				}
+			}
+
+			setTimeout( bind_it, 200 );
+		},
+		clearMCEEditor: function ( ignore ) {
+			var _current_ids = ['tve_success_wp_editor', 'tve_error_wp_editor'];
+			_current_ids.forEach( function ( element ) {
+				if ( ignore != element ) {
+					var _current = tinymce.get( element );
+					if ( _current ) {
+						_current.destroy();
+						tinymce.execCommand('mceRemoveControl', true, element);
+					}
+				}
 			} );
 		},
 		/**
@@ -123,6 +181,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				name: '_asset_option',
 				value: lead_generation.asset_option || ''
 			};
+
 			lead_generation.generateForm().applyStyle();
 			TVE_Content_Builder.controls.lb_close();
 		},
@@ -130,10 +189,42 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 		 * saves the API connection configuration and renders the form
 		 */
 		save_api_connection: function () {
+			var $messages = {},
+				_type = lead_generation.getConnectionType(),
+				encoded_messages = '';
+			if(tinymce.get( 'tve_error_wp_editor' )) {
+				$messages.error = tinymce.get( 'tve_error_wp_editor' ).getContent();
+				if ( lead_generation.api_form_data.submit_option == 'message' ) {
+					$messages.success = tinymce.get( 'tve_success_wp_editor' ).getContent();
+				}
+			}
+
+			lead_generation.setCustomMessages( $messages );
+			TVE_Editor_Page.overlay();
+			TVE_Content_Builder.auto_responder.clearMCEEditor();
+
+			ajax( {
+				route: 'encodeMessages',
+				connection_type: _type,
+				custom_messages: lead_generation.getCustomMessages()
+			} ).done( function ( response ) {
+				if ( response ) {
+					encoded_messages = response.custom_messages;
+					lead_generation.api_form_data.elements.__tcb_lg_msg = {
+						type: 'hidden',
+						name: '__tcb_lg_msg',
+						value: encoded_messages
+					};
+				}
+				TVE_Editor_Page.overlay( true );
+				TVE_Content_Builder.auto_responder.create_fields();
+			} );
+		},
+
+		create_fields: function () {
 			/**
 			 * add the thank you url as a hidden input
 			 */
-
 			var group = jQuery( '.tve-asset-select-holder' ).find( 'select#tve-api-submit-option' ).val();
 
 			if ( typeof group === 'undefined' || typeof group === 'null' ) {
@@ -155,6 +246,12 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				name: '_asset_option',
 				value: lead_generation.asset_option || ''
 			};
+			lead_generation.api_form_data.elements._error_message_option = {
+				type: 'hidden',
+				name: '_error_message_option',
+				value: lead_generation.error_message_option || ''
+			};
+
 			lead_generation.api_form_data.elements._back_url = {
 				type: 'hidden',
 				name: '_back_url',
@@ -171,6 +268,18 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				value: lead_generation.use_captcha || ''
 			};
 
+			if ( lead_generation.api_form_data.submit_option == 'state' ) {
+				lead_generation.api_form_data.elements._state = {
+					type: 'hidden',
+					name: '_state',
+					value: lead_generation.state || ''
+				};
+				lead_generation.api_form_data.elements.state_change_trigger = {
+					type: 'state_change_trigger',
+					value: lead_generation.state || ''
+				};
+			}
+
 			for ( var option in lead_generation.captcha_options ) {
 				lead_generation.api_form_data.elements[option] = {
 					type: 'hidden',
@@ -178,6 +287,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					value: lead_generation.captcha_options[option]
 				};
 			}
+
 			$.each( lead_generation.api_form_data.extra, function ( n, item ) {
 				/**
 				 * append any extra individual settings for each autoresponder
@@ -248,6 +358,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 		 * show options for step 1 of creating a new connection
 		 */
 		connection_form: function ( $btn ) {
+			TVE_Content_Builder.auto_responder.clearMCEEditor();
 			TVE_Editor_Page.overlay();
 			var connection_type = $btn.attr( 'data-step2' ) ? $( '#connection-type' ).val() : $btn.attr( 'data-connection-type' );
 			lead_generation.edit_api = $btn.attr( 'data-key' ) ? $btn.attr( 'data-key' ) : '';
@@ -294,7 +405,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			lead_generation.asset_group = option;
 		},
 		/**
-		 * @param $select
+		 * @param $input
 		 */
 		asset_option_changed: function ( $input ) {
 			var option = $input.is( ':checked' ) ? 1 : 0,
@@ -303,6 +414,43 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				asset.show();
 			}
 			lead_generation.asset_option = option;
+		},
+		/**
+		 * Enable error messages
+		 * @param $input
+		 */
+		error_message_option_changed: function ( $input ) {
+			var option = $input.is( ':checked' ) ? 1 : 0,
+				message = $input.parent().next( '.tve-error-message-wrapper' ).hide(),
+				shortcodes_error = $input.closest( '.tve_lightbox_content' ).find( '.tve-shortcodes-error' ),
+				shortcodes_message = $input.closest( '.tve_lightbox_content' ).find( '.tve-shortcodes-message' ),
+				action = $input.closest( '.tve_lightbox_content' ).find( '.tve-api-submit-filters' ).val();
+			if ( option == 1 ) {
+				message.show();
+				shortcodes_error.show();
+				TVE_Content_Builder.auto_responder.bindZClip( $lb.find( 'a.tve-copy-to-clipboard' ) );
+				shortcodes_message.hide();
+			} else {
+				shortcodes_error.hide();
+				if ( action == 'message' ) {
+					shortcodes_message.show();
+					TVE_Content_Builder.auto_responder.bindZClip( $lb.find( 'a.tve-copy-to-clipboard' ) );
+				}
+			}
+
+			lead_generation.error_message_option = option;
+		},
+		messages_change: function () {
+			var $messages = {};
+
+			$messages.success = tinymce.get( 'tve_success_wp_editor' ).getContent();
+			$messages.error = tinymce.get( 'tve_error_wp_editor' ).getContent();
+
+			lead_generation.setCustomMessages( $messages );
+
+			this.dashboard();
+
+
 		},
 		/**
 		 * actions related to API connections
@@ -442,6 +590,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			 * @param $link
 			 */
 			remove: function ( $link ) {
+				TVE_Content_Builder.auto_responder.clearMCEEditor();
 				lead_generation.removeApiConnection( $link.attr( 'data-key' ) );
 				TVE_Content_Builder.auto_responder.dashboard();
 			},
@@ -514,11 +663,54 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			 */
 			submit_option_changed: function ( $select ) {
 				var option = $select.val(),
-					$url = $select.parent().next( 'input' ).hide();
-				if ( option == 'redirect' ) {
-					$url.show();
+					$url = $select.parent().next( 'input' ).hide(),
+					$message = $select.closest( '.tve_lightbox_content' ).find( '.tve_message_settings' ).hide(),
+					$state = $select.closest( '.tve_lightbox_content' ).find( '.tve_state_settings' ).hide(),
+					action = $select.closest( '.tve_lightbox_content' ).find( '#tve-error-message-option' ),
+					shortcodes_message = $select.closest( '.tve_lightbox_content' ).find( '.tve-shortcodes-message' ),
+					shortcodes_error = $select.closest( '.tve_lightbox_content' ).find( '.tve-shortcodes-error' );
+
+				switch ( option ) {
+					case 'reload':
+						shortcodes_message.hide();
+						break;
+					case 'redirect':
+						$url.show();
+						shortcodes_message.hide();
+						break;
+					case 'message':
+						$message.show();
+						if ( action.is( ':checked' ) ) {
+							shortcodes_message.hide()
+						} else {
+							shortcodes_message.show();
+							TVE_Content_Builder.auto_responder.bindZClip( $lb.find( 'a.tve-copy-to-clipboard' ) );
+						}
+						break;
+					case 'state':
+						$state.show();
+						shortcodes_message.hide();
+						lead_generation.state = $select.parentsUntil( '.tve_lightbox_content' ).find( '.tve_change_states' ).val();
+						break;
+					default:
+						break;
 				}
+				if ( action.is( ':checked' ) ) {
+					shortcodes_error.show()
+					TVE_Content_Builder.auto_responder.bindZClip( $lb.find( 'a.tve-copy-to-clipboard' ) );
+				} else {
+					shortcodes_error.hide();
+				}
+
 				lead_generation.api_form_data.submit_option = option;
+			},
+			/**
+			 *
+			 * @param $select
+			 */
+			state_changed: function ( $select ) {
+				var option = $select.val();
+				lead_generation.state = option;
 			}
 		}
 	};
@@ -539,11 +731,14 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				jsonFields: null,
 				form_code: '',
 				api_config: {},
+				custom_messages: {},
 				connection_type: '',
 				api_form_data: {},
 				use_captcha: 0,
 				asset_option: '',
+				error_message_option: '',
 				asset_group: '',
+				state: '',
 				captcha_options: {
 					captcha_theme: 'light',
 					captcha_type: 'image',
@@ -564,6 +759,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						this.readApiElements();
 					} else if ( this.connection_type == 'custom-html' ) {
 						this.asset_option = $element.find( 'input#_asset_option' ).val() || 0;
+						this.error_message_option = $element.find( 'input#_error_message_option' ).val() || 0;
 						this.asset_group = $element.find( 'input#_asset_group' ).val() || 0;
 						this.use_captcha = $element.find( '.tve-captcha-container' ).length > 0 ? 1 : 0;
 					}
@@ -596,6 +792,14 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				 */
 				getApiConnections: function () {
 					return this.api_config;
+				},
+
+				setCustomMessages: function ( $messages ) {
+					this.custom_messages = $messages
+				},
+
+				getCustomMessages: function () {
+					return this.custom_messages;
 				},
 
 				/**
@@ -1017,6 +1221,11 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 
 					return $inputContainer;
 				},
+				renderHiddenSwitchStateTrigger: function ( state_id ) {
+					var event = '__TCB_EVENT_[{"t":"click","a":"tl_state_switch","config":{"s":"' + state_id + '"},"elementType":"a"}]_TNEVE_BCT__',
+						$triggerElement = '<a href="" style="display: none;" class="tve-switch-state-trigger tve_evt_manager_listen tve_et_click" data-tcb-events=' + event + '></a>';
+					return $triggerElement;
+				},
 				/**
 				 * render a checkbox input element
 				 * @param checkbox_id the encoded checkbox name
@@ -1146,6 +1355,9 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 
 					$inputsContainer.append( '<div style="display: none">' + form_data.additional_fields + '</div>' );
 					$inputsContainer.append( $element.find( '.tve_submit_container' ) );
+					if ( typeof(form_data.elements['state_change_trigger']) != "undefined" && form_data.elements['state_change_trigger'] !== null ) {
+						$inputsContainer.append( self.renderHiddenSwitchStateTrigger( form_data.elements['state_change_trigger'].value ) );
+					}
 					$form.append( $inputsContainer );
 
 					/* HOT FIX for TCB-545 - Icon dissapears when autoresponder code changed */
@@ -1219,9 +1431,12 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					this.api_form_data.thank_you_url = $element.find( 'input#_back_url' ).val() || '';
 					this.api_form_data.submit_option = $element.find( 'input#_submit_option' ).val() || 'reload';
 					this.asset_option = $element.find( 'input#_asset_option' ).val() || 0;
+					this.error_message_option = $element.find( 'input#_error_message_option' ).val() || 0;
 					this.asset_group = $element.find( 'input#_asset_group' ).val() || 0;
+					this.state = $element.find( 'input#_state' ).val() || '';
 					this.use_captcha = $element.find( 'input#_use_captcha' ).val() || 0;
 					this.api_config_str = $element.find( '#__tcb_lg_fc' ).val();
+					this.custom_messages_str = $element.find( '#__tcb_lg_msg' ).val();
 					this.api_form_data.element_order = [];
 					var self = this;
 
@@ -1238,12 +1453,23 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				 * @param response
 				 */
 				setApiData: function ( response ) {
-					var self = this;
+					var self = this,
+						success = "<p>Thank you for singing up! An email is being sent to [lead_email] - please check your inbox.</p>",
+						error = "<p>Ooops... </p><p>something went wrong. Please try again or contact the site owner.</p>";
+
 					jQuery.each( response, function ( k, v ) {
 						if ( k != 'lb_html' && k != 'elements' ) {
 							self.api_form_data[k] = v;
 						}
 					} );
+
+					TVE_Content_Builder.auto_responder.clearMCEEditor();
+
+					success = this.api_form_data.custom_messages && this.api_form_data.custom_messages.success ? this.api_form_data.custom_messages.success : success;
+					error = this.api_form_data.custom_messages && this.api_form_data.custom_messages.error ? this.api_form_data.custom_messages.error : error;
+
+					this.editorInit( 'tve_success_wp_editor', success );
+					this.editorInit( 'tve_error_wp_editor', error );
 
 					this.api_config = response.connections;
 
@@ -1275,6 +1501,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						/**
 						 * read the configuration from the previously stored elements
 						 */
+
 						jQuery.each( this.api_form_data.elements, function ( element_name, element ) {
 							if ( element.label ) {
 								jQuery( '#txt_label_' + element_name ).val( element.label );
@@ -1310,6 +1537,38 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 						}
 					} );
 
+				},
+
+				build_mce_init: function ( defaults, _id ) {
+					var mce = {}, qt = {};
+					mce[_id] = $.extend( true, {}, defaults.mce );
+					qt[_id] = $.extend( true, {}, defaults.qt );
+
+					qt[_id].id = _id;
+
+					mce[_id].selector = '#' + _id;
+					mce[_id].body_class = mce[_id].body_class.replace( 'tve_tinymce_tpl', _id );
+
+					return {
+						'mce_init': mce,
+						'qt_init': qt
+					};
+				},
+
+				editorInit: function ( id, content ) {
+					var mce_reinit = this.build_mce_init( {
+						mce: window.tinyMCEPreInit.mceInit['tve_tinymce_tpl'],
+						qt: window.tinyMCEPreInit.qtInit['tve_tinymce_tpl']
+					}, id );
+
+					tinyMCEPreInit.mceInit = $.extend( tinyMCEPreInit.mceInit, mce_reinit.mce_init );
+					tinyMCEPreInit.mceInit[id].setup = function ( editor ) {
+						editor.on( 'init', function () {
+							editor.setContent( content );
+						} );
+					};
+					tinyMCE.init( tinyMCEPreInit.mceInit[id] );
+					window.wpActiveEditor = 'tve_success_wp_editor';
 				}
 
 			};

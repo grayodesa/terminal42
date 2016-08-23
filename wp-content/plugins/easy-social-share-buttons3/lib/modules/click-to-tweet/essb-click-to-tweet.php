@@ -58,7 +58,15 @@ function essb_ctt_shorten($input, $length, $ellipsis = true, $strip_html = true)
 function essb_ctt_shortcode($atts) {
 	global $essb_options;
 	
-	extract ( shortcode_atts ( array ('tweet' => '', 'via' => 'yes', 'url' => 'yes', 'nofollow' => 'no', 'user' => '', 'hashtags' => '', 'usehashtags' => 'yes', 'template' => '' )
+	extract ( shortcode_atts ( array ('tweet' => '', 
+			'via' => 'yes', 
+			'url' => 'yes', 
+			'nofollow' => 'no', 
+			'user' => '', 
+			'hashtags' => '', 
+			'usehashtags' => 'yes', 
+			'template' => '',
+			'image' => '' )
 
 	, $atts ) );
 	
@@ -165,6 +173,9 @@ function essb_ctt_shortcode($atts) {
 	}
 	
 	$link_short = $short;
+	if ($image != '') {
+		$link_short .= ' '.$image;
+	}
 	//$link_short = str_replace('#', '%23', $link_short);
 	
 	if ($nofollow != 'no') {
@@ -191,22 +202,12 @@ function essb_ctt_shortcode($atts) {
 add_shortcode ( 'easy-ctt', 'essb_ctt_shortcode' );
 add_shortcode ( 'easy-tweet', 'essb_ctt_shortcode' );
 
-/*
- * Load the stylesheet to style the output. As of v4.1, defaults to a custom
- * stylesheet located in the root of the uploads folder at
- * wp-content/uploads/bcttstyle.css and falls back to the stylesheet bundled
- * with the plugin if the custom sheet is not present. @since 0.1
- */
 
 function essb_ctt_scripts() {
 	
 	
 		if (!ESSBCoreHelper::is_plugin_deactivated_on() && !ESSBCoreHelper::is_module_deactivate_on('ctt')) {
-			//wp_register_style ( 'essb-cct-style', plugins_url ( 'assets/css/styles.css', __FILE__ ), false, ESSB3_VERSION, 'all' );
-		    //$resource_builder = ESSBResourceBuilder::get_instance();
-		    
 		    essb_resource_builder()->add_static_resource(plugins_url ( 'assets/css/styles.css', __FILE__ ), 'essb-cct-style', 'css');
-			//wp_enqueue_style ( 'essb-cct-style' );
 		}
 	
 

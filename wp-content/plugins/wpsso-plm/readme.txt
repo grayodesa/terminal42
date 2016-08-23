@@ -3,14 +3,15 @@ Plugin Name: WPSSO Place / Location and Local Business Meta (WPSSO PLM)
 Plugin Slug: wpsso-plm
 Text Domain: wpsso-plm
 Domain Path: /languages
-Contributors: jsmoriss
-Donate Link: https://wpsso.com/?utm_source=wpssoplm-readme-donate
-Tags: wpsso, place, location, venue, longitude, latitude, address, local, business, hours, seo
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
+Donate Link: https://wpsso.com/?utm_source=wpssoplm-readme-donate
+Assets URI: https://surniaulula.github.io/wpsso-plm/assets/
+Tags: wpsso, place, location, venue, longitude, latitude, address, local, business, hours, seo
+Contributors: jsmoriss
 Requires At Least: 3.1
 Tested Up To: 4.6
-Stable Tag: 2.0.10-1
+Stable Tag: 2.1.0-1
 
 WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
 
@@ -37,12 +38,13 @@ WPSSO Place / Location and Local Business Meta (WPSSO PLM) works in conjunction 
 	* Facebook / Open Graph Location
 		* Latitude
 		* Longitude
-		* Altitude in Meters
+		* Altitude
 	* Schema Local Business
 		* Local Business Type
-		* Business Days and Hours
-		* Seasonal Business Dates
-		* Food Establishment Menu URL
+		* Business Days + Hours
+		* Business Dates (Season)
+		* Service Radius
+		* Food Menu URL
 		* Accepts Reservations
 * Combine WPSSO PLM with the [WPSSO Schema JSON-LD Markup (WPSSO JSON) Pro](http://wpsso.com/extend/plugins/wpsso-json/) extension to include complete Place and Local Business using Schema JSON-LD markup.
 
@@ -130,22 +132,22 @@ Use the Free version of WPSSO PLM with *both* the Free and Pro versions of WPSSO
 
 = Changelog / Release Notes =
 
-**Version 2.0.10-1 (2016/07/29)**
+**Version 2.1.0-1 (2016/08/18)**
 
 Official announcement: N/A
 
 * *New Features*
-	* None
+	* Added a new "Service Radius" option for Schema Local Business.
 * *Improvements*
 	* None
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Updated the 'wpsso_schema_meta_itemprop' filter for WPSSO 3.33.8-1.
+	* None
 
 == Upgrade Notice ==
 
-= 2.0.10-1 =
+= 2.1.0-1 =
 
-(2016/07/29) Updated the 'wpsso_schema_meta_itemprop' filter for WPSSO 3.33.8-1.
+(2016/08/18) Added a new "Service Radius" option for Schema Local Business.
 

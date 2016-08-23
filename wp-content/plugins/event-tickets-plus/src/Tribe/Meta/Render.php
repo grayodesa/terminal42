@@ -58,8 +58,8 @@ class Tribe__Tickets_Plus__Meta__Render {
 						}
 
 						?>
-						<dt class="event-tickets-meta-label_<?php echo esc_attr( $field->slug ); ?>"><?php echo esc_html( $field->label ); ?></dt>
-						<dd class="event-tickets-meta-data_<?php echo esc_attr( $field->slug ); ?>"><?php echo $value ? esc_html( $value ) : '&nbsp;'; ?></dd>
+						<dt class="event-tickets-meta-label_<?php echo esc_attr( $field->slug ); ?>"><?php echo wp_kses_post( $field->label ); ?></dt>
+						<dd class="event-tickets-meta-data_<?php echo esc_attr( $field->slug ); ?>"><?php echo $value ? wp_kses_post( $value ) : '&nbsp;'; ?></dd>
 						<?php
 					}
 					?>
@@ -111,10 +111,10 @@ class Tribe__Tickets_Plus__Meta__Render {
 				?>
 				<tr>
 					<th valign="top" class="event-tickets-meta-label_<?php echo esc_attr( $field->slug ); ?>" align="left" border="0" cellpadding="20" cellspacing="0" style="padding:0 20px; background:#f7f7f7;min-width:100px;">
-						<?php echo esc_html( $field->label ); ?>
+						<?php echo wp_kses_post( $field->label ); ?>
 					</th>
 					<td valign="top" class="event-tickets-meta-data_<?php echo esc_attr( $field->slug ); ?>" align="left" border="0" cellpadding="20" cellspacing="0" style="padding:0 20px; background:#f7f7f7;">
-						<?php echo esc_html( $value ); ?>
+						<?php echo wp_kses_post( $value ); ?>
 					</td>
 				</tr>
 				<?php

@@ -132,6 +132,8 @@ class ESSBSocialFollowersCounterDraw {
 		
 		foreach ( essb_followers_counter ()->active_social_networks () as $social ) {
 			$social_followers_text = ESSBSocialFollowersCounterHelper::get_option ( $social . '_text' );
+			$social_custom_icon = ESSBSocialFollowersCounterHelper::get_option($social.'_icon_type');
+			if ($social_custom_icon != '') { $social_custom_icon = ' essbfc-icon-'.$social.'-'.$social_custom_icon; }
 			$social_followers_counter = isset ( $followers_count [$social] ) ? $followers_count [$social] : 0;
 			
 			$social_display = $social;
@@ -147,7 +149,7 @@ class ESSBSocialFollowersCounterDraw {
 			}
 			
 			echo '<div class="essbfc-network">';
-			printf ( '<i class="essbfc-icon essbfc-icon-%1$s%2$s"></i>', $social_display, $class_animation );
+			printf ( '<i class="essbfc-icon essbfc-icon-%1$s%2$s%3$s"></i>', $social_display, $class_animation, $social_custom_icon );
 			printf ( '<span class="essbfc-followers-count">%1$s</span>', self::followers_number ( $social_followers_counter ) );
 			printf ( '<span class="essbfc-followers-text">%1$s</span>', $social_followers_text );
 			echo '</div>';

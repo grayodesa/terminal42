@@ -49,7 +49,7 @@ class Tribe__Events__Pro__Updates__Recurrence_Meta_To_Child_Post_Converter {
 		update_post_meta( $event_id, '_EventStartDate', $original );
 	}
 
-	private function start_date_to_sequence( array $start_date ) {
+	private function start_date_to_sequence( $start_date ) {
 		return array( 'timestamp' => $start_date );
 	}
 }

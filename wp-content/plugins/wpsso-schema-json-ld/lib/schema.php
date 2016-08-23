@@ -20,7 +20,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 				$this->p->debug->mark();
 		}
 
-		public static function add_media_data( &$json_data, &$use_post, &$mod, &$mt_og, &$user_id, $size_name = false ) {
+		public static function add_media_data( &$json_data, $mod, $mt_og, $user_id, $size_name = false ) {
 
 			$wpsso =& Wpsso::get_instance();
 			
@@ -80,7 +80,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 		}
 
 		// pass a single or two dimension video array in $og_video
-		public static function add_video_list_data( &$json_data, &$og_video, $prefix = 'og:video' ) {
+		public static function add_video_list_data( &$json_data, $og_video, $prefix = 'og:video' ) {
 			$videos_added = 0;
 
 			if ( isset( $og_video[0] ) && is_array( $og_video[0] ) ) {						// 2 dimensional array
@@ -112,7 +112,7 @@ if ( ! class_exists( 'WpssoJsonSchema' ) ) {
 		 *		[og:image:height] => 544
 		 *	)
 		 */
-		public static function add_single_video_data( &$json_data, &$opts, $prefix = 'og:video', $list_element = true ) {
+		public static function add_single_video_data( &$json_data, $opts, $prefix = 'og:video', $list_element = true ) {
 
 			$wpsso =& Wpsso::get_instance();
 

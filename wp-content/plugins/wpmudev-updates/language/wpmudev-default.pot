@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://premium.wpmudev.org/\n"
-"POT-Creation-Date: 2016-07-21 02:35:41+00:00\n"
+"POT-Creation-Date: 2016-07-22 15:55:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,229 +16,229 @@ msgstr ""
 msgid "A WPMU DEV plugin was automatically updated."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:569
-#: includes/class-wpmudev-dashboard-site.php:613
+#: includes/class-wpmudev-dashboard-site.php:579
+#: includes/class-wpmudev-dashboard-site.php:623
 msgid "Required field missing"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:579
+#: includes/class-wpmudev-dashboard-site.php:589
 msgid "Something went wrong, please refresh the page and try again."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:586
+#: includes/class-wpmudev-dashboard-site.php:596
 msgid "Sorry, you are not allowed to do this."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:594
+#: includes/class-wpmudev-dashboard-site.php:604
 msgid "Unexpected action, we could not handle it."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:876
-#: includes/class-wpmudev-dashboard-site.php:999
+#: includes/class-wpmudev-dashboard-site.php:886
+#: includes/class-wpmudev-dashboard-site.php:1009
 msgid "Unknown action: %s"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:1516
+#: includes/class-wpmudev-dashboard-site.php:1526
 msgid "Requires Multisite"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:1520
+#: includes/class-wpmudev-dashboard-site.php:1530
 msgid "Requires BuddyPress"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:1524
+#: includes/class-wpmudev-dashboard-site.php:1534
 msgid "Incompatible"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:2082
+#: includes/class-wpmudev-dashboard-site.php:2092
 msgid "<b>The Upfront parent theme is missing!</b><br>Please install it to use your Upfront child themes"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:2109
+#: includes/class-wpmudev-dashboard-site.php:2119
 msgid "Awesome news for Upfront"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-site.php:2110
+#: includes/class-wpmudev-dashboard-site.php:2120
 msgid "We have a new version of Upfront for you! Install it right now to get all the latest improvements and features."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:250
+#: includes/class-wpmudev-dashboard-ui.php:249
 msgid "1 Plugin update"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:252
+#: includes/class-wpmudev-dashboard-ui.php:251
 msgid "%s Plugin updates"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:255
+#: includes/class-wpmudev-dashboard-ui.php:254
 msgid "1 Theme update"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:257
+#: includes/class-wpmudev-dashboard-ui.php:256
 msgid "%s Theme updates"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:273
+#: includes/class-wpmudev-dashboard-ui.php:272
 msgid "Log in to your WPMU DEV account to use all features!"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:285
-#: includes/class-wpmudev-dashboard-ui.php:297
+#: includes/class-wpmudev-dashboard-ui.php:284
+#: includes/class-wpmudev-dashboard-ui.php:296
 msgid "WPMU DEV Dashboard"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:298
+#: includes/class-wpmudev-dashboard-ui.php:297
 msgid "Dashboard"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:326
+#: includes/class-wpmudev-dashboard-ui.php:325
 msgid "WPMU DEV Plugins"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:327 template/plugins.php:18
+#: includes/class-wpmudev-dashboard-ui.php:326 template/plugins.php:18
 msgid "Plugins"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:341
+#: includes/class-wpmudev-dashboard-ui.php:340
 msgid "WPMU DEV Themes"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:342 template/themes.php:17
+#: includes/class-wpmudev-dashboard-ui.php:341 template/themes.php:17
 msgid "Themes"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:354
+#: includes/class-wpmudev-dashboard-ui.php:353
 msgid "Support Access enabled"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:359
+#: includes/class-wpmudev-dashboard-ui.php:358
 msgid "WPMU DEV Support"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:360 template/support-system.php:222
+#: includes/class-wpmudev-dashboard-ui.php:359 template/support-system.php:222
 #: template/support.php:21
 msgid "Support"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:370
+#: includes/class-wpmudev-dashboard-ui.php:369
 msgid "WPMU DEV Settings"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:371 template/settings.php:30
+#: includes/class-wpmudev-dashboard-ui.php:370 template/settings.php:30
 msgid "Manage"
 msgstr ""
 
+#: includes/class-wpmudev-dashboard-ui.php:668
 #: includes/class-wpmudev-dashboard-ui.php:669
-#: includes/class-wpmudev-dashboard-ui.php:670
+#: includes/class-wpmudev-dashboard-ui.php:697
 #: includes/class-wpmudev-dashboard-ui.php:698
-#: includes/class-wpmudev-dashboard-ui.php:699
 msgid "Return to WPMU DEV Plugins"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:736
+#: includes/class-wpmudev-dashboard-ui.php:735
 msgid "You must install the Upfront parent theme for this theme to work."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:737
+#: includes/class-wpmudev-dashboard-ui.php:736
 msgid "Install Upfront (Required)"
 msgstr ""
 
+#: includes/class-wpmudev-dashboard-ui.php:759
 #: includes/class-wpmudev-dashboard-ui.php:760
-#: includes/class-wpmudev-dashboard-ui.php:761
+#: includes/class-wpmudev-dashboard-ui.php:798
 #: includes/class-wpmudev-dashboard-ui.php:799
-#: includes/class-wpmudev-dashboard-ui.php:800
 msgid "Return to WPMU DEV Themes"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:889
+#: includes/class-wpmudev-dashboard-ui.php:888
 msgid "Login to WPMU DEV Dashboard"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:889
+#: includes/class-wpmudev-dashboard-ui.php:888
 msgid "to update."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:894
+#: includes/class-wpmudev-dashboard-ui.php:893
 msgid "Auto-update not possible."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:896
+#: includes/class-wpmudev-dashboard-ui.php:895
 msgid "More info &raquo;"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1046
+#: includes/class-wpmudev-dashboard-ui.php:1045
 msgid "There is a new version of %1$s available on WPMU DEV. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\" class=\"update-link\">update now</a>."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1050
+#: includes/class-wpmudev-dashboard-ui.php:1049
 msgid "There is a new version of %1$s available on WPMU DEV. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\" target=\"_blank\" title=\"Download update from WPMU DEV\">download update</a>."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1057
+#: includes/class-wpmudev-dashboard-ui.php:1056
 msgid "There is a new version of %1$s available on WPMU DEV. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\" target=\"_blank\" title=\"Setup your WPMU DEV account to update\">login to update</a>."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1065
+#: includes/class-wpmudev-dashboard-ui.php:1064
 msgid "There is a new version of %1$s available on WPMU DEV. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a> or <a href=\"%5$s\" target=\"_blank\" title=\"Upgrade your WPMU DEV membership\">upgrade to update</a>."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1069
+#: includes/class-wpmudev-dashboard-ui.php:1068
 msgid "There is a new version of %1$s available on WPMU DEV. <a href=\"%2$s\" class=\"thickbox\" title=\"%3$s\">View version %4$s details</a>."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1338 template/settings.php:65
+#: includes/class-wpmudev-dashboard-ui.php:1337 template/settings.php:65
 msgid "Free"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1385
+#: includes/class-wpmudev-dashboard-ui.php:1384
 msgid "Get Support"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1388
+#: includes/class-wpmudev-dashboard-ui.php:1387
 msgid "The Hub"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1392
+#: includes/class-wpmudev-dashboard-ui.php:1391
 msgid "Logout"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1404
+#: includes/class-wpmudev-dashboard-ui.php:1403
 msgid "Almost there!"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1407
+#: includes/class-wpmudev-dashboard-ui.php:1406
 msgid "Hold on a moment while we finish that action and refresh the page..."
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1675
+#: includes/class-wpmudev-dashboard-ui.php:1674
 msgid "Business"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1679
+#: includes/class-wpmudev-dashboard-ui.php:1678
 msgid "SEO"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1683
+#: includes/class-wpmudev-dashboard-ui.php:1682
 msgid "Marketing"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1687
+#: includes/class-wpmudev-dashboard-ui.php:1686
 msgid "Publishing"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1691
+#: includes/class-wpmudev-dashboard-ui.php:1690
 msgid "Community"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1695
+#: includes/class-wpmudev-dashboard-ui.php:1694
 msgid "BuddyPress"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1699
+#: includes/class-wpmudev-dashboard-ui.php:1698
 msgid "Multisite"
 msgstr ""
 
-#: includes/class-wpmudev-dashboard-ui.php:1802
+#: includes/class-wpmudev-dashboard-ui.php:1801
 msgid "Error: The template %s does not exist. Please re-install the plugin."
 msgstr ""
 
@@ -956,7 +956,7 @@ msgid "General settings"
 msgstr ""
 
 #: template/settings.php:141
-msgid "Enable automatic updates for the WPMU DEV plugin"
+msgid "Enable automatic updates of the WPMU DEV Dashboard plugin"
 msgstr ""
 
 #: template/settings.php:149

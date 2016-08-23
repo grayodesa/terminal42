@@ -88,6 +88,11 @@ class Thrive_Dash_Api_Mandrill {
 			'sslverify' => false,
 		) );
 
+
+		if ( $result instanceof WP_Error ) {
+			throw new Thrive_Dash_Api_Mandrill_Exceptions( 'We were unable to decode the JSON response from the Mandrill API: ' . $result->errors['http_failure'][0] );
+		}
+
 		if ( $result === null ) {
 			throw new Thrive_Dash_Api_Mandrill_Exceptions( 'We were unable to decode the JSON response from the Mandrill API: ' . $result['body'] );
 		}

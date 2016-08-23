@@ -35,7 +35,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 			'post_type' => false,
 			'post_status' => false,
 			'post_author' => false,
-			'post_coauthors' => false,
+			'post_coauthors' => array(),
 			/*
 			 * Term
 			 */
@@ -107,7 +107,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 			return $table_rows;
 		}
 
-		public function get_rows_social_preview( &$form, &$head, &$mod ) {
+		public function get_rows_social_preview( $form, $head, $mod ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
@@ -155,30 +155,29 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 				$auto_draft_msg = sprintf( __( 'Save a draft version or publish the %s to update this value.',
 					'wpsso' ), ucfirst( $mod['post_type'] ) );
 
-				$table_rows[] = $form->get_th_html( _x( 'Short URL',
+				$table_rows[] = $form->get_th_html( _x( 'Sharing URL',
 					'option label', 'wpsso' ), 'medium' ).
 				'<td class="blank"><em>'.$auto_draft_msg.'</em></td>';
 	
-				$table_rows[] = $form->get_th_html( _x( 'Sharing URL',
+				$table_rows[] = $form->get_th_html( _x( 'Shortened URL',
 					'option label', 'wpsso' ), 'medium' ).
 				'<td class="blank"><em>'.$auto_draft_msg.'</em></td>';
 	
 			} else {
-				$long_url = $this->p->util->get_sharing_url( $mod, false );	// false or post ID
+				$long_url = $this->p->util->get_sharing_url( $mod, false );	// $add_page = false
 
-				$short_url = apply_filters( $this->p->cf['lca'].'_shorten_url',
+				if ( $mod['is_post'] )
+					$short_url = wp_get_shortlink( $mod['id'], 'post' );
+				else $short_url = apply_filters( $this->p->cf['lca'].'_shorten_url',
 					$long_url, $this->p->options['plugin_shortener'] );
 
-				if ( $long_url === $short_url && $mod['is_post'] )
-					$short_url = wp_get_shortlink();
-
-				$table_rows[] = $form->get_th_html( _x( 'Short URL',
-					'option label', 'wpsso' ), 'medium' ).
-				'<td>'.$form->get_copy_input( $short_url ).'</td>';
-	
 				$table_rows[] = $form->get_th_html( _x( 'Sharing URL',
 					'option label', 'wpsso' ), 'medium' ).
 				'<td>'.$form->get_copy_input( $long_url ).'</td>';
+
+				$table_rows[] = $form->get_th_html( _x( 'Shortened URL',
+					'option label', 'wpsso' ), 'medium' ).
+				'<td>'.$form->get_copy_input( $short_url ).'</td>';
 			}
 
 			$table_rows[] = $form->get_th_html( _x( 'Open Graph Example',
@@ -560,7 +559,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 			return $columns;
 		}
 
-		protected function get_mod_column_content( $value, $column_name, &$mod ) {
+		protected function get_mod_column_content( $value, $column_name, $mod ) {
 
 			$lca = $this->p->cf['lca'];
 
@@ -597,7 +596,8 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 
 			switch ( $column_name ) {
 				case $lca.'_og_img':
-					// set custom image dimensions for this post/term/user id
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( 'setting custom image dimensions for this post/term/user id' );
 					$this->p->util->add_plugin_image_sizes( false, array(), $mod );
 					break;
 			}
@@ -612,20 +612,29 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 
 		public function get_og_img_column_html( $og_image ) {
 			$value = '';
-			// try and get a smaller thumbnail version if we can
+
 			if ( isset( $og_image['og:image:id'] ) && 
 				$og_image['og:image:id'] > 0 ) {
+
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'getting thumbnail for image id '.$og_image['og:image:id'] );
+
 				list(
-					$og_image['og:image'],
-					$og_image['og:image:width'],
-					$og_image['og:image:height'],
-					$og_image['og:image:cropped'],
-					$og_image['og:image:id']
+					$og_thumb['og:image'],
+					$og_thumb['og:image:width'],
+					$og_thumb['og:image:height'],
+					$og_thumb['og:image:cropped'],
+					$og_thumb['og:image:id']
 				) = $this->p->media->get_attachment_image_src( $og_image['og:image:id'], 'thumbnail', false, false );
+				if ( ! empty( $thumb['og:image'] ) )	// just in case
+					$og_image =& $og_thumb;
 			}
 
-			if ( ! empty( $og_image['og:image'] ) )
-				$value .= '<div class="preview_img" style="background-image:url('.$og_image['og:image'].');"></div>';
+			$media_url = SucomUtil::get_mt_media_url( $og_image, 'og:image' );
+
+			if ( ! empty( $media_url ) )
+				$value .= '<div class="preview_img" style="background-image:url('.$media_url.');"></div>';
+
 			return $value;
 		}
 
@@ -633,7 +642,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 			return $this->must_be_extended( __METHOD__, array() );
 		}
 
-		public function get_md_image( $num, $size_name, array &$mod, $check_dupes = true, $force_regen = false, $md_pre = 'og', $mt_pre = 'og' ) {
+		public function get_md_image( $num, $size_name, array $mod, $check_dupes = true, $force_regen = false, $md_pre = 'og', $mt_pre = 'og' ) {
 
 			if ( $this->p->debug->enabled ) {
 				$this->p->debug->log_args( array( 
@@ -836,7 +845,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 				$this->p->debug->mark();
 
 			if ( ! is_array( $all_meta ) || empty( $all_meta ) )
-				return $opts;
+				return $md_opts;
 
 			$charset = get_bloginfo( 'charset' );	// required for html_entity_decode()
 
@@ -865,16 +874,21 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 				// decode strings and array elements
 				if ( is_array( $mixed ) ) {
 					if ( $this->p->debug->enabled )
-						$this->p->debug->log( $md_name.' is array of '.count( $mixed ).' elements' );
+						$this->p->debug->log( $md_name.' is array of '.count( $mixed ).' values (decoding each value)' );
 					foreach ( $mixed as $value )
 						$values[] = html_entity_decode( SucomUtil::decode_utf8( $value ), ENT_QUOTES, $charset );
-				} else $values[] = html_entity_decode( SucomUtil::decode_utf8( $mixed ), ENT_QUOTES, $charset );
+				} else {
+					if ( $this->p->debug->enabled )
+						$this->p->debug->log( 'decoding '.$md_name.' as string of '.strlen( $mixed ).' chars' );
+					$values[] = html_entity_decode( SucomUtil::decode_utf8( $mixed ), ENT_QUOTES, $charset );
+				}
 
 				switch ( $meta_opt_name ) {
 					case 'schema_recipe_ingredient':
 						// explode text ingredient list into array
 						if ( ! is_array( $mixed ) ) {
-							$values = array_map( 'trim', explode( PHP_EOL, $values[0] ) );
+							$values = array_map( 'trim', 
+								explode( PHP_EOL, reset( $values ) ) );
 							if ( $this->p->debug->enabled )
 								$this->p->debug->log( 'exploded '.$md_name.' into array of '.count( $values ).' elements' );
 						}
@@ -895,7 +909,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 						$md_opts[$meta_opt_name.'_'.$num.':is'] = 'disabled';
 					}
 				} else {
-					$md_opts[$meta_opt_name] = $value[0];
+					$md_opts[$meta_opt_name] = reset( $values );	// get first element of $values array
 					$md_opts[$meta_opt_name.':is'] = 'disabled';
 				}
 			}

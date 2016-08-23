@@ -63,11 +63,20 @@ var essb_ajax_subscribe = function(key) {
 	
 	if (formContainer.length) {
 		var user_mail = jQuery(formContainer).find('.essb-subscribe-form-content-email-field').val();
+		var user_name = jQuery(formContainer).find('.essb-subscribe-form-content-name-field').length ? jQuery(formContainer).find('.essb-subscribe-form-content-name-field').val() : '';
 		jQuery(formContainer).find('.submit').prop('disabled', true);
 		jQuery(formContainer).hide();
 		jQuery('.essb-subscribe-form-' + key).find('.essb-subscribe-loader').show();
-		jQuery.post(formContainer.attr('action'), { mailchimp_email: user_mail}, 
-				function (data) { if (data) {
+		console.log(formContainer.attr('action'));
+		console.log(user_mail+"," + user_name);
+		jQuery.post(formContainer.attr('action'), { mailchimp_email: user_mail, mailchimp_name: user_name}, 
+				function (data) {
+					console.log('result is ');
+					console.log(data);
+					if (data) {
+					
+					console.log(data);
+					
 					if (data['code'] == '1') {
 						jQuery('.essb-subscribe-form-' + key).find('.essb-subscribe-form-content-success').show();
 					}

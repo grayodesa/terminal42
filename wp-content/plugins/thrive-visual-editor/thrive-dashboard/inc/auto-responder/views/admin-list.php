@@ -10,7 +10,7 @@ $json_available_apis = Thrive_Dash_List_Manager::toJSON( $available_apis );
 </script>
 
 <?php include dirname( __FILE__ ) . '/admin-messages.php' ?>
-<?php include TVE_DASH_PATH .'/templates/header.phtml';?>
+<?php include TVE_DASH_PATH . '/templates/header.phtml'; ?>
 <div class="tvd-v-spacer"></div>
 <div class="tvd-container tvd-hide tvd-show-onload">
 	<h3 class="tvd-section-title"><?php echo __( "Active Connections", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
@@ -133,9 +133,13 @@ $json_available_apis = Thrive_Dash_List_Manager::toJSON( $available_apis );
 			<h3 class="tvd-modal-title">
 				<#= item.get('title') #><br/><?php echo __( "Connection Ready!", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
 			<p>
-				<?php echo __( "You can now connect your opt-in forms to ", TVE_DASH_TRANSLATE_DOMAIN ) ?>
-				<#= item.get('title') #>.
-					<a class="wistia-popover[height=450,playerColor=2bb914,width=800]" href="//fast.wistia.net/embed/iframe/7sv6uvfshp?popover=true"><?php echo __( "See how it's done.", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+				<# if(typeof item.get('success_message') !== 'undefined' && item.get('success_message') != '') { #>
+					<#= item.get('success_message') #>
+						<# } else { #>
+							<?php echo __( "You can now connect your opt-in forms to ", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+							<#= item.get('title') #>.
+								<a class="wistia-popover[height=450,playerColor=2bb914,width=800]" href="//fast.wistia.net/embed/iframe/7sv6uvfshp?popover=true"><?php echo __( "See how it's done.", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+								<# } #>
 			</p>
 			<div class="tvd-row">
 				<div class="tvd-col tvd-s12 tvd-m6 tvd-offset-m3">

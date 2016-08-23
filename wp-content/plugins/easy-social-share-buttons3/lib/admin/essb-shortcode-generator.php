@@ -578,6 +578,22 @@ jQuery(document).ready(function(){
 		if ($shortcode == 'easy-popular-posts') {
 			$this->includePopularPosts();
 		}
+		if ($shortcode == 'easy-subscribe') {
+			$this->includeSubscribe();
+		}
+	}
+	
+	private function includeSubscribe() {
+		$this->shortcode = 'easy-subscribe';
+		$this->shortcodeTitle = '[easy-subscribe] Shortcode';
+	
+		$listOfTypes = array("" => "Subscribe form with service integration (MailChimp, GetReponse, myMail, MailPoet)", "form" => "Custom code subscribe form");
+		$this->register("mode", array("type" => "dropdown", "text" => "Form type", "comment" => "Choose form generation type", "sourceOptions" => $listOfTypes));
+		$listOfTypes = array("design1" => "Design #1", "design2" => "Design #2", "design3" => "Design #3", "design4" => "Design #4");
+		$this->register("design", array("type" => "dropdown", "text" => "Design", "comment" => "Choose your form design style", "sourceOptions" => $listOfTypes));
+		$this->register("twostep", array("type" => "checkbox", "text" => "Two step optin form", "comment" => "Two step optin forms will open form when you click on link (text or image)", "value" => "true"));
+		$this->register("twostep_text", array("type" => "textbox", "text" => "Two step link content", "comment" => "Put here your two step content open link", "value" => "", "fullwidth" => "true"));
+		$this->register("twostep_inline", array("type" => "checkbox", "text" => "Two step form open inline", "comment" => "Open your two step form inline - default mode is as popup", "value" => "true"));
 	}
 	
 	private function includePopularPosts() {

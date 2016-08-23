@@ -16,7 +16,7 @@ class Thrive_Dash_List_Editor_Controller {
 	protected $_viewSetupPath;
 
 	public function __construct() {
-		$this->_viewPath = TVE_DASH_PATH . '/inc/auto-responder/views/editor/';
+		$this->_viewPath      = TVE_DASH_PATH . '/inc/auto-responder/views/editor/';
 		$this->_viewSetupPath = TVE_DASH_PATH . '/inc/auto-responder/views/setup/';
 	}
 
@@ -97,16 +97,28 @@ class Thrive_Dash_List_Editor_Controller {
 				 * if not connection is setup - return the default dashboard
 				 */
 				$connection_config = $this->_param( 'connections' );
+				$custom_messages   = $this->_param( 'custom_messages' );
+
+
 				/**
 				 * try also decoding it from the hidden input element
 				 */
 				if ( empty( $connection_config ) ) {
 					$connection_config = Thrive_Dash_List_Manager::decodeConnectionString( $this->_param( 'connections_str' ) );
 				}
+
 				if ( empty( $connection_config ) ) {
 					$content = $this->_view( 'dashboard' );
 					break;
 				}
+
+				/**
+				 * try also decoding custom messages it from the hidden input element
+				 */
+				if ( empty( $custom_messages ) ) {
+					$custom_messages = Thrive_Dash_List_Manager::decodeConnectionString( $this->_param( 'custom_messages_str' ) );
+				}
+
 				$renderer = new Thrive_Dash_Api_Html_Renderer();
 				$helper   = new Thrive_Dash_Api_CustomHtml();
 				$data     = array(
@@ -129,14 +141,36 @@ class Thrive_Dash_List_Editor_Controller {
 				$response['not_visible_inputs'] = '';
 				$response['hidden_inputs']      = ''; // TODO: maybe hold here API connections ?
 				$response['connections']        = $connection_config;
+
+				/**
+				 * Add the form type to our form so we know how to hendle the non-reload actions
+				 */
+				$response['elements']['_form_type'] = array(
+					'type'  => 'hidden',
+					'name'  => '_form_type',
+					'value' => $helper->getFormType(),
+				);
 				/**
 				 * adding API connections as one hidden input element - encrypted with a key (to see how we can improve this)
 				 */
 				$response['elements']['__tcb_lg_fc'] = array(
 					'type'  => 'hidden',
 					'name'  => '__tcb_lg_fc',
-					'value' => Thrive_Dash_List_Manager::encodeConnectionString( $connection_config )
+					'value' => Thrive_Dash_List_Manager::encodeConnectionString( $connection_config ),
 				);
+
+				if ( ! empty( $custom_messages ) ) {
+					foreach ( $custom_messages as $k => $message ) {
+						$messages[ $k ] = stripcslashes( $message );
+					}
+					$response['elements']['__tcb_lg_msg'] = array(
+						'type'  => 'hidden',
+						'name'  => '__tcb_lg_msg',
+						'value' => Thrive_Dash_List_Manager::encodeConnectionString( $messages ),
+					);
+
+					$response['custom_messages'] = $messages;
+				}
 
 				break;
 			default:
@@ -149,6 +183,32 @@ class Thrive_Dash_List_Editor_Controller {
 		$response['lb_html'] = $content;
 
 		return $response;
+	}
+
+	/**
+	 * dashboard route / action
+	 */
+	public function encodeMessagesAction() {
+		$response = array();
+
+		switch ( $this->_param( 'connection_type' ) ) {
+			case 'custom-html':
+
+				break;
+			case 'api':
+				$custom_messages = $this->_param( 'custom_messages' );
+
+				if ( ! empty( $custom_messages ) ) {
+					$messages = stripslashes_deep( $custom_messages );
+
+					$response['custom_messages'] = Thrive_Dash_List_Manager::encodeConnectionString( $messages );
+				}
+
+				break;
+		}
+
+		return $response;
+
 	}
 
 	/**
@@ -226,7 +286,7 @@ class Thrive_Dash_List_Editor_Controller {
 	 * get groups from an API and include them in an html select element
 	 */
 	public function apiGroupsAction() {
-		$api = $this->_param( 'api' );
+		$api     = $this->_param( 'api' );
 		$list_id = $this->_param( 'list' );
 
 		if ( ! $api || ! array_key_exists( $api, Thrive_Dash_List_Manager::available() ) ) {
@@ -236,7 +296,7 @@ class Thrive_Dash_List_Editor_Controller {
 		$connection = Thrive_Dash_List_Manager::connectionInstance( $api );
 
 		echo $this->_view( 'mailchimp/api-groups', array(
-			'groups' => $connection->getGroups($list_id),
+			'groups' => $connection->getGroups( $list_id ),
 		) );
 		exit();
 	}
@@ -248,7 +308,7 @@ class Thrive_Dash_List_Editor_Controller {
 		/**
 		 * list of all connected APIs (that have been setup from admin) but exclude captcha
 		 */
-		$connected_apis = Thrive_Dash_List_Manager::getAvailableAPIs( true, array( 'captcha', 'email' ) );
+		$connected_apis = Thrive_Dash_List_Manager::getAvailableAPIs( true, array( 'captcha', 'email', 'social' ) );
 		/**
 		 * existing setup connections for this form
 		 */

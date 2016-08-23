@@ -101,6 +101,7 @@ class wordfenceHash {
 		}
 		$this->haveIssues = array(
 			'core' => false,
+			'coreUnknown' => false,
 			'themes' => false,
 			'plugins' => false,
 			'malware' => false

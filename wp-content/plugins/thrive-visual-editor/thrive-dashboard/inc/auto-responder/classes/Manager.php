@@ -16,6 +16,7 @@ class Thrive_Dash_List_Manager {
 		'autoresponder' => 'Email Marketing',
 		'webinar'       => 'Webinars',
 		'other'         => 'Other',
+		'social'        => 'Social',
 	);
 
 	public static $AVAILABLE = array(
@@ -26,7 +27,9 @@ class Thrive_Dash_List_Manager {
 		'constantcontact'  => 'Thrive_Dash_List_Connection_ConstantContact',
 		'convertkit'       => 'Thrive_Dash_List_Connection_ConvertKit',
 		'drip'             => 'Thrive_Dash_List_Connection_Drip',
+		'facebook'         => 'Thrive_Dash_List_Connection_Facebook',
 		'get-response'     => 'Thrive_Dash_List_Connection_GetResponse',
+		'google'           => 'Thrive_Dash_List_Connection_Google',
 		'gotowebinar'      => 'Thrive_Dash_List_Connection_GoToWebinar',
 		'hubspot'          => 'Thrive_Dash_List_Connection_HubSpot',
 		'icontact'         => 'Thrive_Dash_List_Connection_iContact',
@@ -43,8 +46,18 @@ class Thrive_Dash_List_Manager {
 		'sendgrid'         => 'Thrive_Dash_List_Connection_SendGrid',
 		'sendinblue'       => 'Thrive_Dash_List_Connection_Sendinblue',
 		'sendy'            => 'Thrive_Dash_List_Connection_Sendy',
+		'twitter'          => 'Thrive_Dash_List_Connection_Twitter',
 		'webinarjamstudio' => 'Thrive_Dash_List_Connection_WebinarJamStudio',
 		'wordpress'        => 'Thrive_Dash_List_Connection_Wordpress',
+
+		/* notification manger - these are now included in the dashboard - services for email notifications */
+		'mandrill'         => 'Thrive_Dash_List_Connection_Mandrill',
+		'postmark'         => 'Thrive_Dash_List_Connection_Postmark',
+		'sparkpost'        => 'Thrive_Dash_List_Connection_SparkPost',
+		'mailgun'          => 'Thrive_Dash_List_Connection_Mailgun',
+		'awsses'           => 'Thrive_Dash_List_Connection_Awsses',
+		'sendinblueemail'  => 'Thrive_Dash_List_Connection_SendinblueEmail',
+		'sendgridemail'    => 'Thrive_Dash_List_Connection_SendGridEmail',
 	);
 
 	private static $_available = array();

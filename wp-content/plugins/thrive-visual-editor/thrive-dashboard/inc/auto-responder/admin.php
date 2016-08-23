@@ -30,7 +30,7 @@ add_filter( 'tve_dash_include_ui', 'tve_dash_api_filter_ui_hooks' );
 function tve_dash_api_admin_menu() {
 	remove_submenu_page( 'thrive_admin_options', 'thrive_font_manager' );
 
-	add_submenu_page( null, __( "API Connections", TVE_DASH_TRANSLATE_DOMAIN ), __( "API Connections", TVE_DASH_TRANSLATE_DOMAIN ), "manage_options", "tve_dash_api_connect", "tve_dash_api_connect" );
+	add_submenu_page( null, __( 'API Connections', TVE_DASH_TRANSLATE_DOMAIN ), __( 'API Connections', TVE_DASH_TRANSLATE_DOMAIN ), 'manage_options', 'tve_dash_api_connect', 'tve_dash_api_connect' );
 	add_submenu_page( null, __( 'API Connections Error Log', TVE_DASH_TRANSLATE_DOMAIN ), __( 'API Connections Error Log', TVE_DASH_TRANSLATE_DOMAIN ), 'manage_options', 'tve_dash_api_error_log', 'tve_dash_api_error_log' );
 }
 
@@ -83,7 +83,7 @@ function tve_dash_api_connect() {
 
 	$api_types = Thrive_Dash_List_Manager::$API_TYPES;
 
-	$api_types = apply_filters( "tve_filter_api_types", $api_types );
+	$api_types = apply_filters( 'tve_filter_api_types', $api_types );
 
 	$types = array();
 	foreach ( $api_types as $type => $label ) {
@@ -104,6 +104,7 @@ function tve_dash_api_connect() {
  * check to see if we currently need to save some credentials, early in the admin section (e.g. a redirect from Oauth)
  */
 function tve_dash_api_handle_save() {
+	require_once dirname( __FILE__ ) . '/misc.php';
 	/**
 	 * either a POST from a regular form, or an oauth redirect
 	 */
@@ -121,10 +122,10 @@ function tve_dash_api_handle_save() {
 
 	$response = array(
 		'success' => false,
-		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN )
+		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN ),
 	);
 	if ( ! empty( $_REQUEST['disconnect'] ) ) {
-		$connection->disconnect()->success( $connection->getTitle() . ' ' . __( "is now disconnected", TVE_DASH_TRANSLATE_DOMAIN ) );
+		$connection->disconnect()->success( $connection->getTitle() . ' ' . __( 'is now disconnected', TVE_DASH_TRANSLATE_DOMAIN ) );
 		//delete active conection for thrive ovation
 		$active_connection = get_option( 'tvo_api_delivery_service', false );
 		if ( $active_connection && $active_connection == $_REQUEST['api'] ) {
@@ -132,14 +133,18 @@ function tve_dash_api_handle_save() {
 		}
 		tve_dash_remove_api_from_one_click_signups( $_REQUEST['api'] );
 		$response['success'] = true;
-		$response['message'] = __( "Service disconnected", TVE_DASH_TRANSLATE_DOMAIN );
-	} else if ( ! empty( $_REQUEST['test'] ) ) {
-		$result              = $connection->testConnection();
-		$response['success'] = is_string( $result ) ? false : $result;
-		$response['message'] = $response['success'] ? __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Connection Error', TVE_DASH_TRANSLATE_DOMAIN );
+		$response['message'] = __( 'Service disconnected', TVE_DASH_TRANSLATE_DOMAIN );
+	} elseif ( ! empty( $_REQUEST['test'] ) ) {
+		$result = $connection->testConnection();
+		if ( is_array( $result ) && isset( $result['success'] ) && ! empty( $result['message'] ) ) {
+			$response = $result;
+		} else {
+			$response['success'] = is_string( $result ) ? false : $result;
+			$response['message'] = $response['success'] ? __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Connection Error', TVE_DASH_TRANSLATE_DOMAIN );
+		}
 	} else {
 		$response['success'] = ( $saved = $connection->readCredentials() ) === true ? true : false;
-		$response['message'] = $saved === true ? __( "Connection established", TVE_DASH_TRANSLATE_DOMAIN ) : $saved;
+		$response['message'] = $saved === true ? __( 'Connection established', TVE_DASH_TRANSLATE_DOMAIN ) : $saved;
 	}
 
 	if ( $doing_ajax ) {
@@ -148,11 +153,11 @@ function tve_dash_api_handle_save() {
 
 	if ( $response['success'] !== true ) {
 		update_option( 'tve_dash_api_error', $response['message'] );
-		wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#failed/" . $_REQUEST['api'] );
+		wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#failed/' . $_REQUEST['api'] );
 		exit;
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#done/" . $_REQUEST['api'] );
+	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#done/' . $_REQUEST['api'] );
 	exit();
 }
 
@@ -176,7 +181,7 @@ function tve_dash_api_api_handle_redirect() {
 
 	$response = array(
 		'success' => false,
-		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN )
+		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN ),
 	);
 
 	$connection->setCredentials( $_POST['connection'] );;
@@ -189,7 +194,7 @@ function tve_dash_api_api_handle_redirect() {
 		exit( json_encode( $response ) );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . "#failed/" . $_REQUEST['api'] );
+	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#failed/' . $_REQUEST['api'] );
 
 	exit();
 }

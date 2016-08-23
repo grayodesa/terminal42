@@ -2190,7 +2190,7 @@
 .essbfc-icon-delicious:before {
 	content: '\e80c';
 } /* '' */
-.essbfc-icon-instagram:before {
+.essbfc-icon-instagram_old:before {
 	content: '\e80d';
 } /* '' */
 .essbfc-icon-youtube:before {
@@ -2262,6 +2262,9 @@
 .essbfc-icon-total:before {
 	content: '\e81a';
 } /* '' */
+
+.essbfc-icon-instagram:before { content: '\e822'; } /* '' */
+.essbfc-icon-youtube-play:before { content: '\f16a'; } /* '' */
 
 /* template fixes for one column style in round */
 .essbfc-container.essbfc-col-1.essbfc-template-roundcolor li .essbfc-icon,

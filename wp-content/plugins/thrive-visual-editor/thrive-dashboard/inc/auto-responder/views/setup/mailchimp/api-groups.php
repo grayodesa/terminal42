@@ -29,7 +29,10 @@
 							if(isset($data['group'])) {
 								$selected_groups = explode(',',$data['group']);
 							} ?>
-							<label class="thrive-api-group-select"><input style="margin-top: -5px;" <?php echo in_array($group['id'], $selected_groups) ? 'checked="checked"' : '' ?> name="mailchimp_group" class="thrive-api-group-select <?php echo isset($data['groupin']) && $data['groupin'] == $groups['id'] ? 'tve-api-extra' : ''; ?>" type="<?php echo $groups['form_field'] == 'checkboxes' ? 'checkbox' : $groups['form_field']; ?>" name="<?php echo $groups['id'] ?>" value="<?php echo $group['id'] ?>"><?php echo $group['name'] ?></label>
+							<input style="margin-top: -5px;" id="thrive-group-checkbox-<?php echo $group['id']?>" <?php echo in_array($group['id'], $selected_groups) ? 'checked="checked"' : '' ?> name="mailchimp_group" class="thrive-api-group-select <?php echo isset($data['groupin']) && $data['groupin'] == $groups['id'] ? 'tve-api-extra' : ''; ?>" type="<?php echo $groups['form_field'] == 'checkboxes' ? 'checkbox' : $groups['form_field']; ?>" name="<?php echo $groups['id'] ?>" value="<?php echo $group['id'] ?>">
+							<label class="thrive-api-group-select" for="thrive-group-checkbox-<?php echo $group['id']?>">
+								<?php echo $group['name'] ?>
+							</label>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</div>

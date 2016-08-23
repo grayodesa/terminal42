@@ -185,7 +185,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	 * @return String
 	 */
 	public static function getEmailMergeTag() {
-		return '~Contact.email~';
+		return '~Contact.Email~';
 	}
 
 }

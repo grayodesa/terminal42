@@ -82,17 +82,18 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		} catch ( Exception $e ) {
 			$this->error( $e->getMessage() );
 
-			return $this;
+			return false;
 		}
 
 		$result = $this->testConnection();
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not test AWeber connection: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			$this->error( sprintf( __( 'Could not test AWeber connection: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return false;
 		}
 
 		$this->save();
 
-		return $this;
+		return true;
 	}
 
 	/**

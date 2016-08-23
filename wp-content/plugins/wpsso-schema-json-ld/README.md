@@ -3,7 +3,7 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Schema JSON-LD Markup (WPSSO JSON)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.10.0-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>1.10.1-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
 <tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.6</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
@@ -70,7 +70,7 @@
   <ul>
   <li>Author URL from Profile</li>
   <li>Author Name</li>
-  <li>Author Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Author Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Author Image URL</li>
@@ -92,14 +92,14 @@
   <li>Website URL</li>
   </ul></li>
   </ul></li>
-  <li>Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
+  <li>Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
   
   <ul>
   <li>Video URL</li>
@@ -179,7 +179,7 @@
   <li>Author URL from Profile</li>
   <li>Author Name</li>
   <li>Author Description</li>
-  <li>Author Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Author Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Author Image URL</li>
@@ -226,14 +226,14 @@
   <li>Twitter Business Page URL</li>
   </ul></li>
   </ul></li>
-  <li>CreativeWork Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>CreativeWork Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>CreativeWork Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
+  <li>CreativeWork Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
   
   <ul>
   <li>Video URL</li>
@@ -346,14 +346,14 @@
   <li>longitude</li>
   </ul></li>
   </ul></li>
-  <li>Event Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Event Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>Event Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
+  <li>Event Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
   
   <ul>
   <li>Video URL</li>
@@ -441,14 +441,14 @@
   <li>Pinterest Company Page URL</li>
   <li>Twitter Business Page URL</li>
   </ul></li>
-  <li>Organization Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Organization Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>Organization Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
+  <li>Organization Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a> (<strong><a href="https://wpsso.com/extend/plugins/wpsso/">WPSSO Pro</a> required</strong>)
   
   <ul>
   <li>Video URL</li>
@@ -481,7 +481,7 @@
   <li>URL from Profile</li>
   <li>Name</li>
   <li>Description</li>
-  <li>Person Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Person Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
@@ -626,14 +626,14 @@
   <li>validFrom</li>
   <li>validThrough</li>
   </ul></li>
-  <li>Place Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Place Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>Place Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a>
+  <li>Place Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a>
   
   <ul>
   <li>Video URL</li>
@@ -739,14 +739,14 @@
   <li>BestRating</li>
   <li>ReviewCount</li>
   </ul></li>
-  <li>Product Image(s) as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
+  <li>Product Images as <a href="http://schema.org/ImageObject">schema.org/ImageObject</a>
   
   <ul>
   <li>Image URL</li>
   <li>Image Width</li>
   <li>Image Height</li>
   </ul></li>
-  <li>Product Video(s) as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a>
+  <li>Product Videos as <a href="http://schema.org/VideoObject">schema.org/VideoObject</a>
   
   <ul>
   <li>Video URL</li>
@@ -1215,6 +1215,7 @@
 <li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/">Filter Examples</a>
 
 <ul>
+<li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/assign-a-custom-field-value-to-a-schema-property/">Assign a Custom Field Value to a Schema Property</a></li>
 <li><a href="http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-aggregaterating-property/">Modify the aggregateRating Property</a></li>
 </ul></li>
 </ul></li>

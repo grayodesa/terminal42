@@ -44,6 +44,15 @@ class WPMUDEV_Dashboard_Site {
 	public $id_upfront = 938297;
 
 	/**
+	 * The PID of the Upfront builder plugin.
+	 * Upfront is required for this plugin to function. This is used to automatically
+	 * install Upfront when required.
+	 *
+	 * @var int (Project ID)
+	 */
+	public $id_upfront_builder = 1107287;
+
+	/**
 	 * The PID of our "133 Theme Pack" package.
 	 * This package needs some special treatment; since it contains many themes
 	 * we need to update the package when only one of those themes changed.
@@ -1422,6 +1431,8 @@ class WPMUDEV_Dashboard_Site {
 
 			if ( 'theme' == $res->type ) {
 				$res->need_upfront = $this->is_upfront_theme( $pid );
+			} else if ( $this->id_upfront_builder == $pid ) { //the upfront builder plugin requires Upfront theme
+				$res->need_upfront = true;
 			}
 
 			$res->is_installed = WPMUDEV_Dashboard::$upgrader->is_project_installed( $pid );
@@ -2750,7 +2761,14 @@ class WPMUDEV_Dashboard_Site {
 
 					// Build theme listing.
 					$object = array();
-					$object['url'] = WPMUDEV_Dashboard::$api->rest_url( 'usage/' . $id );
+					$object['url'] = add_query_arg(
+						array(
+							'action' => 'wdp-changelog',
+							'pid' => $id,
+							'hash' => wp_create_nonce( 'changelog' ),
+						),
+						admin_url( 'admin-ajax.php' )
+					);
 					$object['new_version'] = $theme['new_version'];
 					$object['package'] = WPMUDEV_Dashboard::$api->rest_url_auth( 'download/' . $id );
 					$object['theme'] = $theme_slug;

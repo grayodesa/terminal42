@@ -3,7 +3,7 @@ Contributors: mmaunder
 Tags: security, secure, security plugin, wordpress security, login security, firewall, malware, antivirus, web application firewall, block hackers, country blocking, block hackers
 Requires at least: 3.9
 Tested up to: 4.6.0
-Stable tag: 6.1.12
+Stable tag: 6.1.14
 
 Secure your website with the Wordfence security plugin for WordPress.  Wordfence provides free enterprise-class WordPress security, protecting your website from hacks and malware.
 
@@ -199,6 +199,13 @@ Secure your website with Wordfence.
 5. If you're technically minded, this is the under-the-hood view of Wordfence Security options where you can fine-tune your security settings.
 
 == Changelog ==
+
+= 6.1.14 =
+* Improvement: Support downloading a file of 2FA recovery codes.
+* Fix: Fixed PHP Notice: Undefined index: coreUnknown during scans.
+* Improvement: Add note to options page that login security is necessary for 2FA to work.
+* Fix: Fixed WAF false positives introduced with WordPress 4.6.
+* Improvement: Update Geo IP database.
 
 = 6.1.12 =
 * Fix: Fixed fatal error on sites running Wordfence 6.1.11 in subdirectory and 6.1.10 or lower in parent directory.

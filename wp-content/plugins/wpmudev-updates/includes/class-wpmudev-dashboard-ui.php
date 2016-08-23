@@ -92,9 +92,14 @@ class WPMUDEV_Dashboard_Ui {
 		);
 
 		add_action(
-			'admin_init',
+			'load-plugins.php',
 			array( $this, 'brand_updates_table' ),
-			15 // Must be called after prio 10 (WP init code is at 10, we modify it).
+			21 // Must be called after WP which is 20
+		);
+		add_action(
+			'load-themes.php',
+			array( $this, 'brand_updates_table' ),
+			21 // Must be called after WP which is 20
 		);
 
 		// Some core updates need to be modified via javascript.
@@ -1070,7 +1075,8 @@ class WPMUDEV_Dashboard_Ui {
 
 		?><tr class="plugin-update-tr" id="<?php echo dirname( $filename ); ?>-update" data-slug="<?php echo dirname( $filename ); ?>" data-plugin="<?php echo esc_attr( $filename ); ?>">
 		<td colspan="3" class="plugin-update colspanchange">
-			<div class="update-message">
+			<div class="update-message notice inline notice-warning notice-alt">
+				<p>
 				<?php
 				printf(
 					wp_kses( $row_text, $plugins_allowedtags ),
@@ -1081,6 +1087,7 @@ class WPMUDEV_Dashboard_Ui {
 					esc_url( $url_action )
 				);
 				?>
+				</p>
 			</div>
 		</td>
 		</tr>

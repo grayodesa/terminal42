@@ -157,6 +157,39 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$awsses = $this->getApi();
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'awsses' );
+		if ( isset( $credentials ) ) {
+			$from_email = $credentials['email'];
+		} else {
+			return false;
+		}
+
+		try {
+			$messsage = new Thrive_Dash_Api_Awsses_SimpleEmailServiceMessage();
+			$messsage->addTo( $data['emails'] );
+			$messsage->setFrom( $from_email );
+			$messsage->setSubject( $data['subject'] );
+			$messsage->setMessageFromString( empty ( $data['text_content'] ) ? '' : $data['text_content'], empty ( $data['html_content'] ) ? '' : $data['html_content'] );
+
+			$awsses->sendEmail( $messsage );
+
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data

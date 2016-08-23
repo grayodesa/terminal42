@@ -35,6 +35,8 @@ if ( ! class_exists( 'WpssoProMediaSlideshare' ) ) {
 
 		// receives an array of arrays
 		public function filter_content_videos( $videos = false, $content ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 			/*
 			 * example: <object type='application/x-shockwave-flash' wmode='opaque' 
 			 *	data='http://static.slideshare.net/swf/ssplayer2.swf?id=29776875&doc=album-design-part-3-visuals-140107132112-phpapp01' 
@@ -67,6 +69,8 @@ if ( ! class_exists( 'WpssoProMediaSlideshare' ) ) {
 		}
 
 		public function filter_video_info( $og_video, $embed_url, $embed_width = 0, $embed_height = 0 ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 
 			// if there's already a video defined (youtube or vimeo, for example), then go with that
 			if ( empty( $embed_url ) ||
@@ -75,11 +79,9 @@ if ( ! class_exists( 'WpssoProMediaSlideshare' ) ) {
 						if ( $this->p->debug->enabled )
 							$this->p->debug->log( 'exiting early: previous video information found' );
 						return $og_video;
-			}
+			} elseif ( strpos( $embed_url, 'slideshare.net' ) === false )
+				return $og_video;
 
-			/*
-			 * Slideshare API
-			 */
 			// this matches both the iframe and object urls
 			if ( preg_match( '/^.*(slideshare\.net)\/.*(\/([0-9]+)|\?id=([0-9]+).*)$/i', $embed_url, $match ) ) {
 

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WordPress Social Sharing Optimization (WPSSO) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WordPress Social Sharing Optimization (WPSSO) 3.33.8-2\n"
+"Project-Id-Version: WordPress Social Sharing Optimization (WPSSO) 3.34.1-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
 "MIME-Version: 1.0\n"
@@ -12,12 +12,12 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: lib/admin.php:71 lib/user.php:252
+#: lib/admin.php:71 lib/term.php:267 lib/user.php:255
 msgctxt "package type"
 msgid "Pro"
 msgstr ""
 
-#: lib/admin.php:72 lib/user.php:253
+#: lib/admin.php:72 lib/term.php:268 lib/user.php:256
 msgctxt "package type"
 msgid "Free"
 msgstr ""
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Insufficient privileges to modify network options."
 msgstr ""
 
-#: lib/admin.php:442 lib/post.php:243 lib/term.php:231 lib/user.php:216
+#: lib/admin.php:442 lib/post.php:261 lib/term.php:233 lib/user.php:219
 msgid "Nonce token validation failed for %1$s action \"%2$s\"."
 msgstr ""
 
@@ -346,25 +346,43 @@ msgid ""
 "Framework</a> Social Meta Settings."
 msgstr ""
 
-#: lib/admin.php:1389
+#: lib/admin.php:1360
+msgid ""
+"please uncheck '<em>Add the Social Open Graph objects</em>' in the <a href="
+"\"%s\">Squirrly SEO</a> Social Media Options."
+msgstr ""
+
+#: lib/admin.php:1365
+msgid ""
+"please uncheck '<em>Add the Twitter card in your tweets</em>' in the <a href="
+"\"%s\">Squirrly SEO</a> Social Media Options."
+msgstr ""
+
+#: lib/admin.php:1370
+msgid ""
+"please uncheck the '<em>adds the Json-LD metas for Semantic SEO</em>' option "
+"in the <a href=\"%s\">Squirrly SEO</a> settings."
+msgstr ""
+
+#: lib/admin.php:1409
 msgid "&lt;head&gt; element not found in %s."
 msgstr ""
 
-#: lib/admin.php:1396
+#: lib/admin.php:1416
 msgid "Error copying %1$s to %2$s."
 msgstr ""
 
-#: lib/admin.php:1405
+#: lib/admin.php:1425
 msgid "Failed to open file %s for writing."
 msgstr ""
 
-#: lib/admin.php:1412
+#: lib/admin.php:1432
 msgid ""
 "The %1$s template has been successfully updated and saved. A backup copy of "
 "the original template is available in %2$s."
 msgstr ""
 
-#: lib/admin.php:1424
+#: lib/admin.php:1444
 msgctxt "option label (very short)"
 msgid "Site Use"
 msgstr ""
@@ -399,29 +417,29 @@ msgctxt "option value"
 msgid "(default)"
 msgstr ""
 
-#: lib/com/notice.php:296
+#: lib/com/notice.php:289
 msgctxt "notification type"
 msgid "error"
 msgstr ""
 
-#: lib/com/notice.php:297
+#: lib/com/notice.php:290
 msgctxt "notification type"
 msgid "warning"
 msgstr ""
 
-#: lib/com/notice.php:301
+#: lib/com/notice.php:294
 msgid ""
 "%1$d important %2$s notices have been hidden and/or dismissed &mdash; <a id="
 "\"%3$s\">unhide and view the %2$s messages</a>."
 msgstr ""
 
-#: lib/com/notice.php:302
+#: lib/com/notice.php:295
 msgid ""
 "%1$d important %2$s notice has been hidden and/or dismissed &mdash; <a id="
 "\"%3$s\">unhide and view the %2$s message</a>."
 msgstr ""
 
-#: lib/com/notice.php:373
+#: lib/com/notice.php:366
 msgid "%s Note"
 msgstr ""
 
@@ -781,261 +799,261 @@ msgctxt "option label"
 msgid "Check for Embedded Media from"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:99 lib/gpl/admin/advanced.php:101
-#: lib/pro/admin/advanced.php:102 lib/pro/admin/advanced.php:104
+#: lib/gpl/admin/advanced.php:100 lib/gpl/admin/advanced.php:102
+#: lib/pro/admin/advanced.php:103 lib/pro/admin/advanced.php:105
 msgctxt "option label"
-msgid "Add \"%s\" Column for"
+msgid "Add %s Column for"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:100 lib/messages.php:309 lib/meta.php:553
-#: lib/pro/admin/advanced.php:103
+#: lib/gpl/admin/advanced.php:101 lib/messages.php:309 lib/meta.php:552
+#: lib/pro/admin/advanced.php:104
 msgctxt "column title"
 msgid "%s Img"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:102 lib/messages.php:312 lib/meta.php:554
-#: lib/pro/admin/advanced.php:105
+#: lib/gpl/admin/advanced.php:103 lib/messages.php:312 lib/meta.php:553
+#: lib/pro/admin/advanced.php:106
 msgctxt "column title"
 msgid "%s Desc"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:107 lib/gpl/admin/advanced.php:120
-#: lib/pro/admin/advanced.php:110 lib/pro/admin/advanced.php:123
+#: lib/gpl/admin/advanced.php:108 lib/gpl/admin/advanced.php:121
+#: lib/pro/admin/advanced.php:111 lib/pro/admin/advanced.php:124
 msgid "Posts, Pages, and Custom Post Types"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:111 lib/gpl/admin/advanced.php:121
-#: lib/gpl/admin/advanced.php:133 lib/pro/admin/advanced.php:114
-#: lib/pro/admin/advanced.php:124 lib/pro/admin/advanced.php:136
+#: lib/gpl/admin/advanced.php:112 lib/gpl/admin/advanced.php:122
+#: lib/gpl/admin/advanced.php:134 lib/pro/admin/advanced.php:115
+#: lib/pro/admin/advanced.php:125 lib/pro/admin/advanced.php:137
 msgid "Terms (Categories and Tags)"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:115 lib/gpl/admin/advanced.php:122
-#: lib/pro/admin/advanced.php:118 lib/pro/admin/advanced.php:125
+#: lib/gpl/admin/advanced.php:116 lib/gpl/admin/advanced.php:123
+#: lib/pro/admin/advanced.php:119 lib/pro/admin/advanced.php:126
 msgid "Users"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:136 lib/pro/admin/advanced.php:139
+#: lib/gpl/admin/advanced.php:137 lib/pro/admin/advanced.php:140
 msgid "User Profile"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:139 lib/pro/admin/advanced.php:142
+#: lib/gpl/admin/advanced.php:140 lib/pro/admin/advanced.php:143
 msgctxt "option label"
 msgid "Include Social Metaboxes on"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:144 lib/pro/admin/advanced.php:147
+#: lib/gpl/admin/advanced.php:145 lib/pro/admin/advanced.php:148
 msgctxt "option label"
 msgid "Image URL Custom Field"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:149 lib/pro/admin/advanced.php:152
+#: lib/gpl/admin/advanced.php:150 lib/pro/admin/advanced.php:153
 msgctxt "option label"
 msgid "Video URL Custom Field"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:154 lib/pro/admin/advanced.php:157
+#: lib/gpl/admin/advanced.php:155 lib/pro/admin/advanced.php:158
 msgctxt "option label"
 msgid "Video Embed HTML Custom Field"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:159 lib/pro/admin/advanced.php:162
+#: lib/gpl/admin/advanced.php:160 lib/pro/admin/advanced.php:163
 msgctxt "option label"
 msgid "Recipe Ingredients Custom Field"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:172 lib/pro/admin/advanced.php:172
+#: lib/gpl/admin/advanced.php:173 lib/pro/admin/advanced.php:173
 msgctxt "option label"
 msgid "&lt;html&gt; Attributes Filter Hook"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:178 lib/pro/admin/advanced.php:178
+#: lib/gpl/admin/advanced.php:179 lib/pro/admin/advanced.php:179
 msgctxt "option label"
 msgid "&lt;head&gt; Attributes Filter Hook"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:183 lib/pro/admin/advanced.php:183
+#: lib/gpl/admin/advanced.php:184 lib/pro/admin/advanced.php:184
 msgctxt "option label"
 msgid "Check for Duplicate Meta Tags"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:188 lib/pro/admin/advanced.php:188
+#: lib/gpl/admin/advanced.php:189 lib/pro/admin/advanced.php:189
 msgctxt "option label"
 msgid "Use WP Locale for Language"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:193 lib/pro/admin/advanced.php:193
+#: lib/gpl/admin/advanced.php:194 lib/pro/admin/advanced.php:194
 msgctxt "option label"
-msgid "Recreate Missing WP Media Sizes"
+msgid "Create Missing WP Media Sizes"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:197 lib/pro/admin/advanced.php:197
+#: lib/gpl/admin/advanced.php:198 lib/pro/admin/advanced.php:198
 msgctxt "option label"
 msgid "Enforce Image Dimensions Check"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:200 lib/pro/admin/advanced.php:200
+#: lib/gpl/admin/advanced.php:201 lib/pro/admin/advanced.php:201
 msgctxt "option comment"
 msgid "recommended"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:202 lib/pro/admin/advanced.php:202
+#: lib/gpl/admin/advanced.php:203 lib/pro/admin/advanced.php:203
 msgctxt "option label"
-msgid "Allow Upscaling of WP Media Images"
+msgid "Allow Upscale of WP Media Images"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:207 lib/pro/admin/advanced.php:207
+#: lib/gpl/admin/advanced.php:208 lib/pro/admin/advanced.php:208
 msgctxt "option label"
-msgid "Maximum Image Upscale Percentage"
+msgid "Maximum Image Upscale Percent"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:213 lib/pro/admin/advanced.php:213
+#: lib/gpl/admin/advanced.php:214 lib/pro/admin/advanced.php:214
 msgctxt "option label"
 msgid "Enable Plugin Shortcode(s)"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:220 lib/pro/admin/advanced.php:220
+#: lib/gpl/admin/advanced.php:221 lib/pro/admin/advanced.php:221
 msgctxt "option label"
 msgid "Enable Plugin Widget(s)"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:225 lib/pro/admin/advanced.php:225
+#: lib/gpl/admin/advanced.php:226 lib/pro/admin/advanced.php:226
 msgctxt "option label"
 msgid "Enable WP Excerpt for Pages"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:229 lib/pro/admin/advanced.php:229
+#: lib/gpl/admin/advanced.php:230 lib/pro/admin/advanced.php:230
 msgctxt "option label"
 msgid "Enable WP Tags for Pages"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:241 lib/messages.php:747
-#: lib/pro/admin/advanced.php:238
+#: lib/gpl/admin/advanced.php:242 lib/messages.php:747
+#: lib/pro/admin/advanced.php:239
 msgctxt "option label"
 msgid "Object Cache Expiry"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:247 lib/pro/admin/advanced.php:244
+#: lib/gpl/admin/advanced.php:248 lib/pro/admin/advanced.php:245
 msgctxt "option label"
 msgid "Verify Peer SSL Certificate"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:253 lib/pro/admin/advanced.php:250
+#: lib/gpl/admin/advanced.php:254 lib/pro/admin/advanced.php:251
 msgctxt "option label"
 msgid "Report Cache Purge Count"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:266 lib/pro/admin/advanced.php:260
+#: lib/gpl/admin/advanced.php:267 lib/pro/admin/advanced.php:261
 msgctxt "option label"
 msgid "Preferred URL Shortening Service"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:270 lib/pro/admin/advanced.php:264
-msgctxt "option label"
-msgid "<em>Get Shortlink</em> Gives Shortened URL"
-msgstr ""
-
-#: lib/gpl/admin/advanced.php:275 lib/pro/admin/advanced.php:269
+#: lib/gpl/admin/advanced.php:272 lib/pro/admin/advanced.php:266
 msgctxt "option label"
 msgid "Minimum URL Length to Shorten"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:278 lib/pro/admin/advanced.php:272
+#: lib/gpl/admin/advanced.php:275 lib/pro/admin/advanced.php:269
 msgctxt "option comment"
 msgid "characters"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:282 lib/pro/admin/advanced.php:276
+#: lib/gpl/admin/advanced.php:277 lib/pro/admin/advanced.php:271
+msgctxt "option label"
+msgid "Use Shortened URL for WP Shortlink"
+msgstr ""
+
+#: lib/gpl/admin/advanced.php:283 lib/pro/admin/advanced.php:277
 msgctxt "metabox title"
 msgid "Bitly URL Shortener"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:284 lib/pro/admin/advanced.php:278
+#: lib/gpl/admin/advanced.php:285 lib/pro/admin/advanced.php:279
 msgctxt "option label"
 msgid "Bitly Username"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:289 lib/pro/admin/advanced.php:283
+#: lib/gpl/admin/advanced.php:290 lib/pro/admin/advanced.php:284
 msgctxt "option label"
 msgid "Bitly Generic Access Token"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:294 lib/pro/admin/advanced.php:288
+#: lib/gpl/admin/advanced.php:295 lib/pro/admin/advanced.php:289
 msgctxt "option label"
 msgid "or Bitly API Key (deprecated)"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:296 lib/pro/admin/advanced.php:290
+#: lib/gpl/admin/advanced.php:297 lib/pro/admin/advanced.php:291
 msgctxt "option comment"
 msgid "api key authentication is deprecated"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:300 lib/pro/admin/advanced.php:294
+#: lib/gpl/admin/advanced.php:301 lib/pro/admin/advanced.php:295
 msgctxt "metabox title"
 msgid "Google APIs"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:303 lib/pro/admin/advanced.php:297
+#: lib/gpl/admin/advanced.php:304 lib/pro/admin/advanced.php:298
 msgctxt "option label"
 msgid "Google Project App BrowserKey"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:308 lib/pro/admin/advanced.php:302
+#: lib/gpl/admin/advanced.php:309 lib/pro/admin/advanced.php:303
 msgctxt "option label"
 msgid "Google URL Shortener API is ON"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:315 lib/pro/admin/advanced.php:309
+#: lib/gpl/admin/advanced.php:316 lib/pro/admin/advanced.php:310
 msgctxt "metabox title"
 msgid "Ow.ly URL Shortener"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:318 lib/pro/admin/advanced.php:312
+#: lib/gpl/admin/advanced.php:319 lib/pro/admin/advanced.php:313
 msgctxt "option label"
 msgid "Ow.ly API Key"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:324 lib/pro/admin/advanced.php:318
+#: lib/gpl/admin/advanced.php:325 lib/pro/admin/advanced.php:319
 msgctxt "metabox title"
 msgid "Your Own URL Shortener (YOURLS)"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:327 lib/pro/admin/advanced.php:321
+#: lib/gpl/admin/advanced.php:328 lib/pro/admin/advanced.php:322
 msgctxt "option label"
 msgid "YOURLS API URL"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:332 lib/pro/admin/advanced.php:326
+#: lib/gpl/admin/advanced.php:333 lib/pro/admin/advanced.php:327
 msgctxt "option label"
 msgid "YOURLS Username"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:337 lib/pro/admin/advanced.php:331
+#: lib/gpl/admin/advanced.php:338 lib/pro/admin/advanced.php:332
 msgctxt "option label"
 msgid "YOURLS Password"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:342 lib/pro/admin/advanced.php:336
+#: lib/gpl/admin/advanced.php:343 lib/pro/admin/advanced.php:337
 msgctxt "option label"
 msgid "YOURLS Token"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:355 lib/gpl/admin/advanced.php:405
-#: lib/pro/admin/advanced.php:346 lib/pro/admin/advanced.php:393
+#: lib/gpl/admin/advanced.php:356 lib/gpl/admin/advanced.php:406
+#: lib/pro/admin/advanced.php:347 lib/pro/admin/advanced.php:394
 msgctxt "column title"
 msgid "Show"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:357 lib/gpl/admin/advanced.php:407
-#: lib/messages.php:663 lib/pro/admin/advanced.php:348
-#: lib/pro/admin/advanced.php:395
+#: lib/gpl/admin/advanced.php:358 lib/gpl/admin/advanced.php:408
+#: lib/messages.php:663 lib/pro/admin/advanced.php:349
+#: lib/pro/admin/advanced.php:396
 msgctxt "column title"
 msgid "Contact Field Name"
 msgstr ""
 
-#: lib/gpl/admin/advanced.php:359 lib/gpl/admin/advanced.php:409
-#: lib/messages.php:663 lib/pro/admin/advanced.php:350
-#: lib/pro/admin/advanced.php:397
+#: lib/gpl/admin/advanced.php:360 lib/gpl/admin/advanced.php:410
+#: lib/messages.php:663 lib/pro/admin/advanced.php:351
+#: lib/pro/admin/advanced.php:398
 msgctxt "column title"
 msgid "Profile Contact Label"
 msgstr ""
@@ -1067,7 +1085,7 @@ msgstr ""
 
 #: lib/gpl/admin/general.php:53 lib/pro/admin/general.php:57
 msgctxt "option label"
-msgid "Include Video Preview Image(s)"
+msgid "Include Video Preview Images"
 msgstr ""
 
 #: lib/gpl/admin/general.php:56 lib/pro/admin/general.php:60
@@ -1125,8 +1143,8 @@ msgctxt "option label"
 msgid "Twitter Card Description"
 msgstr ""
 
-#: lib/gpl/admin/meta.php:67 lib/gpl/admin/post.php:72 lib/meta.php:162
-#: lib/meta.php:179 lib/pro/admin/meta.php:82 lib/pro/admin/post.php:98
+#: lib/gpl/admin/meta.php:67 lib/gpl/admin/post.php:72 lib/meta.php:158
+#: lib/meta.php:174 lib/pro/admin/meta.php:82 lib/pro/admin/post.php:98
 msgctxt "option label"
 msgid "Sharing URL"
 msgstr ""
@@ -1219,7 +1237,7 @@ msgstr ""
 
 #: lib/gpl/admin/meta.php:177 lib/pro/admin/meta.php:192
 msgctxt "option label"
-msgid "Include Preview Image(s)"
+msgid "Include Preview Images"
 msgstr ""
 
 #: lib/gpl/admin/meta.php:192 lib/pro/admin/meta.php:210
@@ -1232,33 +1250,33 @@ msgctxt "option label"
 msgid "Article Topic"
 msgstr ""
 
-#: lib/gpl/admin/post.php:91 lib/meta.php:155 lib/post.php:392
+#: lib/gpl/admin/post.php:91 lib/meta.php:155 lib/post.php:410
 #: lib/pro/admin/post.php:118
 msgid "Save a draft version or publish the %s to update this value."
 msgstr ""
 
-#: lib/media.php:318
+#: lib/media.php:321
 msgid ""
 "The NextGEN Gallery integration module provided by %1$s is required to read "
 "information for image ID %2$s."
 msgstr ""
 
-#: lib/media.php:693
+#: lib/media.php:701
 msgid "Content"
 msgstr ""
 
-#: lib/media.php:912 lib/pro/util/checkimgdims.php:62
+#: lib/media.php:917 lib/pro/util/checkimgdims.php:67
 msgid "Media Library"
 msgstr ""
 
-#: lib/media.php:967
+#: lib/media.php:972
 msgid ""
 "%1$s image %2$s ignored &mdash; the resulting image of %3$s has an "
 "<strong>aspect ratio equal to/or greater than %4$d:1 allowed by the %5$s "
 "standard</strong>."
 msgstr ""
 
-#: lib/media.php:984
+#: lib/media.php:989
 msgid ""
 "%1$s image %2$s ignored &mdash; the resulting image of %3$s is "
 "<strong>smaller than the minimum of %4$s allowed by the %5$s standard</"
@@ -1420,8 +1438,8 @@ msgstr ""
 
 #: lib/messages.php:349
 msgid ""
-"Automatically recreate missing and/or incorrect images in the WordPress "
-"Media Library (default is checked)."
+"Automatically create missing and/or incorrect images in the WordPress Media "
+"Library (default is checked)."
 msgstr ""
 
 #: lib/messages.php:394
@@ -1433,8 +1451,8 @@ msgstr ""
 
 #: lib/messages.php:397
 msgid ""
-"The <em>Get Shortlink</em> button on Posts / Pages admin editing pages "
-"provides the shortened sharing URL instead of the default WordPress "
+"The <em>Get Shortlink</em> button and the shortlink meta tag on Posts / "
+"Pages provides the shortened sharing URL instead of the default WordPress "
 "shortlink URL."
 msgstr ""
 
@@ -2103,99 +2121,99 @@ msgctxt "preview image error"
 msgid "No Open Graph Image Found"
 msgstr ""
 
-#: lib/meta.php:158 lib/meta.php:175
+#: lib/meta.php:162 lib/meta.php:178
 msgctxt "option label"
-msgid "Short URL"
+msgid "Shortened URL"
 msgstr ""
 
-#: lib/meta.php:184
+#: lib/meta.php:183
 msgctxt "option label"
 msgid "Open Graph Example"
 msgstr ""
 
-#: lib/meta.php:277
+#: lib/meta.php:276
 msgctxt "option label"
 msgid "Facebook Debugger"
 msgstr ""
 
-#: lib/meta.php:277
+#: lib/meta.php:276
 msgid ""
 "Facebook, Pinterest, LinkedIn, Google+, and most social websites use Open "
 "Graph meta tags."
 msgstr ""
 
-#: lib/meta.php:277
+#: lib/meta.php:276
 msgid ""
 "The Facebook debugger allows you to refresh Facebook's cache, while also "
 "validating the Open Graph and Pinterest Rich Pin meta tags."
 msgstr ""
 
-#: lib/meta.php:277
+#: lib/meta.php:276
 msgid ""
 "The Facebook debugger remains the most stable and reliable method to verify "
 "Open Graph meta tags. <strong>You may have to click the \"Fetch new scrape "
 "information\" button several times to refresh Facebook's cache</strong>."
 msgstr ""
 
-#: lib/meta.php:277
+#: lib/meta.php:276
 msgctxt "submit button"
 msgid "Validate Open Graph"
 msgstr ""
 
-#: lib/meta.php:279
+#: lib/meta.php:278
 msgctxt "option label"
 msgid "Google Structured Data Testing Tool"
 msgstr ""
 
-#: lib/meta.php:279
+#: lib/meta.php:278
 msgid ""
 "Verify that Google can correctly parse your structured data markup (meta "
 "tags, Schema, Microdata, and social JSON-LD markup) for Google Search and "
 "Google+."
 msgstr ""
 
-#: lib/meta.php:279
+#: lib/meta.php:278
 msgctxt "submit button"
 msgid "Validate Data Markup"
 msgstr ""
 
-#: lib/meta.php:281
+#: lib/meta.php:280
 msgctxt "option label"
 msgid "Pinterest Rich Pin Validator"
 msgstr ""
 
-#: lib/meta.php:281
+#: lib/meta.php:280
 msgid ""
 "Validate the Open Graph / Rich Pin meta tags and apply to have them shown on "
 "Pinterest zoomed pins."
 msgstr ""
 
-#: lib/meta.php:281
+#: lib/meta.php:280
 msgctxt "submit button"
 msgid "Validate Rich Pins"
 msgstr ""
 
-#: lib/meta.php:283
+#: lib/meta.php:282
 msgctxt "option label"
 msgid "Twitter Card Validator"
 msgstr ""
 
-#: lib/meta.php:283
+#: lib/meta.php:282
 msgid ""
 "The Twitter Card Validator does not accept query arguments &ndash; copy-"
 "paste the following sharing URL into the validation input field."
 msgstr ""
 
-#: lib/meta.php:283
+#: lib/meta.php:282
 msgctxt "submit button"
 msgid "Validate Twitter Card"
 msgstr ""
 
-#: lib/meta.php:464
+#: lib/meta.php:463
 msgid "Nonce token validation failed for the submitted form (update ignored)."
 msgstr ""
 
-#: lib/meta.php:577
+#: lib/meta.php:576
 msgid "Reload to View"
 msgstr ""
 
@@ -2209,72 +2227,71 @@ msgctxt "image size label"
 msgid "Pinterest Rich Pin"
 msgstr ""
 
-#: lib/options.php:200
+#: lib/options.php:202
 msgid ""
-"Free version non-standard value found for the '%s' option - resetting to its "
-"default value."
+"Non-standard value found for \"%s\" option - resetting to default value."
 msgstr ""
 
-#: lib/options.php:256
+#: lib/options.php:266
 msgid "WordPress could not find an entry for %s in the options table."
 msgstr ""
 
-#: lib/options.php:259
+#: lib/options.php:269
 msgid ""
 "WordPress returned a non-array value when reading %s from the options table."
 msgstr ""
 
-#: lib/options.php:262
+#: lib/options.php:272
 msgid ""
 "WordPress returned an empty array when reading %s from the options table."
 msgstr ""
 
-#: lib/options.php:264
+#: lib/options.php:274
 msgid ""
 "WordPress returned an unknown condition when reading %s from the options "
 "table."
 msgstr ""
 
-#: lib/options.php:275
+#: lib/options.php:285
 msgid ""
 "The plugin settings have been returned to their default values &mdash; <a "
 "href=\"%s\">please review and save the new settings</a>."
 msgstr ""
 
-#: lib/options.php:334
+#: lib/options.php:344
 msgid ""
 "The values for '%1$s' and  '%2$s' have an aspect ratio that is equal to / or "
 "greater than %3$s:1 &mdash; resetting these options to their default values."
 msgstr ""
 
-#: lib/options.php:380
+#: lib/options.php:390
 msgid ""
 "The Facebook App ID must be numeric and 32 characters or less in length "
 "&mdash; the value of \"%s\" is not valid."
 msgstr ""
 
-#: lib/options.php:429
+#: lib/options.php:439
 msgid "Plugin settings (%s) have been upgraded and saved."
 msgstr ""
 
-#: lib/post.php:301
+#: lib/post.php:319
 msgid ""
 "can be disabled in the <a href=\"%s\">WP / Theme Integration</a> Advanced "
 "settings"
 msgstr ""
 
-#: lib/post.php:305
+#: lib/post.php:323
 msgid "Checking %1$s for duplicate meta tags"
 msgstr ""
 
-#: lib/post.php:320
+#: lib/post.php:338
 msgid ""
 "Possible conflict detected &mdash; your theme or another plugin is adding a "
 "<code>%1$s</code> HTML tag to the head section of this webpage."
 msgstr ""
 
-#: lib/post.php:351 lib/profile/social-settings.php:27 lib/term.php:255
-#: lib/user.php:242
+#: lib/post.php:369 lib/profile/social-settings.php:27 lib/term.php:257
+#: lib/user.php:245
 msgctxt "metabox title"
 msgid "Social Settings"
 msgstr ""
@@ -2324,11 +2341,11 @@ msgstr ""
 msgid "NextGEN Gallery"
 msgstr ""
 
-#: lib/pro/media/ngg.php:225 lib/pro/util/checkimgdims.php:66
+#: lib/pro/media/ngg.php:225 lib/pro/util/checkimgdims.php:71
 msgid "cropped"
 msgstr ""
 
-#: lib/pro/media/ngg.php:227 lib/pro/util/checkimgdims.php:68
+#: lib/pro/media/ngg.php:227 lib/pro/util/checkimgdims.php:73
 msgid ""
 "%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small "
 "for the required %4$s image dimensions."
@@ -2346,24 +2363,24 @@ msgid ""
 "%6$s image size."
 msgstr ""
 
-#: lib/pro/util/checkimgdims.php:54
+#: lib/pro/util/checkimgdims.php:59
 msgid "full size original"
 msgstr ""
 
-#: lib/pro/util/checkimgdims.php:109
+#: lib/pro/util/checkimgdims.php:119
 msgid ""
 "%1$s includes an additional 'data-wp-pid' attribute for Media Library images "
 "&mdash; if this image was selected from the Media Library before %1$s was "
 "activated, try removing and adding the image back to your content."
 msgstr ""
 
-#: lib/pro/util/checkimgdims.php:110
+#: lib/pro/util/checkimgdims.php:120
 msgid ""
 "Image %1$s in content ignored &mdash; the image width / height is too small "
 "for the required %2$s image dimensions."
 msgstr ""
 
-#: lib/pro/util/shorten.php:166
+#: lib/pro/util/shorten.php:165
 msgid ""
 "Incomplete and/or missing %s service API credentials for URL shortening."
 msgstr ""
@@ -2377,13 +2394,13 @@ msgctxt "image size label"
 msgid "Google / Schema Image"
 msgstr ""
 
-#: lib/schema.php:683
+#: lib/schema.php:682
 msgid ""
 "The \"%1$s\" Organization Logo Image is missing and required for the Schema "
 "%2$s markup."
 msgstr ""
 
-#: lib/schema.php:686
+#: lib/schema.php:685
 msgid ""
 "The \"%1$s\" Organization Banner (600x60px) is missing and required for the "
 "Schema %2$s markup."
@@ -2867,7 +2884,7 @@ msgstr ""
 
 #: lib/submenu/general.php:404
 msgctxt "option label"
-msgid "<em>Large Image</em> Card Image Dimensions"
+msgid "<em>Large Image</em> Card Img Dimensions"
 msgstr ""
 
 #: lib/submenu/general.php:412
@@ -2900,15 +2917,15 @@ msgctxt "image size label"
 msgid "Twitter Large Image Card"
 msgstr ""
 
-#: lib/user.php:409
+#: lib/user.php:412
 msgid "AIM"
 msgstr ""
 
-#: lib/user.php:410
+#: lib/user.php:413
 msgid "Yahoo IM"
 msgstr ""
 
-#: lib/user.php:411
+#: lib/user.php:414
 msgid "Jabber / Google Talk"
 msgstr ""
 
@@ -2980,7 +2997,7 @@ msgid ""
 "default value."
 msgstr ""
 
-#: lib/util.php:614
+#: lib/util.php:616
 msgid ""
 "The %1$s PHP class is missing - please contact your hosting provider to "
 "install the missing %1$s PHP class."
@@ -3010,15 +3027,15 @@ msgctxt "option comment"
 msgid "unhide these rows"
 msgstr ""
 
-#: wpsso.php:254
+#: wpsso.php:253
 msgid "HTML debug mode is active (transient cache could NOT be disabled)."
 msgstr ""
 
-#: wpsso.php:255
+#: wpsso.php:254
 msgid "HTML debug mode is active (transient cache use is disabled)."
 msgstr ""
 
-#: wpsso.php:256
+#: wpsso.php:255
 msgid "Informational debug messages are being added as hidden HTML comments."
 msgstr ""
 

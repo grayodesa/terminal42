@@ -291,29 +291,36 @@ class wordfenceScanner {
 							$regexMatched = false;
 						foreach ($this->patterns['rules'] as $rule) {
 							$type = (isset($rule[4]) && !empty($rule[4])) ? $rule[4] : 'server';
+							$logOnly = (isset($rule[5]) && !empty($rule[5])) ? $rule[5] : false;
 							if ($type == 'server' && !$treatAsBinary) { continue; }
 							else if (($type == 'both' || $type == 'browser') && $fileExt == 'js') { $extraMsg = ''; }
 							else if (($type == 'both' || $type == 'browser') && !$treatAsBinary) { continue; }
 							
-							if (preg_match('/(' . $rule[2] . ')/i', $data, $matches)) {
+							if (preg_match('/(' . $rule[2] . ')/i', $data, $matches, PREG_OFFSET_CAPTURE)) {
 								if (!$this->isSafeFile($this->path . $file)) {
+									$matchString = $matches[1][0];
+									$matchOffset = $matches[1][1];
+									$beforeString = substr($data, max(0, $matchOffset - 100), $matchOffset - max(0, $matchOffset - 100));
+									$afterString = substr($data, $matchOffset + strlen($matchString), 100);
+									if (!$logOnly) {
 										$this->addResult(array(
 											'type' => 'file',
 											'severity' => 1,
 											'ignoreP' => $this->path . $file,
 											'ignoreC' => $fileSum,
 											'shortMsg' => "File appears to be malicious: " . esc_html($file),
-											'longMsg' => "This file appears to be installed by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans. The text we found in this file that matches a known malicious file is: <strong style=\"color: #F00;\">\"" . esc_html((strlen($matches[1]) > 200 ? substr($matches[1], 0, 200) . '...' : $matches[1])) . "\"</strong>. The infection type is: <strong>" . esc_html($rule[3]) . '</strong>' . $extraMsg,
+											'longMsg' => "This file appears to be installed by a hacker to perform malicious activity. If you know about this file you can choose to ignore it to exclude it from future scans. The text we found in this file that matches a known malicious file is: <strong style=\"color: #F00;\">\"" . esc_html((strlen($matchString) > 200 ? substr($matchString, 0, 200) . '...' : $matchString)) . "\"</strong>. The infection type is: <strong>" . esc_html($rule[3]) . '</strong>' . $extraMsg,
 											'data' => array_merge(array(
 												'file' => $file,
 											), $dataForFile),
 										));
-										$regexMatched = true;
-										$this->scanEngine->recordMetric('malwareSignature', $rule[0], array('file' => $file, 'match' => $matches[1]), false);
-										break;
 									}
+									$regexMatched = true;
+									$this->scanEngine->recordMetric('malwareSignature', $rule[0], array('file' => $file, 'match' => $matchString, 'before' => $beforeString, 'after' => $afterString), false);
+									break;
 								}
 							}
+						}
 						if ($regexMatched) { break; }
 						}
 					if ($treatAsBinary && wfConfig::get('scansEnabled_highSense')) {

@@ -35,6 +35,8 @@ if ( ! class_exists( 'WpssoProMediaWistia' ) ) {
 
 		// receives an array of arrays
 		public function filter_content_videos( $videos = false, $content = '' ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 			/*
 			 * examples:
 			 *	<div id="wistia_wb36s0vwcg" class="wistia_embed" style="width:640px;height:360px;">&nbsp;</div>
@@ -90,6 +92,8 @@ if ( ! class_exists( 'WpssoProMediaWistia' ) ) {
 		}
 
 		public function filter_video_info( $og_video, $embed_url, $embed_width = 0, $embed_height = 0 ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 
 			// if there's already a video defined (youtube or vimeo, for example), then go with that
 			if ( empty( $embed_url ) ||

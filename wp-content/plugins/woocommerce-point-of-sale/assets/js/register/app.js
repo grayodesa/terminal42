@@ -11,7 +11,6 @@ var changeProductQuantity = null;
 
 
 jQuery(document).ready(function($) {
-
 // ajaxSetup is global, but we use it to ensure JSON is valid once returned.
 $.ajaxSetup( {
     dataFilter: function( raw_response, dataType ) {
@@ -420,12 +419,12 @@ $.ajaxSetup( {
         },
 	    getServerProductsCount : function(){            
             var filter = "?filter[updated_at_min]="+APP.lastUpdate;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'products/count'+filter);
+            var e = $.getJSON(wc_pos_params.wc_api_url+'products/count/'+filter);
             return e;
         },
         getServerProducts :function(limit, offset){
             var filter = "?filter[limit]=" + limit + "&filter[offset]=" + offset + "&filter[updated_at_min]="+APP.lastUpdate;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'products'+filter, {
+            var e = $.getJSON(wc_pos_params.wc_api_url+'products/'+filter, {
                 action : "wc_pos_json_api",
             });
             return e;
@@ -447,7 +446,7 @@ $.ajaxSetup( {
                 filter['q'] = search;
             }
 
-            var e = $.getJSON(wc_pos_params.wc_api_url+'orders/count', {
+            var e = $.getJSON(wc_pos_params.wc_api_url+'orders/count/', {
                 action : "wc_pos_json_api",
                 reg_id : reg_id,
                 filter : filter,
@@ -475,7 +474,7 @@ $.ajaxSetup( {
             }
 
 
-            var e = $.getJSON(wc_pos_params.wc_api_url+'orders', {
+            var e = $.getJSON(wc_pos_params.wc_api_url+'orders/', {
                 action : "wc_pos_json_api",
                 reg_id : opt.reg_id,
                 status : wc_pos_params.load_order_status,
@@ -509,12 +508,12 @@ $.ajaxSetup( {
 
         getServerCouponsCount : function(){            
             var filter = "?filter[updated_at_min]="+APP.lastUpdateCoupon;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'coupons/count'+filter);
+            var e = $.getJSON(wc_pos_params.wc_api_url+'coupons/count/'+filter);
             return e;
         },
         getServerCoupons :function(limit, offset){
             var filter = "?filter[limit]=" + limit + "&filter[offset]=" + offset + "&filter[updated_at_min]="+APP.lastUpdateCoupon;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'coupons'+filter);
+            var e = $.getJSON(wc_pos_params.wc_api_url+'coupons/'+filter);
             return e;
         },
         customersUpdate: function(limit, offset, CustomersCount){
@@ -541,7 +540,7 @@ $.ajaxSetup( {
         },		
         getServerCustomersCount : function(){            
             var filter = "?filter[updated_at_min]=" + APP.lastUpdateCustomer;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'customers/count'+filter,{
+            var e = $.getJSON(wc_pos_params.wc_api_url+'customers/count/'+filter,{
                 action : "wc_pos_json_api",
                 role : "all",
             });
@@ -549,7 +548,7 @@ $.ajaxSetup( {
         },
         getServerCustomers :function(limit, offset){
             var filter = "?filter[limit]=" + limit + "&filter[offset]=" + offset + "&filter[updated_at_min]="+APP.lastUpdateCustomer;
-            var e = $.getJSON(wc_pos_params.wc_api_url+'customers'+filter,{
+            var e = $.getJSON(wc_pos_params.wc_api_url+'customers/'+filter,{
                 action : "wc_pos_json_api",
                 role : "all",
             });
@@ -573,7 +572,6 @@ $.ajaxSetup( {
         			CART.empty_cart(false);
 
         			POS_TRANSIENT.order_id = order.id;
-                    console.log(order.stock_reduced);
 
         			$.each(order.line_items, function(index, item) {
                         
@@ -1314,7 +1312,7 @@ $.ajaxSetup( {
             APP.processing_payment = true;
 
             $.ajax({
-                url: wc_api_url,
+                url: wc_api_url + '/',
                 /*beforeSend: function(xhr) {
                   xhr.setRequestHeader("Authorization", "Basic " + btoa("username:password")); 
                 },*/
@@ -1417,7 +1415,7 @@ $.ajaxSetup( {
 
                 var pager = getOrdersListPager(opt);
                 $('#modal-retrieve_sales .wrap-button').html(pager);
-                
+                console.log(ordersData.orders);
                 var source   = $('#tmpl-retrieve-sales-orders-list').html();
                 var template = Handlebars.compile(source);
                 var html     = template( ordersData.orders );
@@ -2697,7 +2695,8 @@ $.ajaxSetup( {
                         openModal('modal-order_comments');
                     }
                     $('#payment_switch').bootstrapSwitch('state', print_receipt);
-                    $('#payment_email_receipt').bootstrapSwitch('state', email_receipt);
+                    var _email_receipt = email_receipt && !CUSTOMER.customer ? false: email_receipt
+                    $('#payment_email_receipt').bootstrapSwitch('state', _email_receipt);
 					openModal('modal-order_payment');                    
                 }
                 
@@ -3031,6 +3030,8 @@ function searchProduct ( barcode ) {
                 }else{
                     APP.addToCart(s['id']);
                 }
+            }else{
+                APP.showNotice(pos_i18n[36], 'error');
             }
         }else{
             var q = APP.db.from( 'products' ).where('sku', '=', barcode);
@@ -3043,6 +3044,8 @@ function searchProduct ( barcode ) {
                         if( objs.length > 0){
                             var variation = objs[0];
                             APP.addToCart(variation.prod_id, 1, variation.id);
+                        }else{
+                            APP.showNotice(pos_i18n[36], 'error');
                         }
                     });
                 }
@@ -3050,7 +3053,7 @@ function searchProduct ( barcode ) {
         }
 
     }else{
-        APP.showNotice(pos_i18n[2], 'error');
+        APP.showNotice(pos_i18n[36], 'error');
         return;
     }
 }

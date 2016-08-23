@@ -31,7 +31,7 @@ if ( ! class_exists( 'WpssoJsonProHeadArticle' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_article' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_article' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
@@ -43,7 +43,7 @@ if ( ! class_exists( 'WpssoJsonProHeadArticle' ) ) {
 		 * http://schema.org/Report
 		 * http://schema.org/SocialMediaPosting
 		 */
-		public function filter_json_data_http_schema_org_article( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_article( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();

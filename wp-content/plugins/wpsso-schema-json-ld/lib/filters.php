@@ -69,7 +69,7 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 		 * Does not add images, videos, author or organization markup since this will
 		 * depend on the Schema type (Article, Product, Place, etc.).
 		 */
-		public function filter_json_data_http_schema_org( $json_data, $use_post, $mod, $mt_og, $user_id, $is_main ) {
+		public function filter_json_data_http_schema_org( $json_data, $mod, $mt_og, $user_id, $is_main ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
@@ -86,8 +86,6 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 			 * Property:
 			 *	name
 			 *
-			 * get_title( $textlen = 70, $trailing = '', $use_post = false, $use_cache = true,
-			 *	$add_hashtags = false, $encode = true, $md_idx = 'og_title' ) {
 			 */
 			$ret['name'] = $this->p->webpage->get_title( $this->p->options['og_title_len'], 
 				'...', $mod, true, false, true, 'schema_title' );
@@ -96,8 +94,6 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 			 * Property:
 			 *	description
 			 *
-			 * get_description( $textlen = 156, $trailing = '...', $use_post = false, $use_cache = true,
-			 *	$add_hashtags = true, $encode = true, $md_idx = 'og_desc' )
 			 */
 			$ret['description'] = $this->p->webpage->get_description( $this->p->options['schema_desc_len'], 
 				'...', $mod, true, false, true, 'schema_desc' );

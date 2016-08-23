@@ -8,9 +8,17 @@
         <td class="alignright"><p class="label">Enable general event setup</p></td>
         <td>
           <input type="checkbox" name="pys[general][general_event_enabled]" value="1"
-            <?php echo pys_checkbox_state( 'general', 'general_event_enabled' ); ?> ></input>
+            <?php echo pys_checkbox_state( 'general', 'general_event_enabled' ); ?> >
         </td>
       </tr>
+
+	    <tr class="tall">
+		    <td></td>
+		    <td>
+			    <input type="checkbox" name="" value="1" class="disabled">Track tags - <strong>This is a PRO feature</strong> - <a href="http://www.pixelyoursite.com/facebook-pixel-plugin">Update NOW</a>
+			    <span class="help">Will pull <code>tags</code> param on posts and custom post types</span>
+		    </td>
+	    </tr>
       
       <tr>
         <td class="alignright"><p class="label">General event name</p></td>
@@ -120,7 +128,7 @@
         <td class="alignright"><p class="label">Enable Search event setup</p></td>
         <td>
           <input type="checkbox" name="pys[general][search_event_enabled]" value="1"
-            <?php echo pys_checkbox_state( 'general', 'search_event_enabled' ); ?> ></input>
+            <?php echo pys_checkbox_state( 'general', 'search_event_enabled' ); ?> >
         </td>
       </tr>
       
@@ -154,11 +162,19 @@
         <td class="alignright"><?php echo $role_name; ?></td>
         <td>
           <input type="checkbox" name="pys[general][disable_for_<?php echo $role_value; ?>]" value="1"
-            <?php echo pys_checkbox_state( 'general', 'disable_for_' . $role_value ); ?> ></input>
+            <?php echo pys_checkbox_state( 'general', 'disable_for_' . $role_value ); ?> >
         </td>
       </tr>
         
       <?php endforeach; ?>
+
+	    <tr>
+		    <td class="alignright">Guest</td>
+		    <td>
+			    <input type="checkbox" name="pys[general][disable_for_guest]" value="1"
+				    <?php echo pys_checkbox_state( 'general', 'disable_for_guest' ); ?> >
+		    </td>
+	    </tr>
       
     </table>
     

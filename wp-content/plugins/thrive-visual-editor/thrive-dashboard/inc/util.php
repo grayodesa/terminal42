@@ -195,5 +195,5 @@ function tve_dash_is_crawler() {
 	$uas_list = require plugin_dir_path( __FILE__ ) . '_crawlers.php';
 	$regexp   = '#(' . implode( '|', $uas_list ) . ')#i';
 
-	return $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent );
+	return apply_filters( 'tve_dash_is_crawler', $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent ) );
 }

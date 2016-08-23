@@ -131,14 +131,14 @@ jQuery(document).ready(function($){
 				
 				switch (network) {
 				case "facebook":
-					var facebook_url	= "https://graph.facebook.com/fql?q=SELECT%20like_count,%20total_count,%20share_count,%20click_count,%20comment_count%20FROM%20link_stat%20WHERE%20url%20=%20%22"+url+"%22";
+					var facebook_url = "https://graph.facebook.com/?id="+url;
 					$.getJSON(facebook_url)
 					.done(function(data){
 						if (fb_value) {
-							counter_display(counter_pos, operating_elements['facebook'+instance_id], operating_elements['facebook_inside'+instance_id], data.data[0].total_count);
+							counter_display(counter_pos, operating_elements['facebook'+instance_id], operating_elements['facebook_inside'+instance_id], data['share'].share_count);
 						}
 						else {
-							counter_display(counter_pos, operating_elements['facebook'+instance_id], operating_elements['facebook_inside'+instance_id], data.data[0].share_count);	
+							counter_display(counter_pos, operating_elements['facebook'+instance_id], operating_elements['facebook_inside'+instance_id], data['share'].share_count);	
 						}
 					});
 					break;

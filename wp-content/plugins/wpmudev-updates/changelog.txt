@@ -5,6 +5,13 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+4.1.2 - 08/17/2016 - Aaron
+----------------------------------------------------------------------
+- WP 4.6 compatibility fixes
+- Add support for upcoming Upfront Builder plugin (dependency management)
+- Fix PHP7 compatibility issue on system info page
+- Use new changelog on single site themes page
+
 4.1.1 - 07/21/2016 - Aaron
 ----------------------------------------------------------------------
 - Enable shiny updates on core plugins list for WPMU DEV plugins
@@ -398,4 +405,4 @@ Added option to disable admin notices.
 Initial Release.
 
 
-373982-1469171938-au
+373982-1471506831-au

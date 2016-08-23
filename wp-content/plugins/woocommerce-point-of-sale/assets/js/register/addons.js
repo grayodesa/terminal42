@@ -273,7 +273,48 @@ jQuery(document).ready(function($) {
                       });
                       return false;
                 break;
+                case 'realex':
+                    var data = {
+                        'realex_accountNumber'   : jQuery('#realex_accountNumber').val(),
+                        'realex_cardType'        : jQuery('#realex_cardType').val(),
+                        'realex_expirationMonth' : jQuery('#realex_expirationMonth').val(),
+                        'realex_expirationYear'  : jQuery('#realex_expirationYear').val(),
+                        'realex_cvNumber'        : jQuery('#realex_cvNumber').length ? jQuery('#realex_cvNumber').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                case 'braintree':
+                    var data = {
+                        'braintree-cc-number'    : jQuery('#braintree-cc-number').val(),
+                        'braintree-cc-exp-month' : jQuery('#braintree-cc-exp-month').val(),
+                        'braintree-cc-exp-year'  : jQuery('#braintree-cc-exp-year').val(),
+                        'braintree-cc-cvv'       : jQuery('#braintree-cc-cvv').length ? jQuery('#braintree-cc-cvv').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;                
+
                 case 'authorize_net_cim':
+                    var data = {
+                        'wc-authorize-net-cim-credit-card-account-number': jQuery('#wc-authorize-net-cim-credit-card-account-number').val(),
+                        'wc-authorize-net-cim-credit-card-expiry'        : jQuery('#wc-authorize-net-cim-credit-card-expiry').val(),
+                        'wc-authorize-net-cim-credit-card-csc'           : jQuery('#wc-authorize-net-cim-credit-card-csc').length ? jQuery('#wc-authorize-net-cim-credit-card-csc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
                 case 'authorize_net_cim_credit_card':
                     var data = {
                         'wc-authorize-net-cim-credit-card-account-number': jQuery('#wc-authorize-net-cim-credit-card-account-number').val(),
@@ -331,6 +372,93 @@ jQuery(document).ready(function($) {
                     APP.processPayment(cart, true);
                     return false;
                 break;
+                case 'authorize_net_aim_echeck':                    
+                    var data = {
+                        'wc-authorize-net-aim-echeck-routing-number' : jQuery('#wc-authorize-net-aim-echeck-routing-number').val(),
+                        'wc-authorize-net-aim-echeck-account-number' : jQuery('#wc-authorize-net-aim-echeck-account-number').val(),
+                        'wc-authorize-net-aim-echeck-account-type'   : jQuery('#wc-authorize-net-aim-echeck-account-type').val()
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                case 'credomatic_aim':
+                    var data = {
+                        'credomatic_aim-card-number' : jQuery('#credomatic_aim-card-number').val(),
+                        'credomatic_aim-card-expiry' : jQuery('#credomatic_aim-card-expiry').val(),
+                        'credomatic_aim-card-cvc'    : jQuery('#credomatic_aim-card-cvc').length ? jQuery('#credomatic_aim-card-cvc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                case 'paytrace':
+                    var data = {
+                        'paytrace-card-number' : jQuery('#paytrace-card-number').val(),
+                        'paytrace-card-type'   : jQuery('#paytrace-card-type').val(),
+                        'paytrace-card-expiry' : jQuery('#paytrace-card-expiry').val(),
+                        'paytrace-card-cvc'    : jQuery('#paytrace-card-cvc').length ? jQuery('#paytrace-card-cvc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                case 'paypal_pro':
+                    var data = {
+                        'paypal_pro-card-number' : jQuery('#paypal_pro-card-number').val(),
+                        'paypal_pro-card-expiry' : jQuery('#paypal_pro-card-expiry').val(),
+                        'paypal_pro-card-cvc'    : jQuery('#paypal_pro-card-cvc').length ? jQuery('#paypal_pro-card-cvc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                case 'paypal_pro_payflow':
+                    var data = {
+                        'paypal_pro_payflow-card-number' : jQuery('#paypal_pro_payflow-card-number').val(),
+                        'paypal_pro_payflow-card-expiry' : jQuery('#paypal_pro_payflow-card-expiry').val(),
+                        'paypal_pro_payflow-card-cvc'    : jQuery('#paypal_pro_payflow-card-cvc').length ? jQuery('#paypal_pro_payflow-card-cvc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
+                default:
+                    var $wrap = $('#modal-order_payment .popup_section').filter('#'+payment_method);
+                    if( $('.wc-credit-card-form-card-number', $wrap).length ){
+
+                        $('.wc-credit-card-form-card-number', $wrap).val(cardData.account);
+                        $('.wc-credit-card-form-card-expiry', $wrap).val(cardData.exp_month+'/'+cardData.s_exp_year);
+                        $('.wc-credit-card-form-card-cvc', $wrap).focus();
+                        var data = {
+                            'wc-credit-card-form-card-number' : jQuery('.wc-credit-card-form-card-number', $wrap).val(),
+                            'wc-credit-card-form-card-expiry' : jQuery('.wc-credit-card-form-card-expiry', $wrap).val(),
+                            'wc-credit-card-form-card-cvc'    : jQuery('.wc-credit-card-form-card-cvc', $wrap).length ? jQuery('.wc-credit-card-form-card-cvc', $wrap).val() : '',
+                        };
+                        if( typeof cart.order.create_post == 'undefined'){
+                            cart.order.create_post = [];
+                        }
+                        cart.order.create_post.push( data );
+                        APP.processPayment(cart, true);
+                        return false;
+                        
+                    }
+                    break;
             }
             return cart;
         },

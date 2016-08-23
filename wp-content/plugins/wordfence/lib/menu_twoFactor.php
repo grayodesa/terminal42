@@ -25,7 +25,15 @@
 	</div>
 
 <?php } ?>
-
+	
+	<?php
+	if (!wfConfig::get('loginSecurityEnabled')) {
+		$url = network_admin_url('admin.php?page=WordfenceSecOpt');
+		?>
+		<div class="notice notice-error"><p>The login security option is currently disabled. This will prevent your website from enforcing two factor authentication for any users configured below. Visit the <a href="<?php echo esc_url($url); ?>">Options page</a> to enable login security.</p></div> 
+		<?php
+	}
+	?>
 	<div class="wordfenceWrap" style="margin: 20px 20px 20px 30px;">
 		<h2>Enable Cellphone Sign-in</h2>
 		<p><em>Our Cellphone Sign-in uses a technique called "Two Factor Authentication" which is used by banks, government agencies and military world-wide as one of the most secure forms of remote system authentication. We recommend you enable Cellphone Sign-in for all Administrator level accounts.</em></p>

@@ -188,6 +188,9 @@ auEa+7b+FGTKs7dUo2BNGR7OVifK4GZ8w/ajS0TelhrSRi3BBQCGXLzUO/UURUAh
 		} catch (wfWAFBlockSQLiException $e) {
 			$this->eventBus->blockSQLi($ip, $e);
 			$this->blockAction($e);
+			
+		} catch (wfWAFLogException $e) {
+			$this->logAction($e);
 		}
 
 		$this->runCron();
@@ -736,6 +739,10 @@ HTML
 		header('HTTP/1.0 403 Forbidden');
 		exit($this->getBlockedMessage());
 	}
+	
+	public function logAction($e) {
+		$this->getStorageEngine()->logAttack(array('logged'), $e->getParamKey(), $e->getParamValue(), $this->getRequest());
+	}
 
 	/**
 	 * @return string
@@ -888,6 +895,9 @@ HTML
 						if (is_array($jsonData) && array_key_exists('success', $jsonData)) {
 							$this->getStorageEngine()->truncateAttackData();
 							$this->getStorageEngine()->unsetConfig('attackDataNextInterval');
+						}
+						if (array_key_exists('data', $jsonData) && array_key_exists('watchedIPList', $jsonData['data'])) {
+							$this->getStorageEngine()->setConfig('watchedIPs', $jsonData['data']['watchedIPList']);
 						}
 					}
 				} else if (is_string($response->getBody()) && preg_match('/next check in: ([0-9]+)/', $response->getBody(), $matches)) {
@@ -1538,6 +1548,9 @@ class wfWAFBlockXSSException extends wfWAFRunException {
 }
 
 class wfWAFBlockSQLiException extends wfWAFRunException {
+}
+
+class wfWAFLogException extends wfWAFRunException {
 }
 
 class wfWAFBuildRulesException extends wfWAFException {

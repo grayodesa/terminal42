@@ -18,6 +18,7 @@ whitelistParam(url='/.*/', param=request.body['excerpt'])
 whitelistParam(url='/wp-comments-post\.php$/i', param=request.body['comment'], rules=[3, 12])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['content'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['data'])
+whitelistParam(url='/\/wp\-load\.php$/i', param=request.body['params']['files'], rules=[9])
 whitelistParam(url='/\/wp-admin\/(?:network\/)?(?:plugin(?:s|-install)|edit)\.php$/i', param=request.queryString['s'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['whitelistedPath'])
 whitelistParam(url='/\/wp-admin\/admin-ajax\.php$/i', param=request.body['whitelistedParam'])
@@ -97,11 +98,14 @@ xssRegex = '/(?:
 if (notEquals('', request.body.ure_other_roles) and match('#/wp\-admin/(network/)?(profile|user-new)\.php#i', request.path) and currentUserIsNot('administrator', server.empty)):
 	block(id=18, category='priv-esc', description='User Roles Manager Privilege Escalation <= 4.24', whitelist=0)
 
-if ((match('#/wp\-admin/(network/)?(post|profile|user-new|settings)\.php$#i', server.script_filename)) or (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (equals('wordfence_loadLiveTraffic', request.body.action) or equals('wordfence_ticker', request.body.action)))):
+if ((match('#/wp\-admin/(network/)?(post|profile|user-new|settings)\.php$#i', server.script_filename)) or (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (equals('wordfence_loadLiveTraffic', request.body.action) or equals('wordfence_ticker', request.body.action) or (currentUserIs('administrator', server.empty) and (equals('install-plugin', request.body.action) or equals('update-plugin', request.body.action) or equals('delete-plugin', request.body.action) or equals('search-plugins', request.body.action) or equals('search-install-plugins', request.body.action) or equals('activate-plugin', request.body.action) or equals('update-theme', request.body.action) or equals('delete-theme', request.body.action) or equals('install-theme', request.body.action)))))):
 	allow(id=1, category='whitelist', description='Whitelisted URL')
 
-if (match('/\/wp\-admin[\/]+admin\-ajax\.php/', request.path) and (((equals('revslider_show_image', request.queryString.action) or equals('nopriv_revslider_show_image', request.queryString.action)) and match('/\.php$/i', request.queryString.img)) or ((equals('revslider_show_image', request.body.action) or equals('nopriv_revslider_show_image', request.body.action)) and match('/\.php$/i', request.body.img)))):
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (((equals('revslider_show_image', request.queryString.action) or equals('nopriv_revslider_show_image', request.queryString.action)) and match('/\.php$/i', request.queryString.img)) or ((equals('revslider_show_image', request.body.action) or equals('nopriv_revslider_show_image', request.body.action)) and match('/\.php$/i', request.body.img)))):
 	block(id=2, category='lfi', description='Slider Revolution: Local File Inclusion', whitelist=0)
+
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and (((equals('revslider_ajax_action', request.queryString.action) or equals('nopriv_revslider_ajax_action', request.queryString.action)) and equals('update_plugin', request.queryString.client_action)) or ((equals('revslider_ajax_action', request.body.action) or equals('nopriv_revslider_ajax_action', request.body.action)) and equals('update_plugin', request.body.client_action))) and currentUserIsNot('administrator', server.empty)):
+	block(id=60, category='file_upload', description='Slider Revolution: Arbitrary File Upload', whitelist=0)
 
 if (match('/dzs\-videogallery[\/]+admin[\/]+(?:playlist|tag)seditor[\/]+popup\.php/', request.path) and contains('\'', request.queryString.initer)):
 	blockXSS(id=15, category='xss', description='dzs-videogallery 8.80 XSS HTML injection in inline JavaScript', whitelist=0)
@@ -111,6 +115,12 @@ if (match('/simple-ads-manager[\/]+sam-ajax-loader\.php/', request.path) and mat
 
 if (match('/gwolle\-gb[\/]+frontend[\/]+captcha[\/]+ajaxresponse\.php/', request.path) and match('/.*/', request.queryString.abspath)):
 	block(id=17, category='rfi', description='Gwolle Guestbook <= 1.5.3 - Remote File Inclusion', whitelist=0)
+
+if (match('/\/(?:timthumb\.php|img\.php)/i', request.path) and match('/[^A-Za-z0-9\-\.\_:\/\?\&\+\;\=]/', request.queryString.src) and lengthGreaterThan('0', request.queryString.webshot)):
+	block(id=64, category='rce', description='TimThumb <= 2.8.13 - Remote Code Execution')
+
+if (match('/\/(?:timthumb\.php|img\.php)/i', request.path) and notMatch('_^[^\?]+?\.(?:jpg|jpeg|gif|png)(?:\?[a-z0-9\-\_\.\~%\!\$&\'\(\)\*\+,;\=\:@\/\?]*)?$_iu', request.queryString.src) and lengthGreaterThan('0', request.queryString.src) and (lengthLessThan('1', request.queryString.webshot) or equals('0', request.queryString.webshot))):
+	block(id=63, category='rfd', description='TimThumb <= 1.33 - Remote File Download')
 
 if (matchCount(sqliRegex, request.body, request.queryString)):
 	failSQLi(id=3, category='sqli', score=40, description='SQL Injection')

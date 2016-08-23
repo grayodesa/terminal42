@@ -9,8 +9,8 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 	 * @access public
 	 */
 	public function __construct() {
-		$widget_ops = array('classname' => 'widget_essb_subscribe', 'description' => __( "Draw subscribe form as widget.") );
-		parent::__construct('easy-subscribe-widget', __('Easy Social Share Buttons: Subscribe Button Widget'), $widget_ops);
+		$widget_ops = array('classname' => 'widget_essb_subscribe', 'description' => __( "Draw subscribe form (opt-in form) as widget.") );
+		parent::__construct('easy-subscribe-widget', __('Easy Social Share Buttons: Subscribe Form'), $widget_ops);
 		$this->alt_option_name = 'widget_essb_subscribe';
 	}
 
@@ -32,6 +32,7 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 		
 		$title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : '';
 		$mode = ( ! empty( $instance['mode'] ) ) ? $instance['mode'] : '';
+		$design = ( ! empty( $instance['design'] ) ) ? $instance['design'] : '';
 		
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
@@ -44,7 +45,7 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 			include_once (ESSB3_PLUGIN_ROOT . 'lib/networks/essb-subscribe.php');
 		}
 			
-		echo ESSBNetworks_Subscribe::draw_inline_subscribe_form($mode);
+		echo ESSBNetworks_Subscribe::draw_inline_subscribe_form($mode, $design, true);
 		
 		if (!empty($title)) {
 			echo $args['after_widget'];
@@ -67,6 +68,7 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 		$instance['mode'] = sanitize_text_field( $new_instance['mode'] );
+		$instance['design'] = sanitize_text_field( $new_instance['design'] );
 		return $instance;
 	}
 
@@ -80,6 +82,7 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$title     = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$design     = isset( $instance['design'] ) ? esc_attr( $instance['design'] ) : '';
 		$mode     = isset( $instance['mode'] ) ? esc_attr( $instance['mode'] ) : '';
 		
 ?>
@@ -92,6 +95,15 @@ class ESSBSubscribeButtonWidget extends WP_Widget {
 			<option value="mailchimp" <?php if ($mode == "mailchimp") echo 'selected="selected"'; ?>>MailChimp integrated form</option>
 		</select></p>
 
+		<p><label for="<?php echo $this->get_field_id( 'design' ); ?>"><?php _e( 'Design:' ); ?></label>
+		<select class="widefat" id="<?php echo $this->get_field_id( 'design' ); ?>" name="<?php echo $this->get_field_name( 'design' ); ?>">
+			<option value="design1" <?php if ($mode == "design1") echo 'selected="selected"'; ?>>Design #1</option>
+			<option value="design2" <?php if ($mode == "design2") echo 'selected="selected"'; ?>>Design #2</option>
+			<option value="design3" <?php if ($mode == "design3") echo 'selected="selected"'; ?>>Design #3</option>
+			<option value="design4" <?php if ($mode == "design4") echo 'selected="selected"'; ?>>Design #4</option>
+		
+		</select></p>
+		
 <?php
 	}
 }

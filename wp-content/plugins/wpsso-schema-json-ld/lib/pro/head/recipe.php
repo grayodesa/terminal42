@@ -32,7 +32,7 @@ if ( ! class_exists( 'WpssoJsonProHeadRecipe' ) ) {
 
 			$this->p->util->add_plugin_filters( $this, array(
 				'schema_meta_itemprop' => 4,			// $mt_schema, $mod, $mt_og, $head_type_url
-				'json_data_http_schema_org_recipe' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_recipe' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
@@ -57,7 +57,7 @@ if ( ! class_exists( 'WpssoJsonProHeadRecipe' ) ) {
 			return $mt_schema;
 		}
 
-		public function filter_json_data_http_schema_org_recipe( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_recipe( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();

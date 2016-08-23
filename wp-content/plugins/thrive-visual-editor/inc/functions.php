@@ -218,7 +218,7 @@ function tcb_get_preview_url( $post_id = false ) {
  * checks whether the $post_type is editable using the TCB
  *
  * @param string $post_type
- * @param int $post_id
+ * @param int    $post_id
  *
  * @return bool true if the post type is editable
  */
@@ -226,7 +226,8 @@ function tve_is_post_type_editable( $post_type, $post_id = null ) {
 	/* post types that are not editable using the content builder - handled as a blacklist */
 	$blacklist_post_types = array(
 		'focus_area',
-		'thrive_optin'
+		'thrive_optin',
+		'tvo_shortcode'
 	);
 
 	$blacklist_post_types = apply_filters( 'tcb_post_types', $blacklist_post_types );
@@ -398,7 +399,7 @@ function tve_load_font_css() {
 	 * Loop through font classes and display their css properties
 	 *
 	 * @var string $font_class
-	 * @var array $rules
+	 * @var array  $rules
 	 */
 	foreach ( $css as $font_class => $rules ) {
 		/** add font css rules to the page */
@@ -449,7 +450,7 @@ function tve_output_custom_font_css( $fonts ) {
 	 * Loop through font classes and display their css properties
 	 *
 	 * @var string $font_class
-	 * @var array $rules
+	 * @var array  $rules
 	 */
 	foreach ( $css as $font_class => $rules ) {
 		/** add font css rules to the page */
@@ -703,7 +704,7 @@ function tve_save_post() {
 /**
  * add the editor content to $content, but at priority 101 so not affected by custom theme shortcode functions that are common with some theme developers
  *
- * @param string $content the post content
+ * @param string      $content  the post content
  * @param null|string $use_case used to control the output, e.g. it can be used to return just TCB content, not full content
  *
  * @return string
@@ -773,8 +774,8 @@ function tve_editor_content( $content, $use_case = null ) {
 			if ( is_feed() ) {
 				$rss_use_excerpt = (bool) get_option( 'rss_use_excerpt' );
 			}
-
-			if ( $rss_use_excerpt || ! is_singular() || ( class_exists( 'PostGridHelper' ) && PostGridHelper::$render_post_grid === false ) ) {
+			$tcb_force_excerpt = apply_filters( 'tcb_force_excerpt', false );
+			if ( $rss_use_excerpt || ! is_singular() || ( class_exists( 'PostGridHelper' ) && PostGridHelper::$render_post_grid === false ) || $tcb_force_excerpt ) {
 				$more_found          = tve_get_post_meta( get_the_ID(), "tve_content_more_found", true );
 				$content_before_more = tve_get_post_meta( get_the_ID(), "tve_content_before_more", true );
 				if ( ! empty( $content_before_more ) && $more_found ) {
@@ -927,7 +928,7 @@ function tve_turn_off_get_current_screen() {
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool $ver
+ * @param bool  $ver
  * @param       $media
  */
 function tve_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media = 'all' ) {
@@ -943,9 +944,9 @@ function tve_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media
  *
  * @param        $handle
  * @param string $src
- * @param array $deps
- * @param bool $ver
- * @param bool $in_footer
+ * @param array  $deps
+ * @param bool   $ver
+ * @param bool   $in_footer
  */
 function tve_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
 	if ( $ver === false ) {
@@ -1997,31 +1998,16 @@ function tve_enqueue_editor_scripts() {
 			add_action( 'wp_print_footer_scripts', 'tve_license_notice' );
 		}
 	}
-
-// now print scripts for preview logo in admin bar. will write directly to page because only a small snippet and thus will load faster than another external css file load.
-	if ( tve_is_post_type_editable( get_post_type( get_the_ID() ) ) && is_admin_bar_showing()
-	     && ! isset( $_GET[ TVE_EDITOR_FLAG ] )
-	     && ( is_single() || is_page() )
-	): ?>
-		<style type="text/css">
-			.thrive-adminbar-icon {
-				background: url('<?php echo tve_editor_css(); ?>/images/admin-bar-logo.png') no-repeat 0px 0px;
+	// now print scripts for preview logo in admin bar. will write directly to page because only a small snippet and thus will load faster than another external css file load.
+	if ( tve_is_post_type_editable( get_post_type( get_the_ID() ) ) && is_admin_bar_showing() && ( is_single() || is_page() ) ) : ?>
+		<style type="text/css">.thrive-adminbar-icon {
 				padding-left: 25px !important;
 				width: 20px !important;
 				height: 20px !important;
-			}
-		</style>
-	<?php else: ?>
-		<style type="text/css">
-			.thrive-adminbar-icon {
-				background: url('<?php echo tve_editor_css(); ?>/images/tcb-close-icon.png') no-repeat 0px 0px;
-				padding-left: 25px !important;
-				width: 20px !important;
-				height: 20px !important;
+				background: url('<?php echo tve_editor_css(); ?>/images/<?php echo isset( $_GET[ TVE_EDITOR_FLAG ] ) ? 'tcb-close-icon.png' : 'admin-bar-logo.png' ?>') no-repeat 0px 0px;
 			}
 		</style>
 	<?php endif;
-
 }
 
 /**
@@ -2376,7 +2362,7 @@ function tve_leads_additional_fields_filters( $data ) {
  * these contents will get deleted if we're currently NOT in editor mode
  *
  * @param string $content
- * @param bool $keepConfig
+ * @param bool   $keepConfig
  */
 function tve_thrive_shortcodes( $content, $keepConfig = false ) {
 	global $tve_thrive_shortcodes;
@@ -2384,7 +2370,7 @@ function tve_thrive_shortcodes( $content, $keepConfig = false ) {
 	$shortcode_pattern = '#>__CONFIG_%s__(.+?)__CONFIG_%s__</div>#';
 
 	foreach ( $tve_thrive_shortcodes as $shortcode => $callback ) {
-		if ( ! tve_check_if_thrive_theme() && $shortcode !== 'widget' && $shortcode !== 'post_grid' && $shortcode !== 'widget_menu' && $shortcode !== 'leads_shortcode' && $shortcode !== 'tve_leads_additional_fields_filters' && $shortcode !== 'social_default' && $shortcode !== 'tvo_shortcode' ) {
+		if ( ! tve_check_if_thrive_theme() && $shortcode !== 'widget' && $shortcode !== 'post_grid' && $shortcode !== 'widget_menu' && $shortcode !== 'leads_shortcode' && $shortcode !== 'tve_leads_additional_fields_filters' && $shortcode !== 'social_default' && $shortcode !== 'tvo_shortcode' && $shortcode != 'ultimatum_shortcode' ) {
 			continue;
 		}
 
@@ -2570,7 +2556,7 @@ function tcb_render_wp_shortcode( $content ) {
  * raw shortcode texts are saved between 2 flags: ___TVE_SHORTCODE_RAW__ AND __TVE_SHORTCODE_RAW___
  *
  * @param string $content
- * @param bool $is_editor_page
+ * @param bool   $is_editor_page
  */
 function tve_do_wp_shortcodes( $content, $is_editor_page = false ) {
 	/**
@@ -2650,7 +2636,7 @@ function tve_post_is_landing_page( $id ) {
  * get post meta key. Also takes into account whether or not this post is a landing page
  * each regular meta key from the editor has the associated meta key for the landing page constructed by appending a "_{template_name}" after the key
  *
- * @param int $post_id
+ * @param int    $post_id
  * @param string $meta_key
  */
 function tve_get_post_meta( $post_id, $meta_key, $single = true ) {
@@ -2832,7 +2818,7 @@ function tve_change_landing_page_template( $post_id, $landing_page_template ) {
  * reset landing page to its default content
  * this assumes that the tve_landing_page post meta field is set to the value of the correct landing page template
  *
- * @param int $post_id
+ * @param int    $post_id
  * @param string $landing_page_template - from where we should take the default LP content
  */
 function tve_landing_page_reset( $post_id, $landing_page_template, $reset_global_scripts = true ) {
@@ -3119,8 +3105,8 @@ function tve_get_post_custom_fonts( $post_id, $include_thrive_fonts = false ) {
 /**
  * enqueue all the custom fonts used on a post (used only on frontend, not on editor page)
  *
- * @param mixed $post_id if null -> use the global wp query; if not, load the fonts for that specific post
- * @param bool $include_thrive_fonts by default thrive themes fonts are included by the theme. for lightboxes for example, we need to include those also
+ * @param mixed $post_id              if null -> use the global wp query; if not, load the fonts for that specific post
+ * @param bool  $include_thrive_fonts by default thrive themes fonts are included by the theme. for lightboxes for example, we need to include those also
  */
 function tve_enqueue_custom_fonts( $post_id = null, $include_thrive_fonts = false ) {
 	if ( $post_id === null ) {
@@ -3173,6 +3159,12 @@ function tve_enqueue_custom_scripts() {
 				wp_script_is( 'tve_js_sdk_' . $handle ) || wp_enqueue_script( 'tve_js_sdk_' . $handle, tve_social_get_sdk_link( $handle ), array(), false );
 			}
 		}
+
+		tve_enqueue_script( "tve_dash_velocity", TVE_DASH_URL . '/js/dist/velocity.min.js', array( 'jquery' ), false, true );
+		tve_enqueue_script( "tve_dash_hammer", TVE_DASH_URL . '/js/dist/hammer.min.js', array( 'jquery' ), false, true );
+		tve_enqueue_script( "tve_dash_global", TVE_DASH_URL . '/js/dist/global.min.js', array( 'jquery' ), false, true );
+		tve_enqueue_script( "tve_dash_toasts", TVE_DASH_URL . '/js/dist/toasts.min.js', array( 'jquery' ), false, true );
+		tve_enqueue_style( 'tve_dash_toast_css', TVE_DASH_URL . '/css/toast.css' );
 	}
 }
 
@@ -3266,10 +3258,10 @@ function tve_output_wysiwyg_editor() {
 
 
 /**
- * @param string $title lightbox title
+ * @param string $title           lightbox title
  * @param string $tcb_content
- * @param array $tve_globals tve_globals array to save for the lightbox
- * @param array $extra_meta_data array of key => value pairs, each will be saved in a meta field for the lightbox
+ * @param array  $tve_globals     tve_globals array to save for the lightbox
+ * @param array  $extra_meta_data array of key => value pairs, each will be saved in a meta field for the lightbox
  *
  * @return int the saved lightbox id
  */
@@ -3418,8 +3410,8 @@ function tve_menu_custom_font_family( $attrs, $menu_item ) {
  * custom call of an action hook - this will forward the call to the WP do_action function
  * it will inject parameters read from $_GET based on the filter that others might use
  *
- * @param string $hook required. The action hook to be called
- * @param mixed $_args arguments that will be passed on to the do_action call
+ * @param string $hook  required. The action hook to be called
+ * @param mixed  $_args arguments that will be passed on to the do_action call
  */
 function tve_do_action() {
 	/**
@@ -3957,9 +3949,10 @@ function tve_find_quick_link_contents() {
 		$posts_array = array_merge( $lightbox_array, $accepted_array );
 
 		foreach ( $posts_array as $id => $item ) {
-
-			$item->post_title = preg_replace( "#($s)#i", "<b>$0</b>", $item->post_title );
-			$postList []      = array(
+			if ( ! empty( $s ) ) {
+				$item->post_title = preg_replace( "#($s)#i", "<b>$0</b>", $item->post_title );
+			}
+			$postList [] = array(
 				'label' => $item->post_title,
 				'id'    => $item->ID,
 				'value' => $item->post_title,
@@ -4173,6 +4166,10 @@ function tve_api_form_submit() {
 	 */
 	$data = apply_filters( 'tcb_api_subscribe_data', $data );
 
+	if ( isset( $data['__tcb_lg_msg'] ) ) {
+		$result['form_messages'] = Thrive_Dash_List_Manager::decodeConnectionString( $data['__tcb_lg_msg'] );
+	}
+
 	$available = Thrive_Dash_List_Manager::getAvailableAPIs( true );
 	foreach ( $available as $key => $connection ) {
 		if ( ! isset( $connections[ $key ] ) ) {
@@ -4195,9 +4192,9 @@ function tve_api_form_submit() {
  * make an api call to a subscribe a user
  *
  * @param string|Thrive_Dash_List_Connection_Abstract $connection
- * @param mixed $list_identifier the list identifier
- * @param array $data submitted data
- * @param bool $log_error whether or not to log errors in a DB table
+ * @param mixed                                       $list_identifier the list identifier
+ * @param array                                       $data            submitted data
+ * @param bool                                        $log_error       whether or not to log errors in a DB table
  *
  * @return result mixed
  */
@@ -4210,9 +4207,9 @@ function tve_api_add_subscriber( $connection, $list_identifier, $data, $log_erro
 	/**
 	 * filter - allows modifying the sent data to each individual API instance
 	 *
-	 * @param array $data data to be sent to the API instance
-	 * @param Thrive_List_Connection_Abstract $connection the connection instance
-	 * @param mixed $list_identifier identifier for the list which will receive the new email
+	 * @param array                           $data            data to be sent to the API instance
+	 * @param Thrive_List_Connection_Abstract $connection      the connection instance
+	 * @param mixed                           $list_identifier identifier for the list which will receive the new email
 	 */
 	$data = apply_filters( 'tcb_api_subscribe_data_instance', $data, $connection, $list_identifier );
 

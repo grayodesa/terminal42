@@ -2,7 +2,7 @@
 /**
  * Renders select field
  *
- * @version 4.2
+ * @version 4.2.5
  *
  */
 $options = null;
@@ -18,7 +18,7 @@ $option_id = "tribe-tickets-meta_{$this->slug}" . ( $attendee_id ? '_' . $attend
 
 ?>
 <div class="tribe-tickets-meta tribe-tickets-meta-select <?php echo $required ? 'tribe-tickets-meta-required' : ''; ?>">
-	<label for="<?php echo esc_attr( $option_id ); ?>" class="tribe-tickets-meta-field-header"><?php echo esc_html( $field['label'] ); ?></label>
+	<label for="<?php echo esc_attr( $option_id ); ?>" class="tribe-tickets-meta-field-header"><?php echo wp_kses_post( $field['label'] ); ?></label>
 	<select	<?php disabled( $this->is_restricted( $attendee_id ) ); ?> id="<?php echo esc_attr( $option_id ); ?>" class="ticket-meta" name="tribe-tickets-meta[<?php echo $attendee_id ?>][<?php echo esc_attr( $this->slug ); ?>]" <?php echo $required ? 'required' : ''; ?>>
 		<option></option>
 		<?php

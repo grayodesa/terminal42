@@ -208,6 +208,63 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$mandrill = $this->getApi();
+
+		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
+
+		if ( isset( $credentials ) ) {
+			$from_email = $credentials['email'];
+		} else {
+			return false;
+		}
+
+		/**
+		 * prepare $to
+		 */
+		$to = array();
+		foreach ( $data['emails'] as $email ) {
+			$temp = array(
+				'email' => $email,
+				'name'  => '',
+				'type'  => 'to'
+			);
+			$to[] = $temp;
+		}
+
+		try {
+
+			$message = array(
+				'html'           => empty ( $data['html_content'] ) ? '' : $data['html_content'],
+				'text'           => empty ( $data['text_content'] ) ? '' : $data['text_content'],
+				'subject'        => $data['subject'],
+				'from_email'     => $from_email,
+				'from_name'      => '',
+				'to'             => $to,
+				'headers'        => array( 'Reply-To' => $from_email ),
+				'merge'          => true,
+				'merge_language' => 'mailchimp',
+			);
+
+			$async   = false;
+			$ip_pool = 'Main Pool';
+
+			$mandrill->messages->send( $message, $async, $ip_pool );
+
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data

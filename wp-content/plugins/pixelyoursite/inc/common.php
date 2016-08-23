@@ -172,7 +172,6 @@ if( !function_exists( 'pys_get_relative_path' ) ) {
 
 /**
  * Check if needle URL (full or relative) matches with current.
- * @todo: review and test
  */
 if( !function_exists( 'pys_match_url' ) ) {
 
@@ -234,6 +233,8 @@ if( !function_exists( 'pys_endsWith' ) ) {
 if( !function_exists( 'pys_clean_param_value' ) ) {
 
 	function pys_clean_param_value( $value ) {
+
+		//@todo: remove deprecated function
 
 		$replace = array(
 			'&lt;'   => '',
@@ -517,38 +518,42 @@ if( !function_exists( 'pys_clean_param_value' ) ) {
 if( !function_exists( 'pys_currency_options' ) ) {
 
 	function pys_currency_options( $current = 'USD' ) {
-		?>
 
-		<option <?php echo selected( 'AUD', $current, true ); ?> value="AUD">Australian Dollar</option>
-		<option <?php echo selected( 'BRL', $current, true ); ?> value="BRL">Brazilian Real</option>
-		<option <?php echo selected( 'CAD', $current, true ); ?> value="CAD">Canadian Dollar</option>
-		<option <?php echo selected( 'CZK', $current, true ); ?> value="CZK">Czech Koruna</option>
-		<option <?php echo selected( 'DKK', $current, true ); ?> value="DKK">Danish Krone</option>
-		<option <?php echo selected( 'EUR', $current, true ); ?> value="EUR">Euro</option>
-		<option <?php echo selected( 'HKD', $current, true ); ?> value="HKD">Hong Kong Dollar</option>
-		<option <?php echo selected( 'HUF', $current, true ); ?> value="HUF">Hungarian Forint</option>
-		<option <?php echo selected( 'IDR', $current, true ); ?> value="IDR">Indonesian Rupiah</option>
-		<option <?php echo selected( 'ILS', $current, true ); ?> value="ILS">Israeli New Sheqel</option>
-		<option <?php echo selected( 'JPY', $current, true ); ?> value="JPY">Japanese Yen</option>
-		<option <?php echo selected( 'KRW', $current, true ); ?> value="KRW">Korean Won</option>
-		<option <?php echo selected( 'MYR', $current, true ); ?> value="MYR">Malaysian Ringgit</option>
-		<option <?php echo selected( 'MXN', $current, true ); ?> value="MXN">Mexican Peso</option>
-		<option <?php echo selected( 'NOK', $current, true ); ?> value="NOK">Norwegian Krone</option>
-		<option <?php echo selected( 'NZD', $current, true ); ?> value="NZD">New Zealand Dollar</option>
-		<option <?php echo selected( 'PHP', $current, true ); ?> value="PHP">Philippine Peso</option>
-		<option <?php echo selected( 'PLN', $current, true ); ?> value="PLN">Polish Zloty</option>
-		<option <?php echo selected( 'RON', $current, true ); ?> value="RON">Romanian Leu</option>
-		<option <?php echo selected( 'GBP', $current, true ); ?> value="GBP">Pound Sterling</option>
-		<option <?php echo selected( 'SGD', $current, true ); ?> value="SGD">Singapore Dollar</option>
-		<option <?php echo selected( 'SEK', $current, true ); ?> value="SEK">Swedish Krona</option>
-		<option <?php echo selected( 'CHF', $current, true ); ?> value="CHF">Swiss Franc</option>
-		<option <?php echo selected( 'TWD', $current, true ); ?> value="TWD">Taiwan New Dollar</option>
-		<option <?php echo selected( 'THB', $current, true ); ?> value="THB">Thai Baht</option>
-		<option <?php echo selected( 'TRY', $current, true ); ?> value="TRY">Turkish Lira</option>
-		<option <?php echo selected( 'USD', $current, true ); ?> value="USD">U.S. Dollar</option>
-		<option <?php echo selected( 'ZAR', $current, true ); ?> value="USD">South African Rands</option>
+		$currencies = apply_filters( 'pys_currencies_list', array(
+			'AUD' => 'Australian Dollar',
+			'BRL' => 'Brazilian Real',
+			'CAD' => 'Canadian Dollar',
+			'CZK' => 'Czech Koruna',
+			'DKK' => 'Danish Krone',
+			'EUR' => 'Euro',
+			'HKD' => 'Hong Kong Dollar',
+			'HUF' => 'Hungarian Forint',
+			'IDR' => 'Indonesian Rupiah',
+			'ILS' => 'Israeli New Sheqel',
+			'JPY' => 'Japanese Yen',
+			'KRW' => 'Korean Won',
+			'MYR' => 'Malaysian Ringgit',
+			'MXN' => 'Mexican Peso',
+			'NOK' => 'Norwegian Krone',
+			'NZD' => 'New Zealand Dollar',
+			'PHP' => 'Philippine Peso',
+			'PLN' => 'Polish Zloty',
+			'RON' => 'Romanian Leu',
+			'GBP' => 'Pound Sterling',
+			'SGD' => 'Singapore Dollar',
+			'SEK' => 'Swedish Krona',
+			'CHF' => 'Swiss Franc',
+			'TWD' => 'Taiwan New Dollar',
+			'THB' => 'Thai Baht',
+			'TRY' => 'Turkish Lira',
+			'USD' => 'U.S. Dollar',
+			'ZAR' => 'South African Rands'
+		) );
 
-		<?php
+		foreach( $currencies as $symbol => $name ) {
+			echo '<option ' . selected( $symbol, $current, false ) . ' value="' . esc_attr( $symbol ) . '">' . esc_html( $name ) . '</option>';
+		}
+
 	}
 
 }
@@ -631,9 +636,9 @@ if( !function_exists( 'pys_explode_taxonomies' ) ) {
 		$str = '';
 		foreach ( $tree as $node ) {
 
-			if ( isset( $node['children'] ) && count( $node['children'] ) ) {
+			if ( isset( $node['children'] ) ) {
 
-				$str .= $node['name'] . ' > ';
+				$str .= $node['name'] . ', ';
 				$str .= pys_explode_taxonomies( $node['children'] );
 
 			} else {
@@ -670,113 +675,50 @@ if( !function_exists( 'pys_get_noscript_code' ) ) {
 
 		$src = add_query_arg( $args, 'https://www.facebook.com/tr' );
 
-		$nojscode = "<noscript>\n";
-		$nojscode .= "<img height='1' width='1' style='display:none' src='" . $src . "'>\n";
-		$nojscode .= "</noscript>";
-		$nojscode .= "\n\n";
+		return "<noscript><img height='1' width='1' style='display:none' src='" . $src . "'></noscript>\n";
 
-		return $nojscode;
-
-	}
-
-}
-
-/**
- * Prepare event code string for Standard Event.
- */
-if( !function_exists( 'pys_get_event_code' ) ) {
-
-	//@todo: replace this function with `pys_build_event_pixel_code`
-	function pys_get_event_code( $event ) {
-
-		$result = array();
-
-		// remember event type
-		$type = $event['eventtype'];
-
-		// remove unused params
-		unset( $event['pageurl'] );
-		unset( $event['eventtype'] );
-		unset( $event['code'] );
-		unset( $event['trigger_type'] );    // pro
-		unset( $event['url'] );             // pro
-		unset( $event['css'] );             // pro
-		unset( $event['custom_name'] );     // custom events
-
-		if ( $event['content_type'] == 'none' ) {
-			unset( $event['content_type'] );
-		}
-
-		$track = pys_is_standard_event( $type ) ? 'track' : 'trackCustom';
-
-		// @todo: sanitize event type name
-
-		$js_str      = "";
-		$nojs_params = array();
-
-		// build js and no js codes from params
-		if ( isset( $event ) && ! empty( $event ) ) {
-			foreach ( $event as $param => $value ) {
-
-				if ( empty( $value ) ) {
-					continue;
-				}
-
-				$val = pys_clean_param_value( $value );
-
-				$js_str .= "$param: '" . $val . "', ";
-				$nojs_params[ $param ] = $val;
-
-			}
-		}
-
-		$result['js']   = "fbq('$track', '$type', {" . $js_str . "} );";
-		$result['nojs'] = pys_get_noscript_code( $type, $nojs_params );
-
-		return $result;
 	}
 
 }
 
 if( !function_exists( 'pys_build_event_pixel_code' ) ) {
 
-	function pys_build_event_pixel_code( $name, array $params, $type ) {
+	function pys_build_event_pixel_code( $params, $event ) {
 
-		$result = array();
+		$params = apply_filters( 'pys_event_params', $params, $event );
+
+		$js   = null;
+		$nojs = array();
 
 		// explode params to formatted string
-		$js_str      = "";
-		$nojs_params = array();
-		foreach ( $params as $param => $value ) {
+		foreach ( $params as $name => $value ) {
 
-			// skip cleanup
-			if ( ! in_array( $param, array( 'content_ids', 'value', 'time' ) ) ) {
-				$value = pys_clean_param_value( $value );
+			if( empty( $value ) ) {
+				continue;
 			}
 
-			$js_str .= "$param: '" . $value . "', ";
-			$nojs_params[ $param ] = $value;
+			// skip cleanup
+			//@todo: remove after tests
+//			if ( ! in_array( $name, array( 'content_ids', 'value', 'time' ) ) ) {
+//				$value = pys_clean_param_value( $value );
+//			}
+
+			// sanitize prams
+			$key   = esc_js( $name );
+			$value = esc_js( $value );
+
+			$js .= "{$key}: '{$value}', ";
+			$nojs[ $name ] = esc_attr( $value );
 
 		}
 
-		$track = pys_is_standard_event( $type ) ? 'track' : 'trackCustom';
+		$track = pys_is_standard_event( $event ) ? 'track' : 'trackCustom';
 
-		// build complete event pixel code
-		if ( $name ) {
-			$pixelcode = "// " . ucfirst( $name ) . " Event \n";
-			$pixelcode .= "fbq('$track', '$type', { $js_str } );";
-			$pixelcode .= "\n\n";
-		} else {
-			$pixelcode = "fbq('$track', '$type', { $js_str } );";
-		}
+		return array(
+			'js'   => "fbq('{$track}', '{$event}', {{$js}} );\n",
+			'nojs' => pys_get_noscript_code( $event, $nojs )
+		);
 
-		$nojscode = "<!-- " . ucfirst( $name ) . " Event -->\n";
-		$nojscode .= pys_get_noscript_code( $type, $nojs_params );
-
-		$result['js']   = $pixelcode;
-		$result['nojs'] = $nojscode;
-
-		return $result;
 	}
 
 }
@@ -850,7 +792,18 @@ if( !function_exists( 'pys_insert_attribute' ) ) {
 		$attr_value = trim( $attr_value );
 
 		$doc = new DOMDocument();
-		$doc->loadHTML( '<?xml encoding="UTF-8">' . $tag, LIBXML_NOEMPTYTAG );
+
+		/**
+		 * Old libxml does not support options parameter.
+		 * @since 3.2.0
+		 */
+		if( defined('LIBXML_DOTTED_VERSION') && version_compare( LIBXML_DOTTED_VERSION, '2.6.0', '>=' ) &&
+		    version_compare( phpversion(), '5.4.0', '>=' ) ) {
+			@$doc->loadHTML( '<?xml encoding="UTF-8">' . $tag, LIBXML_NOEMPTYTAG );
+		} else {
+			@$doc->loadHTML( '<?xml encoding="UTF-8">' . $tag );
+		}
+
 		$node = $doc->getElementsByTagName( $tag_name )->item(0);
 
 		if( is_null( $node ) ) {
@@ -926,15 +879,20 @@ if( !function_exists( 'pys_is_disabled_for_role' ) ) {
 
 	function pys_is_disabled_for_role() {
 
-		// if disabled for current role
-		$disabled_roles = get_option( 'pixel_your_site' );
+		$options = get_option( 'pixel_your_site' );
+		$disabled_roles = $options['general'];
+
 		$user           = wp_get_current_user();
 		foreach ( (array) $user->roles as $role ) {
 
-			if ( array_key_exists( "disable_for_$role", $disabled_roles['general'] ) ) {
+			if ( array_key_exists( "disable_for_$role", $disabled_roles ) ) {
 				return true;
 			}
 
+		}
+
+		if( empty( $user->roles ) && isset( $disabled_roles['disable_for_guest'] ) ) {
+			return true;
 		}
 
 		return false;
@@ -950,32 +908,19 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 
 	function pys_pixel_code() {
 
-		// put pixel only on front-end
-		if ( is_admin() ) {
-			return;
-		}
-
-		// if pixel setup disabled
-		if ( pys_get_option( 'general', 'enabled' ) == false ) {
-			return;
-		}
-
-		// if ID is not set
 		$pixel_id = pys_get_option( 'general', 'pixel_id' );
-		if ( ! isset( $pixel_id ) || empty( $pixel_id ) ) {
-			return;
-		}
 
 		// build pixel code...
 		$pixelcode = "\n";
 		$nojscode  = "\n";
 
 		// pixel id
-		$pixelcode .= "fbq('init', '$pixel_id' " . pys_get_additional_matching_code() ." ); \n\n";
+		$pixelcode .= "fbq('init', '{$pixel_id}', {" . pys_pixel_init_params() . "});\n";
 
 		// default event
-		$pixelcode .= "// Default Event \n" . "fbq('track', 'PageView');" . "\n\n";
-		$nojscode .= "<!-- Default Event -->\n" . pys_get_noscript_code( 'PageView', array() );
+		$default_event = pys_build_event_pixel_code( array(), 'PageView' );
+		$pixelcode .= $default_event['js'];
+		$nojscode  .= $default_event['nojs'];
 
 		// general event
 		if ( pys_get_option( 'general', 'general_event_enabled' ) ) {
@@ -983,21 +928,19 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 			$code = pys_get_general_event_code();
 
 			$pixelcode .= $code['js'];
-			$nojscode .= $code['nojs'];
+			$nojscode  .= $code['nojs'];
 
 		}
 
 		// search event
 		if ( pys_get_option( 'general', 'search_event_enabled' ) && is_search() && isset( $_REQUEST['s'] ) ) {
 
-			$pixelcode .= "// Search Event \n";
-			$pixelcode .= "fbq('track', 'Search', { search_string: '" . pys_clean_param_value( $_REQUEST['s'] ) . "'} );";
-			$pixelcode .= "\n\n";
+			$search_event = pys_build_event_pixel_code( array(
+				'search_string' => $_REQUEST['s']
+			), 'Search' );
 
-			$nojscode .= "<!-- Search Event -->\n";
-			$nojscode .= pys_get_noscript_code( 'Search', array(
-				'search_string' => pys_clean_param_value( $_REQUEST['s'] )
-			) );
+			$pixelcode .= $search_event['js'];
+			$nojscode  .= $search_event['nojs'];
 
 		}
 
@@ -1005,27 +948,33 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 		$std_events = get_option( 'pixel_your_site_std_events', array() );
 		if ( pys_get_option( 'std', 'enabled' ) && count( $std_events ) > 0 ) {
 
-			foreach ( $std_events as $event ) {
+			foreach ( $std_events as $std_event_params ) {
+
+				// skip wrong events
+				if( ! isset( $std_event_params['pageurl'] ) || ! isset( $std_event_params['eventtype'] ) ) {
+					continue;
+				}
 
 				// add event on url's match
-				if ( pys_match_url( $event['pageurl'] ) ) {
+				if ( pys_match_url( $std_event_params['pageurl'] ) ) {
 
-					if ( $event['eventtype'] == 'CustomCode' ) {
+					if ( $std_event_params['eventtype'] == 'CustomCode' ) {
 
-						$custom_code = $event['code'];
+						$custom_code = $std_event_params['code'];
 						$custom_code = stripcslashes( $custom_code );
 						$custom_code = trim( $custom_code );
 
-						$pixelcode .= "// Standard Event (custom code) \n" . $custom_code . " \n\n";
+						$pixelcode .= "{$custom_code}\n";
 
 					} else {
 
-						$event_code = pys_get_event_code( $event );
+						$std_event_type = $std_event_params['eventtype'];
+						$std_event_params = pys_clean_system_event_params( $std_event_params );
 
-						$pixelcode .= "// Standard Event \n" . $event_code['js'] . " \n\n";
+						$std_event_code = pys_build_event_pixel_code( $std_event_params, $std_event_type );
 
-						$nojscode .= "<!-- Standard Event -->\n";
-						$nojscode .= $event_code['nojs'];
+						$pixelcode .= $std_event_code['js'];
+						$nojscode  .= $std_event_code['nojs'];
 
 					}
 
@@ -1038,10 +987,10 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 		// add woocommerce events
 		if ( pys_get_option( 'woo', 'enabled' ) && pys_is_woocommerce_active() ) {
 
-			$event_code = pys_get_woo_code();
+			$woo_event_code = pys_get_woo_code();
 
-			$pixelcode .= $event_code['js'];
-			$nojscode .= $event_code['nojs'];
+			$pixelcode .= $woo_event_code['js'];
+			$nojscode  .= $woo_event_code['nojs'];
 
 		}
 
@@ -1055,16 +1004,25 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 			}
 
 			$params     = pys_get_woo_ajax_addtocart_params( $product_id );
-			$event_code = pys_build_event_pixel_code( 'WooCommerce', $params, 'AddToCart' );
+			$event_code = pys_build_event_pixel_code( $params, 'AddToCart' );
 
 			$pixelcode .= $event_code['js'];
-			$nojscode .= $event_code['nojs'];
+			$nojscode  .= $event_code['nojs'];
 
+		}
+
+		// version data
+		if( defined('PYS_PRO_VERSION') ) {
+			$version = "PRO v".PYS_PRO_VERSION;
+		} elseif( defined('PYS_FREE_VERSION') ) {
+			$version = "FREE v".PYS_FREE_VERSION_REAL;
+		} else {
+			$version = null;
 		}
 
 		?>
 
-		<!-- Facebook Pixel Code -->
+		<!-- Facebook Pixel Code ( <?php echo esc_attr( $version ); ?> ) -->
 		<script>
 			var PYS_DOMReady = function (a, b, c) {
 				b = document, c = 'addEventListener';
@@ -1106,6 +1064,25 @@ if( !function_exists( 'pys_pixel_code' ) ) {
 
 }
 
+if( !function_exists( 'pys_clean_system_event_params' ) ) {
+
+	function pys_clean_system_event_params( $params ) {
+
+		// remove unused params
+		unset( $params['pageurl'] );
+		unset( $params['eventtype'] );
+		unset( $params['code'] );
+		unset( $params['trigger_type'] );    // pro
+		unset( $params['url'] );             // pro
+		unset( $params['css'] );             // pro
+		unset( $params['custom_name'] );     // custom events
+
+		return $params;
+
+	}
+
+}
+
 /**
  * Build General Event code.
  */
@@ -1122,16 +1099,21 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 		// Posts
 		if ( pys_get_option( 'general', 'general_event_on_posts_enabled' ) && is_singular( 'post' ) ) {
 
-			$params['content_type'] = 'post';
+			$params['post_type']    = 'post';
 			$params['content_name'] = $post->post_title;
-			$params['content_ids']  = $post->ID;
+			$params['post_id']      = $post->ID;
 
 			$terms = pys_get_content_taxonomies();
 			if ( $terms ) {
 				$params['content_category'] = $terms;
 			}
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			// track post tags
+			if ( pys_get_option( 'general', 'general_event_add_tags', 0 ) && $tags = pys_get_post_tags( $post->ID ) ) {
+				$params['tags'] = implode( ', ', $tags );
+			}
+
+			return pys_build_event_pixel_code( $params, $event_name );
 
 		}
 
@@ -1143,25 +1125,25 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 				return false;
 			}
 
-			$params['content_type'] = 'page';
+			$params['post_type']    = 'page';
 			$params['content_name'] = is_home() == true ? get_bloginfo( 'name' ) : $post->post_title;
 
-			is_home() != true ? $params['content_ids'] = $post->ID : null;
+			is_home() != true ? $params['post_id'] = $post->ID : null;
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			return pys_build_event_pixel_code( $params, $event_name );
 
 		}
 
 		// WooCommerce Shop page
-		if( pys_get_option( 'general', 'general_event_on_pages_enabled' ) && pys_is_woocommerce_active() && is_shop() ) {
+		if ( pys_get_option( 'general', 'general_event_on_pages_enabled' ) && pys_is_woocommerce_active() && is_shop() ) {
 
 			$page_id = wc_get_page_id( 'shop' );
 
-			$params['content_type'] = 'page';
-			$params['content_ids'] = $page_id;
+			$params['post_type']    = 'page';
+			$params['post_id']      = $page_id;
 			$params['content_name'] = get_the_title( $page_id );;
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			return pys_build_event_pixel_code( $params, $event_name );
 
 		}
 
@@ -1176,30 +1158,30 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 				$cat  = get_query_var( 'cat' );
 				$term = get_category( $cat );
 
-				$params['content_type'] = 'category';
+				$params['post_type']    = 'category';
 				$params['content_name'] = $term->name;
-				$params['content_ids']  = $cat;
+				$params['post_id']      = $cat;
 
 			} elseif ( is_tag() ) {
 
 				$slug = get_query_var( 'tag' );
 				$term = get_term_by( 'slug', $slug, 'post_tag' );
 
-				$params['content_type'] = 'tag';
+				$params['post_type']    = 'tag';
 				$params['content_name'] = $term->name;
-				$params['content_ids']  = $term->term_id;
+				$params['post_id']      = $term->term_id;
 
 			} else {
 
 				$term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
 
-				$params['content_type'] = get_query_var( 'taxonomy' );
+				$params['post_type']    = get_query_var( 'taxonomy' );
 				$params['content_name'] = $term->name;
-				$params['content_ids']  = $term->term_id;
+				$params['post_id']      = $term->term_id;
 
 			}
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			return pys_build_event_pixel_code( $params, $event_name );
 
 		}
 
@@ -1213,9 +1195,9 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 				return false;
 			}
 
-			$params['content_type'] = $post_type;
+			$params['post_type']    = $post_type;
 			$params['content_name'] = $post->post_title;
-			$params['content_ids']  = $post->ID;
+			$params['post_id']      = $post->ID;
 
 			$taxonomies = get_post_taxonomies( get_post() );
 			$terms      = pys_get_content_taxonomies( $taxonomies[0] );
@@ -1223,7 +1205,12 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 				$params['content_category'] = $terms;
 			}
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			// track custom post type tags
+			if ( pys_get_option( 'general', 'general_event_add_tags', 0 ) && $tags = pys_get_post_tags( $post->ID ) ) {
+				$params['tags'] = implode( ', ', $tags );
+			}
+
+			return pys_build_event_pixel_code( $params, $event_name );
 
 		}
 
@@ -1232,9 +1219,9 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 
 			$download = new EDD_Download( $post->ID );
 
-			$params['content_type'] = 'download';
+			$params['post_type']    = 'download';
 			$params['content_name'] = $download->post_title;
-			$params['content_ids']  = $post->ID;
+			$params['post_id']      = $post->ID;
 			$params['value']        = $download->get_price();
 			$params['currency']     = edd_get_currency();
 
@@ -1243,7 +1230,7 @@ if( !function_exists( 'pys_get_general_event_code' ) ) {
 				$params['content_category'] = $terms;
 			}
 
-			return pys_build_event_pixel_code( 'General', $params, $event_name );
+			return pys_build_event_pixel_code( $params, $event_name );
 		}
 
 		return false;
@@ -1311,6 +1298,7 @@ if( !function_exists( 'pys_get_default_options' ) ) {
 
 		$options['general']['pixel_id'] = '';
 		$options['general']['enabled']  = 0;
+		$options['general']['enable_advance_matching']  = 1;
 
 		$options['general']['general_event_enabled']          = 1;
 		$options['general']['general_event_name']             = 'GeneralEvent';
@@ -1318,6 +1306,7 @@ if( !function_exists( 'pys_get_default_options' ) ) {
 		$options['general']['general_event_on_pages_enabled'] = 1;
 		$options['general']['general_event_on_tax_enabled']   = 1;
 		$options['general']['general_event_on_edd_enabled']   = 0;
+		$options['general']['general_event_add_tags']         = 0;
 
 		$options['general']['timeonpage_enabled'] = 1;
 
@@ -1335,6 +1324,7 @@ if( !function_exists( 'pys_get_default_options' ) ) {
 		$options['woo']['variation_id'] = 'main';
 
 		$options['woo']['enable_additional_params'] = 1;
+		$options['woo']['enable_tags']              = 1;
 		$options['woo']['tax']                      = 'incl';
 
 		$options['woo']['on_view_content']            = 1;
@@ -1362,8 +1352,6 @@ if( !function_exists( 'pys_get_default_options' ) ) {
 		$options['woo']['purchase_value_option']  = 'total';
 		$options['woo']['purchase_percent_value'] = '';
 		$options['woo']['purchase_global_value']  = '';
-
-		$options['woo']['purchase_additional_matching'] = 1;
 
 		$options['woo']['purchase_add_address']         = 1;
 		$options['woo']['purchase_add_payment_method']  = 1;
@@ -1446,6 +1434,7 @@ if( !function_exists( 'pys_is_standard_event' ) ) {
 	function pys_is_standard_event( $eventtype ) {
 
 		$std_events = array(
+			'PageView',
 			'ViewContent',
 			'Search',
 			'AddToCart',
@@ -1457,6 +1446,38 @@ if( !function_exists( 'pys_is_standard_event' ) ) {
 		);
 
 		return in_array( $eventtype, $std_events );
+
+	}
+
+}
+
+/**
+ * Add extra params to FB init call.
+ */
+if( !function_exists( 'pys_pixel_init_params' ) ) {
+
+	function pys_pixel_init_params() {
+
+		$params = array();
+		$params = apply_filters( 'pys_pixel_init_params', $params );
+
+		$code = null;
+		foreach ( $params as $key => $value ) {
+
+			// remove empty params
+			if ( empty( $value ) ) {
+				unset( $params[ $key ] );
+			}
+
+			// sanitize prams
+			$key   = esc_js( $key );
+			$value = esc_js( $value );
+
+			$code .= "{$key}: '{$value}', ";
+
+		}
+
+		return $code;
 
 	}
 

@@ -65,6 +65,11 @@ class ESSBCachedCounters {
 				$is_fresh = false;
 			}
 		}
+		
+		$user_call_refresh = isset ( $_REQUEST ['essb_counter_update'] ) ? $_REQUEST ['essb_counter_update'] : '';
+		if ($user_call_refresh == 'true') {
+			$is_fresh = false;
+		}		
 				
 		return $is_fresh;
 	}
@@ -114,7 +119,7 @@ class ESSBCachedCounters {
 		global $essb_options;
 		
 		$cached_counters = array();
-		$cached_counters['total'] = 0;
+		$cached_counters['total'] = 0;		
 		
 		if (!ESSBCachedCounters::is_fresh_cache($post_id)) {
 			$cached_counters = ESSBCachedCounters::update_counters($post_id, $share['url'], $share['full_url'], $networks);
@@ -190,6 +195,7 @@ class ESSBCachedCounters {
 		if (!class_exists('ESSBCounterHelper')) {
 			include_once (ESSB3_PLUGIN_ROOT . 'lib/core/essb-counters-helper.php');
 		}
+		
 		
 		foreach ( $networks as $k ) {
 			switch ($k) {

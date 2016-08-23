@@ -31,12 +31,12 @@ if ( ! class_exists( 'WpssoJsonProPropAggregateRating' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
 		// automatically include an aggregateRating property based on the Open Graph rating meta tags
-		public function filter_json_data_http_schema_org( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();

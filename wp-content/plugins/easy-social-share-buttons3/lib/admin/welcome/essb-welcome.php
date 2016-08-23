@@ -5,6 +5,9 @@ $active_tab = isset ( $_REQUEST ['tab'] ) ? $_REQUEST ['tab'] : "essb-welcome";
 $slug = "essb_about";
 
 if (ESSB3_ADDONS_ACTIVE) {
+	global $essb_options;
+	$deactivate_appscreo = ESSBOptionValuesHelper::options_bool_value($essb_options, 'deactivate_appscreo');
+	if (!$deactivate_appscreo) {
 	if (class_exists('ESSBAddonsHelper')) {
 		$addons = ESSBAddonsHelper::get_instance();
 		$addons->call_remove_addon_list_update();
@@ -18,6 +21,7 @@ if (ESSB3_ADDONS_ACTIVE) {
 			$dismiss_addons_button = '<a href="'.$dismiss_url.'"  text="' . __ ( 'Add-ons', ESSB3_TEXT_DOMAIN ) . '" class="button button-orange float_right" style="margin-right: 5px;"><i class="fa fa-close"></i>&nbsp;' . __ ( 'Dismiss', ESSB3_TEXT_DOMAIN ) . '</a>';
 			printf ( '<div class="essb-information-box fade"><div class="icon orange"><i class="fa fa-cube"></i></div><div class="inner">New add-on for Easy Social Share Buttons for WordPress is available: <a href="%2$s" target="_blank"><b>%1$s</b></a> %4$s%3$s</div></div>', $data['title'], $data['url'], $all_addons_button, $dismiss_addons_button );
 		}
+	}
 	}
 }
 
@@ -101,10 +105,10 @@ if (ESSB3_ADDONS_ACTIVE) {
 				<h3>Hello Subscribers</h3>
 				<p>Brand new subscribe button come to Easy Social Share Buttons with cool new features:</p>
 				<ul>
-					<li style="list-style-type: disc;">3 different types of work: link to subscribe page, custom code where you can design your form or use shortcodes from other plugins, Mailchimp integrated form</li>
+					<li style="list-style-type: disc;">3 different types of work: link to subscribe page, custom code where you can design your form or use shortcodes from other plugins, Service integrated form</li>
 					<li style="list-style-type: disc;">works on any device and with any display method</li>
-					<li style="list-style-type: disc;">eye catching MailChimp subscribe form design with easy to customize colors</li>
-					<li style="list-style-type: disc;">direct MailChimp integration</li>
+					<li style="list-style-type: disc;">service integrated form with support for MailChimp, myMail, MailPoet and GetReponse</li>
+					<li style="list-style-type: disc;">4 different eye catching designs with customization options</li>
 				</ul>
 				<a href="http://fb.creoworx.com/essb/subscribe-button-demo/" target="_blank" class="button">Try the new subscribe button</a>
 				

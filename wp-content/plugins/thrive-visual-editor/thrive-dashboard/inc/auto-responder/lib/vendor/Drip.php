@@ -205,13 +205,7 @@ class Thrive_Dash_Api_Drip {
 	 * @throws Thrive_Dash_Api_Drip_Exception_Unsubscribed
 	 */
 	public function make_request( $url, $params = array(), $req_method = self::GET ) {
-		$args = array(
-			'headers' => array(
-				'Content-Type'  => 'application/json',
-				"Authorization" => "Basic " . base64_encode( $this->api_token . ":" ),
-			),
-			'body'    => json_encode( $params )
-		);
+
 
 		switch ( $req_method ) {
 			case self::DELETE:
@@ -222,8 +216,17 @@ class Thrive_Dash_Api_Drip {
 				$fn = 'tve_dash_api_remote_get';
 				break;
 			default:
+				$params = json_encode($params);
 				$fn = 'tve_dash_api_remote_post';
 		}
+
+		$args = array(
+			'headers' => array(
+				'Content-Type'  => 'application/json',
+				"Authorization" => "Basic " . base64_encode( $this->api_token . ":" ),
+			),
+			'body'    => $params,
+		);
 
 		$result = $fn( $url, $args );
 

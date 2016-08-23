@@ -24,7 +24,7 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 				<tr>
 					<td class="legend"><p class="label">URL:</p></td>
 					<td>
-						<input type="text" name="std_event[pageurl]" value="<?php echo $std_event['pageurl']; ?>">
+						<input type="text" name="std_event[pageurl]" value="<?php echo $std_event['pageurl']; ?>" id="std-url">
 						<span class="help">Event will trigger when this URL is visited.<br>If you add * at the end of the URL string, it will match all URLs starting with the this string.</span>
 					</td>
 				</tr>
@@ -140,7 +140,7 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 				<tr class="CustomEvent-visible">
 					<td class="legend"></td>
 					<td>
-						<p><strong>This is a PRO feature</strong> - <a href="http://www.pixelyoursite.com/facebook-pixel-plugin">Update NOW</a></p>
+						<a href="#" class="button button-add-row button-primary action">Add Param</a>
 					</td>
 				</tr>
 
@@ -148,13 +148,15 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 
 			<div class="actions-row">
 				<a href="#" class="button button-close action">Cancel</a>
-				<a href="#" class="button button-save button-primary action"><?php echo isset( $_REQUEST['id'] ) == true ? 'Save' : 'Add'; ?></a>
+				<a href="#" class="button button-save button-primary action disabled"><?php echo isset( $_REQUEST['id'] ) == true ? 'Save' : 'Add'; ?></a>
 			</div>
 
 		</form>
 
 		<script>
 			jQuery(function ($) {
+
+				validate();
 
 				/* Standard event fields show/hide on event type change. */
 				$('#std-event-type').on('change', function () {
@@ -163,6 +165,9 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 					wrapper.removeClass();	// clear all classes
 					wrapper.addClass('layout');
 					wrapper.addClass(this.value);
+
+					validate();
+
 				});
 
 				/* Close modal window */
@@ -174,6 +179,10 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 				/* Save / Add event */
 				$('.button-save').on('click', function (e) {
 					e.preventDefault();
+
+					if( validate() == false ) {
+						return;
+					}
 
 					$('#std-event-form').addClass('disabled');
 					$(this).text('Saving...');
@@ -196,6 +205,40 @@ if( !function_exists( 'pys_edit_std_event' ) ) {
 						});
 
 				});
+
+				// Form validation
+				$('form').submit(function(e) {
+
+					if( validate() == false ) {
+						e.preventDefault();
+					}
+
+				});
+
+				$('#std-url').on( 'change, keyup', function(e){
+					validate();
+				});
+
+				function validate() {
+
+					var pageURL = $('#std-url').val(),
+						eventType = $('#std-event-type').val(),
+						btnSave = $('.button-save'),
+						isValid = true;
+
+					if( eventType == null || pageURL.length == 0 ) {
+						isValid = false;
+					}
+
+					if( isValid ) {
+						btnSave.removeClass('disabled');
+					} else {
+						btnSave.addClass('disabled');
+					}
+
+					return isValid;
+
+				}
 
 			});
 		</script>

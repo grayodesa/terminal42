@@ -31,7 +31,7 @@ if ( ! class_exists( 'WpssoJsonProHeadFoodEstablishment' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_foodestablishment' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_foodestablishment' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'WpssoJsonProHeadFoodEstablishment' ) ) {
 		 * http://schema.org/Restaurant
 		 * http://schema.org/Winery
 		 */
-		public function filter_json_data_http_schema_org_foodestablishment( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_foodestablishment( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -54,8 +54,8 @@ if ( ! class_exists( 'WpssoJsonProHeadFoodEstablishment' ) ) {
 			$ret = array();
 
 			WpssoSchema::add_data_itemprop_from_assoc( $ret, $mt_og, array( 
-				'menu' => 'place:business:menu_url',
 				'acceptsReservations' => 'place:business:accepts_reservations',
+				'menu' => 'place:business:menu_url',
 			) );
 
 			return WpssoSchema::return_data_from_filter( $json_data, $ret );

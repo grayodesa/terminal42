@@ -34,10 +34,15 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 		}
 
 		public function filter_attached_accept_img_dims( $bool, $img_url, $img_width, $img_height, $size_name, $pid ) {
-
 			if ( ! $bool )	// don't recheck already rejected images
 				return false;
 
+			$lca = $this->p->cf['lca'];
+			if ( strpos( $size_name, $lca.'-' ) !== 0 ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: '.$size_name.' not a '.$lca.' custom image size' );
+				return $bool;
+			}
 			$size_info = SucomUtil::get_size_info( $size_name );
 			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $img_width >= $size_info['width'] ? true : false;
@@ -78,10 +83,15 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 		}
 
 		public function filter_content_accept_img_dims( $bool, $og_image, $size_name, $attr_name, $content_passed ) {
-
 			if ( ! $bool )	// don't recheck already rejected images
 				return false;
 
+			$lca = $this->p->cf['lca'];
+			if ( strpos( $size_name, $lca.'-' ) !== 0 ) {
+				if ( $this->p->debug->enabled )
+					$this->p->debug->log( 'exiting early: '.$size_name.' not a '.$lca.' custom image size' );
+				return $bool;
+			}
 			$size_info = SucomUtil::get_size_info( $size_name );
 			$is_cropped = empty( $size_info['crop'] ) ? false : true;	// get_size_info() returns false, true, or an array
 			$is_sufficient_w = $og_image['og:image:width'] >= $size_info['width'] ? true : false;
@@ -106,7 +116,7 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 				$size_label = $this->p->util->get_image_size_label( $size_name );
 				$dismiss_id = 'content_'.$og_image_url.'_'.$size_name.'_rejected';
 				$required_text = '<b>'.$size_label.'</b> ('.$size_name.')';
-				$data_wp_pid_msg = $content_passed ? '' : ' '.sprintf( __( '%1$s includes an additional \'data-wp-pid\' attribute for Media Library images &mdash; if this image was selected from the Media Library before %1$s was activated, try removing and adding the image back to your content.', 'wpsso' ), $this->p->cf['plugin'][$this->p->cf['lca']]['short'] );
+				$data_wp_pid_msg = $content_passed ? '' : ' '.sprintf( __( '%1$s includes an additional \'data-wp-pid\' attribute for Media Library images &mdash; if this image was selected from the Media Library before %1$s was activated, try removing and adding the image back to your content.', 'wpsso' ), $this->p->cf['plugin'][$lca]['short'] );
 				$this->p->notice->warn( sprintf( __( 'Image %1$s in content ignored &mdash; the image width / height is too small for the required %2$s image dimensions.', 'wpsso' ), $og_image_url, $required_text ).$data_wp_pid_msg, false, true, $dismiss_id, true );
 			}
 

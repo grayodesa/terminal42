@@ -5,6 +5,7 @@
  * Text Domain: wpsso-schema-json-ld
  * Domain Path: /languages
  * Plugin URI: http://surniaulula.com/extend/plugins/wpsso-schema-json-ld/
+ * Assets URI: https://surniaulula.github.io/wpsso-schema-json-ld/assets/
  * Author: JS Morisset
  * Author URI: http://surniaulula.com/
  * License: GPLv3
@@ -12,7 +13,7 @@
  * Description: WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Place, Product, etc.) for Google and Pinterest.
  * Requires At Least: 3.1
  * Tested Up To: 4.6
- * Version: 1.10.0-1
+ * Version: 1.10.1-1
  * 
  * Version Numbers: {major}.{minor}.{bugfix}-{stage}{level}
  *
@@ -38,7 +39,7 @@ if ( ! class_exists( 'WpssoJson' ) ) {
 		private static $instance = null;
 		private static $req_short = 'WPSSO';
 		private static $req_name = 'WordPress Social Sharing Optimization (WPSSO)';
-		private static $req_min_version = '3.33.8-1';
+		private static $req_min_version = '3.34.0-1';
 		private static $req_has_min_ver = true;
 
 		public static function &get_instance() {

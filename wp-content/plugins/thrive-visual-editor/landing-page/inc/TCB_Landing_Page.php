@@ -106,7 +106,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 
 			$this->fonts();
 
-			if ( ! empty( $this->globalScripts['head'] ) ) {
+			if ( ! empty( $this->globalScripts['head'] ) && ! is_editor_page() ) {
 				$this->globalScripts['head'] = $this->removeJQuery( $this->globalScripts['head'] );
 				echo $this->globalScripts['head'];
 			}
@@ -237,7 +237,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		 * called right after <body> open tag
 		 */
 		public function afterBodyOpen() {
-			if ( ! empty( $this->globalScripts['body'] ) ) {
+			if ( ! empty( $this->globalScripts['body'] ) && ! is_editor_page() ) {
 				$this->globalScripts['body'] = $this->removeJQuery( $this->globalScripts['body'] );
 				echo $this->globalScripts['body'];
 			}
@@ -258,7 +258,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		public function beforeBodyEnd() {
 			apply_filters( self::HOOK_BODY_CLOSE, $this->id );
 
-			if ( ! empty( $this->globalScripts['footer'] ) ) {
+			if ( ! empty( $this->globalScripts['footer'] ) && ! is_editor_page() ) {
 				$this->globalScripts['footer'] = $this->removeJQuery( $this->globalScripts['footer'] );
 				echo $this->globalScripts['footer'];
 			}

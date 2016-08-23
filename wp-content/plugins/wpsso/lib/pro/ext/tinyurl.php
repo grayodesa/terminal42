@@ -103,7 +103,7 @@ if ( ! class_exists( 'SuextTinyUrl' ) ) {
 				$queryString = trim($queryString, '&');
 	
 				// append to url
-				$url .= '?'. $queryString;
+				$url .= (strpos($url, '?') === false ? '?' : '&').$queryString;
 			}
 	
 			// set options
@@ -118,48 +118,28 @@ if ( ! class_exists( 'SuextTinyUrl' ) ) {
 			$curl = curl_init();
 	
 			// set options
-			curl_setopt_array($curl, $options);
+			curl_setopt_array( $curl, $options );
 	
 			// execute
-			$response = curl_exec($curl);
-			$headers = curl_getinfo($curl);
+			$response = curl_exec( $curl );
+			$headers = curl_getinfo( $curl );
 	
 			// fetch errors
-			$errorNumber = curl_errno($curl);
-			$errorMessage = curl_error($curl);
+			$errorNumber = curl_errno( $curl );
+			$errorMessage = curl_error( $curl );
 	
 			// close
-			curl_close($curl);
-	
-			// invalid headers
-			if(!in_array($headers['http_code'], array(0, 200)))
-			{
-				// should we provide debug information
-				if(self::DEBUG)
-				{
-					// make it output proper
-					echo '<pre>';
-	
-					// dump the header-information
-					var_dump($headers);
-	
-					// dump the raw response
-					var_dump($response);
-	
-					// end proper format
-					echo '</pre>';
-	
-					// stop the script
-					exit;
+			curl_close( $curl );
+
+			try {
+				if( ! in_array( $headers['http_code'], array( 0, 200 ) ) ) {
+					throw new SucomException( null, (int) $headers['http_code'] );
+				} elseif ( $errorNumber != '' ) {
+					throw new SucomException( $errorMessage, $errorNumber );
 				}
-	
-				// throw error
-				throw new SuextTinyUrlException(null, (int) $headers['http_code']);
+			} catch ( SucomException $e ) {
+				$e->errorMessage();
 			}
-	
-			// error?
-			if($errorNumber != '') 
-				throw new SuextTinyUrlException($errorMessage, $errorNumber);
 	
 			// return
 			return $response;
@@ -269,85 +249,6 @@ if ( ! class_exists( 'SuextTinyUrl' ) ) {
 	
 			// fallback
 			return false;
-		}
-	}
-}
-
-if ( ! class_exists( 'SuextTinyUrlException' ) ) {
-	
-	/**
-	 * TinyUrl Exception class
-	 *
-	 * @author		Tijs Verkoyen <php-tinyurl@verkoyen.eu>
-	 */
-	class SuextTinyUrlException extends Exception
-	{
-		/**
-		 * Http header-codes
-		 *
-		 * @var	array
-		 */
-		private $aStatusCodes = array(
-			100 => 'Continue',
-			101 => 'Switching Protocols',
-			200 => 'OK',
-			201 => 'Created',
-			202 => 'Accepted',
-			203 => 'Non-Authoritative Information',
-			204 => 'No Content',
-			205 => 'Reset Content',
-			206 => 'Partial Content',
-			300 => 'Multiple Choices',
-			301 => 'Moved Permanently',
-			301 => 'Status code is received in response to a request other than GET or HEAD, the user agent MUST NOT automatically redirect the request unless it can be confirmed by the user, since this might change the conditions under which the request was issued.',
-			302 => 'Found',
-			302 => 'Status code is received in response to a request other than GET or HEAD, the user agent MUST NOT automatically redirect the request unless it can be confirmed by the user, since this might change the conditions under which the request was issued.',
-			303 => 'See Other',
-			304 => 'Not Modified',
-			305 => 'Use Proxy',
-			306 => '(Unused)',
-			307 => 'Temporary Redirect',
-			400 => 'Bad Request',
-			401 => 'Unauthorized',
-			402 => 'Payment Required',
-			403 => 'Forbidden',
-			404 => 'Not Found',
-			405 => 'Method Not Allowed',
-			406 => 'Not Acceptable',
-			407 => 'Proxy Authentication Required',
-			408 => 'Request Timeout',
-			409 => 'Conflict',
-			411 => 'Length Required',
-			412 => 'Precondition Failed',
-			413 => 'Request Entity Too Large',
-			414 => 'Request-URI Too Long',
-			415 => 'Unsupported Media Type',
-			416 => 'Requested Range Not Satisfiable',
-			417 => 'Expectation Failed',
-			500 => 'Internal Server Error',
-			501 => 'Not Implemented',
-			502 => 'Bad Gateway',
-			503 => 'Service Unavailable',
-			504 => 'Gateway Timeout',
-			505 => 'HTTP Version Not Supported'
-		);
-	
-	
-		/**
-		 * Default constructor
-		 *
-		 * @return	void
-		 * @param	string[optional] $message
-		 * @param	int[optional] $code
-		 */
-		public function __construct($message = null, $code = null)
-		{
-			// set message
-			if($message === null && isset($this->aStatusCodes[(int) $code]))
-				$message = $this->aStatusCodes[(int) $code];
-	
-			// call parent
-			parent::__construct((string) $message, $code);
 		}
 	}
 }

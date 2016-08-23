@@ -5,7 +5,7 @@
 	Plugin URI: http://www.pixelyoursite.com/facebook-pixel-plugin-help
 	Author: PixelYourSite
 	Author URI: http://www.pixelyoursite.com
-	Version: 3.0.3
+	Version: 3.1.0
 	License: GPLv3
 */
 
@@ -16,7 +16,8 @@ if( defined( 'WP_DEBUG' ) && WP_DEBUG == true ) {
 	error_reporting( E_ALL );
 }
 
-define( 'PYS_FREE_VERSION', '3.0.2');
+define( 'PYS_FREE_VERSION_REAL', '3.1.0');
+define( 'PYS_FREE_VERSION', '3.0.2');           // for plugin notices capability
 
 require_once( 'inc/common.php' );
 require_once( 'inc/admin_notices.php' );
@@ -26,23 +27,21 @@ require_once( 'inc/ajax-standard.php' );
 add_action( 'plugins_loaded', 'pys_free_init' );
 function pys_free_init() {
 
-	if( !is_admin() && pys_get_option( 'general', 'enabled' ) == true && ! pys_is_disabled_for_role() ){
-
-		add_action( 'wp_head', 'pys_pixel_code', 1 ); // display Facebook Pixel Code
-		add_action( 'wp_enqueue_scripts', 'pys_public_scripts' );
-		
-		// add addtocart ajax support only if woocommerce installed and event is enabled
-		if( pys_is_woocommerce_active() && pys_get_option( 'woo', 'enabled' ) && pys_get_option( 'woo', 'on_add_to_cart_btn' ) ){
-			add_filter( 'woocommerce_loop_add_to_cart_link', 'pys_add_code_to_woo_cart_link', 10, 2 );
-		}
-		
-	}
-
 	$options = get_option( 'pixel_your_site' );
 	if ( ! $options || ! isset( $options['general']['pixel_id'] ) || empty( $options['general']['pixel_id'] ) ) {
-
 		pys_initialize_settings();
+	}
 
+	if( is_admin() || pys_get_option( 'general', 'enabled' ) == false || pys_is_disabled_for_role() || ! pys_get_option( 'general', 'pixel_id' ) ) {
+		return;
+	}
+
+	add_action( 'wp_head', 'pys_pixel_code', 1 ); // display Facebook Pixel Code
+	add_action( 'wp_enqueue_scripts', 'pys_public_scripts' );
+
+	// add addtocart ajax support only if woocommerce installed and events enabled
+	if ( pys_is_woocommerce_active() && pys_get_option( 'woo', 'enabled' ) && pys_get_option( 'woo', 'on_add_to_cart_btn' ) ) {
+		add_filter( 'woocommerce_loop_add_to_cart_link', 'pys_add_code_to_woo_cart_link', 10, 2 );
 	}
 	
 }
@@ -53,7 +52,7 @@ if( !function_exists( 'pys_admin_menu' ) ) {
 	add_action( 'admin_menu', 'pys_admin_menu' );
 	function pys_admin_menu() {
 
-		add_menu_page( 'PixelYourSite', 'PixelYourSite', 'manage_options', 'pixel-your-site', 'pys_admin_page_callback' );
+		add_menu_page( 'PixelYourSite', 'PixelYourSite', 'manage_options', 'pixel-your-site', 'pys_admin_page_callback', plugins_url( 'pixelyoursite/img/favicon.png' ) );
 
 	}
 

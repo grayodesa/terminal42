@@ -21,6 +21,7 @@ class WC_Pos_Sell{
 	protected static $_instance = null;
 	
 	public $data           = null;
+	public $script_ver     = '0.1.2';
 	public $id             = null;
 	public $active_plugins = array();
 
@@ -710,9 +711,10 @@ class WC_Pos_Sell{
 	    }
 
 	    $manifest = "CACHE MANIFEST\n";
+		$v = $this->script_ver;
 		foreach( $scripts as $script ) {
-			$manifest .= str_replace(' ', '%20', $script) . "\n";
-	        echo "\n".'<script src="'. $script . '"></script>';
+			$manifest .= str_replace(' ', '%20', $script) . "\n";			
+	        echo "\n".'<script src="'. $script . '?v='.$v.'"></script>';
 	    }
 
 	    global $wp_scripts;

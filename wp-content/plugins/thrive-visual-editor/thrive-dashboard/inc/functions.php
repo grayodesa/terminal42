@@ -231,7 +231,10 @@ function tve_dash_get_features() {
 			'btn_text'    => __( "Manage Settings", TVE_DASH_TRANSLATE_DOMAIN ),
 		)
 	);
+	
 	$features_to_show = apply_filters( 'tve_dash_features', array() );
+
+	$dash_features = apply_filters( 'tve_dash_filter_features', $dash_features );
 
 	$thrive_features = array();
 
@@ -380,12 +383,14 @@ function tve_dash_get_error_log_entries( $order_by = 'date', $order = 'DESC', $p
 
 	$availableAPIs = Thrive_Dash_List_Manager::getAvailableAPIs( false, array(), true );
 	foreach ( $models as $key => $entry ) {
-		$unserialized_data                 = unserialize( $entry->api_data );
+		$unserialized_data                   = unserialize( $entry->api_data );
 		$models[ $key ]->fields_html         = tve_dash_build_column_api_data( $unserialized_data );
 		$models[ $key ]->api_data            = json_encode( $unserialized_data );
 		$models[ $key ]->connection_explicit = $availableAPIs[ $entry->connection ];
 	}
+	
 	$data['models'] = $models;
+
 	return $data;
 }
 

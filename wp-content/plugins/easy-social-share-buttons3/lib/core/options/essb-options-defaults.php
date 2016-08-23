@@ -429,3 +429,16 @@ if (! function_exists ( 'essb_cached_counters_update' )) {
 	}
 }
 
+if (! function_exists ( 'essb_optin_designs' )) {
+	function essb_optin_designs() {
+		$periods = array ();
+		$periods ['design1'] = 'Design #1';
+		$periods ['design2'] = 'Design #2';
+		$periods ['design3'] = 'Design #3';
+		$periods ['design4'] = 'Design #4';
+		
+		return $periods;
+	}
+}
+
+

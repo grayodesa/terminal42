@@ -50,4 +50,5 @@ return array(
 	33   => __( 'Card not recognized.', 'wc_point_of_sale' ),
 	34   => __( 'Please enter correct data.', 'wc_point_of_sale' ),
 	35   => __( 'Please fill Custom Fields.', 'wc_point_of_sale'),
+	36   => __( 'Invalid Barcode Scan', 'wc_point_of_sale'),
 );

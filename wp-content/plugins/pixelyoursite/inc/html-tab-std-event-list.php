@@ -19,29 +19,40 @@
       </thead>
       <tbody>
         
-        <?php if( $std_events ) : ?>
+        <?php if( $std_events = get_option( 'pixel_your_site_std_events' ) ) : ?>
         
-          <?php foreach ($std_events as $key => $event) : ?>
+          <?php foreach( $std_events as $key => $params ) : ?>
+
+		        <?php
+
+		        // skip wrong events
+		        if( ! isset( $params['eventtype'] ) || ! isset( $params['pageurl'] ) ) {
+			        continue;
+		        }
+
+		        ?>
           
           <tr>
             <th scope="row" class="check-column">
               <input type="checkbox" class="std-event-check" data-id="<?php echo $key; ?>">
             </th>
             
-            <td><?php echo $event['eventtype']; ?></td>
-            <td><pre><?php echo $event['pageurl']; ?></pre></td>
+            <td><?php echo $params['eventtype']; ?></td>
+            <td><pre><?php echo $params['pageurl']; ?></pre></td>
             <td>
             <?php
             
               $code = '';
-              if( $event['eventtype'] == 'CustomCode' ) {
+              if( $params['eventtype'] == 'CustomCode' ) {
                 
-                $code = $event['code'];
+                $code = $params['code'];
                 
               } else {
-                
-                $code = pys_get_event_code( $event );
-                $code = $code['js'];
+
+				$event_type = $params['eventtype'];
+				$params = pys_clean_system_event_params( $params );
+				$code = pys_build_event_pixel_code( $params, $event_type );
+				$code = $code['js'];
                 
               }
               

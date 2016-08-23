@@ -13,6 +13,8 @@ class Thrive_Dash_Api_CustomHtml {
 
 	protected $_isMailchimp = null;
 
+	protected $_usedIds = array();
+
 	/**
 	 * @var Thrive_Dash_Api_Html_Renderer
 	 */
@@ -54,6 +56,44 @@ class Thrive_Dash_Api_CustomHtml {
 		}
 
 		return $this->_isMailchimp;
+	}
+
+	/**
+	 * get the type of form we're editing
+	 * @return string
+	 */
+	public function getFormType() {
+		$form_type_id = $_POST['post_id'];
+		if ( function_exists( 'tve_leads_get_form_type' ) ) {
+			$form_type = tve_leads_get_form_type( $form_type_id, array( 'get_variations' => false ) );
+			if ( $form_type && $form_type->post_name ) {
+				if($form_type->post_type == "tve_lead_shortcode" || $form_type->post_type == "tve_lead_2s_lightbox") {
+					return $form_type->post_type;
+				}
+				return $form_type->post_name;
+			}
+		}
+
+		return 'lead_generation';
+	}
+
+	public function getFormVariations() {
+		$variation_id = $_POST['_key'];
+
+		if ( function_exists( 'tve_leads_get_form_related_states' ) ) {
+			$states = tve_leads_get_form_related_states($variation_id);
+			if ( $states ) {
+				foreach($states as $key => $state) {
+					if($state['key'] == $variation_id) {
+						unset($states[$key]);
+					}
+				}
+
+				return $states;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -200,7 +240,6 @@ class Thrive_Dash_Api_CustomHtml {
 					$this->{$method}( $element, $response );
 				}
 			}
-
 			$response['parse_status'] = 1;
 			foreach ( $response['elements'] as $n => $elem ) {
 				$response['elements'][ $n ]['display'] = 1;
@@ -251,9 +290,18 @@ class Thrive_Dash_Api_CustomHtml {
 			'search'
 		);
 
-		$o_name       = $element->getAttribute( 'name' );
-		$element_name = $this->attrName( $o_name );
+		$o_name = $element->getAttribute( 'name' );
+		if ( substr( $o_name, - 2 ) == '[]' ) {
+			if ( ! isset( $this->_usedIds[ $o_name ] ) ) {
+				$this->_usedIds[ $o_name ] = 0;
+			} else {
+				++ $this->_usedIds[ $o_name ];
+			}
+			$o_name = substr( $o_name, 0, - 2 ) . '[' . $this->_usedIds[ $o_name ] . ']';
+		}
 
+
+		$element_name = $this->attrName( $o_name );
 		if ( in_array( $element_type, $text_input_types ) ) {
 			//hot fix for mailchimp
 			if ( $this->_isMailchimp() && strlen( $element_name ) > 30 ) {
@@ -284,7 +332,7 @@ class Thrive_Dash_Api_CustomHtml {
 				'encoded_name' => $element_name,
 				'type'         => 'checkbox',
 				'name'         => $o_name,
-				'value'        => $value
+				'value'        => $value,
 			);
 		}
 

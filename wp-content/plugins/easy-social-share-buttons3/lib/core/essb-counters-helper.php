@@ -243,14 +243,17 @@ class ESSBCountersHelper {
 	}
 	
 	public static function getRedditScore($url) {
-		$reddit_url = 'http://www.reddit.com/api/info.json?url='.$url;
+		$reddit_url = 'https://www.reddit.com/api/info.json?url='.$url;
 		$format = "json";
 		$score = $ups = $downs = 0; //initialize
 	
+		//print $reddit_url;
+		//http://stackoverflow.com/questions/8963485/error-429-when-invoking-reddit-api-from-google-app-engine
 		/* action */
 		$content = self::parse( $reddit_url );
 		if($content) {
 			if($format == 'json') {
+				//print "result ".$content;
 				$json = json_decode($content,true);
 				
 				if (isset($json['data']) && isset($json['data']['children'])) {
@@ -269,18 +272,20 @@ class ESSBCountersHelper {
 	
 	public static function get_facebook_count($url) {
 		
-		$parse_url = 'https://graph.facebook.com/fql?q=SELECT%20like_count,%20total_count,%20share_count,%20click_count,%20comment_count%20FROM%20link_stat%20WHERE%20url%20=%20%22' . $url . '%22';
+		//$parse_url = 'https://graph.facebook.com/fql?q=SELECT%20like_count,%20total_count,%20share_count,%20click_count,%20comment_count%20FROM%20link_stat%20WHERE%20url%20=%20%22' . $url . '%22';
+		//$parse_url = 'https://api.facebook.com/restserver.php?method=links.getStats&format=json&urls='.$url;
+		$parse_url = 'https://graph.facebook.com/?id='.$url;
+		//print "Facebook count URL = ".$parse_url;
 		$content = self::parse ( $parse_url );
-		
 		$result = 0;
 		$result_comments = 0;
 		
 		if ($content != '') {
+			//print "response = ".$content;
 			$content = json_decode ( $content, true );
 		
-			$data_parsers = $content['data'];
-			$result = isset ( $data_parsers [0] ['total_count'] ) ? intval ( $data_parsers [0] ['total_count'] ) : 0;
-			$result_comments = isset ( $data_parsers [0] ['comment_count'] ) ? intval ( $data_parsers [0] ['comment_count'] ) : 0;
+			$data_parsers = $content;
+			$result = isset ( $data_parsers ['share'] ['share_count'] ) ? intval ( $data_parsers ['share'] ['share_count'] ) : 0;
 		}
 		
 		return $result;
@@ -344,7 +349,7 @@ class ESSBCountersHelper {
 	}
 	
 	public static function get_yummly($url) {
-		$return_data = self::parse('https://www.yummly.com/services/yum-count?callback=?&url='.$url);
+		$return_data = self::parse('https://www.yummly.com/services/yum-count?url='.$url);
 	
 		$result = 0;
 		if (!empty($return_data)) {

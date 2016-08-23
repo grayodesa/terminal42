@@ -31,11 +31,11 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 				$this->p->debug->mark();
 
 			$this->p->util->add_plugin_filters( $this, array(
-				'json_data_http_schema_org_place' => 5,	// $json_data, $use_post, $mod, $mt_og, $user_id
+				'json_data_http_schema_org_place' => 4,	// $json_data, $mod, $mt_og, $user_id
 			) );
 		}
 
-		public function filter_json_data_http_schema_org_place( $json_data, $use_post, $mod, $mt_og, $user_id ) {
+		public function filter_json_data_http_schema_org_place( $json_data, $mod, $mt_og, $user_id ) {
 
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
@@ -49,7 +49,7 @@ if ( ! class_exists( 'WpssoJsonProHeadPlace' ) ) {
 			 *	image as http://schema.org/ImageObject
 			 *	video as http://schema.org/VideoObject
 			 */
-			WpssoJsonSchema::add_media_data( $ret, $use_post, $mod, $mt_og, $user_id );
+			WpssoJsonSchema::add_media_data( $ret, $mod, $mt_og, $user_id );
 
 			// save time and check for prefix in meta tags
 			if ( ! preg_grep( '/^place:/', array_keys( $mt_og ) ) )

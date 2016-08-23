@@ -25,6 +25,7 @@ $listOfMappedShortcodes = array(
 		"easy-followers" => array("name" => "Social followers counter", "description" => "Display social followers counter"),
 		"easy-total-followers" => array("name" => "Total social followers counter", "description" => "Display number of total social followers"),		
 		"easy-popular-posts" => array("name" => "List of popular posts", "description" => "Display popular posts by shares, loves or views"),
+		"easy-subscribe" => array("name" => "Subscribe form", "description" => "Include subscribe form"),
 		
 		);
 

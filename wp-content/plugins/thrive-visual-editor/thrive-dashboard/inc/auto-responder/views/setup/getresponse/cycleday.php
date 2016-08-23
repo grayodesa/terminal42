@@ -15,19 +15,22 @@
 </div>
 <script type="text/javascript">
 	(function ( $ ) {
-		TVE_Content_Builder.auto_responder['get-response'] = TVE_Content_Builder.auto_responder['get-response'] || {};
+		var TVE_Content_Builder = TVE_Content_Builder || {};
+		if ( TVE_Content_Builder.auto_responder ) {
+			TVE_Content_Builder.auto_responder['get-response'] = TVE_Content_Builder.auto_responder['get-response'] || {};
 
-		TVE_Content_Builder.auto_responder['get-response'].validate = function () {
-			var $input = $( '#get-response_cycleday' ),
-				value = $input.val();
+			TVE_Content_Builder.auto_responder['get-response'].validate = function () {
+				var $input = $( '#get-response_cycleday' ),
+					value = $input.val();
 
 
-			if ( isNaN( value ) || value < 0 || value > 103 ) {
-				alert( 'Invalid cycle day' );
-				return false;
+				if ( isNaN( value ) || value < 0 || value > 103 ) {
+					alert( 'Invalid cycle day' );
+					return false;
+				}
+
+				return true;
 			}
-
-			return true;
 		}
 	})( jQuery );
 </script>

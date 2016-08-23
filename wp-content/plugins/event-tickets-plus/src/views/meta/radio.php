@@ -2,7 +2,7 @@
 /**
  * Renders radio field
  *
- * @version 4.2
+ * @version 4.2.5
  *
  */
 $options = null;
@@ -17,7 +17,7 @@ if ( ! $options ) {
 ?>
 <div class="tribe-tickets-meta tribe-tickets-meta-radio <?php echo $required ? 'tribe-tickets-meta-required' : ''; ?>">
 	<header class="tribe-tickets-meta-label">
-		<?php echo esc_html( $field['label'] ); ?>
+		<?php echo wp_kses_post( $field['label'] ); ?>
 	</header>
 	<?php
 	foreach ( $options as $option ) {
@@ -35,7 +35,7 @@ if ( ! $options ) {
 				<?php disabled( $this->is_restricted( $attendee_id ) ); ?>
 			>
 			<span class="tribe-tickets-meta-option-label">
-				<?php echo esc_html( $option ); ?>
+				<?php echo wp_kses_post( $option ); ?>
 			</span>
 		</label>
 		<?php

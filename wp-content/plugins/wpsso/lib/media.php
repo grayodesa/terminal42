@@ -13,7 +13,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 	class WpssoMedia {
 
 		private $p;
-		private $default_img_preg = array(
+		private $def_img_preg = array(
 			'html_tag' => 'img',
 			'pid_attr' => 'data-[a-z]+-pid',
 			'ngg_src' => '[^\'"]+\/cache\/([0-9]+)_(crop)?_[0-9]+x[0-9]+_[^\/\'"]+|[^\'"]+-nggid0[1-f]([0-9]+)-[^\'"]+',
@@ -212,6 +212,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 		public function get_attached_images( $num = 0, $size_name = 'thumbnail', $post_id, $check_dupes = true, $force_regen = false ) {
 
 			if ( $this->p->debug->enabled ) {
+				$this->p->debug->mark();
 				$this->p->debug->log_args( array(
 					'num' => $num,
 					'size_name' => $size_name,
@@ -294,8 +295,10 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 				'force_regen' => $force_regen,
 			) );
 
-			if ( $this->p->debug->enabled )
+			if ( $this->p->debug->enabled ) {
+				$this->p->debug->mark();
 				$this->p->debug->log_args( $args );
+			}
 
 			$lca = $this->p->cf['lca'];
 			$size_info = SucomUtil::get_size_info( $size_name );
@@ -333,7 +336,8 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					$img_meta['height'] === $size_info['height'] )
 						$use_full = true;
 				if ( $this->p->debug->enabled )
-					$this->p->debug->log( 'full size image '.$img_meta['file'].' dimensions '.$img_meta['width'].'x'.$img_meta['height'] );
+					$this->p->debug->log( 'full size image '.$img_meta['file'].' dimensions '.
+						$img_meta['width'].'x'.$img_meta['height'] );
 			} elseif ( $this->p->debug->enabled ) {
 				if ( isset( $img_meta['file'] ) )
 					$this->p->debug->log( 'full size image '.$img_meta['file'].' dimensions are missing' );
@@ -396,21 +400,25 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 								( empty( $img_meta['sizes'][$size_name]['height'] ) ? 0 : 
 									$img_meta['sizes'][$size_name]['height'] ).') does not match '.
 								$size_name.' ('.$size_info['width'].'x'.$size_info['height'].
-									( $img_cropped === 0 ? '' : ' cropped' ).')' );
+									( $img_cropped ? ' cropped' : '' ).')' );
 						}
 
-						$fullsizepath = get_attached_file( $pid );
-						$resized = image_make_intermediate_size( $fullsizepath, 
-							$size_info['width'], $size_info['height'], $size_info['crop'] );
+						if ( $this->can_make_size( $img_meta, $size_info ) ) {
 
-						if ( $this->p->debug->enabled )
-							$this->p->debug->log( 'WordPress image_make_intermediate_size() reported '.
-								( $resized === false ? 'failure' : 'success' ) );
-
-						if ( $resized !== false ) {
-							$img_meta['sizes'][$size_name] = $resized;
-							wp_update_attachment_metadata( $pid, $img_meta );
-						}
+							$fullsizepath = get_attached_file( $pid );
+							$resized = image_make_intermediate_size( $fullsizepath, 
+								$size_info['width'], $size_info['height'], $size_info['crop'] );
+	
+							if ( $this->p->debug->enabled )
+								$this->p->debug->log( 'WordPress image_make_intermediate_size() reported '.
+									( $resized === false ? 'failure' : 'success' ) );
+	
+							if ( $resized !== false ) {
+								$img_meta['sizes'][$size_name] = $resized;
+								wp_update_attachment_metadata( $pid, $img_meta );
+							}
+						} elseif ( $this->p->debug->enabled )
+							$this->p->debug->log( 'skipped image_make_intermediate_size()' );
 					}
 				} elseif ( $this->p->debug->enabled )
 					$this->p->debug->log( 'image metadata check skipped: plugin_auto_img_resize option is disabled' );
@@ -541,13 +549,13 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 
 			$og_image = SucomUtil::get_mt_prop_image( 'og' );
 			$size_info = SucomUtil::get_size_info( $size_name );
-			$img_preg = $this->default_img_preg;
+			$img_preg = $this->def_img_preg;
 
 			// allow the html_tag and pid_attr regex to be modified
 			foreach( array( 'html_tag', 'pid_attr' ) as $type ) {
 				$filter_name = $this->p->cf['lca'].'_content_image_preg_'.$type;
 				if ( has_filter( $filter_name ) ) {
-					$img_preg[$type] = apply_filters( $filter_name, $this->default_img_preg[$type] );
+					$img_preg[$type] = apply_filters( $filter_name, $this->def_img_preg[$type] );
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'filtered image preg '.$type.' = \''.$img_preg[$type].'\'' );
 				}
@@ -579,7 +587,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 						$attr_value = $img_arr[4];	// id
 					} else {
 						$tag_name = $img_arr[5];	// img
-						$attr_name = $img_arr[6];	// data-share-src|data-lazy-src|src
+						$attr_name = $img_arr[6];	// data-share-src|data-lazy-src|data-src|src
 						$attr_value = $img_arr[7];	// url
 					}
 
@@ -622,7 +630,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 
 							break;
 
-						// data-share-src|data-lazy-src|src
+						// data-share-src|data-lazy-src|data-src|src
 						default:
 							// prevent duplicates by silently ignoring ngg images (already processed by the ngg module)
 							if ( $this->p->is_avail['media']['ngg'] === true && 
@@ -741,9 +749,6 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 			return $og_ret;
 		}
 
-		/*
-		 * Check the content for generic <iframe|embed/> html tags. Apply wpsso_content_videos filter for more specialized checks.
-		 */
 		public function get_content_videos( $num = 0, $mod = true, $check_dupes = true, $content = '' ) {
 
 			if ( $this->p->debug->enabled ) {
@@ -775,9 +780,9 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 			}
 
 			// detect standard iframe/embed tags - use the wpsso_content_videos filter for additional html5/javascript methods
-			// the src url must contain '/embed|embed_code|swf|video|v/' in to be recognized as an embedded video url
-			if ( preg_match_all( '/<(iframe|embed)[^<>]*? src=[\'"]([^\'"<>]+\/(embed|embed_code|swf|video|v)\/[^\'"<>]+)[\'"][^<>]*>/i',
-				$content, $all_matches, PREG_SET_ORDER ) ) {
+			if ( preg_match_all( '/<(iframe|embed)[^<>]*? (data-share-src|data-lazy-src|data-src|src)=[\'"]'.
+				'([^\'"<>]+\/(embed\/|embed_code\/|swf\/|v\/|video\/|video\.php\?)[^\'"<>]+)[\'"][^<>]*>/i',
+					$content, $all_matches, PREG_SET_ORDER ) ) {
 
 				if ( isset( $this->p->options['plugin_content_vid_max'] ) &&
 					count( $all_matches ) > $this->p->options['plugin_content_vid_max'] ) {
@@ -792,8 +797,8 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 
 				foreach ( $all_matches as $media ) {
 					if ( $this->p->debug->enabled )
-						$this->p->debug->log( '<'.$media[1].'/> html tag found = '.$media[2] );
-					$embed_url = $media[2];
+						$this->p->debug->log( '<'.$media[1].'/> html tag found '.$media[2].' = '.$media[3] );
+					$embed_url = $media[3];
 					if ( ! empty( $embed_url ) && 
 						( $check_dupes == false || 
 							$this->p->util->is_uniq_url( $embed_url, 'video' ) ) ) {	// $context = 'video'
@@ -987,6 +992,44 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 			}
 
 			return true;
+		}
+
+		public function can_make_size( $img_meta, $size_info ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
+
+			$full_width = empty( $img_meta['width'] ) ? 0 : $img_meta['width'];
+			$full_height = empty( $img_meta['height'] ) ? 0 : $img_meta['height'];
+
+			$is_sufficient_w = $full_width >= $size_info['width'] ? true : false;
+			$is_sufficient_h = $full_height >= $size_info['height'] ? true : false;
+
+			$img_cropped = empty( $size_info['crop'] ) ? 0 : 1;
+			$upscale_multiplier = 1;
+
+			if ( $this->p->options['plugin_upscale_images'] ) {
+				$img_info = (array) self::get_image_src_info();
+				$upscale_multiplier = 1 + ( apply_filters( $this->p->cf['lca'].'_image_upscale_max',
+					$this->p->options['plugin_upscale_img_max'], $img_info ) / 100 );
+				$upscale_full_width = round( $full_width * $upscale_multiplier );
+				$upscale_full_height = round( $full_height * $upscale_multiplier );
+				$is_sufficient_w = $upscale_full_width >= $size_info['width'] ? true : false;
+				$is_sufficient_h = $upscale_full_height >= $size_info['height'] ? true : false;
+			}
+
+
+			if ( ( ! $img_cropped && ( ! $is_sufficient_w && ! $is_sufficient_h ) ) ||
+				( $img_cropped && ( ! $is_sufficient_w || ! $is_sufficient_h ) ) )
+					$ret = false;
+			else $ret = true;
+
+			if ( $this->p->debug->enabled )
+				$this->p->debug->log( 'full size image of '.$full_width.'x'.$full_height.( $upscale_multiplier !== 1 ? 
+					' ('.$upscale_full_width.'x'.$upscale_full_height.' upscaled by '.$upscale_multiplier.')' : '' ).
+					( $ret ? ' sufficient' : ' too small' ).' to create size '.$size_info['width'].'x'.$size_info['height'].
+					( $img_cropped ? ' cropped' : '' ) );
+
+			return $ret;
 		}
 	}
 }

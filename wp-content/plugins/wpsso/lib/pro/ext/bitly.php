@@ -42,17 +42,11 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 		 * @param	string $login	The login (username) that has to be used for authenticating.
 		 * @param	string $apiKey	The API-key that has to be used for authentication (see http://bit.ly/account).
 		 */
-		public function __construct( $login, $accessToken = '', $apiKey = '', &$debug = '' ) {
+		public function __construct( $login, $accessToken = '', $apiKey = '' ) {
 
 			$this->setLogin( $login );
 			$this->setAccessToken( $accessToken );
 			$this->setApiKey( $apiKey );
-
-			if ( is_object( $debug ) ) {
-				$this->debug = $debug;
-				if ( $this->debug->enabled )
-					$this->debug->mark();
-			} else $this->debug = new SuextBitlyNoDebug();
 		}
 	
 		/**
@@ -85,7 +79,7 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 			$queryString = trim($queryString, '&');
 	
 			// append to url
-			$url .= '?' . $queryString;
+			$url .= (strpos($url, '?') === false ? '?' : '&').$queryString;
 	
 			// prepend
 			if ( empty( $aParameters['access_token'] ) )
@@ -121,39 +115,20 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 			// close
 			curl_close($curl);
 	
-			// invalid headers
-			if ( ! in_array( $headers['http_code'], array( 0, 200 ) ) ) {
-				if ( $this->debug->enabled )
-					$this->debug->log( 'invalid headers ('.$headers['http_code'].')' );
-				return false;
-			}
-	
-			// error?
-			if($errorNumber != '') {
-				if ( $this->debug->enabled )
-					$this->debug->log( $errorMessage );
-				return false;
-			}
-	
-			// we expect JSON so decode it
-			$json = @json_decode($response, true);
-	
-			// validate json
-			if($json === false) {
-				if ( $this->debug->enabled )
-					$this->debug->log('invalid json-response');
-				return false;
-			}
-	
-			// is error?
-			if(!isset($json['status_txt']) || (string) $json['status_txt'] != 'OK')
-			{
-				if ( $this->debug->enabled ) {
-					if(isset($json['status_code']) && isset($json['status_txt']))	// bitly-error?
-						$this->debug->log((string) $json['status_txt']);
-					else $this->debug->log('invalid json-response');		// invalid json?
+			try {
+				if ( ! in_array( $headers['http_code'], array( 0, 200 ) ) ) {				// invalid headers
+					throw new SucomException( 'invalid headers ('.$headers['http_code'].')' );
+				} elseif ( $errorNumber != '' ) {							// error?
+					throw new SucomException( $errorMessage );
+				} elseif ( ( $json = @json_decode( $response, true ) ) === false ) {			// validate json
+					throw new SucomException( 'invalid json-response' );
+				} elseif ( ! isset( $json['status_txt'] ) || (string) $json['status_txt'] != 'OK' ) {	// is error?
+					if( isset( $json['status_code'] ) && isset( $json['status_txt'] ) )		// bitly-error?
+						throw new SucomException( (string) $json['status_txt'] );
+					else throw new SucomException( 'invalid json-response' );			// invalid json?
 				}
-				return false;
+			} catch ( SucomException $e ) {
+				return $e->errorMessage();
 			}
 	
 			// return
@@ -284,11 +259,12 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 			$shortURL = (string) $shortURL;
 			$hash = (string) $hash;
 	
-			// validate
-			if($shortURL == '' && $hash == '') {
-				if ( $this->debug->enabled )
-					$this->debug->log('shortURL or hash should contain a value');
-				return false;
+			try {
+				if( $shortURL == '' && $hash == '' ) {	// validate
+					throw new SucomException('shortURL or hash should contain a value');
+				}
+			} catch ( SucomException $e ) {
+				return $e->errorMessage();
 			}
 	
 			// make the call
@@ -329,18 +305,26 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 		 */
 		public function shorten( $url, $domain = null, $endUserLogin = null, $endUserApiKey = null ) {
 
-			// domain specified
-			if( $domain !== null && ! in_array((string) $domain, array('bit.ly', 'j.mp') ) ) {
-				if ( $this->debug->enabled )
-					$this->debug->log('invalid domain: custom domains are handled by using a correct login.');
-				return false;
+			try {
+				if ( $domain !== null && 
+					! in_array( (string) $domain, array( 'bit.ly', 'j.mp' ) ) ) {	// domain specified
+					throw new SucomException( 'invalid domain: custom domains handled by using correct login.' );
+				}
+			} catch ( SucomException $e ) {
+				return $e->errorMessage();
 			}
 	
 			// redefine
 			$parameters['longUrl'] = (string) $url;
-			if( $domain !== null ) $parameters['domain'] = (string) $domain;
-			if( $endUserLogin !== null ) $parameters['x_login'] = (string) $endUserLogin;
-			if( $endUserApiKey !== null ) $parameters['x_apiKey'] = (string) $endUserApiKey;
+
+			if ( $domain !== null )
+				$parameters['domain'] = (string) $domain;
+
+			if ( $endUserLogin !== null )
+				$parameters['x_login'] = (string) $endUserLogin;
+
+			if ( $endUserApiKey !== null )
+				$parameters['x_apiKey'] = (string) $endUserApiKey;
 	
 			// make the call
 			$response = $this->doCall( 'shorten', $parameters );
@@ -367,12 +351,4 @@ if ( ! class_exists( 'SuextBitly' ) ) {
 	
 }
 	
-if ( ! class_exists( 'SuextBitlyNoDebug' ) ) {
-	class SuextBitlyNoDebug {
-		public $enabled = false;
-		public function mark() { return; }
-		public function log() { return; }
-	}
-}	
-
 ?>

@@ -173,6 +173,9 @@ if (ESSBTwitterCounterRecovery::recovery_called()) {
 
 
 if (ESSB3_ADDONS_ACTIVE && class_exists('ESSBAddonsHelper')) {
+	global $essb_options;
+	$deactivate_appscreo = ESSBOptionValuesHelper::options_bool_value($essb_options, 'deactivate_appscreo');
+	if (!$deactivate_appscreo) {
 	$addons = ESSBAddonsHelper::get_instance();
 	$new_addons = $addons->get_new_addons();
 	
@@ -183,6 +186,7 @@ if (ESSB3_ADDONS_ACTIVE && class_exists('ESSBAddonsHelper')) {
 				
 		$dismiss_addons_button = '<a href="'.$dismiss_url.'"  text="' . __ ( 'Add-ons', ESSB3_TEXT_DOMAIN ) . '" class="button button-orange float_right" style="margin-right: 5px;"><i class="fa fa-close"></i>&nbsp;' . __ ( 'Dismiss', ESSB3_TEXT_DOMAIN ) . '</a>';
 		printf ( '<div class="essb-information-box fade"><div class="icon orange"><i class="fa fa-cube"></i></div><div class="inner">New add-on for Easy Social Share Buttons for WordPress is available: <a href="%2$s" target="_blank"><b>%1$s</b></a> %4$s%3$s</div></div>', $data['title'], $data['url'], $all_addons_button, $dismiss_addons_button );		
+	}
 	}
 }
 

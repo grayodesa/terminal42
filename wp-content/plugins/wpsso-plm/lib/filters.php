@@ -98,7 +98,7 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			return $ns;
 		}
 
-		public function filter_og_seed( $og = array(), $use_post = false, $mod = false ) {
+		public function filter_og_seed( $og, $use_post, $mod ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
@@ -122,8 +122,9 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			 * place:country_name
 			 */
 			foreach ( WpssoPlmAddress::$place_mt as $key => $mt_name )
-				$og[$mt_name] = isset( $addr_opts[$key] ) ?
-					$addr_opts[$key] : '';
+				$og[$mt_name] = isset( $addr_opts[$key] ) && 
+					$addr_opts[$key] !== 'none' ?
+						$addr_opts[$key] : '';
 
 			/*
 			 * og:latitude
@@ -161,8 +162,9 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 			foreach ( array(
 				'plm_addr_season_from_date' => 'place:business:season:from',
 				'plm_addr_season_to_date' => 'place:business:season:to',
-				'plm_addr_menu_url' => 'place:business:menu_url',
+				'plm_addr_service_radius' => 'place:business:service_radius',
 				'plm_addr_accept_res' => 'place:business:accepts_reservations',
+				'plm_addr_menu_url' => 'place:business:menu_url',
 			) as $key => $mt_name ) {
 				if ( $key === 'plm_addr_accept_res' )
 					$og[$mt_name] = empty( $addr_opts[$key] ) ? 'false' : 'true';
@@ -335,7 +337,7 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 				case ( preg_match( '/^plm_addr_(streetaddr|city|state|zipcode)$/', $key ) ? true : false ):
 					return 'ok_blank';	// text strings that can be blank
 					break;
-				case ( preg_match( '/^plm_addr_(latitude|longitude|altitude|po_box_number)$/', $key ) ? true : false ):
+				case ( preg_match( '/^plm_addr_(latitude|longitude|altitude|service_radius|po_box_number)$/', $key ) ? true : false ):
 					return 'blank_num';	// must be numeric (blank or zero is ok)
 					break;
 				case ( preg_match( '/^plm_addr_day_[a-z]+_(open|close)$/', $key ) ? true : false ):
@@ -419,7 +421,7 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 					$text = __( 'An optional numeric altitude (in meters above sea level) for the main content of this webpage.', 'wpsso-plm' );
 					break;
 				case 'tooltip-plm_addr_business_type':
-					$text = __( 'A more descriptive Schema type for this local business. You must select a food establishment (fast food restaurant, ice cream shop, restaurant, etc.) to include Schema markup for a food menu and/or reservation information.', 'wpsso-plm' );
+					$text = __( 'A more descriptive Schema type for this local business. You must select a food establishment (fast food restaurant, ice cream shop, restaurant, etc.) to include Schema markup for a food menu URL and/or reservation information.', 'wpsso-plm' );
 					break;
 				case 'tooltip-plm_addr_days':
 					$text = __( 'Select the days and hours this business is open.', 'wpsso-plm' );
@@ -427,12 +429,14 @@ if ( ! class_exists( 'WpssoPlmFilters' ) ) {
 				case 'tooltip-plm_addr_season_dates':
 					$text = __( 'This business is only open for part of the year, between these two dates.', 'wpsso-plm' );
 					break;
-				case 'tooltip-plm_addr_menu_url':
-					$text = __( 'The menu URL for this food establishment (fast food restaurant, ice cream shop, restaurant, etc.)', 'wpsso-plm' );
-					break;
+				case 'tooltip-plm_addr_service_radius':
+					$text = __( 'The geographic area where a service is provided.', 'wpsso-plm' );
 					break;
 				case 'tooltip-plm_addr_accept_res':
 					$text = __( 'This food establishment accepts reservations.', 'wpsso-plm' );
+					break;
+				case 'tooltip-plm_addr_menu_url':
+					$text = __( 'The menu URL for this food establishment (fast food restaurant, ice cream shop, restaurant, etc.)', 'wpsso-plm' );
 					break;
 				case 'tooltip-plm_add_to':
 					$text = sprintf( __( 'A <em>%1$s</em> tab can be added to the %2$s metabox on Posts, Pages, and custom post types, allowing you to enter specific address information for that webpage (ie. GPS coordinates and/or street address).', 'wpsso-plm' ), _x( 'Place / Location', 'metabox tab', 'wpsso-plm' ), _x( 'Social Settings', 'metabox title', 'wpsso' ) );

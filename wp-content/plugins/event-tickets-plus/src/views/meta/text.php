@@ -2,14 +2,14 @@
 /**
  * Renders text field
  *
- * @version 4.2
+ * @version 4.2.5
  *
  */
 $multiline = isset( $field['extra'] ) && isset( $field['extra']['multiline'] ) ? $field['extra']['multiline'] : '';
 $option_id = "tribe-tickets-meta_{$this->slug}" . ( $attendee_id ? '_' . $attendee_id : '' );
 ?>
 <div class="tribe-tickets-meta tribe-tickets-meta-text <?php echo $required ? 'tribe-tickets-meta-required' : ''; ?>">
-	<label for="<?php echo esc_attr( $option_id ); ?>"><?php echo esc_html( $field['label'] ); ?></label>
+	<label for="<?php echo esc_attr( $option_id ); ?>"><?php echo wp_kses_post( $field['label'] ); ?></label>
 	<?php
 	if ( $multiline ) {
 		?>

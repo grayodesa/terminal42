@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Event Tickets Plus package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2016-06-22 15:36:40+0000\n"
+"PO-Revision-Date: 2016-08-09 13:48:53+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: src/Tribe/CSV_Importer/Column_Names.php:46
 msgid "Event Name or ID or Slug"
-msgstr ""
+msgstr "Veranstaltungsname oder ID"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:47
 msgid "Ticket Name"
@@ -24,27 +24,27 @@ msgstr "Ticket Name"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:48
 msgid "Ticket Description"
-msgstr ""
+msgstr "Ticketbeschreibung"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:49
 msgid "Ticket Start Sale Date"
-msgstr ""
+msgstr "Karten Verkaufsstartdatum"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:50
 msgid "Ticket Start Sale Time"
-msgstr ""
+msgstr "Karten Verkaufsstartzeit"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:51
 msgid "Ticket End Sale Date"
-msgstr ""
+msgstr "Karten Verkaufsenddatum "
 
 #: src/Tribe/CSV_Importer/Column_Names.php:52
 msgid "Ticket End Sale Time"
-msgstr ""
+msgstr "Karten Verkaufsendzeit"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:53
 msgid "Ticket Price"
-msgstr ""
+msgstr "Ticketpreis"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:55
 msgid "Ticket SKU"
@@ -56,11 +56,11 @@ msgstr ""
 
 #: src/Tribe/Main.php:289
 msgid "Require users to log in before they purchase tickets"
-msgstr ""
+msgstr "Zwinge Benutzer sich vor dem Kauf einzuloggen"
 
 #: src/views/login-to-purchase.php:12
 msgid "Login to purchase"
-msgstr ""
+msgstr "Einloggen um zu kaufen"
 
 #: src/views/tickets-plus/orders-edit-meta.php:13
 msgid "Toggle attendee info"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: src/views/tickets-plus/orders-tickets.php:29
 msgid "My Tickets for This %s"
-msgstr ""
+msgstr "Meine Karten für %s"
 
 #: src/views/tickets-plus/orders-tickets.php:45
 msgid "Order #%1$s: %2$s reserved by %3$s (%4$s) on %5$s"
@@ -76,7 +76,7 @@ msgstr ""
 
 #: src/views/tickets-plus/orders-tickets.php:70
 msgid "Attendee %d"
-msgstr ""
+msgstr "Teilnehmer %d"
 
 #. Description of the plugin/theme
 msgid "Event Tickets Plus lets you sell tickets to events, collect custom attendee information, and more!"

@@ -142,9 +142,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 		}
 		
-		if(isset($params['grouping_id'])) {
-			foreach($groupings as $grouping) {
-				if($grouping['id'] ==  $params['grouping_id']) {
+		if ( isset( $params['grouping_id'] ) ) {
+			foreach ( $groupings as $grouping ) {
+				if ( $grouping['id'] == $params['grouping_id'] ) {
 					$groupings = $grouping;
 				}
 			}
@@ -177,25 +177,25 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		);
 
 		if ( isset( $arguments['mailchimp_groupin'] ) && $arguments['mailchimp_groupin'] != 0 && ! empty( $arguments['mailchimp_group'] ) ) {
-			$group_ids                  = explode( ',', $arguments['mailchimp_group'] );
-			$params['list_id'] = $list_identifier;
+			$group_ids             = explode( ',', $arguments['mailchimp_group'] );
+			$params['list_id']     = $list_identifier;
 			$params['grouping_id'] = $arguments['mailchimp_groupin'];
-			$grouping = $this->_getGroups($params);
+			$grouping              = $this->_getGroups( $params );
 
-			foreach($grouping['groups'] as $group) {
-				if(in_array($group['id'], $group_ids)) {
+			foreach ( $grouping['groups'] as $group ) {
+				if ( in_array( $group['id'], $group_ids ) ) {
 					$groups[] = $group['name'];
 				}
 			}
 
-			$merge_tags['groupings'] = array (
+			$merge_tags['groupings'] = array(
 				array(
 					'id'     => $arguments['mailchimp_groupin'],
 					'groups' => $groups,
 				)
 			);
 		}
-		
+
 		if ( isset( $arguments['phone'] ) ) {
 			$merge_vars = $this->getCustomFields( $list_identifier );
 			foreach ( $merge_vars as $item ) {
@@ -206,9 +206,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 		}
 
-		$member = $api->lists->memberInfo($list_identifier, array(array('email' => $arguments['email'])));
+		$member = $api->lists->memberInfo( $list_identifier, array( array( 'email' => $arguments['email'] ) ) );
 
-		if($member['error_count'] == 1) {
+		if($member['error_count'] == 1 || $member['data'][0]['status'] == 'unsubscribed') {
 			try {
 				$api->lists->subscribe(
 					$list_identifier,
@@ -226,8 +226,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
 			}
 		} else {
-
-			var_dump($merge_tags);
 
 			$existing_groups = array();
 			if(isset($member['data'][0]['merges']['GROUPINGS'])) {
@@ -260,7 +258,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
 			}
 		}
-
 
 
 	}

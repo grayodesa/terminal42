@@ -81,6 +81,7 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 			$form->get_th_html( _x( 'Check for Embedded Media from',
 				'option label', 'wpsso' ), null, 'plugin_embedded_media' ).
 			'<td class="blank">'.
+			'<p>'.$this->get_nocb( 'plugin_facebook_api' ).' Facebook Videos</p>'.
 			'<p>'.$this->get_nocb( 'plugin_slideshare_api' ).' Slideshare Presentations</p>'.
 			'<p>'.$this->get_nocb( 'plugin_vimeo_api' ).' Vimeo Videos</p>'.
 			'<p>'.$this->get_nocb( 'plugin_wistia_api' ).' Wistia Videos</p>'.
@@ -96,9 +97,9 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 				$this->p->msgs->get( 'pro-feature-msg' ).'</td>';
 
 			foreach ( array( 
-				'og_img' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
+				'og_img' => sprintf( _x( 'Add %s Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Img', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
-				'og_desc' => sprintf( _x( 'Add "%s" Column for', 'option label', 'wpsso' ), 
+				'og_desc' => sprintf( _x( 'Add %s Column for', 'option label', 'wpsso' ), 
 					sprintf( _x( '%s Desc', 'column title', 'wpsso' ), $this->p->cf['menu'] ) ),
 			) as $key => $label ) {
 
@@ -190,7 +191,7 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 			$this->get_nocb_cell( 'plugin_filter_lang' );
 
 			$table_rows['plugin_auto_img_resize'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Recreate Missing WP Media Sizes',
+			$form->get_th_html( _x( 'Create Missing WP Media Sizes',
 				'option label', 'wpsso' ), null, 'plugin_auto_img_resize' ).
 			$this->get_nocb_cell( 'plugin_auto_img_resize' );
 
@@ -199,12 +200,12 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 			$this->get_nocb_cell( 'plugin_check_img_dims', 
 				'<em>'._x( 'recommended', 'option comment', 'wpsso' ).'</em>' );
 
-			$table_rows['plugin_upscale_images'] = $form->get_th_html( _x( 'Allow Upscaling of WP Media Images',
+			$table_rows['plugin_upscale_images'] = $form->get_th_html( _x( 'Allow Upscale of WP Media Images',
 				'option label', 'wpsso' ), null, 'plugin_upscale_images' ).
 			$this->get_nocb_cell( 'plugin_upscale_images' ).'</td>';
 
 			$table_rows['plugin_upscale_img_max'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Maximum Image Upscale Percentage',
+			$form->get_th_html( _x( 'Maximum Image Upscale Percent',
 				'option label', 'wpsso' ), null, 'plugin_upscale_img_max' ).
 			'<td class="blank">'.$this->p->options['plugin_upscale_img_max'].' %</td>';
 
@@ -267,15 +268,15 @@ if ( ! class_exists( 'WpssoGplAdminAdvanced' ) ) {
 				'option label', 'wpsso' ), null, 'plugin_shortener' ).
 			'<td class="blank">[None]</td>';
 
-			$table_rows['plugin_shortlink'] = $form->get_th_html( _x( '<em>Get Shortlink</em> Gives Shortened URL',
-				'option label', 'wpsso' ), null, 'plugin_shortlink' ).
-			$this->get_nocb_cell( 'plugin_shortlink' );
-
 			$table_rows['plugin_min_shorten'] = '<tr class="hide_in_basic">'.
 			$form->get_th_html( _x( 'Minimum URL Length to Shorten',
 				'option label', 'wpsso' ), null, 'plugin_min_shorten' ). 
 			'<td nowrap class="blank">'.$this->p->options['plugin_min_shorten'].' '.
 				_x( 'characters', 'option comment', 'wpsso' ).'</td>';
+
+			$table_rows['plugin_shortlink'] = $form->get_th_html( _x( 'Use Shortened URL for WP Shortlink',
+				'option label', 'wpsso' ), null, 'plugin_shortlink' ).
+			$this->get_nocb_cell( 'plugin_shortlink' );
 
 			$table_rows['subsection_plugin_bitly'] = '<tr class="hide_in_basic">'.
 				'<td></td><td class="subsection"><h4>'.

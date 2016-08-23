@@ -69,15 +69,18 @@ if ( ! class_exists( 'WpssoPlmGplAdminPost' ) ) {
 
 			$table_rows['plm_addr_latitude'] = $form->get_th_html( _x( 'Latitude',
 				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_latitude' ). 
-			'<td class="blank" colspan="3">'.$form->get_no_input( '', 'required' ).'</td>';
+			'<td class="blank" colspan="3">'.$form->get_no_input( '', 'required' ).' '.
+				_x( 'decimal degrees', 'option comment', 'wpsso-plm' ).'</td>';
 
 			$table_rows['plm_addr_longitude'] = $form->get_th_html( _x( 'Longitude',
 				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_longitude' ). 
-			'<td class="blank" colspan="3">'.$form->get_no_input( '', 'required' ).'</td>';
+			'<td class="blank" colspan="3">'.$form->get_no_input( '', 'required' ).' '.
+				_x( 'decimal degrees', 'option comment', 'wpsso-plm' ).'</td>';
 
-			$table_rows['plm_addr_altitude'] = $form->get_th_html( _x( 'Altitude in Meters',
+			$table_rows['plm_addr_altitude'] = $form->get_th_html( _x( 'Altitude',
 				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_altitude' ). 
-			'<td class="blank" colspan="3">'.$form->get_no_input().'</td>';
+			'<td class="blank" colspan="3">'.$form->get_no_input().' '.
+				_x( 'meters above sea level', 'option comment', 'wpsso-plm' ).'</td>';
 
 			$table_rows['subsection_schema_localbusiness'] = '<td></td><td class="subsection" colspan="3"><h4>'.
 				_x( 'Schema Local Business', 'metabox title', 'wpsso-plm' ).'</h4></td>';
@@ -90,7 +93,7 @@ if ( ! class_exists( 'WpssoPlmGplAdminPost' ) ) {
 			$row_number = 1;
 			foreach ( $this->p->cf['form']['weekdays'] as $day => $label ) {
 				if ( $row_number === 1 )
-					$th_cell = $form->get_th_html( _x( 'Business Hours',
+					$th_cell = $form->get_th_html( _x( 'Business Days + Hours',
 						'option label', 'wpsso-plm' ), 'medium', 'plm_addr_days' );
 				else $th_cell = '<td></td>';
 
@@ -104,18 +107,23 @@ if ( ! class_exists( 'WpssoPlmGplAdminPost' ) ) {
 				$row_number++;
 			}
 
-			$table_rows['plm_addr_season_dates'] = $form->get_th_html( _x( 'Seasonal Business Dates',
+			$table_rows['plm_addr_season_dates'] = $form->get_th_html( _x( 'Business Dates (Season)',
 				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_season_dates' ). 
 			'<td class="blank" colspan="3">Open from '.$form->get_no_input_date().
 				' through '.$form->get_no_input_date().'</td>';
 
-			$table_rows['plm_addr_menu_url'] = $form->get_th_html( _x( 'Food Menu URL',
-				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_menu_url' ). 
-			'<td class="blank" colspan="3">'.$form->get_no_input_value( '', 'wide' ).'</td>';
+			$table_rows['plm_addr_service_radius'] = $form->get_th_html( _x( 'Service Radius',
+				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_service_radius' ). 
+			'<td class="blank" colspan="3">'.$form->get_no_input_value( '', 'medium' ).' '.
+				_x( 'meters from location', 'option comment', 'wpsso-plm' ).'</td>';
 
 			$table_rows['plm_addr_accept_res'] = $form->get_th_html( _x( 'Accepts Reservations',
 				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_accept_res' ). 
 			'<td class="blank" colspan="3">'.$form->get_no_checkbox( 'plm_addr_accept_res' ).'</td>';
+
+			$table_rows['plm_addr_menu_url'] = $form->get_th_html( _x( 'Food Menu URL',
+				'option label', 'wpsso-plm' ), 'medium', 'plm_addr_menu_url' ). 
+			'<td class="blank" colspan="3">'.$form->get_no_input_value( '', 'wide' ).'</td>';
 
 			return $table_rows;
 		}

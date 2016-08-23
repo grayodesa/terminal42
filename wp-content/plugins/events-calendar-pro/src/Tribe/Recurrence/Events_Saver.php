@@ -37,7 +37,7 @@ class Tribe__Events__Pro__Recurrence__Events_Saver {
 	/**
 	 * Do the actual work of saving a recurring series of events
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function save_events() {
 		$existing_instances = Tribe__Events__Pro__Recurrence__Children_Events::instance()->get_ids( $this->event_id );
@@ -116,6 +116,8 @@ class Tribe__Events__Pro__Recurrence__Events_Saver {
 
 		// ...but don't wait around, process a small initial batch right away
 		Tribe__Events__Pro__Main::instance()->queue_processor->process_batch( $this->event_id );
+
+		return true;
 	}
 
 	/**

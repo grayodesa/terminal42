@@ -1,7 +1,7 @@
 <?php
 
 /* global constants */
-defined( 'TVE_VERSION' ) || DEFINE( "TVE_VERSION", '1.200.14' );
+defined( 'TVE_VERSION' ) || DEFINE( "TVE_VERSION", '1.200.18' );
 defined( 'TVE_TCB_DB_VERSION' ) || define( 'TVE_TCB_DB_VERSION', '1.1' );
 defined( 'TVE_TEMPLATES_PATH' ) || DEFINE( "TVE_TEMPLATES_PATH", plugin_dir_path( __FILE__ ) . 'shortcodes/templates' );
 defined( 'TVE_LANDING_PAGE_TEMPLATE' ) || DEFINE( "TVE_LANDING_PAGE_TEMPLATE", plugins_url() . '/thrive-visual-editor/landing-page/templates' );

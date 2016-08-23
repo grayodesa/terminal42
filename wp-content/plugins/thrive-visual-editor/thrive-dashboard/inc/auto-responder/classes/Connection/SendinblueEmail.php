@@ -131,6 +131,39 @@ class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Conne
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$sendinblue = $this->getApi();
+
+		$from_email = get_option( 'admin_email' );
+
+		$to = array();
+		foreach ( $data['emails'] as $email ) {
+			$to[ $email ] = '';
+		}
+
+		try {
+			$options = array(
+				"to"      => $to,
+				"from"    => array( $from_email, "" ),
+				"subject" => $data['subject'],
+				'html'    => empty ( $data['html_content'] ) ? '' : $data['html_content'],
+				'text'    => empty ( $data['text_content'] ) ? '' : $data['text_content'],
+			);
+			$sendinblue->send_email( $options );
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data

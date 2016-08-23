@@ -143,6 +143,44 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 	}
 
 	/**
+	 * Send the same email to multiple addresses
+	 *
+	 * @param $data
+	 *
+	 * @return bool|string
+	 */
+	public function sendMultipleEmails( $data ) {
+		$sg    = $this->getApi();
+		$email = new Thrive_Dash_Api_SendGridEmail_Email();
+
+		$from_email = get_option( 'admin_email' );
+
+		$to = array_shift( $data['emails'] );
+
+		/**
+		 * Try sending the email
+		 */
+		try {
+			$email
+				->addTo( $to )
+				->setFrom( $from_email )
+				->setSubject( $data['subject'] )
+				->setText( empty ( $data['text_content'] ) ? '' : $data['text_content'] )
+				->setHtml( empty ( $data['html_content'] ) ? '' : $data['html_content'] );
+
+			foreach ( $data['emails'] as $item ) {
+				$email->addCc( $item );
+			}
+
+			$sg->send( $email );
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+		return true;
+	}
+
+	/**
 	 * Send the email to the user
 	 *
 	 * @param $post_data
@@ -170,7 +208,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 		if ( empty( $html_content ) ) {
 			$html_content = get_option( 'tve_leads_asset_mail_body' );
 		}
-		
+
 		$the_files = '';
 		foreach ( $files as $file ) {
 			$the_files .= '<a href="' . $file['link'] . '">' . $file['link_anchor'] . '</a><br/><br/>';

@@ -3,6 +3,7 @@
  * @var {Object} tve_dash_front
  */
 var TVE_Dash = TVE_Dash || {};
+var ThriveGlobal = ThriveGlobal || {$j: jQuery.noConflict()};
 (function ( $ ) {
 	TVE_Dash.ajax_sent = false;
 	var ajax_data = {},
@@ -33,15 +34,6 @@ var TVE_Dash = TVE_Dash || {};
 
 		return true;
 	};
-
-	/**
-	 * the AJAX that needs to be performed on page load
-	 */
-	function initial_ajax() {
-		var data = {
-			action: 'tve_dash_front_ajax'
-		};
-	}
 
 	$( function () {
 		setTimeout( function () {
@@ -78,4 +70,4 @@ var TVE_Dash = TVE_Dash || {};
 			TVE_Dash.ajax_sent = true;
 		} );
 	} );
-})( jQuery );
+})( ThriveGlobal.$j );

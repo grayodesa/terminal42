@@ -24,9 +24,14 @@ if (!function_exists('essb_rs_css_popular_posts')) {
 }
 
 if (! function_exists ( 'essb_popular_posts' )) {
-	add_shortcode ( 'easy-popular-posts', 'essb_popular_posts' );
+	//add_shortcode ( 'easy-popular-posts', 'essb_popular_posts_code' );
+	
+	function essb_popular_posts_code($atts) {
+		return essb_popular_posts($atts);
+	}
 	
 	function essb_popular_posts($atts, $is_widget = false, $args = array()) {
+		
 		$attributes = shortcode_atts ( array (
 				'title' => '', 
 				'number' => '', 
@@ -246,6 +251,7 @@ class ESSBPopularPostsWidget extends WP_Widget {
 
   function init_wp_widget_essb_popular_posts() {
     register_widget( 'ESSBPopularPostsWidget' );
+    
   }
 
   add_action( 'widgets_init', 'init_wp_widget_essb_popular_posts' );

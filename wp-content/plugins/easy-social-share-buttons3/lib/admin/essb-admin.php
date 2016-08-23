@@ -14,6 +14,8 @@ class ESSBAdminControler {
 	} // end get_instance;
 	
 	function __construct() {
+		global $essb_options;
+		$deactivate_appscreo = ESSBOptionValuesHelper::options_bool_value($essb_options, 'deactivate_appscreo');
 		
 		//add_action ('init',array ($this, 'essb_settings_redirect' )  );
 		add_action ( 'admin_menu', 	array ($this, 'register_menu' ) );
@@ -48,26 +50,28 @@ class ESSBAdminControler {
 			add_action ( 'admin_notices', array ($this, 'add_notice_essb2_running' ) );
 		}
 		
-		if (ESSB3_ADDONS_ACTIVE) {
-			include_once(ESSB3_PLUGIN_ROOT . 'lib/admin/addons/essb-addons-helper.php');
-			ESSBAddonsHelper::get_instance();
+		if (!$deactivate_appscreo) {
+			if (ESSB3_ADDONS_ACTIVE) {
+				include_once(ESSB3_PLUGIN_ROOT . 'lib/admin/addons/essb-addons-helper.php');
+				ESSBAddonsHelper::get_instance();
+			}
+			
+			if (ESSB3_ADDONS_ACTIVE && class_exists('ESSBAddonsHelper')) {
+				
+				$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
+				
+				if (strpos($page, 'essb_') === false) {
+					
+					$addons = ESSBAddonsHelper::get_instance();
+					$new_addons = $addons->get_new_addons_count();
+				
+					if ($new_addons > 0) {
+						add_action ( 'admin_notices', array ($this, 'add_notice_new_addon' ) );
+					}
+				}
+	 		}
 		}
 		
-		if (ESSB3_ADDONS_ACTIVE && class_exists('ESSBAddonsHelper')) {
-			
-			$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-			
-			if (strpos($page, 'essb_') === false) {
-				
-				$addons = ESSBAddonsHelper::get_instance();
-				$new_addons = $addons->get_new_addons_count();
-			
-				if ($new_addons > 0) {
-					add_action ( 'admin_notices', array ($this, 'add_notice_new_addon' ) );
-				}
-			}
- 		}
- 		
  		$easymode = isset($_REQUEST['easymode']) ? $_REQUEST['easymode'] : '';
  		if (!empty($easymode)) {
  			if ($easymode == "activate") {
@@ -108,29 +112,40 @@ class ESSBAdminControler {
 	}
 	
 	public function display_news_dashboard_widget() {
-		// Create two feeds, the first being just a leading article with data and summary, the second being a normal news feed
-		$feeds = array(
-				'first' => array(
-						'link'         => 'http://appscreo.com/',
-						'url'          => 'http://appscreo.com/feed/',
-						'title'        => __( 'AppsCreo News', 'essb' ),
-						'items'        => 1,
-						'show_summary' => 1,
-						'show_author'  => 0,
-						'show_date'    => 1,
-				),
-				'news' => array(
-						'link'         => 'http://appscreo.com/',
-						'url'          => 'http://appscreo.com/feed/',
-						'title'        => __( 'AppsCreo News', 'essb' ),
-						'items'        => 4,
-						'show_summary' => 0,
-						'show_author'  => 0,
-						'show_date'    => 0,
-				),
-		);
+		global $essb_options;
+		$deactivate_appscreo = ESSBOptionValuesHelper::options_bool_value($essb_options, 'deactivate_appscreo');
 		
-		wp_dashboard_primary_output( 'appscreo_news', $feeds );
+		if (!$deactivate_appscreo) {
+			// Create two feeds, the first being just a leading article with data and summary, the second being a normal news feed
+			$feeds = array(
+					'first' => array(
+							'link'         => 'http://appscreo.com/',
+							'url'          => 'http://appscreo.com/feed/',
+							'title'        => __( 'AppsCreo News', 'essb' ),
+							'items'        => 1,
+							'show_summary' => 1,
+							'show_author'  => 0,
+							'show_date'    => 1,
+					),
+					'news' => array(
+							'link'         => 'http://appscreo.com/',
+							'url'          => 'http://appscreo.com/feed/',
+							'title'        => __( 'AppsCreo News', 'essb' ),
+							'items'        => 4,
+							'show_summary' => 0,
+							'show_author'  => 0,
+							'show_date'    => 0,
+					),
+			);
+			
+			wp_dashboard_primary_output( 'appscreo_news', $feeds );
+		}
+		else {
+			print '<div class="essb-admin-widget">';
+			print '<h4><strong>AppsCreo News</strong></h4>';
+			print '<a href="http://appscreo.com/" target="_blank">Read latest news, tips and tricks in our blog at http://appscreo.com</a>';
+			print '</div>';
+		}
 		
 		print '<div class="essb-admin-widget">';
 		print '<h4><strong>Subscribe to our mailing list and get interesting stuff and updates to your email inbox.</strong></h4>';
