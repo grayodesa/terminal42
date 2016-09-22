@@ -33,6 +33,7 @@ abstract class App_Template {
 	public static function get_currencies () {
 		if (!self::$_currencies) self::$_currencies = apply_filters('app-template-currencies', array(
 			'AUD' => __('AUD - Australian Dollar', 'appointments'),
+			'UAH' => __('UAH - Ukrainian Hryvna', 'appointments'),
 			'BRL' => __('BRL - Brazilian Real', 'appointments'),
 			'CAD' => __('CAD - Canadian Dollar', 'appointments'),
 			'CHF' => __('CHF - Swiss Franc', 'appointments'),
@@ -65,6 +66,7 @@ abstract class App_Template {
 		if (empty($currency)) return false;
 		if (!self::$_currency_symbols) self::$_currency_symbols = apply_filters('app-template-currency_symbols', array(
 			'AUD' => __('AUD', 'appointments'),
+			'UAH' => __('UAH', 'appointments'),
 			'BRL' => __('BRL', 'appointments'),
 			'CAD' => __('CAD', 'appointments'),
 			'CHF' => __('CHF', 'appointments'),
