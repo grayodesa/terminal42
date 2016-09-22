@@ -59,6 +59,7 @@ class Tribe__Events__Pro__Recurrence__Instance {
 			if ( get_post_status( $this->post_id ) == 'trash' ) {
 				$post_to_save['post_status'] = get_post_status( $this->post_id );
 			}
+
 			$this->post_id = wp_update_post( $post_to_save );
 
 			update_post_meta( $this->post_id, '_EventStartDate',    $this->db_formatted_start_date() );
@@ -91,6 +92,28 @@ class Tribe__Events__Pro__Recurrence__Instance {
 
 		$this->copy_meta(); // everything else
 		$this->set_terms();
+	}
+
+	/**
+	 * Indicates if this instance already seems to be in existence.
+	 *
+	 * @return bool
+	 */
+	public function already_exists() {
+		$parent = get_post( $this->parent_id );
+
+		$possible_matches = tribe_get_events( array(
+			'post_parent' => $parent->ID,
+			'name'        => $parent->post_name . '-' . $this->start_date->format( 'Y-m-d' ),
+		) );
+
+		foreach ( $possible_matches as $existing_post ) {
+			if ( $this->duration == $existing_post->_EventDuration ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public function get_id() {

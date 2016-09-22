@@ -260,8 +260,14 @@ class WC_POS {
             wp_enqueue_style('woocommerce-style', WC()->plugin_url() . '/assets/css/woocommerce-layout.css', array(), $wc_pos_version);
             wp_enqueue_style('wc-pos-style', $this->plugin_url() . '/assets/css/admin.css', array(), $wc_pos_version);
         }
+        if( pos_barcodes_admin_page() ){
+            wp_enqueue_style('wc-pos-barcode-options', $this->plugin_url() . '/assets/css/barcode-options.css', array(), $wc_pos_version);
+        }
         if( pos_shop_order_page() ){
             wp_enqueue_style('wc-pos-style', $this->plugin_url() . '/assets/css/admin.css', array(), $wc_pos_version);
+        }
+        if( pos_receipts_admin_page() && isset($_GET['action']) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'add')){
+            wp_enqueue_style('codemirror-css', $this->plugin_url() . '/assets/plugins/codemirror/codemirror.css', array(), $wc_pos_version);
         }
         wp_enqueue_style('wc-pos-print', $this->plugin_url() . '/assets/css/print.css', array(), $wc_pos_version);
 
@@ -299,11 +305,27 @@ class WC_POS {
             if( pos_receipts_admin_page() && isset($_GET['action']) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'add')){
               wp_enqueue_media();
               wp_enqueue_script('postbox');
-              wp_enqueue_script('pos-script-receipt_options', $this->plugin_url() . '/assets/js/receipt_options.js', array('jquery'), $wc_pos_version);
+
+              $deps = array('jquery', 'codemirror', 'codemirror-css');
+
+              wp_register_script('codemirror', $this->plugin_url() . '/assets/plugins/codemirror/codemirror.js', array(), $wc_pos_version);
+              wp_register_script('codemirror-css', $this->plugin_url() . '/assets/plugins/codemirror/css.js', array(), $wc_pos_version);
+
+              wp_enqueue_script('pos-script-receipt_options', $this->plugin_url() . '/assets/js/receipt_options.js', $deps, $wc_pos_version);
               wp_localize_script('pos-script-receipt_options', 'wc_pos_receipt', array(
                 'pos_receipt_style' => $this->receipt()->get_style_templates()
                 ) );
               
+            }
+            if( pos_barcodes_admin_page() ){
+                wp_enqueue_script('pos-script-barcode_options', $this->plugin_url() . '/assets/js/barcode-options.js', array('jquery'), $wc_pos_version);
+                wp_localize_script('pos-script-barcode_options', 'wc_pos_barcode', array(
+                'ajax_url'                      => WC()->ajax_url(),
+                'barcode_url'                   => $this->barcode_url(),
+                'product_for_barcode_nonce'     => wp_create_nonce( 'product_for_barcode' ),
+                'remove_item_notice'            => __( 'Are you sure you want to remove the selected items?', 'wc_point_of_sale' ),
+                'select_placeholder_category'   => __( 'Search for a category&hellip;', 'wc_point_of_sale' ),
+                ) );
             }
             if (pos_settings_admin_page() ) {
               wp_enqueue_media();
@@ -746,6 +768,15 @@ class WC_POS {
     }
 
     /**
+     * Get the plugin barcode url.
+     *
+     * @return string
+     */
+    public function barcode_url() {
+        return untrailingslashit( plugins_url( 'includes/lib/barcode/image.php', WC_POS_FILE ) . '?filetype=PNG&dpi=72&scale=3&rotation=0&font_family=Arial.ttf&thickness=30&start=NULL&code=BCGcode128');
+    }
+
+    /**
      * Get the plugin path.
      *
      * @return string
@@ -753,6 +784,7 @@ class WC_POS {
     public function plugin_path() {
         return untrailingslashit( plugin_dir_path( WC_POS_FILE ) );
     }
+
 
     /**
      * Get the plugin path.

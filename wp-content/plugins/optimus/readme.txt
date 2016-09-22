@@ -2,7 +2,7 @@
 Contributors: keycdn
 Tags: images, optimize, compress, progressive, performance, png, jpeg, webp, image optimizer, wordpress image optimizer, optimize image, optimize jpg, optimize jpeg, optimize png, compress image, progressive jpeg, progressive jpg
 Requires at least: 3.8
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,9 @@ Optimus supports the conversion of images to the new [*WebP* image format](https
 
 
 == Changelog ==
+
+= 1.4.7 =
+* Improved the bulk optimizer
 
 = 1.4.6 =
 * Added support for WP Retina 2x

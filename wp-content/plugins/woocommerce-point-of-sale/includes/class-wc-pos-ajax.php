@@ -25,37 +25,43 @@ class WC_POS_AJAX {
 
         // woocommerce_EVENT => nopriv
         $ajax_events = array(
-            'new_update_outlets_address'   => false,
-            'edit_update_outlets_address'  => false,
-            'add_products_to_register'     => false,
-            'update_product_quantity'      => false,
-            'remove_product_from_register' => false,
-            'add_customer'                 => false,
-            'loading_states'               => false,
-            'add_customers_to_register'    => false,
-            'search_variations_for_product'=> false,
-            'tile_ordering'                => false,
-            'json_search_usernames'        => false,
+            'new_update_outlets_address'       => false,
+            'edit_update_outlets_address'      => false,
+            'add_products_to_register'         => false,
+            'update_product_quantity'          => false,
+            'remove_product_from_register'     => false,
+            'add_customer'                     => false,
+            'loading_states'                   => false,
+            'add_customers_to_register'        => false,
+            'search_variations_for_product'    => false,
+            'tile_ordering'                    => false,
+            'json_search_usernames'            => false,
             'search_variations_for_product_and_sku' => false,
-            'check_shipping'               => false,
+            'check_shipping'                   => false,
             
-            'stripe_get_outlet_address'    => false,
-            'json_search_products'         => false,
-            'json_search_products_all'     => false,
-            'find_variantion_by_attributes'=> false,
-            'add_product_grid'             => false,
-            'get_server_product_ids'       => false,
-            'json_search_customers'        => false,
-            'checkout'                     => false,
-            'void_register'                => false,
-            'search_order_by_code'         => false,
-            'json_search_registers'        => false,
-            'json_search_outlet'           => false,
-            'json_search_cashier'          => false,
+            'stripe_get_outlet_address'        => false,
+            'json_search_products'             => false,
+            'json_search_products_all'         => false,
+            'find_variantion_by_attributes'    => false,
+            'add_product_grid'                 => false,
+            'get_server_product_ids'           => false,
+            'json_search_customers'            => false,
+            'checkout'                         => false,
+            'void_register'                    => false,
+            'search_order_by_code'             => false,
+            'json_search_registers'            => false,
+            'json_search_outlet'               => false,
+            'json_search_cashier'              => false,
             'update_customer_shipping_address' => false,
             'filter_product_barcode'           => false,
             'change_stock'                     => false,
-            'get_grid_options'                 => true,
+            'get_grid_options'                 => false,
+            'can_user_open_register'           => false,
+
+            'add_product_for_barcode'            => false,
+            'get_product_variations_for_barcode' => false,
+            'json_search_categories'             => false,
+            'get_products_by_categories'         => false,
         ); 
 
         foreach ($ajax_events as $ajax_event => $nopriv) {
@@ -1606,6 +1612,176 @@ class WC_POS_AJAX {
         $pos->getRegisted( intval($_GET['reg']) );
         echo $pos->getGrid();
         die();
+    }
+
+    public function add_product_for_barcode()
+    {
+        check_ajax_referer( 'product_for_barcode', 'security' );
+
+        if ( ! current_user_can( 'manage_wc_point_of_sale' ) ) {
+            die(-1);
+        }
+
+        $item_to_add = sanitize_text_field( $_POST['item_to_add'] );
+
+        // Find the item
+        if ( ! is_numeric( $item_to_add ) ) {
+            die();
+        }
+
+        $post = get_post( $item_to_add );
+
+        if ( ! $post || ( 'product' !== $post->post_type && 'product_variation' !== $post->post_type ) ) {
+            die();
+        }
+
+        $_product    = wc_get_product( $post->ID );
+        $class       = 'new_row ' . $_product->product_type;
+
+        include 'views/html-admin-barcode-item.php';
+        // Quit out
+        die();
+    }
+
+    public function get_product_variations_for_barcode()
+    {
+        check_ajax_referer( 'product_for_barcode', 'security' );
+
+        if ( ! current_user_can( 'manage_wc_point_of_sale' ) ) {
+            die(-1);
+        }
+
+        $prid = $_POST['prid'];
+
+        // Find the item
+        if ( ! is_array($prid) ) {
+            die();
+        }
+        $variations =array();
+        foreach ($prid as $id) {
+            $args = array(
+                'post_parent' => $id,
+                'post_type'   => 'product_variation', 
+                'numberposts' => -1,
+                'fields' => 'ids',
+            ); 
+            $children_array = get_children( $args, ARRAY_A );
+            if( $children_array ){
+
+                $variations = array_merge($variations, $children_array );
+            }
+        }
+        wp_send_json($variations);
+        // Quit out
+        die();
+    }
+
+    public function can_user_open_register()
+    {
+        $response = array('result' => 'denied');
+
+        if ( isset($_POST['register_id']) && pos_check_user_can_open_register( $_POST['register_id'] ) ) {
+
+            if( $user_id = pos_check_register_lock( $_POST['register_id'] ) ){                
+                $user     = get_userdata( $user_id );
+                $response = array(
+                    'result'  => 'locked',
+                    'user_id' => $user_id,
+                    'message' => sprintf( __('This register is currently opened by %s.', 'wc_point_of_sale'), $user->display_name ),
+                    'avatar'  => get_avatar_url( $user_id, array( 'size' => 64 ) )
+                );
+            }else{
+                $current_user = wp_get_current_user();
+                $response = array(
+                    'result'  => 'success',
+                    'user_id' => $current_user->ID,
+                    'name'    => $current_user->display_name,
+                    'avatar'  => get_avatar_url( $current_user->ID, array( 'size' => 64 ) )
+                );
+            }
+        }
+
+        wp_send_json($response);
+        die();
+    }
+
+    public function json_search_categories()
+    {
+        global $wpdb;
+
+        ob_start();
+
+        check_ajax_referer( 'search-products', 'security' );
+
+        $term = wc_clean( stripslashes( $_GET['term'] ) );
+
+        if ( empty( $term ) ) {
+            die();
+        }
+        $like_term = '%' . $wpdb->esc_like( $term ) . '%';
+
+        $query = $wpdb->prepare( "
+                SELECT terms.term_id FROM {$wpdb->terms} terms LEFT JOIN {$wpdb->term_taxonomy} taxonomy ON terms.term_id = taxonomy.term_id
+                WHERE taxonomy.taxonomy = 'product_cat'
+                AND terms.name LIKE %s
+            ", $like_term );
+
+        $categories       = array_unique( $wpdb->get_col( $query ) );
+        $found_categories = array();
+
+        if ( ! empty( $categories ) ) {
+            foreach ( $categories as $term_id ) {
+                $category = get_term( $term_id );
+
+                if ( is_wp_error($category) || ! $category ) {
+                    continue;
+                }
+
+                $found_categories[ $term_id ] = rawurldecode( $category->name );
+            }
+        }
+
+        $found_categories = apply_filters( 'wc_pos_json_search_categories', $found_categories );
+
+        wp_send_json( $found_categories );
+    }
+
+    public function get_products_by_categories()
+    {
+        check_ajax_referer( 'product_for_barcode', 'security' );
+
+
+        if ( ! current_user_can( 'manage_wc_point_of_sale' ) || !isset($_POST['categories'])) {
+            die(-1);
+        }
+
+        $categories = $_POST['categories'];
+
+        // Find the item
+        if ( ! is_array($categories) ) {
+            die();
+        }
+
+        $args = array(
+            'post_type'   => 'product', 
+            'numberposts' => -1,
+            'fields' => 'ids',
+            'tax_query' => array(
+                array(
+                    'terms' => $categories,
+                    'taxonomy' => 'product_cat'
+                )                
+            )
+        ); 
+        $products = array();
+        $posts = get_posts( $args, ARRAY_A );
+        
+        if ( $posts ) {
+            $products = $posts;
+        }
+
+        wp_send_json($products);
+
     }
 
 }

@@ -38,6 +38,7 @@ $.ajaxSetup( {
             matches.push(raw_response.match( /{"customer.*}/ ));
             matches.push(raw_response.match( /{"product.*}/ ));
             matches.push(raw_response.match( /{"coupon.*}/ ));
+            matches.push(raw_response.match( /{"posts_ids.*}/ ));
 
 
             var valid_json = null;
@@ -86,7 +87,7 @@ $.ajaxSetup( {
 	ADDONS    = window.POS_ADDONS;
 	APP       = window.POS_APP = {
 		//version          : Math.random(),
-        version          : '22',
+        version          : '23',
 		customerVersion  : '2',
         db               : null,
 		initialized      : false,
@@ -266,6 +267,11 @@ $.ajaxSetup( {
             APP.debug( "Open Database. Version " + APP.version );
             APP.db = new ydn.db.Storage( 'WC-POS', APP.schema, {mechanisms: mechanisms} );
 
+            var v  = APP.getCookie("pos_Version");
+            if( parseInt(v) <= 22 ){
+                APP.db.clear();
+            }
+
             APP.db.count('products').done(function(x) {
                 if( x == 0 ){
                     APP.resetCookieVersion();
@@ -285,6 +291,8 @@ $.ajaxSetup( {
                 APP.ready();              	
                 APP.setCookieVersion();
 
+                wp.heartbeat.interval( 15 );
+
                 if( wc_pos_params.autoupdate_interval != ''){
                     APP.interval = wc_pos_params.autoupdate_interval * 1000;
                 }
@@ -302,10 +310,11 @@ $.ajaxSetup( {
             APP.sync_ProductData(block);
             APP.sync_CouponData(block);
             APP.sync_CustomerData(block);
+            APP.check_RemovedItems();
         },
         sync_ProductData : function(block) {
             if( APP.processing_payment === true || APP.sync_status.product === true ) return;
-            if( $('#grid_layout_cycle').length && block === true ){
+            if( $('#grid_layout_cycle').length && block === true && pos_grid.second_column_layout == 'product_grids' ){
                 var h   = parseFloat($('#wc-pos-register-grids').height())-87;
                 $('#grid_layout_cycle').height(h);
                 $('#grid_layout_cycle').block({
@@ -370,6 +379,24 @@ $.ajaxSetup( {
               }
             }); 
         },
+        check_RemovedItems : function(){
+            $.when(APP.getServerRemovedItems()).then(function(items) {
+              if(parseInt(items.post_ids.length) > 0){
+                $.each(items.post_ids, function(index, post_id) {
+                    APP.db.remove('products', post_id);
+                    APP.db.remove('variations', post_id);
+                    APP.db.remove('orders', post_id);
+                    APP.db.remove('coupons', post_id);
+                });
+              }
+              if(parseInt(items.user_ids.length) > 0){
+                $.each(items.user_ids, function(index, user_id) {
+                    APP.db.remove('customers', user_id);
+                });
+              }
+              
+            });
+        },
         updateCustomersCompleted : function(){
             APP.sync_status.customer = false;
             APP.lastUpdateCustomer = APP._formatLastUpdateFilter('pos_lastUpdateCustomer');
@@ -384,7 +411,7 @@ $.ajaxSetup( {
                 d = ProductsCount;           
 
             $.when(APP.getServerProducts(limit, offset)).then(function(productsData) {
-            	if(productsData.products.length > 0){
+            	if( productsData != null && productsData.products.length > 0){
     				APP.db.putAll( 'products', productsData.products ).fail( function(e) {
                         throw e;
                     });
@@ -560,6 +587,9 @@ $.ajaxSetup( {
                 reg : wc_pos_register_id
             });
             return e;
+        },
+        getServerRemovedItems : function(){
+            return jQuery.getJSON(wc_pos_params.wc_api_url+'pos_removed/');
         },
         canHide: function(){
             APP.addGrid();
@@ -809,7 +839,8 @@ $.ajaxSetup( {
 				});
 				APP.tmp.product_item.product_variations[index] = {attributes : attributes};
 				APP.tmp.product_item.product_variations[index]['variation_is_active'] = true;
-				APP.tmp.product_item.product_variations[index]['variation_id'] = val.id;
+                APP.tmp.product_item.product_variations[index]['variation_id']        = val.id;
+				APP.tmp.product_item.product_variations[index]['data']                = val;
 
 				if(val.id == variation_id){
 					if(val.attributes){
@@ -849,11 +880,12 @@ $.ajaxSetup( {
 					$html.find( 'select.attribute_'+i ).val(opt);
 				});
 
-				$('#modal-missing-attributes').addClass('missing-attributes');
+				$('#modal-missing-attributes').addClass('missing-attributes md-close-by-overlay');
 				$('#missing-attributes-select').html($html);
 
 				if ( window.openwin === false && typeof adding_to_cart.item_id == 'undefined' ){
-					openModal('modal-missing-attributes', true);
+                    $('#selected-variation-data, #reset_selected_variation').hide();
+                    openModal('modal-missing-attributes', true);
 				}
 			} else if( typeof variation_id == 'undefined' ){
 				APP.showNotice(pos_i18n[2], 'error');
@@ -872,6 +904,47 @@ $.ajaxSetup( {
 				}
 			}
 			return false;
+        },
+        voidRegister : function(notice){
+            if ( typeof POS_TRANSIENT.order_id != 'undefined' && POS_TRANSIENT.order_id > 0){
+                $('#post-body').block({
+                    message: null,
+                    overlayCSS: {
+                      background: '#fff',
+                      opacity: 0.6
+                    }
+                });
+                var order_id    = POS_TRANSIENT.order_id;
+                var register_id = wc_pos_register_id;
+                $.ajax({
+                    type: 'POST',
+                    url: wc_pos_params.ajax_url,
+                    data: {
+                        action      : 'wc_pos_void_register',
+                        security    : wc_pos_params.void_register_nonce,
+                        order_id    : order_id,
+                        register_id : register_id,
+                    },
+                    success: function(response) {
+                        if( notice !== false ){
+                            APP.showNotice(pos_i18n[13]);
+                        }
+
+                        CART.empty_cart();
+                        delete POS_TRANSIENT.order_id;
+                    },
+                    
+                })
+                .always( function(response) {
+                    $('#post-body').unblock();
+                });
+            }else{
+                CART.empty_cart();
+                if( notice !== false ){
+                    APP.showNotice(pos_i18n[13]);
+                }
+                delete POS_TRANSIENT.order_id;
+            }
         },
         setCustomer : function ( customer_id, open ) {
         	CUSTOMER.reset();
@@ -1129,6 +1202,8 @@ $.ajaxSetup( {
 		  		$('#grid_layout_cycle').html(ul);
                 $('#grid_layout_cycle').unblock();
 		  		resizeGrid();	    		
+	    	}else{
+                $('#grid_layout_cycle').unblock();
 	    	}
 	    },
 	    find_matching_variations : function( product_variations, settings ) {
@@ -1324,8 +1399,7 @@ $.ajaxSetup( {
                 success: function (data) {
                   var success = true;                  
                   
-                  if (paid) {
-                    
+                  if (paid) {                    
                     
                     if( typeof data['payment_result'] != 'undefined' && typeof data['payment_result']['result'] != 'undefined' ){ 
 
@@ -1344,13 +1418,23 @@ $.ajaxSetup( {
                                 //APP.showNotice( data['payment_result']['messages'], 'success');
                                 if( $('#payment_switch').bootstrapSwitch('state') ){
                                     posPrintReceipt(data.order.print_url);                        
+                                }else{
+                                    if( change_user ){
+                                        APP_auth_show();
+                                    }
+                                    wp.heartbeat.connectNow();
                                 }
                             }
 
                         }
                     }else if( $('#payment_switch').bootstrapSwitch('state') ){
                         posPrintReceipt(data.order.print_url);                        
-                    } 
+                    } else{
+                        if( change_user ){
+                            APP_auth_show();
+                        }
+                        wp.heartbeat.connectNow();
+                    }
 
                     $('#payment_switch').bootstrapSwitch('state', print_receipt);
                     $('#payment_email_receipt').bootstrapSwitch('state', email_receipt);
@@ -2246,6 +2330,7 @@ $.ajaxSetup( {
 			      current_settings[ attribute_name ] = $( this ).val();
 			    }
 			  });
+              
 
 			  var matching_variations = APP.find_matching_variations( $product_variations, current_settings );
 
@@ -2254,8 +2339,30 @@ $.ajaxSetup( {
 			    var variation = matching_variations.shift();
 
 			    if ( variation ) {
+                    var price_html = pos_get_price_html(variation.data);
+                    var stock_quantity = parseInt(variation.data.stock_quantity);
+                    price = '<span class="price">'+price_html+'</span>';
+
+                    $('#selected-variation-data .selected-variation-price').html(price);
+                    $('#selected-variation-data .selected-variation-sku').html(variation.data.sku);
+                    
+                    if( !isNaN(stock_quantity) ){
+                        if( !variation.data.in_stock ){
+                            $('#selected-variation-data .selected-variation-stock').html(pos_i18n[39]).closest('li').show();                            
+                        }else{
+                            $('#selected-variation-data .selected-variation-stock').html(variation.data.stock_quantity + ' ' + pos_i18n[38]).closest('li').show();
+                        }
+                    }else{
+                        $('#selected-variation-data .selected-variation-stock').html('').closest('li').hide();
+                    }
+                    if( !$('#selected-variation-data').is(':visible') ){
+                        $('#selected-variation-data').slideToggle(300);
+                    }
 			    	APP.tmp.product_item.variation_id = variation.variation_id;
 			    } else {
+                    if( $('#selected-variation-data').is(':visible') ){
+                        $('#selected-variation-data').slideToggle(300);
+                    }
 			      // Nothing found - reset fields
 			      $form.find( 'select' ).val( '' );
 
@@ -2265,13 +2372,45 @@ $.ajaxSetup( {
 			    }
 
 			  } else {
-
+                
 			    $form.trigger( 'update_variation_values', [ matching_variations ] );
 			  }
 
 			} );
+            $('body').on('click', '#reset_selected_variation', function() {
+                $( '#missing-attributes-select select' ).val( '' ).first().trigger('change');
+                return false;
+            });
             $('body').on('change', '#missing-attributes-select select', function() {
-			  $form = $( this ).closest( '#missing-attributes-select' ); 
+
+			  var $form = $( this ).closest( '#missing-attributes-select' ); 
+
+              var all_attributes_chosen  = true,
+                  some_attributes_chosen = false;
+
+              $form.find( 'select' ).each( function() {
+
+                if ( $( this ).val().length === 0 ) {
+                  all_attributes_chosen = false;
+                } else {
+                  some_attributes_chosen = true;
+                }
+
+              });
+              if( !all_attributes_chosen && $('#selected-variation-data').is(':visible') ){
+                $('#selected-variation-data').slideToggle(300);
+              }
+
+              if( some_attributes_chosen ){
+                if( !$('#reset_selected_variation').is(':visible') ){
+                    $('#reset_selected_variation').slideToggle(300);
+                }
+              }else{
+                if( $('#reset_selected_variation').is(':visible') ){
+                    $('#reset_selected_variation').slideToggle(300);
+                }
+              }
+
 			  $form.trigger( 'check_variations', [ '', false ] );
 			  $( this ).blur();
 
@@ -2337,42 +2476,7 @@ $.ajaxSetup( {
 			$('.wc_pos_register_void').on('click', function() {
 				var args = {
 					content : $('#tmpl-confirm-void-register').html(),
-					confirm : function(){
-						if ( typeof POS_TRANSIENT.order_id != 'undefined' && POS_TRANSIENT.order_id > 0){
-			                $('#post-body').block({
-					            message: null,
-					            overlayCSS: {
-					              background: '#fff',
-					              opacity: 0.6
-					            }
-					        });
-		                    var order_id    = POS_TRANSIENT.order_id;
-		                    var register_id = wc_pos_register_id;
-		                    $.ajax({
-		                        type: 'POST',
-		                        url: wc_pos_params.ajax_url,
-		                        data: {
-		                            action      : 'wc_pos_void_register',
-		                            security    : wc_pos_params.void_register_nonce,
-		                            order_id    : order_id,
-		                            register_id : register_id,
-		                        },
-		                        success: function(response) {
-					        		APP.showNotice(pos_i18n[13]);
-                                    CART.empty_cart();
-                                    delete POS_TRANSIENT.order_id;
-		                        },
-		                        
-		                    })
-		                    .always( function(response) {
-		                        $('#post-body').unblock();
-		                    });
-						}else{
-							CART.empty_cart();
-                            APP.showNotice(pos_i18n[13]);
-                            delete POS_TRANSIENT.order_id;
-						}
-					}
+					confirm : APP.voidRegister
 				};
 				openConfirm(args);
 
@@ -2547,13 +2651,16 @@ $.ajaxSetup( {
 			$('#add_product_to_register').click(function(event) {
 				$('#custom_product_meta_label, #custom_product_meta_table').hide();
 				$('#custom_product_meta_table tbody').html('');
-				$('#custom_product_title, #custom_product_price, #custom_product_quantity').val('');
-				openModal('modal-add_custom_product');
+                $('#custom_product_title, #custom_product_price, #custom_product_quantity').val('');
+				$('#custom_product_quantity').val(1);
+                openModal('modal-add_custom_product');
+                $('#custom_product_title').focus();
 			});
 			$('.wc_pos_register_notes').on('click', function() {
 				var customer_note = CART.customer_note;
 				$('#order_comments').val(customer_note);
 		        openModal('modal-order_comments');
+                $('#order_comments').focus();
 		    });
 		    $('#save_order_comments').on('click', function() {
                 var note = $('#order_comments').val();
@@ -2661,6 +2768,7 @@ $.ajaxSetup( {
 					return false;
 				}else if( CART.customer_note == '' && note_request === 1 ){
                     openModal('modal-order_comments');
+                    $('#order_comments').focus();
                     POS_TRANSIENT.save_order = true;
                 }else{
 				   APP.createOrder(false);
@@ -2693,9 +2801,18 @@ $.ajaxSetup( {
 
                     if( CART.customer_note == '' && note_request === 2 ){
                         openModal('modal-order_comments');
+                        $('#order_comments').focus();
                     }
                     $('#payment_switch').bootstrapSwitch('state', print_receipt);
-                    var _email_receipt = email_receipt && !CUSTOMER.customer ? false: email_receipt
+                        var _email_receipt = false;
+                        switch (email_receipt){
+                            case 1:
+                                _email_receipt = true;
+                                break;
+                            case 2:
+                                _email_receipt = !CUSTOMER.customer ? false : true;
+                                break;
+                        }
                     $('#payment_email_receipt').bootstrapSwitch('state', _email_receipt);
 					openModal('modal-order_payment');                    
                 }

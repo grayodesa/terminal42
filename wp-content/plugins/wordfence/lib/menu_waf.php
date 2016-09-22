@@ -48,15 +48,19 @@ $wafRemoveURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=removeA
 	<?php elseif (!empty($wafActionContent)): ?>
 		<?php echo $wafActionContent ?>
 
-		<?php if (!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'removeAutoPrepend'): ?>
+		<?php if (!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'removeAutoPrepend') { ?>
 			<p class="wf-notice"><em>If you cannot complete the uninstallation process,
 					<a target="_blank" href="https://docs.wordfence.com/en/Web_Application_Firewall_FAQ#How_can_I_remove_the_firewall_setup_manually.3F">click here for
 						help</a>.</em></p>
-		<?php else: ?>
+		<?php }
+		else if (!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'updateSuPHPConfig') {
+			//Do nothing
+		}
+		else { ?>
 			<p class="wf-notice"><em>If you cannot complete the setup process,
 				<a target="_blank" href="https://docs.wordfence.com/en/Web_Application_Firewall_Setup">click here for
 					help</a>.</em></p>
-		<?php endif ?>
+		<?php } ?>
 
 	<?php else: ?>
 

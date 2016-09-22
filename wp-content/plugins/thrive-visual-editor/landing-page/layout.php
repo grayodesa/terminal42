@@ -24,7 +24,11 @@ if ( ! isset( $lp_template ) ) {
 	<?php remove_filter( 'wp_title', 'genesis_doctitle_wrap', 20 ) ?>
 	<?php /* Catalyst, an older version of Genesis, seems to do the same thing. */ ?>
 	<?php remove_filter( 'wp_title', 'catalyst_site_title_wrap', 20 ) ?>
-	<title><?php wp_title( '|', true, 'right' ); ?></title>
+
+	<?php /* only output the title if the theme does not have support for title-tag */ ?>
+	<?php if ( ! get_theme_support( 'title-tag' ) ) : ?>
+		<title><?php wp_title( '|', true, 'right' ); ?></title>
+	<?php endif ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 	<?php $tcb_landing_page->head(); ?>

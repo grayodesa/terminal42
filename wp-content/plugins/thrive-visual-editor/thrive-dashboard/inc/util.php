@@ -32,7 +32,7 @@ function tve_dash_get_thrivethemes_shares( $network = 'facebook' ) {
 function tve_dash_fetch_share_count_facebook( $url ) {
 	$data = _tve_dash_util_helper_get_json( 'http://graph.facebook.com/?id=' . rawurlencode( $url ) );
 
-	return empty( $data['shares'] ) ? 0 : (int) $data['shares'];
+	return empty( $data['share']['share_count'] ) ? 0 : (int) $data['share']['share_count'];
 }
 
 /**
@@ -57,7 +57,7 @@ function tve_dash_fetch_share_count_twitter( $url ) {
  */
 function tve_dash_fetch_share_count_pinterest( $url ) {
 	$response = wp_remote_get( 'http://api.pinterest.com/v1/urls/count.json?callback=_&url=' . rawurlencode( $url ), array(
-		'sslverify' => false
+		'sslverify' => false,
 	) );
 
 	$body = wp_remote_retrieve_body( $response );
@@ -180,9 +180,11 @@ function _tve_dash_util_helper_get_json( $url, $fn = 'wp_remote_get' ) {
 /**
  * Checks if the current request is performed by a crawler. It identifies crawlers by inspecting the user agent string
  *
- * @return bool
+ * @param bool $apply_filter Whether or not to apply the crawler detection filter ( tve_dash_is_crawler )
+ *
+ * @return int|false False form empty UAS. int 1|0 if a crawler has|not been detected
  */
-function tve_dash_is_crawler() {
+function tve_dash_is_crawler( $apply_filter = false ) {
 	if ( isset( $GLOBALS['thrive_dashboard_bot_detection'] ) ) {
 		return $GLOBALS['thrive_dashboard_bot_detection'];
 	}
@@ -195,5 +197,41 @@ function tve_dash_is_crawler() {
 	$uas_list = require plugin_dir_path( __FILE__ ) . '_crawlers.php';
 	$regexp   = '#(' . implode( '|', $uas_list ) . ')#i';
 
+	if ( ! $apply_filter ) {
+		return $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent );
+	}
+
+	/**
+	 * Filter tve_dash_is_crawler
+	 *
+	 * @param int $detected 1|0 whether or not the crawler is detected
+	 *
+	 * @since 1.0.20
+	 */
 	return apply_filters( 'tve_dash_is_crawler', $GLOBALS['thrive_dashboard_bot_detection'] = preg_match( $regexp, $user_agent ) );
+}
+
+/**
+ * Defines the products order in the Thrive Dashboard Wordpress Menu
+ *
+ * @return array
+ */
+function tve_dash_get_menu_products_order() {
+	return array(
+		'license_manager',
+		'general_settings',
+		'ui_toolkit',
+		'font_manager',
+		'font_import_manager',
+		'icon_manager',
+		'tho',
+		'tl',
+		'tvo',
+		'tqb',
+		'tu',
+		/*For Thrive Themes*/
+		'thrive_theme_admin_page_templates',
+		'thrive_theme_license_validation',
+		'thrive_theme_admin_options',
+	);
 }

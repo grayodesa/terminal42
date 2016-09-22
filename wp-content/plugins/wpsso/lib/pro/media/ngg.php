@@ -217,14 +217,14 @@ if ( ! class_exists( 'WpssoProMediaNgg' ) ) {
 					$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$img_width.'x'.$img_height.' too small for the '.
 						$size_name.' ('.$size_info['width'].'x'.$size_info['height'].( $img_cropped ? ' cropped' : '' ).') image size' );
 
-				if ( is_admin() ) {
+				if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 					$media_lib = __( 'NextGEN Gallery', 'wpsso' );
 					$size_label = $this->p->util->get_image_size_label( $size_name );
 					$dismiss_id = 'ngg_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
 					$required_text = '<b>'.$size_label.'</b> ('.$size_info['width'].'x'.$size_info['height'].
 						( $img_cropped ? ' <i>'.__( 'cropped', 'wpsso' ).'</i>' : '' ).')';
 					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', array( 'size_label' => $size_label ) );
-					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $img_width.'x'.$img_height, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
+					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $img_width.'x'.$img_height, $required_text ).' '.$reject_notice, true, $dismiss_id, true );
 				}
 
 				return  false;	// exit early

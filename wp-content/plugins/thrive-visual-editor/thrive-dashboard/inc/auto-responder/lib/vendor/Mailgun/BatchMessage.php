@@ -36,9 +36,19 @@ class BatchMessage extends MessageBuilder {
 	private $workingDomain;
 
 	/**
+	 * @var string
+	 */
+	private $workingDomain;
+
+	/**
 	 * @var array
 	 */
-	private $messageIds = array();
+	private $endpointUrl;
+
+	/**
+	 * @var array
+	 */
+	private $endpointUrl;
 
 	/**
 	 * @param \Mailgun\Connection\RestClient $restClient

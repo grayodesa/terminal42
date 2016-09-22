@@ -1,7 +1,10 @@
 <h4><?php echo __( "Connect with Service", TVE_DASH_TRANSLATE_DOMAIN ) ?></h4>
 <hr class="tve_lightbox_line"/>
 <?php
-$connection_config = $data['connection_config'];
+$connection_config          = $data['connection_config'];
+$custom_messages            = is_array( $data['custom_messages'] ) ? $data['custom_messages'] : array();
+$custom_messages['error']   = empty( $custom_messages['error'] ) ? '' : $custom_messages['error'];
+$custom_messages['success'] = empty( $custom_messages['success'] ) ? '' : $custom_messages['success'];
 /**
  * at this stage, we have a list of existing connections that are to be displayed in a list
  */
@@ -99,7 +102,7 @@ $form_type !== 'lead_generation' ? $variations = $helper->getFormVariations() : 
 			<div class="tve_message_settings" <?php echo $submit !== 'message' ? ' style="display: none"' : '' ?>>
 				<p><?php echo __( "The following message will be displayed in a small popup after signup, without reloading the page.", TVE_DASH_TRANSLATE_DOMAIN ) ?></p>
 				<div class="tve_dashboard_tab_success tve_dashboard_tab tve_dashboard_tab_selected">
-					<?php wp_editor( '', 'tve_success_wp_editor', $settings = array( 'quicktags' => false, 'media_buttons' => false ) ); ?>
+					<?php wp_editor( $custom_messages['success'], 'tve_success_wp_editor', $settings = array( 'quicktags' => false, 'media_buttons' => false ) ); ?>
 				</div>
 			</div>
 			<?php if ( $form_type !== 'lead_generation' ) : ?>
@@ -109,8 +112,8 @@ $form_type !== 'lead_generation' ? $variations = $helper->getFormVariations() : 
 						<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline">
 							<select class="tve_change_states tve_change" data-ctrl="function:auto_responder.api.state_changed">
 								<?php foreach ( $variations as $variation ) : ?>
-									<option
-										value="<?php echo $variation['key'] ?>" <?php echo $state == $variation['key'] ? ' selected="selected"' : '' ?>><?php echo $variation['state_name'] ?>
+									<option data-state="<?php echo $variation['form_state'] ?>"
+									        value="<?php echo $variation['key'] ?>" <?php echo $state == $variation['key'] ? ' selected="selected"' : '' ?>><?php echo $variation['state_name'] ?>
 									</option>
 								<?php endforeach; ?>
 
@@ -135,7 +138,7 @@ $form_type !== 'lead_generation' ? $variations = $helper->getFormVariations() : 
 			<p><?php echo __( "This error message is shown in the rare case that the signup fails. This can happen when your connected email marketing service can't be reached.", TVE_DASH_TRANSLATE_DOMAIN ) ?>
 			</p>
 			<div class="tve_dashboard_tab_error">
-				<?php wp_editor( '', 'tve_error_wp_editor', $settings = array( 'quicktags' => false, 'media_buttons' => false ) ); ?>
+				<?php wp_editor( $custom_messages['error'], 'tve_error_wp_editor', $settings = array( 'quicktags' => false, 'media_buttons' => false ) ); ?>
 			</div>
 		</div>
 		<div class="tve-shortcodes-wrapper tve-shortcodes-error" <?php echo $_POST['error_message_option'] != 1 ? 'style="display:none"' : '' ?>>

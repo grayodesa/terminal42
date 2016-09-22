@@ -51,4 +51,7 @@ return array(
 	34   => __( 'Please enter correct data.', 'wc_point_of_sale' ),
 	35   => __( 'Please fill Custom Fields.', 'wc_point_of_sale'),
 	36   => __( 'Invalid Barcode Scan', 'wc_point_of_sale'),
+	37   => __( 'You have logged in successfully.', 'wc_point_of_sale'),
+	38   => __( 'In Stock', 'wc_point_of_sale'),
+	39   => __( 'Out of Stock', 'wc_point_of_sale'),
 );

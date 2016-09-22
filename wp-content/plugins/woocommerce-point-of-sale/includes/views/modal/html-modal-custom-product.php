@@ -1,4 +1,4 @@
-<div class="md-modal md-dynamicmodal full-width" id="modal-add_custom_product">
+<div class="md-modal md-dynamicmodal full-width md-close-by-overlay" id="modal-add_custom_product">
     <div class="md-content">
         <h1><?php _e('Custom Product', 'wc_point_of_sale'); ?><span class="md-close"></span></h1>
         <div class="full-height">
@@ -21,7 +21,7 @@
                         <tr>
                             <td class="product_title"><input type="text" id="custom_product_title"></td>
                             <td class="product_price"><input type="text" id="custom_product_price"></td>
-                            <td class="product_quantity"><input type="text" id="custom_product_quantity"></td>
+                            <td class="product_quantity"><input type="number" id="custom_product_quantity" value="1"></td>
                         </tr>
                     </tbody>
                 </table>

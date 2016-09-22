@@ -6,23 +6,23 @@
 	  	
 	  	@media print {
 		  	body.pos_receipt, html {
-			  	min-width: 100% !important;
-			    width: 100% !important;
-			    margin: 0 !important;
-			    padding: 0 !important;
+			  	min-width: 100%;
+			    width: 100%;
+			    margin: 0;
+			    padding: 0;
 			}
 			@page {
-			  	margin: 0 !important;
+			  	margin: 0;
 	  		}
 	  	}
 		body.pos_receipt, table.order-info, table.receipt_items, table.customer-info, #pos_receipt_title, #pos_receipt_address, #pos_receipt_contact, #pos_receipt_header, #pos_receipt_footer, #pos_receipt_tax, #pos_receipt_info, #pos_receipt_items {
-			font-family: 'Arial', sans-serif !important;
-			line-height: 1.4 !important;
+			font-family: 'Arial', sans-serif;
+			line-height: 1.4;
 			font-size: 14px;
-			background: transparent !important;
-			color: #000 !important;
-			box-shadow: none !important;
-			text-shadow: none !important;
+			background: transparent;
+			color: #000;
+			box-shadow: none;
+			text-shadow: none;
 		}
 		#pos_receipt_logo {
 			text-align: center;
@@ -60,6 +60,19 @@
 			text-align: left;
 			width: 40%;
 		}
+		table.receipt_items tr .column-product-image {
+			text-align: center;
+		    white-space: nowrap;
+		    width: 52px;
+		}
+		table.receipt_items .column-product-image img{
+			height: auto;
+		    margin: 0;
+		    max-height: 40px;
+		    max-width: 40px;
+		    vertical-align: middle;
+		    width: auto;
+		}
 		table.receipt_items thead tr {
 			border-bottom: 2px solid #000;
 		}
@@ -80,7 +93,7 @@
 		}
 		#pos_receipt_title {
 			font-weight: bold;
-			font-size: 20px !important;
+			font-size: 20px;
 		}
 		#pos_receipt_barcode {
 			border-bottom: 2px solid #000;
@@ -103,6 +116,10 @@
   					}
   				}
   			?>
+  			
+				<?php echo $receipt_options['custom_css']; ?>
+  			@media print {
+  			}
   		</style>
   		<?php
   	}
@@ -229,6 +246,9 @@
 	        <thead>
 	            <tr>
 	                <th><?php _e( 'Qty', 'wc_point_of_sale' ); ?></th>
+	                <?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+	                	<th class="column-product-image"></th>
+                	<?php } ?>
 	                <th><?php _e( 'Product', 'wc_point_of_sale' ); ?></th>
 	                <th><?php _e( 'Cost', 'wc_point_of_sale' ); ?></th>
 	                <th><?php _e( 'Total', 'wc_point_of_sale' ); ?></th>
@@ -254,6 +274,14 @@
 	                        ?>
 	                        <tr>
 	                            <td><?php echo $item['qty'] ;?></td>
+	                            <?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+				                	<td class="column-product-image">
+				                	<?php
+				                		$thumbnail = $_product ? apply_filters( 'woocommerce_admin_order_item_thumbnail', $_product->get_image( 'thumbnail', array( 'title' => '' ), false ), $item_id, $item ) : '';
+										echo '<div class="wc-order-item-thumbnail">' . wp_kses_post( $thumbnail ) . '</div>';
+									?>
+				                	</td>
+			                	<?php } ?>
 	                            <td class="product-name" ><strong>
 		                            <?php echo ( $_product && $_product->get_sku() ) ? esc_html( $_product->get_sku() ) . ' &ndash; ' : ''; ?>
 		                            <?php echo $name = esc_html( $item['name'] ); ?></strong>
@@ -386,6 +414,9 @@
 	                                foreach ($total_rows as $row) {
 	                                ?>
 	                                <tr>
+	                                	<?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+						                	<th class="column-product-image"></th>
+					                	<?php } ?>
 	                                    <th scope="row" colspan="3">
 	                                        <?php echo $row['label']; ?>  <span id="print-tax_label">
 	                                        <?php if($preview) {
@@ -402,6 +433,9 @@
 	                        }
 	                        ?>
 	                        <tr>
+	                        	<?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+				                	<th class="column-product-image"></th>
+			                	<?php } ?>
 	                            <th scope="row" colspan="3">
 	                                <?php echo $total_label; ?>
 	                            </th>
@@ -413,6 +447,9 @@
 	                    }
 	                    ?>
 	                    <tr>
+	                    	<?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+			                	<th class="column-product-image"></th>
+		                	<?php } ?>
 	                        <th scope="row" colspan="3">
 	                            <?php echo $order->payment_method_title ;?> <span id="print-payment_label"><?php echo $receipt_options['payment_label']; ?></span>
 	                        </th>
@@ -430,6 +467,9 @@
 	                    </tr>
 	                    <?php if( $order->payment_method == 'cod' ) { ?>
 	                    <tr>
+	                    	<?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+			                	<th class="column-product-image"></th>
+		                	<?php } ?>
 	                        <th scope="row" colspan="3">
 	                            <?php _e( 'Change', 'wc_point_of_sale' ); ?>
 	                        </th>
@@ -448,6 +488,9 @@
 	                    <?php } ?>
 	                     <?php if( $preview || $receipt_options['print_number_items'] == 'yes') { ?>
 	                     <tr id="print_number_items">
+	                     	<?php if ($receipt_options['show_image_product'] == 'yes'){ ?>
+			                	<th class="column-product-image"></th>
+		                	<?php } ?>
 	                        <th scope="row" colspan="3">
 	                            <span id="print-items_label"><?php echo $receipt_options['items_label']; ?></span>
 	                        </th>

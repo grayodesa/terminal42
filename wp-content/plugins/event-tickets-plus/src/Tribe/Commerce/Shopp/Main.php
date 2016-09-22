@@ -673,7 +673,8 @@ class Tribe__Tickets_Plus__Commerce__Shopp__Main extends Tribe__Tickets_Plus__Ti
 	public function front_end_tickets_form( $content ) {
 		$post = $GLOBALS['post'];
 
-		if ( ! empty( $post->post_parent ) ) {
+		// For recurring events (child instances only), default to loading tickets for the parent event
+		if ( ! empty( $post->post_parent ) && function_exists( 'tribe_is_recurring_event' ) && tribe_is_recurring_event( $post->ID ) ) {
 			$post = get_post( $post->post_parent );
 		}
 

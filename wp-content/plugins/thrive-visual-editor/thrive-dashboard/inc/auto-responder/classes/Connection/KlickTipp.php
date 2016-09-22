@@ -114,11 +114,12 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 
 			$lists = array();
 			foreach ( $all as $id => $name ) {
-
-				$lists[] = array(
-					'id'   => $id,
-					'name' => $name
-				);
+				if(!empty($name)) {
+					$lists[] = array(
+						'id'   => $id,
+						'name' => $name
+					);
+				}
 			}
 
 			return $lists;

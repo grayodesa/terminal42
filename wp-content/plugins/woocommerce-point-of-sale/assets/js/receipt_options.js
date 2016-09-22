@@ -25,6 +25,14 @@ jQuery(document).ready(function($) {
         }
     }).trigger('change');
 
+    $('#receipt_show_image_product').change(function() {
+        if($(this).is(':checked')){
+            $('table.receipt_items tr .column-product-image').show();
+        }else{
+            $('table.receipt_items tr .column-product-image').hide();
+        }
+    }).trigger('change');
+
     $('#receipt_print_server').change(function() {
         if($(this).is(':checked')){
             $('.show_receipt_print_server').show();
@@ -333,4 +341,9 @@ jQuery(document).ready(function($) {
                 date : format.val()
             }, function(d) { format.siblings( '.spinner' ).removeClass( 'is-active' ); format.siblings('.example').text(d); } );
     });
+
+    var editor = CodeMirror.fromTextArea(document.getElementById("receipt_custom_css"), {
+        lineNumbers: true,
+        mode:  "css",
+      });
 });

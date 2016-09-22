@@ -96,7 +96,7 @@
          if ($_product && !$_product->is_taxable()){
           $is_taxable = 'false';
           }?>
-        <input type="text" class="product_price" value="<?php echo $item_price ; ?>" name="order_item_price[<?php echo esc_attr( $_product_id_var ); ?>]" data-original="<?php echo $item_price ; ?>" data-istaxable="<?php echo $is_taxable; ?>'" data-taxclass="<?php echo $taxclass; ?>'" data-discountsymbol="currency_symbol" data-percent="0" data-modprice="<?php echo $item_price ; ?>" >
+        <input type="text" class="product_price" placeholder="<?php echo $item_price ; ?>" value="<?php echo $item_price ; ?>" name="order_item_price[<?php echo esc_attr( $_product_id_var ); ?>]" data-original="<?php echo $item_price ; ?>" data-istaxable="<?php echo $is_taxable; ?>'" data-taxclass="<?php echo $taxclass; ?>'" data-discountsymbol="currency_symbol" data-percent="0" data-modprice="<?php echo $item_price ; ?>" >
         <input type="hidden" value="0" class="pr_coupon_discount" />
         <input type="hidden" value="<?php echo $item_price ; ?>" class="final_total_amount" />
       </div>

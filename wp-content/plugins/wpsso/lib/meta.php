@@ -461,7 +461,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 					$this->p->debug->log( 'submit nonce token validation failed' );
 				if ( is_admin() )
 					$this->p->notice->err( __( 'Nonce token validation failed for the submitted form (update ignored).',
-						'wpsso' ), true );
+						'wpsso' ) );
 				return false;
 
 			} else return true;
@@ -602,6 +602,11 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 					break;
 			}
 
+			/* hooked by:
+			 *	WpssoPost::filter_og_img_post_column_content()
+			 *	WpssoTerm::filter_og_img_term_column_content()
+			 *	WpssoUser::filter_og_img_user_column_content()
+			 */
 			$value = apply_filters( $column_name.'_'.$mod['name'].'_column_content', $value, $column_name, $mod );
 
 			if ( $use_cache === true && $this->p->is_avail['cache']['transient'] )
@@ -794,9 +799,7 @@ if ( ! class_exists( 'WpssoMeta' ) ) {
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'fetching video from custom '.$prefix.' url '.$url,
 							get_class( $this ) );	// log extended class name
-					$og_video = $this->p->media->get_video_info( $url, 0, 0, $check_dupes );
-					if ( empty( $og_video ) )	// fallback to the original custom video URL
-						$og_video['og:video:url'] = $url;
+					$og_video = $this->p->media->get_video_info( $url, 0, 0, $check_dupes, true );	// $fallback = true
 					if ( $this->p->util->push_max( $og_ret, $og_video, $num ) ) 
 						return $og_ret;
 				}

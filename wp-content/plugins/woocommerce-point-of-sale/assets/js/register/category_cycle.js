@@ -422,7 +422,7 @@
     		POS_TRANSIENT.grid_product_variations = [];
     		POS_TRANSIENT.grid_product_attributes = {};
     		window.POS_APP.db.get("products", parent ).done(function(record) {
-    			
+
     			if( wc_pos_params.image_size == 'thumbnail' && typeof record.thumbnail_src != 'undefined'){
 		  			POS_TRANSIENT.grid_product_image = record.thumbnail_src;
 		  		}
@@ -446,7 +446,8 @@
 					});
 					POS_TRANSIENT.grid_product_variations[index] = {attributes : attributes};
 					POS_TRANSIENT.grid_product_variations[index]['variation_is_active'] = true;
-					POS_TRANSIENT.grid_product_variations[index]['variation_id'] = val.id;
+					POS_TRANSIENT.grid_product_variations[index]['variation_id']        = val.id;
+					POS_TRANSIENT.grid_product_variations[index]['data']                = val;
 
 				});
 				$.each(record.attributes, function(index, attr) {
@@ -484,9 +485,11 @@
 			current_settings       = POS_TRANSIENT.grid_current_settings,
 			$form                  = $( this ),
 			product_id             = parseInt( parent ),
-			product_variations    = POS_TRANSIENT.grid_product_variations;
+			product_variations     = POS_TRANSIENT.grid_product_variations,
+			cs_count               = sizeof(current_settings),
+			pa_count               = sizeof(POS_TRANSIENT.grid_product_attributes);
 			
-		if( sizeof(current_settings) != sizeof(POS_TRANSIENT.grid_product_attributes) ){
+		if( cs_count != pa_count ){
 			all_attributes_chosen = false;
 		}
 
@@ -567,9 +570,21 @@
 					$.each( options, function(index, val) {
 						if( in_array(val.slug, _options) || all_opt ){
 
-							var title = val.name;
-							var $li = $('<li id="attribute_'+val.slug+'" class="title_product open_variantion_attr category_cycle" data-id="'+parent+'" data-taxonomy="'+tax+'" data-term="'+val.slug+'"><span></span></li>');
-		    				$li.find('span').html(title);
+							var title = val.name,
+								price = '';
+							if( cs_count+1 == pa_count && pos_grid.tile_layout == 'image_title_price' ){
+								var new_settings      = current_settings;
+									new_settings[tax] = val.slug;
+								var new_matching      = APP.find_matching_variations( product_variations, new_settings );
+								var variation         = new_matching.shift();
+
+		    					if ( variation ) {
+					    		 	var price_html = pos_get_price_html(variation.data);
+									price = '<span class="price">'+price_html+'</span>';
+		    					}
+							}
+							var $li = $('<li id="attribute_'+val.slug+'" class="title_product open_variantion_attr category_cycle" data-id="'+parent+'" data-taxonomy="'+tax+'" data-term="'+val.slug+'"><span class="pr_title"></span>'+price+'</li>');
+		    				$li.find('span.pr_title').html(title);
 		    				$li.data('title', title).css({
 		    					'background-image' : 'url('+POS_TRANSIENT.grid_product_image+')'
 		    				});

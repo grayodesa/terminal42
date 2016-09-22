@@ -143,10 +143,18 @@ function posPrintReceipt(url)
             jQuery("<img>").load(function() {
                 window.print();
                 closeModal('modal-printing-receipt');  
+                wp.heartbeat.connectNow();
+                if( change_user && typeof APP_auth_show != 'undefined' ){
+                    APP_auth_show();
+                }
             }).attr('src', src);
         }else{
             window.print();
             closeModal('modal-printing-receipt');  
+            wp.heartbeat.connectNow();
+            if( change_user && typeof APP_auth_show != 'undefined' ){
+                APP_auth_show();
+            }
         }
     }
     else if( jQuery('#print_receipt_logo').length ){
@@ -155,15 +163,27 @@ function posPrintReceipt(url)
             jQuery("<img>").load(function() {
                 window.print();
                 closeModal('modal-printing-receipt');  
+                wp.heartbeat.connectNow();
+                if( change_user && typeof APP_auth_show != 'undefined' ){
+                    APP_auth_show();
+                }
             }).attr('src', src);
         }else{
             window.print();
             closeModal('modal-printing-receipt');  
+            wp.heartbeat.connectNow();
+            if( change_user && typeof APP_auth_show != 'undefined' ){
+                APP_auth_show();
+            }
         }
     }
     else{
         window.print();
         closeModal('modal-printing-receipt');  
+        wp.heartbeat.connectNow();
+        if( change_user && typeof APP_auth_show != 'undefined' ){
+            APP_auth_show();
+        }
     }
   });
 }
@@ -182,7 +202,7 @@ function pos_get_price_html( product ) {
   }
   var tax_display_mode = pos_wc.tax_display_shop;  
   var price = '';
-  if( product.variations.length > 0){
+  if( typeof product.variations != 'undefined' && product.variations.length > 0){
     var min = 0;
     var max = 0;
     jQuery.each(product.variations, function(index, val) {

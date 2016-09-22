@@ -58,6 +58,11 @@ class TD_NM_Action_Send_Email_Notification extends TD_NM_Action_Abstract {
 		$lead_details['source_id']        = $tl_item->ID;
 		$lead_details['source_form_name'] = $tl_form->post_title;
 		$lead_details['source_form_id']   = $tl_form->ID;
+		/*Send also the custom fields to the lead_detail shortcode*/
+		foreach ( $tl_data['custom_fields'] as $key => $value ) {
+			$lead_details[ 'custom_' . $key ] = $value;
+		}
+
 
 		$data['lead_details'] = $lead_details;
 		$data['lead_email']   = $tl_data['email'];

@@ -50,6 +50,42 @@ Should you find a bug, please do not hesitate to contact us through our support 
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+= 3.1.6.6 - 2016.09.20 =
+* Feature added to barcode page to add product categories and product variables from single SKU.
+* Fix bug with local installations of plugin displaying errors on register page.
+
+= 3.1.6.5 - 2016.09.16 =
+* Tweak to overlay variable stock indicator, SKU and price to be reset.
+* Feature added to define CSS per receipt.
+
+= 3.1.6.4 - 2016.09.15 =
+* Fix bug with scan field API.
+* Tweak to show price on variable products when using overlay mode.
+* Tweak to email receipt option for register.
+* Tweak to product price to show original price after editing.
+
+= 3.1.6.3 - 2016.09.13 =
+* Tweak to the modal window closing feature.
+* Tweak to product title text box auto focus when loading the add custom product window.
+* Tweak to quantity number pad when loading the add custom product window.
+* Tweak to the variable product price display when tiles are selected.
+* Fix bug with card details on console bug.
+
+= 3.1.6.2 - 2016.09.10 =
+* Fix bug with NMI payment gateway.
+* Feature to the connection status setting.
+* Tweak to the design of icons.
+
+= 3.1.6.1 - 2016.09.05 =
+* Fix bug with Authorize.NET payment gateway.
+* Fix bug with deleted products appearing.
+* Fix bug with syncing between products after stock.
+
+= 3.1.6 - 2016.08.25 =
+* Feature added to show product image on receipt.
+* Feature added to allow multiple products to be loaded when printing barcodes.
+* Feature added to print on Avery 20 x 4 template.
+
 = 3.1.5.5 - 2016.08.05 =
 * Fix bug with PayPal gateway not working.
 

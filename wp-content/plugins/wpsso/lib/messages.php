@@ -239,8 +239,8 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						case 'tooltip-og_def_author_on_search':
 							$text = 'Check this option if you would like to force the Default Author on search result webpages as well. If this option is checked, search results will be labeled as a an \'article\' with authorship attributed to the Default Author (default is unchecked).';
 							break;
-						case 'tooltip-og_author_gravatar':
-							$text = 'Check this option to include the author\'s Gravatar image in meta tags for author index / archive webpages. If the "<strong>Use Default Image on <em>Author</em> Index</strong>" option is also checked under the <em>Images</em> tab (unchecked by default), then the default image will be used instead for author index / archive webpages.';
+						case 'tooltip-og_author_gravatar':	// aka plugin_gravatar_api
+							$text = 'Check this option to include the author\'s Gravatar image in meta tags for author index / archive webpages (default is checked).';
 							break;
 						default:
 							$text = apply_filters( $lca.'_messages_tooltip_og', $text, $idx, $info );
@@ -334,7 +334,8 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						 * 'WP / Theme Integration' settings
 						 */
 						case 'tooltip-plugin_check_head':
-							$text = $info['short'].' can check the front-end webpage head section for duplicate HTML tags when editing Posts and Pages. You may uncheck this option if you\'ve edited a few Posts and Pages without seeing any warning messages about duplicate HTML tags.';
+							$max_count = (int) SucomUtil::get_const( 'WPSSO_CHECK_HEADER_COUNT', 6 );
+							$text = sprintf( __( 'When editing Posts and Pages, %1$s can check the head section of webpages for conflicting and/or duplicate HTML tags. After %2$d <em>successful</em> checks, no additional checks will be performed &mdash; until the theme and/or any plugin is updated, when another %2$d checks are performed.', 'wpsso' ), $info['short'], $max_count );
 							break;
 						case 'tooltip-plugin_html_attr_filter':
 							$text = $info['short'].' hooks the "language_attributes" filter by default to add / modify required Open Graph namespace prefix values. The "language_attributes" WordPress function and filter are used by most themes &mdash; if the namespace prefix values are missing from your &amp;lt;html&amp;gt; element, make sure your header template(s) use the language_attributes() function. Leaving this option blank disables the addition of Open Graph namespace values. Example template code: <pre><code>&amp;lt;html &amp;lt;?php language_attributes(); ?&amp;gt;&amp;gt;</code></pre>';
@@ -541,6 +542,12 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						case 'tooltip-tc_desc_len':
 							$text = 'The maximum length of text used for the Twitter Card description. The length should be at least '.$this->p->cf['head']['limit_min']['og_desc_len'].' characters or more (the default is '.$this->p->opt->get_defaults( 'tc_desc_len' ).' characters).';
 							break;
+						case 'tooltip-tc_type_post':
+							$text = 'The Twitter Card type for posts / pages with a custom, featured, and/or attached image.';
+							break;
+						case 'tooltip-tc_type_default':
+							$text = 'The Twitter Card type for all other images (default, image from content text, etc).';
+							break;
 						case 'tooltip-tc_sum_dimensions':
 							$def_dimensions = $this->p->opt->get_defaults( 'tc_sum_width' ).'x'.
 								$this->p->opt->get_defaults( 'tc_sum_height' ).' '.
@@ -700,14 +707,11 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 							sprintf( _x( '%s required to use this option', 'option comment', 'wpsso' ),
 								$info['short_pro'] ).'</a></p>';
 						break;
-					case 'pro-about-msg-post':
-						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'Update the content or excerpt text to change the default values shown here.', 'wpsso' ).'</p>';
+					case 'pro-about-msg-post-text':
+						$text = '<p>'.__( 'You can update the excerpt or content text to change the default description values.', 'wpsso' ).'</p>';
 						break;
-					case 'pro-about-msg-media':
-						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).' '.__( 'You can change the social image by selecting a featured image or including images in the content.', 'wpsso' ).' '.sprintf( __( 'The video service modules &mdash; required to detect embedded videos &mdash; are available in the %s Pro version.', 'wpsso' ),  $info['short'] ).'</p>';
-						break;
-					case 'pro-about-msg':
-						$text = '<p>'.sprintf( __( 'The Free / Basic version of %1$s does not include modules required to customize post, term, and/or user meta &mdash; these options are shown for informative purposes only.', 'wpsso' ), $info['short'] ).( empty( $info['text'] ) ? '' : ' '.$info['text'] ).'</p>';
+					case 'pro-about-msg-post-media':
+						$text = '<p>'.__( 'You can change the social image by selecting a featured image, attaching image(s) or including images in the content.', 'wpsso' ).'<br/>'.sprintf( __( 'The video service modules &mdash; required to detect embedded videos &mdash; are available with the %s Pro version.', 'wpsso' ),  $info['short'] ).'</p>';
 						break;
 					default:
 						$text = apply_filters( $lca.'_messages_pro', $text, $idx, $info );
@@ -738,7 +742,10 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 						}
 						break;
 					case 'notice-missing-og-image':
-						$text = __( 'An Open Graph image meta tag could not be created from this webpage content and/or custom settings. Facebook and other social websites <em>require at least one image meta tag</em> to render shared content correctly.', 'wpsso' );
+						$text = __( 'An Open Graph image meta tag could not be created from this webpage content or its custom Social Settings. Facebook <em>requires at least one image meta tag</em> to render shared content correctly.', 'wpsso' );
+						break;
+					case 'notice-missing-og-description':
+						$text = __( 'An Open Graph description meta tag could not be created from this webpage content or its custom Social Settings. Facebook <em>requires a description meta tag</em> to render shared content correctly.', 'wpsso' );
 						break;
 					case 'notice-missing-schema-image':
 						$text = __( 'A Schema image property could not be created from this webpage content and/or custom settings. Google <em>requires at least one image property</em> for this Schema item type.', 'wpsso' );
@@ -752,7 +759,9 @@ if ( ! class_exists( 'WpssoMessages' ) ) {
 					case 'notice-header-tmpl-no-head-attr':
 						$action_url = wp_nonce_url( $this->p->util->get_admin_url( '?'.$this->p->cf['lca'].'-action=modify_tmpl_head_elements' ),
 							WpssoAdmin::get_nonce(), WPSSO_NONCE );
-						$text = '<p><b>'.__( 'At least one of your theme header templates does not support Schema markup of the webpage head section &mdash; this is especially important for Pinterest.', 'wpsso' ).'</b> '.sprintf( __( 'The %s element in your header templates should include a function, action, or filter call for its attributes.', 'wpsso' ), '<code>&lt;head&gt;</code>' ).' '.sprintf( __( '%1$s can update your header templates automatically to change the default %2$s element to:', 'wpsso' ), $info['short'], '<code>&lt;head&gt;</code>' ).'</p><pre><code>&lt;head &lt;?php do_action( \'add_head_attributes\' ); ?&gt;&gt;</code></pre><p>'.sprintf( __( '<b><a href="%1$s">Click here to update header templates automatically</a></b> or update the templates yourself manually.', 'wpsso' ), $action_url ).'</p>';
+						$text = '<p><b>'.__( 'At least one of your theme header templates does not support Schema markup of the webpage head section &mdash; this is especially important for Pinterest.', 'wpsso' ).'</b> '.sprintf( __( 'The %s element in your header templates should include a function, action, or filter for its attributes.', 'wpsso' ), '<code>&lt;head&gt;</code>' ).' '.sprintf( __( '%1$s can update your header templates automatically to change the default %2$s element to:', 'wpsso' ), $info['short'], '<code>&lt;head&gt;</code>' ).'</p>';
+						$text .= '<pre><code>&lt;head &lt;?php do_action( \'add_head_attributes\' ); ?&gt;&gt;</code></pre>';
+						$text .= '<p>'.sprintf( __( '<b><a href="%1$s">Click here to update header templates automatically</a></b> or update the templates yourself manually.', 'wpsso' ), $action_url ).'</p>';
 						break;
 					case 'notice-pro-tid-missing':
 						if ( ! is_multisite() )

@@ -1652,6 +1652,7 @@ function tve_enqueue_editor_scripts() {
 						'tve_controls',
 						'tve_colors',
 						'tve_auto_responder',
+						'jquery-ui-autocomplete',
 						'jquery-ui-slider',
 						'jquery-ui-datepicker',
 						'iris',
@@ -1733,8 +1734,23 @@ function tve_enqueue_editor_scripts() {
 				// load any custom css
 				tve_load_custom_css();
 
-				// scan templates directory and build array of template file names
-				$shortcode_files = array_diff( scandir( dirname( dirname( __FILE__ ) ) . '/shortcodes/templates/', 1 ), array(
+				/**
+				 * scan templates directory and build array of template file names
+				 */
+				$template_files = array();
+				$templates_path = dirname( dirname( __FILE__ ) ) . '/shortcodes/templates/';
+				if ( function_exists( 'scandir' ) ) {
+					$template_files = scandir( $templates_path, 1 );
+
+				} else if ( $handle = opendir( $templates_path ) ) { //some servers have scandir function disabled for security reasons
+
+					while ( false !== ( $entry = readdir( $handle ) ) ) {
+						array_push( $template_files, $entry );
+					}
+					closedir( $handle );
+				}
+
+				$shortcode_files = array_diff( $template_files, array(
 					"..",
 					".",
 					"css",
@@ -1743,6 +1759,7 @@ function tve_enqueue_editor_scripts() {
 					"html",
 					"js"
 				) );
+				$shortcode_files = array_values( $shortcode_files );//take only values to make sure it will be json encoded as array not object
 
 				// list of credit cards for cc widget
 				$tve_cc_icons = array( "cc_amex, cc_discover, cc_mc, cc_paypal, cc_visa" );
@@ -3245,6 +3262,7 @@ function tve_output_wysiwyg_editor() {
 	$lb_after  = '</div><div class="tve_lightbox_buttons"><div class="tve-sp"></div><input type="button" class="tve_save_lightbox tve_editor_button tve_editor_button_success tve_mce_save tve_mousedown tve_right" data-ctrl="controls.lb_save" value="Save"></div></div>';
 
 	echo $lb_before;
+	tcb_remove_tinymce_conflicts();
 	wp_editor( '', 'tve_tinymce_tpl', array(
 		'dfw'               => true,
 		'tabfocus_elements' => 'insert-media-button,save-post',
@@ -3256,6 +3274,33 @@ function tve_output_wysiwyg_editor() {
 	$GLOBALS['tve_wysiwyg_output'] = true;
 }
 
+/**
+ * remove tinymce conflicts
+ * 1. if 3rd party products include custom versions of jquery UI, those will completely break the 'wplink' plugin
+ * 2. MemberMouse adds some media buttons and does not correctly setup links to images
+ */
+function tcb_remove_tinymce_conflicts() {
+	/* Membermouse adds some extra media buttons */
+	remove_all_actions( 'media_buttons_context' );
+
+	add_filter( 'tiny_mce_plugins', 'tcb_remove_tinymce_wplink_plugin' );
+}
+
+/**
+ * Removes the "wplink" plugin - this causes conflicts in cases where themes / plugins include custom versions of jquery UI on the page
+ *
+ * @param array $plugins
+ *
+ * @return array
+ */
+function tcb_remove_tinymce_wplink_plugin( $plugins ) {
+	$found = array_search( 'wplink', $plugins );
+	if ( $found !== false ) {
+		array_splice( $plugins, $found, 1 );
+	}
+
+	return $plugins;
+}
 
 /**
  * @param string $title           lightbox title

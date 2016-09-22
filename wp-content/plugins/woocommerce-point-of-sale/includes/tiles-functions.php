@@ -78,7 +78,6 @@ function the_grid_layout_cycle($grid, $ret = false){
           $ordering = WC()->query->get_catalog_ordering_args();
           break;
       }
-      #var_dump($ordering);
       $args       = array(
         'posts_per_page' => -1,
         'post_type' => 'product',
@@ -112,7 +111,6 @@ function pos_grid_layout_cycle($tiles, $grid_name, $is_all = false)
   $js = array();
   if( count($tiles) > 100){
     $tiles = array_slice($tiles,0, 100);
-    //var_dump(count($tiles)); die;
   }
   $hide_text = get_option('wc_pos_hide_text_on_tiles');
   $hide_text = $hide_text == 'yes' ? true : false;

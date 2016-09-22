@@ -35,7 +35,7 @@ class Thrive_Dash_Api_SparkPost_Connection extends Thrive_Dash_Api_SparkPost_API
 		'trackClicks'      => 'options.click_tracking',
 		'trackOpens'       => 'options.open_tracking',
 		'transactional'    => 'options.transactional',
-		'useDraftTemplate' => 'use_draft_template'
+		'useDraftTemplate' => 'use_draft_template',
 	);
 
 	/**
@@ -44,12 +44,12 @@ class Thrive_Dash_Api_SparkPost_Connection extends Thrive_Dash_Api_SparkPost_API
 	 */
 	protected $structure = array(
 		'return_path'        => 'default@sparkpostmail.com',
-		'content'            => [
+		'content'            => array(
 			'html'         => null,
 			'text'         => null,
-			'email_rfc822' => null
-		],
-		'use_draft_template' => false
+			'email_rfc822' => null,
+		),
+		'use_draft_template' => false,
 	);
 
 	/**

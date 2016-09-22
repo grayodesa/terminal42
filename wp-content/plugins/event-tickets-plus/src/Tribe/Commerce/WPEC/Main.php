@@ -556,7 +556,8 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets_Plus__Tic
 	public function front_end_tickets_form( $content ) {
 		$post = $GLOBALS['post'];
 
-		if ( ! empty( $post->post_parent ) ) {
+		// For recurring events (child instances only), default to loading tickets for the parent event
+		if ( ! empty( $post->post_parent ) && function_exists( 'tribe_is_recurring_event' ) && tribe_is_recurring_event( $post->ID ) ) {
 			$post = get_post( $post->post_parent );
 		}
 
@@ -575,6 +576,7 @@ class Tribe__Tickets_Plus__Commerce__WPEC__Main extends Tribe__Tickets_Plus__Tic
 	 * to the cart
 	 */
 	public function process_front_end_tickets_form() {
+		parent::process_front_end_tickets_form();
 
 		if ( empty( $_POST['wpec_tickets_quantity'] ) )
 			return;

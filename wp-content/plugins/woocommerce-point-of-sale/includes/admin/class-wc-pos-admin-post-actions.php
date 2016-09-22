@@ -116,29 +116,19 @@ class WC_POS_Admin_Post_Actions {
         
     }elseif( isset($_GET['close']) && !empty($_GET['close']) ){
         setcookie ("wc_point_of_sale_register", $_GET['close'] ,time()-3600*24*120, '/');
-
-        $table_name = $wpdb->prefix . "wc_poin_of_sale_registers";
+        
         $register_id = $_GET['close'];
-        $db_data = $wpdb->get_results("SELECT * FROM $table_name WHERE ID = $register_id");
+        
+        if( pos_close_register($register_id) ){
+            $display_reports = get_option('wc_pos_display_reports');
 
-        if ( $db_data && 0 != ($user_id = get_current_user_id()) ){
-            $row = $db_data[0];
-            
-            $lock_user = $row->_edit_last;
-            if($lock_user == $user_id){
-                $now = current_time( 'mysql' );    
-                $data['closed']     = $now;
-                $data['_edit_last'] = $user_id;
-                $rows_affected = $wpdb->update( $table_name, $data, array( 'ID' => $register_id ) );
-                $display_reports = get_option('wc_pos_display_reports');
-
-                $url = get_admin_url(get_current_blog_id(), '/').'admin.php?page=wc_pos_registers';
-                if( $display_reports == 'yes'){
-                    $url .= '&report='.$register_id;
-                }
-                wp_redirect( $url);
+            $url = get_admin_url(get_current_blog_id(), '/').'admin.php?page=wc_pos_registers';
+            if( $display_reports == 'yes'){
+                $url .= '&report='.$register_id;
             }
+            wp_redirect( $url);
         }
+
     }
     if( isset($_POST['action']) && $_POST['action'] == 'add-wc-pos-registers'){
         WC_POS()->register()->save_register();

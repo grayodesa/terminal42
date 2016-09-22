@@ -10,7 +10,7 @@
 			<ul id="tvd-dash-submenu" class="tvd-right">
 				<li>
 					<a id="td-nm-email-services" href="javascript:void(0)">
-						<i class="tvd-icon-paper-plane"></i>
+						<i class="tvd-icon-paper-plane <?php if ( count( Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'email' ) ) ) === 0 ) { ?>tvd-nm-warning-sign<?php } ?>"></i>
 						<?php echo __( 'Email Delivery Setup', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					</a>
 				</li>

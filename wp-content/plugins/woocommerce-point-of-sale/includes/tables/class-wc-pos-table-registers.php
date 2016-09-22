@@ -178,36 +178,46 @@ class WC_Pos_Table_Registers extends WP_List_Table {
     $settings_data    = $item['settings'];
     
     if($end_sale_fields['change_user']['options'][$settings_data['change_user']] == 'Yes'){
-            $change_user = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'User Changes After Sale', 'woocommerce' ) . '"></span>';
+            $change_user = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'User Changes After Sale', 'wc_point_of_sale' ) . '"></span>';
         } else {
-            $change_user = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'User Does Not Change After Sale', 'woocommerce' ) . '"></span>';
+            $change_user = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'User Does Not Change After Sale', 'wc_point_of_sale' ) . '"></span>';
         };
     
     return sprintf('%1$s', $change_user );
   }
   
   function column_email_receipt( $item ) {
-	$end_sale_fields  = WC_Pos_Registers::$register_end_of_sale_fields;
+
     $settings_data    = $item['settings'];
-    
-    if($end_sale_fields['email_receipt']['options'][$settings_data['email_receipt']] == 'Yes'){
-            $email_receipt = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Receipt Is Emailed', 'woocommerce' ) . '"></span>';
-        } else {
-            $email_receipt = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Receipt Is Not Emailed', 'woocommerce' ) . '"></span>';
-        };
-    
+  
+    $opt = (int)$settings_data['email_receipt'];
+    switch ($opt) {
+      case 1:
+        $email_receipt = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Receipt Is Emailed To All Customers', 'wc_point_of_sale' ) . '"></span>';
+        break;
+      case 2:
+        $email_receipt = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Receipt Is Emailed To Non-guest Customers Only', 'wc_point_of_sale' ) . '"></span>';
+        break;      
+      default:
+        $email_receipt = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Receipt Is Not Emailed', 'wc_point_of_sale' ) . '"></span>';
+        break;
+    }
     return sprintf('%1$s', $email_receipt );
   }
   
   function column_print_receipt( $item ) {
-	$end_sale_fields  = WC_Pos_Registers::$register_end_of_sale_fields;
     $settings_data    = $item['settings'];
-    
-    if($end_sale_fields['print_receipt']['options'][$settings_data['print_receipt']] == 'Yes'){
-            $print_receipt = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Receipt Is Printed', 'woocommerce' ) . '"></span>';
-        } else {
-            $print_receipt = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Receipt Is Not Printed', 'woocommerce' ) . '"></span>';
-        };
+    $opt = (int)$settings_data['print_receipt'];
+
+    switch ($opt) {
+      case 1:
+        $print_receipt = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Receipt Is Printed', 'wc_point_of_sale' ) . '"></span>';
+        break;
+      
+      default:
+        $print_receipt = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Receipt Is Not Printed', 'wc_point_of_sale' ) . '"></span>';
+        break;
+    }
     
     return sprintf('%1$s', $print_receipt );
   }
@@ -217,11 +227,11 @@ class WC_Pos_Table_Registers extends WP_List_Table {
     $settings_data    = $item['settings'];
     
     if($end_sale_fields['note_request']['options'][$settings_data['note_request']] == 'None'){
-            $note_request = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Note Is Not Taken', 'woocommerce' ) . '"></span>';
+            $note_request = '<span style="color: #999;" class="woocommerce_pos_register_table_icons_no tips" data-tip="' . esc_attr__( 'Note Is Not Taken', 'wc_point_of_sale' ) . '"></span>';
         } else if($end_sale_fields['note_request']['options'][$settings_data['note_request']] == 'On Save'){
-            $note_request = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Note Is Taken On Save', 'woocommerce' ) . '"></span>';
+            $note_request = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Note Is Taken On Save', 'wc_point_of_sale' ) . '"></span>';
         } else {
-	        $note_request = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Note Is Taken On All Sales', 'woocommerce' ) . '"></span>';
+	        $note_request = '<span style="color: #ad74a2;" class="woocommerce_pos_register_table_icons_yes tips" data-tip="' . esc_attr__( 'Note Is Taken On All Sales', 'wc_point_of_sale' ) . '"></span>';
         };
     
     return sprintf('%1$s', $note_request );

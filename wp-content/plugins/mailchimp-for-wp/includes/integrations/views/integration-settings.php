@@ -90,12 +90,14 @@
 							<th scope="row"><?php _e( 'MailChimp Lists', 'mailchimp-for-wp' ); ?></th>
 							<?php if( ! empty( $lists ) ) {
 								echo '<td>';
+								echo '<ul style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;">';
 								foreach( $lists as $list ) {
-									echo '<label>';
+									echo '<li><label>';
 									echo sprintf( '<input type="checkbox" name="mc4wp_integrations[%s][lists][]" value="%s" class="mc4wp-list-input" %s> ', $integration->slug, $list->id, checked( in_array( $list->id, $opts['lists'] ), true, false ) );
-									echo $list->name;
-									echo '</label><br />';
+									echo esc_html( $list->name );
+									echo '</label></li>';
 								}
+								echo '</ul>';
 
 								echo '<p class="help">';
 								_e( 'Select the list(s) to which people who check the checkbox should be subscribed.' ,'mailchimp-for-wp' );
@@ -196,7 +198,7 @@
 									<?php _e( 'No' ); ?>
 								</label>
 								<p class="help">
-									<?php _e( 'Select "no" if you want to add the selected groupings to any previously selected groupings when updating a subscriber.', 'mailchimp-for-wp' ); ?>
+									<?php _e( 'Select "no" if you want to add the selected interests to any previously selected interests when updating a subscriber.', 'mailchimp-for-wp' ); ?>
 									<?php printf( ' <a href="%s" target="_blank">' . __( 'What does this do?', 'mailchimp-for-wp' ) . '</a>', 'https://mc4wp.com/kb/what-does-replace-groupings-mean/' ); ?>
 								</p>
 							</td>

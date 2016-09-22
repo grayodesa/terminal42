@@ -91,32 +91,57 @@ function td_nm_get_notifications( $filters = array() ) {
 		'orderby'        => 'date',
 		'order'          => 'ASC',
 	);
-	$triggers = TD_NM()->get_trigger_types();
 
+	/**
+	 * check if plugins are active
+	 */
+	$tho_active = is_plugin_active( 'thrive-headline-optimizer/thrive-headline-optimizer.php' );
+	$tl_active  = is_plugin_active( 'thrive-leads/thrive-leads.php' );
+
+	$filters       = array_merge( $defaults, $filters );
+	$posts         = get_posts( $filters );
+	$notifications = array();
+
+	$types         = TD_NM()->get_trigger_types();
 	$trigger_types = array();
-	foreach ( $triggers as $type ) {
-		if ( ! in_array( $type['key'], $trigger_types ) ) {
-			$trigger_types[] = $type['key'];
-		}
+	//prepare trigger types
+	foreach ( $types as $type ) {
+		$trigger_types[] = $type['key'];
 	}
 
-	$filters = array_merge( $defaults, $filters );
+	foreach ( $posts as $post ) {
+		$trigger = td_nm_get_trigger( $post->ID );
 
-	$posts = get_posts( $filters );
+		/**
+		 * Pls consider to refactorize this if the logic gets more complicated that it is now
+		 */
 
-	foreach ( $posts as $key => $post ) {
-		$td_nm_trigger = td_nm_get_trigger( $post->ID );
-		if ( ! in_array( $td_nm_trigger['type'], $trigger_types ) ) {
-			unset( $posts[ $key ] );
+		if ( ! in_array( $trigger['type'], $trigger_types ) ) {
 			continue;
 		}
-		$post->trigger = $td_nm_trigger;
-		$post->actions = td_nm_get_actions( $post->ID );
-	}
-	/*Reset keys*/
-	$posts = array_values( $posts );
 
-	return $posts;
+		$settings = $trigger['settings'];
+
+		/**
+		 * TL is not active and tho settings are empty
+		 */
+		if ( ! $tl_active && ! empty( $settings['tl'] ) && empty( $settings['tho'] ) ) {
+			continue;
+		}
+
+		/**
+		 * THO is not active and tl settings are empty
+		 */
+		if ( ! $tho_active && empty( $settings['tl'] ) && empty( $settings['groups'] ) && empty( $settings['shortcodes'] ) && empty( $settings['thrive_boxes'] ) ) {
+			continue;
+		}
+
+		$post->trigger = $trigger;
+		$post->actions = td_nm_get_actions( $post->ID );;
+		$notifications[] = $post;
+	}
+
+	return $notifications;
 }
 
 /**

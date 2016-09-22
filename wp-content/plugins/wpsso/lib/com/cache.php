@@ -33,6 +33,7 @@ if ( ! class_exists( 'SucomCache' ) ) {
 			$this->p =& $plugin;
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
+
 			$this->verify_certs = empty( $this->p->options['plugin_verify_certs'] ) ? 0 : 1;
 			$this->base_dir = trailingslashit( constant( $this->p->cf['uca'].'_CACHEDIR' ) );
 			$this->base_url = trailingslashit( constant( $this->p->cf['uca'].'_CACHEURL' ) );
@@ -79,7 +80,7 @@ if ( ! class_exists( 'SucomCache' ) ) {
 			if ( is_admin() ) {
 				$this->p->notice->err( 'Error connecting to <a href="'.$url.'" target="_blank">'.
 					$url.'</a> for caching (HTTP code '.$http_code.'). Ignoring requests to cache this URL for '.
-						$this->transient['ignore_time'].' second(s).', true );
+						$this->transient['ignore_time'].' second(s).' );
 			}
 			if ( $this->p->debug->enabled ) {
 				$this->p->debug->log( 'error connecting to URL '.$url.' for caching (http code '.$http_code.')' );
@@ -90,7 +91,7 @@ if ( ! class_exists( 'SucomCache' ) ) {
 		public function clear( $url, $url_ext = '' ) {
 
 			$get_url = preg_replace( '/#.*$/', '', $url );	// remove the fragment
-			$cache_salt = __CLASS__.'::salt(url:'.$get_url.')';
+			$cache_salt = __CLASS__.'::get(url:'.$get_url.')';
 			$cache_id = $this->p->cf['lca']. '_'.md5( $cache_salt );	// add a prefix to the object cache id
 
 			/*
@@ -119,9 +120,7 @@ if ( ! class_exists( 'SucomCache' ) ) {
 					$url_ext = '.'.$url_ext;
 			}
 
-			$cache_id = md5( $cache_salt );		// no lca prefix on filenames
-			$cache_file = $this->base_dir.$cache_id.$url_ext;
-
+			$cache_file = $this->base_dir.md5( $cache_salt ).$url_ext;
 			if ( file_exists( $cache_file ) && @unlink( $cache_file ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'clear file cache: '.$cache_file );
@@ -161,10 +160,9 @@ if ( ! class_exists( 'SucomCache' ) ) {
 			if ( ! empty( $url_frag ) ) 
 				$url_frag = '#'.$url_frag;
 
-			$cache_salt = __CLASS__.'::salt(url:'.$get_url.')';
-			$cache_id = md5( $cache_salt );		// no lca prefix on filenames
-			$cache_file = $this->base_dir.$cache_id.$url_ext;
-			$cache_url = $this->base_url.$cache_id.$url_ext.$url_frag;
+			$cache_salt = __CLASS__.'::get(url:'.$get_url.')';	// SucomCache::get()
+			$cache_file = $this->base_dir.md5( $cache_salt ).$url_ext;
+			$cache_url = $this->base_url.md5( $cache_salt ).$url_ext.$url_frag;
 			$cache_data = false;
 
 			// return immediately if the cache contains what we need
@@ -316,12 +314,12 @@ if ( ! class_exists( 'SucomCache' ) ) {
 						if ( $this->p->debug->enabled )
 							$this->p->debug->log( $cache_file.' does not exist yet.' );
 					} elseif ( ! is_readable( $cache_file ) ) {
-						$this->p->notice->err( $cache_file.' is not readable.', true );
+						$this->p->notice->err( $cache_file.' is not readable.' );
 					} elseif ( filemtime( $cache_file ) < time() - $file_expire ) {
 						if ( $this->p->debug->enabled )
 							$this->p->debug->log( $cache_file.' is expired (file expiration = '.$file_expire.').' );
 					} elseif ( ! $fh = @fopen( $cache_file, 'rb' ) ) {
-						$this->p->notice->err( 'Failed to open file '.$cache_file.' for reading.', true );
+						$this->p->notice->err( 'Failed to open file '.$cache_file.' for reading.' );
 					} else {
 						$cache_data = fread( $fh, filesize( $cache_file ) );
 						fclose( $fh );
@@ -378,10 +376,10 @@ if ( ! class_exists( 'SucomCache' ) ) {
 					if ( ! is_dir( $this->base_dir ) ) 
 						mkdir( $this->base_dir );
 					if ( ! is_writable( $this->base_dir ) )
-						$this->p->notice->err( $this->base_dir.' is not writable.', true );
+						$this->p->notice->err( $this->base_dir.' is not writable.' );
 					else {
 						if ( ! $fh = @fopen( $cache_file, 'wb' ) )
-							$this->p->notice->err( 'Failed to open file '.$cache_file.' for writing.', true );
+							$this->p->notice->err( 'Failed to open file '.$cache_file.' for writing.' );
 						else {
 							if ( fwrite( $fh, $cache_data ) ) {
 								if ( $this->p->debug->enabled )

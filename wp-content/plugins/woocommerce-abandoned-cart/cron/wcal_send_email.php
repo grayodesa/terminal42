@@ -14,8 +14,9 @@ if ( ! isset( $wp_load ) ) {
 $wcal_root = dirname( dirname(__FILE__) ); // go two level up for directory from this file.
 
 require_once $wp_load;
-require_once $wcal_root.'/includes/classes/class-wcal-aes-counter.php';
 require_once $wcal_root.'/includes/classes/class-wcal-aes.php';
+require_once $wcal_root.'/includes/classes/class-wcal-aes-counter.php';
+
 
 /**
  * woocommerce_abandon_cart_cron class
@@ -108,8 +109,10 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
                         // non-multisite - regular table name
                         $query_email = "SELECT user_email FROM `".$wpdb->prefix."users` WHERE ID = %d";
                     }
-                    $results_email       = $wpdb->get_results( $wpdb->prepare( $query_email, $user_id ) );
-                    $user_billing_email  = $results_email[0]->user_email;
+                    $results_email   = $wpdb->get_results( $wpdb->prepare( $query_email, $user_id ) );
+                    if ( isset( $results_guest[0]->user_email ) ) {
+                        $user_billing_email  = $results_email[0]->user_email;
+                    }
                 }
 			
 			    $query_email_id      = "SELECT post_id FROM `" . $wpdb->prefix . "postmeta` 
@@ -163,6 +166,13 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
 				}
 				
 				$carts               = $this->wcal_get_carts( $time_to_send_template_after, $cart_abandon_cut_off_time );
+				/**
+				 * When there are 3 templates and for cart id 1 all template time has been reached. BUt all templates are deactivated.
+				 * If we activate all 3 template then at a 1 time all 3 email templates send to the users.
+				 * So below function check that after first email is sent time and then from that time it will send the 2nd template time.  ( It will not consider the cart abadoned time in this case. )
+				 */
+				$carts               = $this->wcal_remove_cart_for_mutiple_templates( $carts, $time_to_send_template_after, $value->id );
+					
 				$email_frequency     = $value->frequency;
 				$email_body_template = $value->body;			
 				$email_subject       = stripslashes  ( $value->subject );
@@ -171,7 +181,7 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
 				$headers            .= "Reply-To:  " . $value->reply_email . " " . "\r\n";
 				$template_id         = $value->id;
 				$is_wc_template      = $value->is_wc_template;
-				$wc_template_header_text = $value->wc_email_header != '' ? $value->wc_email_header : __( 'Abandoned cart reminder', 'woocommerce-ac ');
+				$wc_template_header_text = $value->wc_email_header != '' ? $value->wc_email_header : __( 'Abandoned cart reminder', 'woocommerce-ac');
 				$wc_template_header  = stripslashes( $wc_template_header_text );
 				
 				foreach ( $carts as $key => $value ) {
@@ -181,8 +191,10 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
 				                            WHERE id = %d";
 				        $results_guest     = $wpdb->get_results( $wpdb->prepare( $query_guest, $value->user_id ) );
 				        $value->user_email = $results_guest[0]->email_id;
-				    } else {				       
-				        $user_id            = $value->user_id;
+				    } else {
+				        if( isset( $value->user_id ) ) {
+				            $user_id            = $value->user_id;
+				        }
 				        $key                = 'billing_email';
 				        $single             = true;
 				        $user_biiling_email = get_user_meta( $user_id, $key, $single );
@@ -191,8 +203,9 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
 				           $value->user_email = $user_biiling_email;
 				        }
 				    }
-				    
-					$cart_info_db_field = json_decode( $value->abandoned_cart_info );
+				    if( isset( $value->abandoned_cart_info ) ) {
+					   $cart_info_db_field = json_decode( $value->abandoned_cart_info );
+				    }
 					if( count( $cart_info_db_field->cart ) > 0 ) {
 						$cart_update_time = $value->abandoned_cart_time;
 						$new_user         = $this->wcal_check_sent_history( $value->user_id, $cart_update_time, $template_id, $value->id );
@@ -408,6 +421,26 @@ if ( !class_exists( 'woocommerce_abandon_cart_cron' ) ) {
 			$results = $wpdb->get_results( $wpdb->prepare( $query, $cart_ignored, $unsubscribe ) );			
 			return $results;		
 			exit;
+		}
+		
+		public static function wcal_remove_cart_for_mutiple_templates( $carts, $time_to_send_template_after, $template_id ) {
+		    global $wpdb;
+		    
+		    foreach( $carts as $carts_key => $carts_value ) {		
+		        $wcal_get_last_email_sent_time               = "SELECT * FROM `" . $wpdb->prefix . "ac_sent_history_lite` WHERE abandoned_order_id = $carts_value->id ORDER BY `sent_time` DESC LIMIT 1";
+		        $wcal_get_last_email_sent_time_results_list  = $wpdb->get_results( $wcal_get_last_email_sent_time );
+		
+		        if( count( $wcal_get_last_email_sent_time_results_list ) > 0 ) {
+		            $last_template_send_time  = strtotime( $wcal_get_last_email_sent_time_results_list[0]->sent_time );
+		            $second_template_send_time = $last_template_send_time + $time_to_send_template_after ;
+		            $current_time_test         = current_time( 'timestamp' );
+		
+		            if( $second_template_send_time > $current_time_test ) {
+		                unset( $carts [ $carts_key ] );
+		            }
+		        }
+		    }
+		    return $carts;
 		}
 		/******
 		*  This function is used to encode the validate string.

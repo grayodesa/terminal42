@@ -1,0 +1,144 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce theme v1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-05-29 15:32+0600\n"
+"Last-Translator: Сергій Кисіль <kysil.me@gmail.com>\n"
+"Language-Team: Сергій Кисіль <kysil.me@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: uk_UA\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "Authorize payment of WebMoney"
+msgstr "Дозволити оплату WebMoney"
+
+msgid "Choose your purses"
+msgstr "Вкажіть ваші гаманці"
+
+msgid "The ruble"
+msgstr "Рублевий"
+
+msgid ""
+"Log %s events, such as IPN requests, inside <code>woocommerce/logs/%s.txt</code>"
+msgstr ""
+"Журнал подій, таких як запити/відповіді на/від серверу %s, всередині документу "
+"<code>woocommerce/logs/%s.txt</code>"
+
+msgid "The Hryvnia"
+msgstr "Гривневий"
+
+msgid "The Dollar"
+msgstr "Доларовий"
+
+msgid "The Belarusian ruble"
+msgstr "Білоруський рублевий"
+
+msgid "Exchange rate concerning Hryvnia"
+msgstr "Курс валют відносно гривні"
+
+msgid "Dollar"
+msgstr "Долар"
+
+msgid "Ruble"
+msgstr "Рубль"
+
+msgid "Default"
+msgstr "Типово"
+
+msgid ""
+"The page on which the client if payment for some reason wasn't executed will "
+"return"
+msgstr ""
+"Сторінка, на яку повернеться клієнт, якщо з якихось причин не було здійснено "
+"платіж"
+
+msgid "Reference"
+msgstr "Довідка"
+
+msgid "Page on which the answer will come from the server"
+msgstr "Сторінка, на яку приведе відповідь від сервера"
+
+msgid "The page on which the client will return"
+msgstr "Сторінка, на яку повернеться клієнт"
+
+msgid "Testing mode"
+msgstr "Режим тестування"
+
+msgid "is absent"
+msgstr "немає"
+
+msgid "All test payments service will mimic successful implementation"
+msgstr "Для всіх тестових платежів сервіс буде імітувати успішне виконання"
+
+msgid ""
+"All test payments service will simulate the execution of the error (payment is "
+"not executed)"
+msgstr ""
+"Для всіх тестових платежів сервіс буде імітувати виконання з помилкою (плажіж "
+"не виконано)"
+
+msgid ""
+"About 80% of the requests for payment are met successfully, and 20% - are not "
+"met"
+msgstr "Близько 80% запитів на платіж буде виконано успішно, а 20% - не виконано"
+
+msgid "Test/Working modes"
+msgstr "Тестовий/Робочий режими"
+
+msgid "Operating mode"
+msgstr "Робочий режим"
+
+msgid "Test mode"
+msgstr "Тестовий режим"
+
+msgid "Method of formation of the control signature"
+msgstr "Метод формування контрольного підпису"
+
+msgid ""
+"Clear the check here if you want to redirect to the site WM occurred "
+"immediately after clicking on the \"Checkout / Place Order\", bypassing the "
+"additional stage of transition to a page with a form."
+msgstr ""
+"Заберіть тут позначку, якщо Ви бажаєте щоб перенаправлення на сайт WM відбулося "
+"одразу, після натискання кнопки \"Оформити/Зробити замовлення\",  оминувши "
+"додатковий етап переходу до сторінки із формою."
+
+msgid "Language of the page of payment Russian?"
+msgstr "Мова сторінки оплати - російська?"
+
+msgid ""
+"If you set the option, then going to pay for the site WebMoney village will be "
+"in Russian, otherwise - in English."
+msgstr ""
+"Якщо позначити опцію, то після переходу до сайту для оплати на WebMoney "
+"сторінка буде російською мовою, інакше - англійською."
+
+msgid ""
+"Payment Order #%s done by WebMoney<br /> Internal account number in the system "
+"WebMoney Transfer: %s<br /> Extension payment system WebMoney Transfer: %s<br /"
+"> Date and time of payment: %s<br /> Purse buyer - %s<br /> WMId buyer - '%s'"
+msgstr ""
+"Оплату замовлення #%s через WebMoney виконано<br />Внутрішній номер рахунку у "
+"системі WebMoney Transfer: %s<br />Внутрішній номер платежу у системі WebMoney "
+"Transfer: %s<br />Дата і час виконання платежу: %s<br />Гаманець покупця - "
+"%s<br />WMId покупця - '%s'"
+
+msgid "Payment order #%s executed."
+msgstr "Оплату замовлення #%s виконано."
+
+msgid ""
+"Thanks for your order. We are redirecting you to handle the payment of the "
+"order c using Webmoney."
+msgstr ""
+"Дякуємо за замовлення. Ми перенаправляємо Вас для проведення оплати замовлення "
+"за допомогою Webmoney."

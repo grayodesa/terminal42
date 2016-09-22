@@ -25,7 +25,7 @@
 		</td>
 		<td class="line_cost">
 			<div class="view">
-				<input type="text" class="product_price" value="{{cart_item_data.price}}" data-discountsymbol="currency_symbol" data-percent="0" >
+				<input type="text" class="product_price" placeholder="{{cart_item_data.price}}" value="{{cart_item_data.price}}" data-discountsymbol="currency_symbol" data-percent="0" >
 			</div>
 		</td>
 		<td class="line_cost_total">
@@ -163,4 +163,20 @@ if ( $user_to_add > 0) {
     <tr id="tr_order_points_earned">
         <th colspan="2">{{message}}</th>
     </tr>
+</script>
+
+<script type="text/template" id="tmpl-current-cashier-name">
+    <a class="pos_register_user_panel" href="<?php echo $admin_url;?>profile.php">
+        <span class="pos_register_user_image"><img width="64" height="64" class="avatar avatar-64 photo avatar-default" src="{{avatar_url}}" alt=""></span>
+        <span class="pos_register_user_name">{{display_name}}</span>
+    </a>
+</script>
+<script type="text/template" id="tmpl-locked-register">
+    <div>
+        <div class="post-locked-avatar"><img width="64" height="64" class="avatar avatar-64 photo avatar-default" src="{{avatar_url}}" alt=""></div>
+        <p tabindex="0">
+            {{message}}
+        </p>
+        <a class="button" href="<?php echo admin_url('admin.php?page=wc_pos_registers' ); ?>"><?php _e( 'All Registers', 'wc_point_of_sale' ); ?></a>
+    </div>
 </script>

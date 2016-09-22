@@ -1,4 +1,4 @@
-<div class="md-modal full-width md-dynamicmodal" id="modal-retrieve_sales">
+<div class="md-modal full-width md-dynamicmodal md-close-by-overlay" id="modal-retrieve_sales">
     <div class="md-content">
         <h1><?php _e('Retrieve Sales', 'wc_point_of_sale'); ?> - <i><?php _e('All', 'wc_point_of_sale'); ?></i> <span class="md-close"></span></h1>
         <div class="full-height" id="retrieve-sales-wrapper">

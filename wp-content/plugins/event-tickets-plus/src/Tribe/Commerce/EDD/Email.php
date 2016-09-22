@@ -116,12 +116,14 @@ class Tribe__Tickets_Plus__Commerce__EDD__Email {
 		$attendees = array();
 
 		foreach ( $query->posts as $ticket_id ) {
+			$product_id = get_post_meta( $ticket_id, Tribe__Tickets_Plus__Commerce__EDD__Main::ATTENDEE_PRODUCT_KEY, true );
 			$ticket_unique_id = get_post_meta( $ticket_id, '_unique_id', true );
 			$ticket_unique_id = $ticket_unique_id === '' ? $ticket_id : $ticket_unique_id;
 
 			$attendees[] = array(
 				'event_id'      => get_post_meta( $ticket_id, Tribe__Tickets_Plus__Commerce__EDD__Main::$attendee_event_key, true ),
-				'ticket_name'   => get_post( get_post_meta( $ticket_id, Tribe__Tickets_Plus__Commerce__EDD__Main::$attendee_product_key, true ) )->post_title,
+				'product_id'    => $product_id,
+				'ticket_name'   => get_post( $product_id )->post_title,
 				'holder_name'   => $user_info['first_name'] . ' ' . $user_info['last_name'],
 				'order_id'      => $payment_id,
 				'ticket_id'     => $ticket_unique_id,

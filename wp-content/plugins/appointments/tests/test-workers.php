@@ -481,31 +481,24 @@ class App_Workers_Test extends App_UnitTestCase {
 		appointments_insert_worker( $args );
 
 		$this->remove_deprecated_filters();
-		$this->assertEquals( 'Display Name', $appointments->_old_get_worker_name( $user_id_1 ) );
 		$this->assertEquals( 'Display Name', appointments_get_worker_name( $user_id_1 ) );
 		$this->assertEquals( 'Display Name', $appointments->get_worker_name( $user_id_1 ) );
 
-		$this->assertEquals( 'userlogin', $appointments->_old_get_worker_name( $user_id_1, false ) );
 		$this->assertEquals( 'userlogin', appointments_get_worker_name( $user_id_1, 'user_login' ) );
 		$this->assertEquals( 'userlogin', $appointments->get_worker_name( $user_id_1, false ) );
 
-		$this->assertEquals( 'A specialist', $appointments->_old_get_worker_name( 0 ) );
 		$this->assertEquals( 'A specialist', appointments_get_worker_name( 0 ) );
 		$this->assertEquals( 'A specialist', $appointments->get_worker_name( 0 ) );
-
 		// Log in the worker
 		wp_set_current_user( $user_id_1 );
-		$this->assertEquals( 'Our staff', $appointments->_old_get_worker_name( 0 ) );
 		$this->assertEquals( 'Our staff', appointments_get_worker_name( 0 ) );
 		$this->assertEquals( 'Our staff', $appointments->get_worker_name( 0 ) );
 
 		// If there's a user meta set, it will return it no matter what we pass to the second argument
 		update_user_meta( $user_id_1, 'app_name', 'Meta Name' );
 
-		$this->assertEquals( 'Our staff', $appointments->_old_get_worker_name( 0 ) );
 		$this->assertEquals( 'Our staff', appointments_get_worker_name( 0 ) );
 		$this->assertEquals( 'Our staff', $appointments->get_worker_name( 0 ) );
-		$this->assertEquals( 'Meta Name', $appointments->_old_get_worker_name( $user_id_1 ) );
 		$this->assertEquals( 'Meta Name', appointments_get_worker_name( $user_id_1 ) );
 		$this->assertEquals( 'Meta Name', $appointments->get_worker_name( $user_id_1 ) );
 
@@ -593,6 +586,174 @@ class App_Workers_Test extends App_UnitTestCase {
 			$names[] = $worker->get_name();
 		}
 		$this->assertEquals( $names, array( 'aaaaa', 'bbbbb', 'ccccc' ) );
+	}
+
+	/**
+	 * @group exceptions
+	 */
+	function test_insert_worker_exceptions() {
+		$args = $this->factory->user->generate_args( array( 'user_login' => 'bbbbb' ) );
+		$user_id_1 = $this->factory->user->create_object( $args );
+
+		$args = $this->factory->user->generate_args( array( 'user_login' => 'aaaaa' ) );
+		$user_id_2 = $this->factory->user->create_object( $args );
+
+		$service_id = appointments_insert_service( array( 'name' => 'My Service' ) );
+
+		$args = array(
+			'ID' => $user_id_1,
+			'services_provided' => array( $service_id )
+		);
+		appointments_insert_worker( $args );
+
+		$args = array(
+			'ID' => $user_id_2,
+			'services_provided' => array( $service_id )
+		);
+		appointments_insert_worker( $args );
+
+		$table = appointments_get_table( 'exceptions' );
+		$data = array(
+			array(
+				'worker' => $user_id_1,
+				'status' => 'closed',
+				'value' => '2016-09-15,2016-09-21,2016-09-22'
+			),
+			array(
+				'worker' => $user_id_1,
+				'status' => 'open',
+				'value' => '2016-08-18,2016-08-19,2016-08-20,2016-08-25'
+			)
+		);
+
+		foreach ( $data as $row ) {
+			$result = appointments_update_worker_exceptions( $row['worker'], $row['status'], $row['value'] );
+		}
+
+		$open = appointments_get_worker_exceptions( $user_id_1, 'open' );
+		$closed = appointments_get_worker_exceptions( $user_id_1, 'closed' );
+
+		$this->assertEquals( $data[1]['value'], $open->days );
+		$this->assertEquals( $data[0]['value'], $closed->days );
+
+		$this->assertNull( appointments_get_worker_exceptions( $user_id_2, 'open' ) );
+		$this->assertNull( appointments_get_worker_exceptions( $user_id_2, 'closed' ) );
+
+	}
+
+	/**
+	 * @group exceptions
+	 */
+	public function test_update_worker_exceptions() {
+		$args = $this->factory->user->generate_args( array( 'user_login' => 'bbbbb' ) );
+		$user_id_1 = $this->factory->user->create_object( $args );
+
+		$service_id = appointments_insert_service( array( 'name' => 'My Service' ) );
+
+		$args = array(
+			'ID' => $user_id_1,
+			'services_provided' => array( $service_id )
+		);
+		appointments_insert_worker( $args );
+
+		$data = array(
+			array(
+				'worker' => $user_id_1,
+				'status' => 'closed',
+				'value' => '2016-09-15,2016-09-21,2016-09-22'
+			),
+			array(
+				'worker' => $user_id_1,
+				'status' => 'open',
+				'value' => '2016-08-18,2016-08-19,2016-08-20,2016-08-25'
+			)
+		);
+
+		foreach ( $data as $row ) {
+			$result = appointments_update_worker_exceptions( $row['worker'], $row['status'], $row['value'] );
+		}
+
+		appointments_update_worker_exceptions( $user_id_1, 'open', '2016-09-15,2016-09-21' );
+		$open = appointments_get_worker_exceptions( $user_id_1, 'open' );
+		$closed = appointments_get_worker_exceptions( $user_id_1, 'closed' );
+		$this->assertEquals( '2016-09-15,2016-09-21', $open->days );
+		$this->assertEquals( $data[0]['value'], $closed->days );
+
+		appointments_update_worker_exceptions( $user_id_1, 'closed', '' );
+		$open = appointments_get_worker_exceptions( $user_id_1, 'open' );
+		$closed = appointments_get_worker_exceptions( $user_id_1, 'closed' );
+		$this->assertEquals( '2016-09-15,2016-09-21', $open->days );
+		$this->assertEquals( '', $closed->days );
+	}
+
+	public function test_worker_exceptions_cache() {
+		global $wpdb;
+
+		$args = $this->factory->user->generate_args( array( 'user_login' => 'bbbbb' ) );
+		$user_id_1 = $this->factory->user->create_object( $args );
+
+		$service_id = appointments_insert_service( array( 'name' => 'My Service' ) );
+
+		$args = array(
+			'ID' => $user_id_1,
+			'services_provided' => array( $service_id )
+		);
+		appointments_insert_worker( $args );
+
+		$data = array(
+			array(
+				'worker' => $user_id_1,
+				'status' => 'closed',
+				'value' => '2016-09-15,2016-09-21,2016-09-22'
+			),
+			array(
+				'worker' => $user_id_1,
+				'status' => 'open',
+				'value' => '2016-08-18,2016-08-19,2016-08-20,2016-08-25'
+			)
+		);
+
+		foreach ( $data as $row ) {
+			$result = appointments_update_worker_exceptions( $row['worker'], $row['status'], $row['value'] );
+		}
+
+		$open = appointments_get_worker_exceptions( $user_id_1, 'open' );
+		$closed = appointments_get_worker_exceptions( $user_id_1, 'closed' );
+
+		$current_queries = $wpdb->num_queries;
+
+		$open = appointments_get_worker_exceptions( $user_id_1, 'open' );
+		$closed = appointments_get_worker_exceptions( $user_id_1, 'closed' );
+
+		$this->assertEquals( $current_queries, $wpdb->num_queries );
+	}
+
+	/**
+	 * @group exceptions
+	 */
+	public function test_should_save_null_worker_exceptions() {
+		$data = array(
+			array(
+				'worker' => 0,
+				'status' => 'closed',
+				'value' => '2016-09-15,2016-09-21,2016-09-22'
+			),
+			array(
+				'worker' => 0,
+				'status' => 'open',
+				'value' => '2016-08-18,2016-08-19,2016-08-20,2016-08-25'
+			)
+		);
+
+		foreach ( $data as $row ) {
+			appointments_update_worker_exceptions( $row['worker'], $row['status'], $row['value'] );
+		}
+
+		$open = appointments_get_worker_exceptions( 0, 'open' );
+		$closed = appointments_get_worker_exceptions( 0, 'closed' );
+
+		$this->assertEquals( $data[1]['value'], $open->days );
+		$this->assertEquals( $data[0]['value'], $closed->days );
 	}
 
 

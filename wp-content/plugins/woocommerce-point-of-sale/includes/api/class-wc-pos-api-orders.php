@@ -404,6 +404,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
     		$this->stock_modified($order);
 
 			sentEmailReceipt( $id_register, $order->id );
+
 			if( $data['action'] == 'create' ){
 				$order = $this->get_order( $order->id );				
 				$order['new_order'] = WC_POS()->register()->crate_order_id( $id_register );
@@ -411,6 +412,7 @@ class WC_API_POS_Orders extends WC_API_Orders {
 				$order = $this->get_order( $order->id );
 			}
 			$order['payment_result'] = $result;
+			pos_logout( $id_register );
 			return $order;
 
 		} catch ( WC_API_Exception $e ) {
@@ -617,7 +619,11 @@ class WC_API_POS_Orders extends WC_API_Orders {
 
 			sentEmailReceipt( $id_register, $order->id );
 
-			return $this->get_order( $order->id );
+			$order  = $this->get_order( $order->id );
+			
+			pos_logout( $id_register );
+
+			return $order;
 
 		} catch ( WC_API_Exception $e ) {
 

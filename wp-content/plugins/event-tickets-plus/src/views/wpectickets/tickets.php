@@ -2,13 +2,15 @@
 /**
  * Renders the WPEC tickets table/form
  *
- * @version 4.2
+ * @version 4.2.7
  *
  * @var bool $must_login
  */
 ob_start();
-$is_there_any_product = false;
+
+$is_there_any_product         = false;
 $is_there_any_product_to_sell = false;
+$unavailability_messaging     = is_callable( array( $this, 'do_not_show_tickets_unavailable_message' ) );
 
 foreach ( $tickets as $ticket ) {
 
@@ -112,7 +114,14 @@ if ( $is_there_any_product ) { ?>
 				<?php } ?>
 			</table>
 
-	<?php if ( $is_there_any_product_to_sell && ( get_option( 'addtocart_or_buynow' ) != 1 ) ) { ?>
+	<?php if ( $is_there_any_product_to_sell && ( get_option( 'addtocart_or_buynow' ) != 1 ) ) {
+		// @todo remove safeguard in 4.3 or later
+		if ( $unavailability_messaging ) {
+			// If we have rendered tickets there is generally no need to display a 'tickets unavailable' message
+			// for this post
+			$this->do_not_show_tickets_unavailable_message();
+		}
+		?>
 		</form>
 	<?php
 	} else {
@@ -120,17 +129,15 @@ if ( $is_there_any_product ) { ?>
 		</div><!-- .cart -->
 		<?php
 	}
+
 } else {
-	$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
+	// @todo remove safeguard in 4.3 or later
+	if ( $unavailability_messaging ) {
+		$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
 
-	// if there isn't an unavailability message, bail
-	if ( ! $unavailability_message ) {
-		return;
+		// if there isn't an unavailability message, bail
+		if ( ! $unavailability_message ) {
+			return;
+		}
 	}
-
-	?>
-	<div class="tickets-unavailable">
-		<?php echo esc_html( $unavailability_message ); ?>
-	</div>
-	<?php
 }

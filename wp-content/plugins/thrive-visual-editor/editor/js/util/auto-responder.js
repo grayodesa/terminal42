@@ -125,13 +125,16 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			setTimeout( bind_it, 200 );
 		},
 		clearMCEEditor: function ( ignore ) {
+			if ( typeof tinymce === 'undefined' || ! tinymce ) {
+				return;
+			}
 			var _current_ids = ['tve_success_wp_editor', 'tve_error_wp_editor'];
 			_current_ids.forEach( function ( element ) {
 				if ( ignore != element ) {
 					var _current = tinymce.get( element );
 					if ( _current ) {
 						_current.destroy();
-						tinymce.execCommand('mceRemoveControl', true, element);
+						tinymce.execCommand( 'mceRemoveControl', true, element );
 					}
 				}
 			} );
@@ -192,11 +195,11 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			var $messages = {},
 				_type = lead_generation.getConnectionType(),
 				encoded_messages = '';
-			if(tinymce.get( 'tve_error_wp_editor' )) {
-				$messages.error = tinymce.get( 'tve_error_wp_editor' ).getContent();
-				if ( lead_generation.api_form_data.submit_option == 'message' ) {
-					$messages.success = tinymce.get( 'tve_success_wp_editor' ).getContent();
-				}
+			if ( $( '#tve-error-message-option' ).is( ':checked' ) ) {
+				$messages.error = ( typeof tinymce !== 'undefined' && tinymce && tinymce.get( 'tve_error_wp_editor' ) ) ? tinymce.get( 'tve_error_wp_editor' ).getContent() : $( '#tve_error_wp_editor' ).val();
+			}
+			if ( lead_generation.api_form_data.submit_option == 'message' ) {
+				$messages.success = ( typeof tinymce !== 'undefined' && tinymce ) ? tinymce.get( 'tve_success_wp_editor' ).getContent() : $( '#tve_success_wp_editor' ).val();
 			}
 
 			lead_generation.setCustomMessages( $messages );
@@ -278,6 +281,8 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					type: 'state_change_trigger',
 					value: lead_generation.state || ''
 				};
+
+				lead_generation.api_form_data.form_state = lead_generation.form_state;
 			}
 
 			for ( var option in lead_generation.captcha_options ) {
@@ -443,14 +448,12 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 		messages_change: function () {
 			var $messages = {};
 
-			$messages.success = tinymce.get( 'tve_success_wp_editor' ).getContent();
-			$messages.error = tinymce.get( 'tve_error_wp_editor' ).getContent();
+			$messages.success = ( typeof tinymce !== 'undefined' && tinymce ) ? tinymce.get( 'tve_success_wp_editor' ).getContent() : $( '#tve_success_wp_editor' ).val();
+			$messages.error = ( typeof tinymce !== 'undefined' && tinymce ) ? tinymce.get( 'tve_error_wp_editor' ).getContent() : $( '#tve_error_wp_editor' ).val();
 
 			lead_generation.setCustomMessages( $messages );
 
 			this.dashboard();
-
-
 		},
 		/**
 		 * actions related to API connections
@@ -709,8 +712,11 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 			 * @param $select
 			 */
 			state_changed: function ( $select ) {
-				var option = $select.val();
+				var option = $select.val(),
+					state = $select.find( ':selected' ).attr( 'data-state' );
+
 				lead_generation.state = option;
+				lead_generation.form_state = state;
 			}
 		}
 	};
@@ -1221,8 +1227,8 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 
 					return $inputContainer;
 				},
-				renderHiddenSwitchStateTrigger: function ( state_id ) {
-					var event = '__TCB_EVENT_[{"t":"click","a":"tl_state_switch","config":{"s":"' + state_id + '"},"elementType":"a"}]_TNEVE_BCT__',
+				renderHiddenSwitchStateTrigger: function ( state_id, type ) {
+					var event = type == 'lightbox' ? '__TCB_EVENT_[{"t":"click","a":"tl_state_lightbox","config":{"s":"' + state_id + '"},"elementType":"a"}]_TNEVE_BCT__' : '__TCB_EVENT_[{"t":"click","a":"tl_state_switch","config":{"s":"' + state_id + '"},"elementType":"a"}]_TNEVE_BCT__',
 						$triggerElement = '<a href="" style="display: none;" class="tve-switch-state-trigger tve_evt_manager_listen tve_et_click" data-tcb-events=' + event + '></a>';
 					return $triggerElement;
 				},
@@ -1356,7 +1362,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 					$inputsContainer.append( '<div style="display: none">' + form_data.additional_fields + '</div>' );
 					$inputsContainer.append( $element.find( '.tve_submit_container' ) );
 					if ( typeof(form_data.elements['state_change_trigger']) != "undefined" && form_data.elements['state_change_trigger'] !== null ) {
-						$inputsContainer.append( self.renderHiddenSwitchStateTrigger( form_data.elements['state_change_trigger'].value ) );
+						$inputsContainer.append( self.renderHiddenSwitchStateTrigger( form_data.elements['state_change_trigger'].value, form_data.form_state ) );
 					}
 					$form.append( $inputsContainer );
 
@@ -1454,7 +1460,7 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				 */
 				setApiData: function ( response ) {
 					var self = this,
-						success = "<p>Thank you for singing up! An email is being sent to [lead_email] - please check your inbox.</p>",
+						success = "<p>Thank you for signing up! An email is being sent to [lead_email] - please check your inbox.</p>",
 						error = "<p>Ooops... </p><p>something went wrong. Please try again or contact the site owner.</p>";
 
 					jQuery.each( response, function ( k, v ) {
@@ -1556,6 +1562,9 @@ var TVE_Content_Builder = TVE_Content_Builder || {};
 				},
 
 				editorInit: function ( id, content ) {
+					if ( typeof tinymce === 'undefined' || ! tinymce ) {
+						return;
+					}
 					var mce_reinit = this.build_mce_init( {
 						mce: window.tinyMCEPreInit.mceInit['tve_tinymce_tpl'],
 						qt: window.tinyMCEPreInit.qtInit['tve_tinymce_tpl']

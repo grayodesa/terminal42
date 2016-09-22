@@ -136,7 +136,7 @@ class WC_Pos_Registers{
 					'label'       => __( 'Email Receipt', 'wc_point_of_sale' ),
 					'type'        => 'select',
 					'value'       => 0,
-					'options'     => array(1 => 'Yes', 0 => 'No'),
+					'options'     => array(1 => 'Yes, for all customers', 2 => 'Yes, for non-guest customers only', 0 => 'No'),
 					'description' => __( 'Select whether to email receipt at end of sale.', 'wc_point_of_sale' ),
 				),
 				'print_receipt' => array(

@@ -196,7 +196,7 @@ if ( ! class_exists( 'TD_NM' ) ) :
 						),
 						array(
 							'shortcode' => '[lead_email]',
-							'label'     => __( 'Displays the name of the person receiving the email (if available)', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Displays the email address of the new lead', TVE_DASH_TRANSLATE_DOMAIN ),
 						)
 					),
 					'wordpress_notification'  => array(

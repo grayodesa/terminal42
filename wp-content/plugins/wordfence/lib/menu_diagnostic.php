@@ -472,15 +472,6 @@ $w = new wfConfig();
 					(Try this if your scans aren't starting and your site is publicly accessible)
 				</td>
 			</tr>
-			<tr>
-				<th>Disable config caching<a
-						href="http://docs.wordfence.com/en/Wordfence_options#Disable_config_caching" target="_blank"
-						class="wfhelp"></a></th>
-				<td><input type="checkbox" id="disableConfigCaching" class="wfConfigElem"
-				           name="disableConfigCaching" value="1" <?php $w->cb('disableConfigCaching'); ?> />
-					(Try this if your options aren't saving)
-				</td>
-			</tr>
 
 			<tr>
 				<th><label for="ssl_verify">Enable SSL Verification</label><a

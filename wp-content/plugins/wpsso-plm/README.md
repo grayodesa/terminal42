@@ -3,20 +3,32 @@
 <table>
 <tr><th align="right" valign="top" nowrap>Plugin Name</th><td>WPSSO Place / Location and Local Business Meta (WPSSO PLM)</td></tr>
 <tr><th align="right" valign="top" nowrap>Summary</th><td>WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.</td></tr>
-<tr><th align="right" valign="top" nowrap>Stable Version</th><td>2.1.0-1</td></tr>
+<tr><th align="right" valign="top" nowrap>Stable Version</th><td>2.1.1-1</td></tr>
 <tr><th align="right" valign="top" nowrap>Requires At Least</th><td>WordPress 3.1</td></tr>
 <tr><th align="right" valign="top" nowrap>Tested Up To</th><td>WordPress 4.6</td></tr>
 <tr><th align="right" valign="top" nowrap>Contributors</th><td>jsmoriss</td></tr>
 <tr><th align="right" valign="top" nowrap>Website URL</th><td><a href="https://wpsso.com/?utm_source=wpssoplm-readme-donate">https://wpsso.com/?utm_source=wpssoplm-readme-donate</a></td></tr>
 <tr><th align="right" valign="top" nowrap>License</th><td><a href="http://www.gnu.org/licenses/gpl.txt">GPLv3</a></td></tr>
-<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, place, location, venue, longitude, latitude, address, local, business, hours, seo</td></tr>
+<tr><th align="right" valign="top" nowrap>Tags / Keywords</th><td>wpsso, place, location, venue, longitude, latitude, address, local, business, local business, seasonal, hours, seo, coordinates, restaurant</td></tr>
 </table>
 
 <h2>Description</h2>
 
-<p align="center"><img src="https://surniaulula.github.io/wpsso-plm/assets/icon-256x256.png" width="256" height="256" /></p><p><strong>Could your website or business use location information, like geo coordinates, store location / street address, business hours (daily and seasonal), and/or restaurant menu URL?</strong> Let Pinterest, Facebook, Google and other search engines know by using this plugin.</p>
+<p align="center"><img src="https://surniaulula.github.io/wpsso-plm/assets/icon-256x256.png" width="256" height="256" /></p><p><strong>Include location / local business meta tags for your website, business, and/or webpage content:</strong></p>
 
-<p>WPSSO Place / Location and Local Business Meta (WPSSO PLM) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin, extending its features with additional settings pages, tabs, and options, to include Facebook / Open Graph <em>Location</em>, Pinterest Rich Pin / Schema <em>Place</em>, and Google / Schema <em>Local Business</em> meta tags in your webpages.</p>
+<ul>
+<li>Geo coordinates (latitude, longitude, altitude).</li>
+<li>Store or business location / street address.</li>
+<li>Business hours (daily and seasonal).</li>
+<li>Restaurant menu URL.</li>
+<li>Service area.</li>
+</ul>
+
+<p><strong>Let Pinterest, Facebook and Google know about your locations</strong> &mdash; WPSSO PLM includes Facebook / Open Graph <em>Location</em> Pinterest Rich Pin / Schema <em>Place</em> and Google / Schema <em>Local Business</em> meta tags in your webpages.</p>
+
+<blockquote>
+<p><strong>Prerequisite</strong> &mdash; WPSSO Place / Location and Local Business Meta (WPSSO PLM) is an extension for the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin.</p>
+</blockquote>
 
 <h4>Quick List of Features</h4>
 

@@ -3,7 +3,7 @@
 $available_gateways = wc_pos_get_available_payment_gateways();
 //$enabled_gateways   = get_option( 'pos_enabled_gateways', array() ); 
 ?>
-<div class="md-modal md-dynamicmodal md-menu full-width" id="modal-order_payment">
+<div class="md-modal md-dynamicmodal md-menu full-width md-close-by-overlay" id="modal-order_payment">
     <div class="media-frame-menu">
         <div class="media-menu">
             <?php

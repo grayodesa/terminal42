@@ -3,28 +3,27 @@ Plugin Name: WPSSO Pro Update Manager (WPSSO UM)
 Plugin Slug: wpsso-um
 Text Domain: wpsso-um
 Domain Path: /languages
-Contributors: jsmoriss
-Donate Link: https://wpsso.com/?utm_source=wpssoum-readme-donate
-Tags: wpsso, update, manager
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.txt
+Donate Link: https://wpsso.com/?utm_source=wpssoum-readme-donate
+Assets URI: https://surniaulula.github.io/wpsso-um/assets/
+Tags: wpsso, update, manager
+Contributors: jsmoriss
 Requires At Least: 3.1
-Tested Up To: 4.5.3
-Stable Tag: 1.5.6-1
+Tested Up To: 4.6
+Stable Tag: 1.5.7-1
 
 WPSSO extension to provide updates for the WordPress Social Sharing Optimization (WPSSO) Pro plugin and its Pro extensions.
 
 == Description ==
 
-<p><img src="https://surniaulula.github.io/wpsso-um/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" />The WPSSO Pro Update Manager (WPSSO UM) extension plugin is required to enable and update the <a href="https://wpsso.com/extend/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO) Pro</a> version plugin, including all licensed Pro extensions.</p>
+<p><img src="https://surniaulula.github.io/wpsso-um/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" />The WPSSO Pro Update Manager (WPSSO UM) extension plugin is required to enable and update the <a href="https://wpsso.com/extend/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO) Pro</a> version plugin, including all its licensed Pro extensions.</p>
 
 Simply *download*, *install*, and *activate*.
 
-The WPSSO UM extension has only two options under the SSO &gt; Pro Update Manager settings page &mdash; one option to customize the update check frequency (once a day by default) and another to install development and pre-release versions.
-
-= Extends the WPSSO Plugin =
-
-The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the WPSSO UM extension.
+<blockquote>
+<p><strong>Prerequisite</strong> &mdash; WPSSO Pro Update Manager (WPSSO UM) is an extension for the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin.</p>
+</blockquote>
 
 == Installation ==
 
@@ -53,43 +52,27 @@ The WordPress Social Sharing Optimization (WPSSO) plugin is required to use the 
 
 = Free / Basic Version Repository =
 
-* [GitHub](https://github.com/SurniaUlula/wpsso-um)
+* [GitHub](https://surniaulula.github.io/wpsso-um/)
 
 = Changelog / Release Notes =
 
-**Version 1.5.6-1 (2016/07/18)**
+**Version 1.5.7-1 (2016/09/10)**
 
 Official announcement: N/A
 
 * *New Features*
 	* None
 * *Improvements*
-	* Added 'wpsso_init_options' and 'wpsso_init_objects' hooks to load the filters library earlier.
+	* None
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* None
-
-**Version 1.5.5-1 (2016/06/16)**
-
-Official announcement: N/A
-
-* *New Features*
-	* None
-* *Improvements*
-	* Added a check to better handle empty API responses.
-* *Bugfixes*
-	* None
-* *Developer Notes*
-	* None
+	* Updated the SucomNotice method calls for WPSSO v3.35.0-1.
+	* Replaced the `register_uninstall_hook()` function call with an uninstall.php file.
 
 == Upgrade Notice ==
 
-= 1.5.6-1 =
+= 1.5.7-1 =
 
-(2016/07/18) Added 'wpsso_init_options' and 'wpsso_init_objects' hooks to load the filters library earlier.
-
-= 1.5.5-1 =
-
-(2016/06/16) Added a check to better handle empty API responses.
+(2016/09/10) Updated the SucomNotice method calls for WPSSO v3.35.0-1. Added an uninstall.php file.
 

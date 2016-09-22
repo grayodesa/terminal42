@@ -22,18 +22,17 @@ class TD_NM_Action_Custom_Script extends TD_NM_Action_Abstract {
 
 	public function prepare_email_sign_up_data( $sign_up_data ) {
 
-		$data = array();
-
+		$data    = array();
 		$tl_item = $sign_up_data[0];
-		$tl_form = $sign_up_data[1];
+		$tl_form = $sign_up_data[2];
 		$tl_data = $sign_up_data[4];
 
 		$data['thrv_event ']      = 'thrv_signup';
 		$data['source']           = $tl_item->post_type;
 		$data['source_name']      = $tl_item->post_title;
 		$data['source_id']        = $tl_item->ID;
-		$data['source_form_name'] = $tl_form->post_title;
-		$data['source_form_id']   = $tl_form->ID;
+		$data['source_form_name'] = $tl_form['post_title'];
+		$data['source_form_id']   = $tl_form['key'];
 		$data['user_email']       = $tl_data['email'];
 		$data['user_custom_data'] = $tl_data['custom_fields'];
 

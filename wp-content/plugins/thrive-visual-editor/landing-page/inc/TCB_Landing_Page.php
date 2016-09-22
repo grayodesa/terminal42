@@ -80,6 +80,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			$this->template      = $landing_page_template;
 			$this->globalScripts = get_post_meta( get_the_ID(), 'tve_global_scripts', true );
 			$this->page_events   = tve_get_post_meta( $landing_page_id, 'tve_page_events' );
+			$this->page_events   = empty( $this->page_events ) ? array() : $this->page_events;
 
 			if ( tve_is_cloud_template( $landing_page_template ) ) {
 				$this->isCloudTemplate   = true;

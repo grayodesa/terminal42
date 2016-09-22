@@ -123,7 +123,7 @@ if ( ! class_exists( 'WpssoProUtilTerm' ) && class_exists( 'WpssoTerm' ) ) {
 			if ( ! current_user_can( $this->query_tax_obj->cap->edit_terms ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'insufficient privileges to save settings for term ID '.$term_id );
-				$this->p->notice->err( 'You have insufficient privileges to save settings for term ID '.$term_id.'.', true );
+				$this->p->notice->err( 'You have insufficient privileges to save settings for term ID '.$term_id.'.' );
 				return false;
 			}
 

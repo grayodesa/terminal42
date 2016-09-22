@@ -69,6 +69,11 @@ class WC_POS_Admin {
         add_action( 'load-edit.php', array( $this, 'product_grid_bulk_actions_handler') );
         /******* end product_grid *********/
 
+        add_action( 'untrashed_post',     array($this, 'update_removed_posts_ids') );
+        add_action( 'before_delete_post', array($this, 'save_removed_posts_ids') );
+        add_action( 'wp_trash_post',      array($this, 'save_removed_posts_ids') );
+        add_action( 'delete_user',        array($this, 'save_delete_user_ids') );
+
         $this->init_users_hooks();
 
 	}
@@ -661,6 +666,36 @@ class WC_POS_Admin {
     }
     /******* end product_grid *********/
 
+    /****/
+    public function update_removed_posts_ids($post_id)
+    {
+        
+        $posts_ids = get_option( 'pos_removed_posts_ids', array() );
+        $key = array_search($post_id, $posts_ids);
+        if( $key !== false && isset($posts_ids[$key]) ){
+            unset($posts_ids[$key]);
+        }
+        update_option( 'pos_removed_posts_ids', $posts_ids );
+    }
+    public function save_removed_posts_ids($post_id)
+    {
+        
+        $posts_ids = get_option( 'pos_removed_posts_ids', array() );
+        if( !in_array($post_id, $posts_ids)){
+            $posts_ids[] = $post_id;
+        }
+        update_option( 'pos_removed_posts_ids', $posts_ids );
+    }
+    /****/
+    public function save_delete_user_ids($user_id )
+    {
+        
+        $user_ids = get_option( 'pos_removed_user_ids', array() );
+        if( !in_array($user_id, $user_ids)){
+            $user_ids[] = $user_id;
+        }
+        update_option( 'pos_removed_user_ids', $user_ids );
+    }
 
 }
 

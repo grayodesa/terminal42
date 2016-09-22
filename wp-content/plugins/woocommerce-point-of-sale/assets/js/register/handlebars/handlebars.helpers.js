@@ -138,7 +138,7 @@ Handlebars.registerHelper('displayProductItemMeta', function() {
 		var stock_quantity = parseInt(product.stock_quantity);
 		
 		if(wc_pos_params.show_stock == 'yes' && !isNaN(stock_quantity) ){
-			string += '<span class="register_stock_indicator"><b>'+product.stock_quantity+'</b> In Stock </span>';
+			string += '<span class="register_stock_indicator"><b>'+product.stock_quantity+'</b> '+pos_i18n[38]+' </span>';
 		}
 		if( product.on_sale === true ){
 			regular_price = accountingPOS(product.regular_price, 'formatMoney');

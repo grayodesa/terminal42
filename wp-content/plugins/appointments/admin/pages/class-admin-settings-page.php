@@ -181,6 +181,7 @@ class Appointments_Admin_Settings_Page {
 
 		$file = _appointments_get_settings_tab_view_file_path( $tab );
 
+		echo '<div class="appointments-settings-tab-' . $tab . '">';
 		if ( $file ) {
 			require_once( $file );
 		}
@@ -188,6 +189,7 @@ class Appointments_Admin_Settings_Page {
 			do_action( 'app-settings-tabs', $tab, $sections );
 			do_action( "appointments-settings-tab-{$tab}", $sections );
 		}
+		echo '</div>';
 	}
 
 	/**
@@ -360,9 +362,6 @@ class Appointments_Admin_Settings_Page {
 		$options['disable_js_check_admin']	= isset( $_POST['disable_js_check_admin'] );
 		$options['disable_js_check_frontend']	= isset( $_POST['disable_js_check_frontend'] );
 
-		$options['use_mp']	 				= isset( $_POST['use_mp'] );
-		$options["app_page_type_mp"]			= @$_POST["app_page_type_mp"];
-
 		$options['allow_cancel'] 				= @$_POST['allow_cancel'];
 		$options['cancel_page'] 				= @$_POST['cancel_page'];
 		$options['thank_page'] 				= @$_POST['thank_page'];
@@ -385,28 +384,6 @@ class Appointments_Admin_Settings_Page {
 				)
 			);
 		}
-
-		if ( isset( $_POST['make_an_appointment_product'] ) ) {
-			$tpl = !empty($_POST['app_page_type_mp']) ? $_POST['app_page_type_mp'] : false;
-			$post_id = wp_insert_post(
-				array(
-					'post_title'	=> 'Appointment',
-					'post_status'	=> 'publish',
-					'post_type'		=> 'product',
-					'post_content'	=> App_Template::get_default_page_template($tpl)
-				)
-			);
-			if ( $post_id ) {
-				// Add a download link, so that app will be a digital product
-				$file = get_post_meta($post_id, 'mp_file', true);
-				if ( !$file ) add_post_meta( $post_id, 'mp_file', get_permalink( $post_id) );
-
-				// MP requires at least 2 variations, so we add a dummy one
-				add_post_meta( $post_id, 'mp_var_name', array( 0 ) );
-				add_post_meta( $post_id, 'mp_sku', array( 0 ) );
-				add_post_meta( $post_id, 'mp_price', array( 0 ) );
-			}
-		}
 	}
 
 	private function _save_working_hours() {
@@ -420,41 +397,13 @@ class Appointments_Admin_Settings_Page {
 
 	private function _save_exceptions() {
 		// Save Exceptions
-		global $wpdb;
-		$appointments = appointments();
 		$location = (int)$_POST['location'];
+		$worker_id = absint( $_POST['worker_id'] );
+		check_admin_referer( 'app_settings_exceptions-' . $worker_id, 'app_exceptions_nonce' );
+
 		foreach ( array( 'closed', 'open' ) as $stat ) {
-			$count = $wpdb->get_var($wpdb->prepare(
-				"SELECT COUNT(*) FROM {$appointments->exceptions_table} WHERE location=%d AND worker=%d AND status=%s",
-				$location, $appointments->worker, $stat
-			));
-
-			if ( $count > 0 ) {
-				$r = $wpdb->update( $appointments->exceptions_table,
-					array(
-						'days'		=> $this->_sort( $_POST[$stat]["exceptional_days"] ),
-						'status'	=> $stat
-					),
-					array(
-						'location'	=> $location,
-						'worker'	=> $appointments->worker,
-						'status'	=> $stat ),
-					array( '%s', '%s' ),
-					array( '%d', '%d', '%s' )
-				);
-			}
-			else {
-				$r = $wpdb->insert( $appointments->exceptions_table,
-					array( 'location'	=> $location,
-					       'worker'	=> $appointments->worker,
-					       'days'		=> $this->_sort( $_POST[$stat]["exceptional_days"] ),
-					       'status'	=> $stat
-					),
-					array( '%d', '%d', '%s', '%s' )
-				);
-			}
-
-			appointments_delete_exceptions_cache( $location, $appointments->worker );
+			$exceptions = $this->_sort( $_POST[$stat]["exceptional_days"] );
+			appointments_update_worker_exceptions( $worker_id, $stat, $exceptions, $location );
 		}
 	}
 
@@ -490,7 +439,10 @@ class Appointments_Admin_Settings_Page {
 						'price'		=> $service["price"],
 						'page'		=> $service["page"]
 					);
-					appointments_insert_service( $args );
+					$result = appointments_insert_service( $args );
+					if ( is_wp_error( $result ) ) {
+						wp_die( $result->get_error_message() );
+					}
 				}
 
 				do_action('app-services-service-updated', $ID);

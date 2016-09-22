@@ -205,6 +205,9 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 				// check for missing open graph image and issue warning
 				if ( empty( WpssoMeta::$head_meta_info['og:image'] ) )
 					$this->p->notice->err( $this->p->msgs->get( 'notice-missing-og-image' ) );
+
+				if ( empty( WpssoMeta::$head_meta_info['og:description'] ) )
+					$this->p->notice->err( $this->p->msgs->get( 'notice-missing-og-description' ) );
 			}
 
 			$action_query = $lca.'-action';
@@ -254,10 +257,12 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 			$pkg_type = $this->p->check->aop( $lca, true, $this->p->is_avail['aop'] ) ? 
 				_x( 'Pro', 'package type', 'wpsso' ) :
 				_x( 'Free', 'package type', 'wpsso' );
+			echo "\n".'<!-- '.$lca.' user metabox section begin -->'."\n";
 			echo '<h3 id="'.$lca.'-metaboxes">'.$this->p->cf['plugin'][$lca]['name'].' '.$pkg_type.'</h3>'."\n";
-			echo '<div id="poststuff">';
+			echo '<div id="poststuff">'."\n";
 			do_meta_boxes( $lca.'-user', 'normal', $user );
-			echo '</div>'."\n";
+			echo "\n".'</div><!-- .poststuff -->'."\n";
+			echo '<!-- '.$lca.' user metabox section end -->'."\n";
 		}
 
 		public function show_metabox_social_settings( $user_obj ) {
@@ -305,7 +310,7 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 			return array_merge( 
 				array( 'none' => '[None]' ), 	// make sure none is first
 				$this->add_contact_methods( array( 
-					'author' => 'Author Index', 
+					'author' => 'Author Archive', 
 					'url' => 'Website'
 				) )
 			);
@@ -689,7 +694,7 @@ if ( ! class_exists( 'WpssoUser' ) ) {
 
 			if ( ! empty( $this->p->options['plugin_cache_info'] ) && $deleted > 0 )
 				$this->p->notice->inf( $deleted.' items removed from the WordPress object and transient caches.', 
-					true, true, __FUNCTION__.'_items_removed', true );
+					true, __FUNCTION__.'_items_removed', true );
 
 			return $user_id;
 		}

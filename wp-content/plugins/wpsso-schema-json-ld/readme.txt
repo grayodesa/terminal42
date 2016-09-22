@@ -7,28 +7,29 @@ License: Nontransferable License for WordPress Site Address URL
 License URI: http://surniaulula.com/wp-content/plugins/wpsso-schema-json-ld/license/pro.txt
 Donate Link: https://wpsso.com/?utm_source=wpssojson-readme-donate
 Assets URI: https://surniaulula.github.io/wpsso-schema-json-ld/assets/
-Tags: wpsso, schema, structured data, json, json-ld, ld+json, rich snippet, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest
+Tags: wpsso, schema, schema.org, structured data, json, json-ld, ld+json, rich snippets, article, product, event, rating, review, recipe, google, seo, news, amp, co-authors, co-authors plus, pinterest, video object, video schema, search engine optimization, news, optimize, knowledge graph, aggregate rating
 Contributors: jsmoriss
 Requires At Least: 3.1
 Tested Up To: 4.6
-Stable Tag: 1.10.1-1
+Stable Tag: 1.10.3-1
 
 WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).
 
 == Description ==
 
-<p style="margin:0;">
-<img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" />
-<blockquote class="top_info">
-<p>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup, including images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, recipe details, event information, etc.</p>
-<p>Overrides any missing or incomplete Schema markup in your theme templates.</p>
-<p>Choose another Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</p>
-<p>Include all WooCommerce product variations and their details in the Schema Product markup! (Pro version)</p>
-<p><strong>Specific Schema markup for Pinterest</strong> &mdash; Pinterest does not (presently) read the popular JSON-LD format. The WPSSO plugin and its WPSSO JSON extension include provisions for Pinterest to provide Schema markup using meta tags instead.</p>
-</blockquote>
-</p>
+<p><img src="https://surniaulula.github.io/wpsso-schema-json-ld/assets/icon-256x256.png" width="256" height="256" style="width:33%;min-width:128px;max-width:256px;float:left;margin:0 40px 20px 0;" /><strong>Offers <em>complete</em> Schema / Structured Data / Rich Snippet markup</strong> &mdash; including images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, recipe details, event information, etc (see complete examples bellow).</p>
 
-<p>WPSSO Schema JSON-LD Markup (WPSSO JSON) works in conjunction with the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin to include complete Schema JSON-LD / Structured Data / Rich Snippet markup (images, videos, organization (publisher), person (author and co-authors), product variations, product ratings, etc.) for Google Search and others. WPSSO JSON includes Schema <a href="http://json-ld.org/">JSON-LD markup</a> in webpage headers, which is independent of any existing Schema / Structured Data / Rich Snippet markup in theme templates.</p>
+<p><strong>Overrides missing or incomplete Schema markup in your theme templates.</strong></p>
+
+<p><strong>Select another Schema type than <a href="https://schema.org/BlogPosting">BlogPosting</a> for <a href="https://wordpress.org/plugins/amp/">AMP</a> webpages.</strong></p>
+
+<p><strong>Include all WooCommerce product images and variations the Schema Product markup!</strong> (Pro version)</p>
+
+<p><strong>Provides specific Schema markup and optimization features for Pinterest</strong> &mdash; Pinterest does not (currently) read the standard JSON-LD format. WPSSO and its WPSSO JSON extension include special provisions to provide Schema markup using meta tags for Pinterest, along with methods to avoid conflicts between incompatible Pinterest and Facebook Open Graph meta tags.</p>
+
+<blockquote>
+<p><strong>Prerequisite</strong> &mdash; WPSSO Schema JSON-LD Markup (WPSSO JSON) is an extension for the <a href="https://wordpress.org/plugins/wpsso/">WordPress Social Sharing Optimization (WPSSO)</a> plugin.</p>
+</blockquote>
 
 = Quick List of Features =
 
@@ -956,6 +957,7 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 		* [Filter Examples](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/)
 			* [Assign a Custom Field Value to a Schema Property](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/assign-a-custom-field-value-to-a-schema-property/)
 			* [Modify the aggregateRating Property](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-aggregaterating-property/)
+			* [Modify the VideoObject Name and Description](http://wpsso.com/codex/plugins/wpsso-schema-json-ld/notes/developer/filters/examples/modify-the-videoobject-name-and-description/)
 
 == Screenshots ==
 
@@ -972,6 +974,32 @@ Use the Free version of WPSSO JSON with *both* the Free and Pro versions of WPSS
 * [WordPress.org](https://wordpress.org/plugins/wpsso-schema-json-ld/developers/)
 
 = Changelog / Release Notes =
+
+**Version 1.10.3-1 (2016/09/10)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* None
+* *Bugfixes*
+	* None
+* *Developer Notes*
+	* Updated the SucomNotice method calls for WPSSO v3.35.0-1.
+
+**Version 1.10.2-1 (2016/08/30)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* None
+* *Bugfixes*
+	* Removed an extra argument in a `filter_json_data_http_schema_org_recipe()` method call (Pro version).
+* *Developer Notes*
+	* None
 
 **Version 1.10.1-1 (2016/08/18)**
 
@@ -1016,7 +1044,7 @@ Official announcement: http://wpsso.com/2016/07/29/wpsso-json-update-google-pint
 
 == Upgrade Notice ==
 
-= 1.10.1-1 =
+= 1.10.3-1 =
 
-(2016/08/18) Added support for an "areaServed" property (as a "circle" GeoShape) in the Schema Local Business markup (Pro version).
+(2016/09/10) Updated the SucomNotice method calls for WPSSO v3.35.0-1.
 

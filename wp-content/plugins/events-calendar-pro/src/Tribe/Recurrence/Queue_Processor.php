@@ -197,6 +197,10 @@ class Tribe__Events__Pro__Recurrence__Queue_Processor {
 				break;
 			}
 
+			if ( ! $this->current_queue->have_ownership_of_job() ) {
+				return;
+			}
+
 			Tribe__Events__Pro__Recurrence__Meta::delete_unexcluded_event( $instance_id, $start_date );
 
 			unset( $instances_to_delete[ $instance_id ] );
@@ -216,6 +220,10 @@ class Tribe__Events__Pro__Recurrence__Queue_Processor {
 				break;
 			}
 
+			if ( ! $this->current_queue->have_ownership_of_job() ) {
+				return;
+			}
+
 			$instance = new Tribe__Events__Pro__Recurrence__Instance( $this->current_event_id, $date_duration, $instance_id );
 			$instance->save();
 
@@ -228,6 +236,7 @@ class Tribe__Events__Pro__Recurrence__Queue_Processor {
 
 	protected function do_creations() {
 		$exclusions = $this->current_queue->instances_to_exclude();
+
 		$instances_to_create = array_values( $this->current_queue->instances_to_create() );
 
 		try {
@@ -248,16 +257,23 @@ class Tribe__Events__Pro__Recurrence__Queue_Processor {
 			// Some instances may deliberately have been removed - let's remove
 			// them from the list of events to create and move on
 			if ( in_array( $date_duration, $exclusions ) ) {
-				unset( $instances_to_create[ $key ] );
+				unset( $instances_to_create[ $date_duration['original_index'] ] );
 				$this->processed++;
 				continue;
 			}
 
+			if ( ! $this->current_queue->have_ownership_of_job() ) {
+				return;
+			}
+
 			$sequence_number = isset( $date_duration['sequence'] ) ? $date_duration['sequence'] : 1;
 			$instance        = new Tribe__Events__Pro__Recurrence__Instance( $this->current_event_id, $date_duration, 0, $sequence_number );
-			$instance->save();
 
-			unset( $instances_to_create[ $key ] );
+			if ( ! $instance->already_exists() ) {
+				$instance->save();
+			}
+
+			unset( $instances_to_create[ $date_duration['original_index'] ] );
 			$this->processed++;
 		}
 

@@ -20,11 +20,11 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 			'feed_cache_exp' => 86400,	// 24 hours
 			'plugin' => array(
 				'wpsso' => array(
-					'version' => '3.34.1-1',	// plugin version
-					'opt_version' => '445',		// increment when changing default options
+					'version' => '3.35.1-1',	// plugin version
+					'opt_version' => '448',		// increment when changing default options
 					'short' => 'WPSSO',		// short plugin name
 					'name' => 'WordPress Social Sharing Optimization (WPSSO)',
-					'desc' => 'Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.',
+					'desc' => 'Automatically create complete and accurate meta tags and Schema markup for Social Sharing Optimization (SSO) and SEO.',
 					'slug' => 'wpsso',
 					'base' => 'wpsso/wpsso.php',
 					'update_auth' => 'tid',
@@ -173,7 +173,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				'wpssojson' => array(
 					'short' => 'WPSSO JSON',		// short plugin name
 					'name' => 'WPSSO Schema JSON-LD Markup (WPSSO JSON)',
-					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, Organization, Place, Product, etc.) for Google and Pinterest.',
+					'desc' => 'WPSSO extension to add complete Schema JSON-LD markup (Article, Event, Organization, Place / Business, Product, Recipe, and more).',
 					'slug' => 'wpsso-schema-json-ld',
 					'base' => 'wpsso-schema-json-ld/wpsso-schema-json-ld.php',
 					'update_auth' => 'tid',
@@ -436,14 +436,16 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 					'rp_dom_verify' => '',
 					'tc_site' => '',			// Twitter Business @username (multilingual)
 					'tc_desc_len' => 200,			// Maximum Description Length
+					'tc_type_post' => 'summary_large_image',
+					'tc_type_default' => 'summary',
 					// summary card
-					'tc_sum_width' => 600,
+					'tc_sum_width' => 600,			// Summary Card Image Dimensions
 					'tc_sum_height' => 600,
 					'tc_sum_crop' => 1,
 					'tc_sum_crop_x' => 'center',
 					'tc_sum_crop_y' => 'center',
 					// large image summary card
-					'tc_lrgimg_width' => 800,
+					'tc_lrgimg_width' => 800,		// Large Image Card Img Dimensions
 					'tc_lrgimg_height' => 1600,
 					'tc_lrgimg_crop' => 0,
 					'tc_lrgimg_crop_x' => 'center',
@@ -808,7 +810,7 @@ if ( ! class_exists( 'WpssoConfig' ) ) {
 				),
 			),
 			'php' => array(				// php
-				'min_version' => '4.1.0',	// minimum php version
+				'min_version' => '5.1.0',	// minimum php version
 			),
 			'form' => array(
 				'og_img_col_width' => '70px',

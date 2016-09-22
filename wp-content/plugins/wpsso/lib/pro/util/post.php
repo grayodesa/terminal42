@@ -146,7 +146,7 @@ if ( ! class_exists( 'WpssoProUtilPost' ) && class_exists( 'WpssoPost' ) ) {
 			if ( $user_can_edit === false ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'insufficient privileges to save settings for '.$post_type.' ID '.$post_id );
-				$this->p->notice->err( 'You have insufficient privileges to save settings for '.$post_type.' ID '.$post_id.'.', true );
+				$this->p->notice->err( 'You have insufficient privileges to save settings for '.$post_type.' ID '.$post_id.'.' );
 				return false;
 			}
 

@@ -44,7 +44,7 @@ if ( ! class_exists( 'WpssoJsonProHeadRecipe' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->mark();
 
-			$json_data = $this->filter_json_data_http_schema_org_recipe( array(), false, $mod, $mt_og, false );
+			$json_data = $this->filter_json_data_http_schema_org_recipe( array(), $mod, $mt_og, false );
 
 			WpssoSchema::add_data_itemprop_from_assoc( $mt_schema, $json_data, array(
 				'prepTime' => 'prepTime',
@@ -77,13 +77,13 @@ if ( ! class_exists( 'WpssoJsonProHeadRecipe' ) ) {
 			 * 	cookTime
 			 * 	totalTime
 			 */
-			foreach ( array( 'prep', 'cook', 'total' ) as $period ) {
-				$d = (int) $md_opts['schema_recipe_'.$period.'_days'];
-				$h = (int) $md_opts['schema_recipe_'.$period.'_hours'];
-				$m = (int) $md_opts['schema_recipe_'.$period.'_mins'];
-				$s = (int) $md_opts['schema_recipe_'.$period.'_secs'];
-				if ( $d.$h.$m.$s > 0 )
-					$ret[$period.'Time'] = 'P'.$d.'DT'.$h.'H'.$m.'M'.$d.'S';
+			foreach ( array( 'prep', 'cook', 'total' ) as $stage ) {
+				$t = array();
+				foreach ( array( 'days', 'hours', 'mins', 'secs' ) as $period )
+					$t[$period] = isset( $md_opts['schema_recipe_'.$stage.'_'.$period] ) ?
+						(int) $md_opts['schema_recipe_'.$stage.'_'.$period] : 0;
+				if ( $t['days'].$t['hours'].$t['mins'].$t['secs'] > 0 )
+					$ret[$stage.'Time'] = 'P'.$t['days'].'DT'.$t['hours'].'H'.$t['mins'].'M'.$t['secs'].'S';
 			}
 
 			/*
@@ -91,13 +91,15 @@ if ( ! class_exists( 'WpssoJsonProHeadRecipe' ) ) {
 			 * 	nutrition
 			 */
 			$ret['nutrition'] = WpssoSchema::get_item_type_context( 'http://schema.org/NutritionInformation', 
-				array( 'calories' => (int) $md_opts['schema_recipe_calories'] ) );
+				array( 'calories' => isset( $md_opts['schema_recipe_calories'] ) ? 
+					(int) $md_opts['schema_recipe_calories'] : 0 ) );
 
 			/*
 			 * Property:
 			 * 	recipeYield
 			 */
-			$ret['recipeYield'] = (string) $md_opts['schema_recipe_yield'];
+			$ret['recipeYield'] = isset( $md_opts['schema_recipe_yield'] ) ?
+				(string) $md_opts['schema_recipe_yield'] : '';
 
 			/*
 			 * Property:

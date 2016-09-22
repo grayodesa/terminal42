@@ -23,6 +23,10 @@ class Tribe__Tickets_Plus__Meta__Render {
 	}
 
 	public function table_meta_data( $item ) {
+		if ( ! isset( $item['product_id'] ) || ! isset( $item['attendee_id'] ) ) {
+			return;
+		}
+
 		wp_enqueue_style( 'event-tickets-meta' );
 		wp_enqueue_script( 'event-tickets-meta-report' );
 
@@ -75,6 +79,10 @@ class Tribe__Tickets_Plus__Meta__Render {
 	 * @param array $item Attendee data
 	 */
 	public function ticket_email_meta( $item ) {
+		if ( ! isset( $item['product_id'] ) || ! isset( $item['attendee_id'] ) ) {
+			return;
+		}
+
 		$meta_fields = Tribe__Tickets_Plus__Main::instance()->meta()->get_meta_fields_by_ticket( $item['product_id'] );
 		$meta_data = get_post_meta( $item['qr_ticket_id'], Tribe__Tickets_Plus__Meta::META_KEY, true );
 

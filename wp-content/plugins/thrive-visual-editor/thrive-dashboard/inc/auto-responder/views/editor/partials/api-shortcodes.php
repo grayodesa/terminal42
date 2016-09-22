@@ -17,7 +17,7 @@
 				</div>
 				<div class="tvd-col tvd-s6">
 					<div class="tve-align-stupid-text">
-						<?php echo __( 'Displays the email if the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+						<?php echo __( 'Displays the email of the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					</div>
 				</div>
 			</div>

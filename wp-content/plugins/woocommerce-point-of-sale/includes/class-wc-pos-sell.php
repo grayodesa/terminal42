@@ -32,6 +32,7 @@ class WC_Pos_Sell{
 	 * @return void
 	 */
 	public function __construct( $ajax = false ) {
+		
 		$this->get_active_plugins();
 		if( !$ajax ){
 
@@ -55,7 +56,7 @@ class WC_Pos_Sell{
 
 #	        add_action( 'wp_login', array( $this, 'set_last_login') );
 
-	        add_filter('woocommerce_checkout_fields', array($this, 'custom_order_fields') );
+	        add_filter('woocommerce_checkout_fields', array($this, 'custom_order_fields') );        
 	        
 	        $this->init_addons_hooks();
 
@@ -230,6 +231,7 @@ class WC_Pos_Sell{
     public function wc_api_loaded()
     {
     	include_once( 'api/class-wc-pos-api-orders.php' );
+    	include_once( 'api/class-wc-pos-api-removed-items.php' );
     }
 
     /**
@@ -241,6 +243,7 @@ class WC_Pos_Sell{
 	public function wc_api_classes( $api_classes ) {
 
 		$api_classes[] = 'WC_API_POS_Orders';
+		$api_classes[] = 'WC_API_POS_Removed';
 		return $api_classes;
 		
 	}
@@ -285,6 +288,7 @@ class WC_Pos_Sell{
 
 		return $_available_gateways;
     }
+
 
     public function wc_pos_get_return_url( $return_url, $order )
     {
@@ -395,7 +399,7 @@ class WC_Pos_Sell{
     	}else{
     		$data = WC_POS()->register()->get_data_by_slug($id);    		
     	}
-	    $data = $data[0];
+	    $data = $data ? $data[0] : array();
 	    foreach ($data['detail'] as $i => $val) {
 	        $data[$i] = $val;
 	    }
@@ -600,6 +604,14 @@ class WC_Pos_Sell{
 	*/
 	protected function footer() {
 		//
+		$admin_url = get_admin_url(get_current_blog_id(), '/');
+		if(isset($_SERVER['HTTP_REFERER'])){
+		    $ref = $_SERVER['HTTP_REFERER'];
+		    if( !empty($_SERVER['HTTPS']) && !empty($ref) && strpos($ref, 'https://') === false ){
+		        $admin_url = str_replace('https://', 'http://', $admin_url);
+		    }
+		}
+
 		$build = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'build' : 'min';
 		$assets_path          = str_replace( array( 'http:', 'https:' ), '', WC()->plugin_url() ) . '/assets/';
 		$wc_frontend_script_path = $assets_path . 'js/frontend/';
@@ -636,6 +648,7 @@ class WC_Pos_Sell{
 		  
 		  /********/
 		  'wc-pos-keypad'                    => WC_POS()->plugin_url() . '/assets/js/register/keypad.js',
+		  'wc-pos-auth-check'                => WC_POS()->plugin_url() . '/assets/js/register/auth-check.js',
 		  'wc-pos-category_cycle'            => WC_POS()->plugin_url() . '/assets/js/register/category_cycle.js',
 		  'wc-pos-modal-classie'             => WC_POS()->plugin_url() . '/assets/js/register/modal/classie.js',
 		  'wc-pos-modal-modalEffects'        => WC_POS()->plugin_url() . '/assets/js/register/modal/modalEffects.js',
@@ -661,6 +674,10 @@ class WC_Pos_Sell{
 		if( !wc_pos_woocommerce_version_check('2.5') ){
 			$scripts['wc-accounting'] = $assets_path . 'js/admin/accounting' . $suffix . '.js';
 		  	$scripts['wc-round']      = $assets_path . 'js/admin/round' . $suffix . '.js';
+		}
+
+		if( get_option('wc_pos_disable_connection_status', 'no') == 'yes' ){
+			unset($scripts['wc-pos-offline']);
 		}
 
 		$scripts = apply_filters( 'wc_pos_enqueue_scripts', $scripts );
@@ -822,6 +839,7 @@ class WC_Pos_Sell{
 	      'load_web_order'               => ( get_option('wc_pos_load_web_order', 'no') == 'yes' ? true : false),
 	      'load_customer'                => ( get_option('wc_pos_load_customer_after_selecting', 'no') == 'yes' ? true : false),
 	      'disable_sound_notifications'  => ( get_option('wc_pos_disable_sound_notifications', 'no') == 'yes' ? true : false),
+	      'disable_connection_status'    => ( get_option('wc_pos_disable_connection_status', 'no') == 'yes' ? true : false),
 	      'mon_decimal_point'            => get_option('woocommerce_price_decimal_sep'),
 	      'default_country'              => get_option('wc_pos_default_country'),
 	      'currency_format_num_decimals' => absint(get_option('woocommerce_price_num_decimals')),
@@ -844,6 +862,7 @@ class WC_Pos_Sell{
 	      'barcode_url'        => plugins_url( 'includes/lib/barcode/image.php?filetype=PNG&dpi=72&scale=2&rotation=0&font_family=Arial.ttf&&thickness=30&start=NULL&code=BCGcode128' , WC_POS_FILE), 
 
 	      'wc_api_url'  => WC_POS()->wc_api_url(),
+	      'logout_url'  => wp_logout_url( get_permalink() ),
 	      
 	      'discount_presets'       => WC_Admin_Settings::get_option( 'woocommerce_pos_register_discount_presets', array(5,10,15,20) ),
 	      'show_stock'             => WC_Admin_Settings::get_option( 'wc_pos_show_stock', 'yes' ),
@@ -860,6 +879,9 @@ class WC_Pos_Sell{
 	      'a_shipping_fields'      => $a_shipping_fields,
 	      'acf_fields'             => $acf_fields,
 	      'acf_order_fields'       => $acf_order_fields,
+
+	      'auth_check_interval'    => apply_filters( 'wp_auth_check_interval', 3 * MINUTE_IN_SECONDS ),
+	      'beforeunload'           => __('Your session has expired. You can log in again from this page or go to the login page.'),
 	    ));
 		return json_encode( $params );
 	}
@@ -1091,9 +1113,12 @@ class WC_Pos_Sell{
 		    'hide_empty' => false,
 		    'fields'     => 'ids'
 		);
+		
+		$category_ids = get_terms( $args );
 
-		if ( ! $category_ids = get_terms( $args ) )
+		if ( is_wp_error($category_ids) || !$category_ids || empty($category_ids) ){
 			return array();
+		}
 
 		$category_ids_string = implode( ',', array_map( 'intval', $category_ids ) );
 

@@ -40,24 +40,29 @@ if ( ! class_exists( 'WpssoProMediaRtmedia' ) ) {
 		}
 
 		public function add_activity_allowed_tags( $allow ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 			$allow['img']['data-wp-pid'] = array();
 			return $allow;
 		}
 
 		public function add_image_id_attribute( $html, $media ) {
+			if ( $this->p->debug->enabled )
+				$this->p->debug->mark();
 			if ( isset( $media->media_type ) ) {
-				global $rtmedia;
 				if ( $media->media_type === 'photo' ) {
 					$thumbnail_id = isset( $media->media_id ) ?
 						$media->media_id : 0;
 					if ( $thumbnail_id ) {
 						$html = preg_replace( '/<img /', '<img data-wp-pid="'.$thumbnail_id.'" ', $html );
+						if ( $this->p->debug->enabled )
+							$this->p->debug->log( 'added media_id '.$thumbnail_id.' to img attributes' );
 					} elseif ( $this->p->debug->enabled )
 						$this->p->debug->log( 'rtmedia media_id is empty or missing' );
 				} elseif ( $this->p->debug->enabled )
-					$this->p->debug->log( 'rtmedia type is not photo' );
+					$this->p->debug->log( 'rtmedia type property is not a photo' );
 			} elseif ( $this->p->debug->enabled )
-				$this->p->debug->log( 'rtmedia type not set' );
+				$this->p->debug->log( 'rtmedia type property not set' );
 			return $html;
 		}
 	}

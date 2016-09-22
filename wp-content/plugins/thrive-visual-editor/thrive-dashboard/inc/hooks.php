@@ -38,20 +38,72 @@ function tve_dash_admin_menu() {
 	/**
 	 * @param tve_dash_section parent slug
 	 */
-	do_action( "tve_dash_add_menu_item", "tve_dash_section" );
+	do_action( 'tve_dash_add_menu_item', 'tve_dash_section' );
 
-	add_submenu_page( "tve_dash_section", "Thrive License Manager", "License Manager", "manage_options", "tve_dash_license_manager_section", "tve_dash_license_manager_section" );
-	add_submenu_page( "tve_dash_section", "Thrive General Settings", "General Settings", "manage_options", "tve_dash_general_settings_section", "tve_dash_general_settings_section" );
+	$menus = array(
+		'license_manager'     => array(
+			'parent_slug' => 'tve_dash_section',
+			'page_title'  => __( 'Thrive License Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'License Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_license_manager_section',
+			'function'    => 'tve_dash_license_manager_section',
+		),
+		'general_settings'    => array(
+			'parent_slug' => 'tve_dash_section',
+			'page_title'  => __( 'Thrive General Settings', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'General Settings', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_general_settings_section',
+			'function'    => 'tve_dash_general_settings_section',
+		),
+		'ui_toolkit'          => array(
+			/**
+			 * in order to not include the page in the menu -> use null as the first parameter
+			 */
+			'parent_slug' => defined( 'TVE_DEBUG' ) && TVE_DEBUG ? 'tve_dash_section' : null,
+			'page_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_ui_toolkit',
+			'function'    => 'tve_dash_ui_toolkit',
+		),
+		/* Font Manager Page */
+		'font_manager'        => array(
+			'parent_slug' => null,
+			'page_title'  => __( 'Thrive Font Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'Thrive Font Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_font_manager',
+			'function'    => 'tve_dash_font_manager_main_page',
+		),
+		/* Font Import Manager Page */
+		'font_import_manager' => array(
+			'parent_slug' => null,
+			'page_title'  => __( 'Thrive Font Import Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'Thrive Font Import Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_font_import_manager',
+			'function'    => 'tve_dash_font_import_manager_main_page',
+		),
+		'icon_manager'        => array(
+			'parent_slug' => null,
+			'page_title'  => __( 'Icon Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'menu_title'  => __( 'Icon Manager', TVE_DASH_TRANSLATE_DOMAIN ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tve_dash_icon_manager',
+			'function'    => 'tve_dash_icon_manager_main_page',
+		),
+	);
 
-	/**
-	 * in order to not include the page in the menu -> use null as the first parameter
-	 */
-	add_submenu_page( defined( 'TVE_DEBUG' ) && TVE_DEBUG ? 'tve_dash_section' : null, 'Thrive UI toolkit', 'Thrive UI toolkit', 'manage_options', 'tve_dash_ui_toolkit', 'tve_dash_ui_toolkit' );
-	/* Font Manager Page */
-	add_submenu_page( null, 'Thrive Font Manager', 'Thrive Font Manager', 'manage_options', 'tve_dash_font_manager', 'tve_dash_font_manager_main_page' );
-	/* Font Import Manager Page */
-	add_submenu_page( null, 'Thrive Font Import Manager', 'Thrive Font Import Manager', 'manage_options', 'tve_dash_font_import_manager', 'tve_dash_font_import_manager_main_page' );
-	add_submenu_page( null, 'Icon Manager', 'Icon Manager', 'manage_options', 'tve_dash_icon_manager', 'tve_dash_icon_manager_main_page' );
+	$thrive_products_order = tve_dash_get_menu_products_order();
+	$menus                 = array_merge( $menus, apply_filters( 'tve_dash_admin_product_menu', array() ) );
+
+	foreach ( $thrive_products_order as $menu_short ) {
+		if ( array_key_exists( $menu_short, $menus ) ) {
+			add_submenu_page( $menus[ $menu_short ]['parent_slug'], $menus[ $menu_short ]['page_title'], $menus[ $menu_short ]['menu_title'], $menus[ $menu_short ]['capability'], $menus[ $menu_short ]['menu_slug'], $menus[ $menu_short ]['function'] );
+		}
+	}
 }
 
 function tve_dash_icon_manager_main_page() {
@@ -315,7 +367,7 @@ function tve_dash_frontend_enqueue() {
 
 	$data = array(
 		'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-		'is_crawler' => (bool) tve_dash_is_crawler(),
+		'is_crawler' => (bool) tve_dash_is_crawler( true ), // Apply the filter to allow overwriting the bot detection. Can be used by 3rd party plugins to force the initial ajax request
 	);
 	wp_localize_script( 'tve-dash-frontend', 'tve_dash_front', $data );
 }
@@ -363,5 +415,4 @@ function tve_dash_frontend_ajax_load() {
 	}
 
 	wp_send_json( $response );
-
 }

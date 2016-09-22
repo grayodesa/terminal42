@@ -3,7 +3,7 @@
 Plugin Name: Abandoned Cart Lite for WooCommerce
 Plugin URI: http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro
 Description: This plugin captures abandoned carts by logged-in users & emails them about it. <strong><a href="http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro">Click here to get the PRO Version.</a></strong>
-Version: 3.0
+Version: 3.1
 Author: Tyche Softwares
 Author URI: http://www.tychesoftwares.com/
 */
@@ -402,6 +402,10 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     	/*-----------------------------------------------------------------------------------*/								
 	    function wcal_activate() {
     		global $wpdb; 
+    		$wcap_collate = '';
+    		if ( $wpdb->has_cap( 'collation' ) ) {
+    		    $wcap_collate = $wpdb->get_charset_collate();
+    		}
     		$table_name = $wpdb->prefix . "ac_email_templates_lite";
     		
     		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -414,7 +418,7 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     				`template_name` text COLLATE utf8_unicode_ci NOT NULL,
     				`from_name` text COLLATE utf8_unicode_ci NOT NULL,
       				PRIMARY KEY (`id`)
-    		        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ";
+    		        ) $wcap_collate AUTO_INCREMENT=1 ";
     	
     		require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
     		dbDelta( $sql );
@@ -450,7 +454,7 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
         				`sent_time` datetime NOT NULL,
         				`sent_email_id` text COLLATE utf8_unicode_ci NOT NULL,
         				PRIMARY KEY  (`id`)
-    		            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ";
+    		            ) $wcap_collate AUTO_INCREMENT=1 ";
     		 
     		require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
     		dbDelta ( $sql_query );
@@ -465,7 +469,7 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
             				 `cart_ignored` enum('0','1') COLLATE utf8_unicode_ci NOT NULL,
             				 `recovered_cart` int(11) NOT NULL,
             				 PRIMARY KEY (`id`)
-    		                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+    		                 ) $wcap_collate";
     				 
     		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     		dbDelta( $history_query );
@@ -591,7 +595,10 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     	 *************************************************/
     	function wcal_update_db_check() {
     	    global $wpdb;
-    	    
+    	    $wcap_collate = '';
+    	    if ( $wpdb->has_cap( 'collation' ) ) {
+    	        $wcap_collate = $wpdb->get_charset_collate();
+    	    }
     	    if( get_option( 'ac_lite_delete_alter_table_queries' ) != 'yes' ) {
     	        update_option( 'ac_lite_alter_table_queries', '' );
     	        update_option( 'ac_lite_delete_alter_table_queries', 'yes' );
@@ -696,7 +703,7 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     		    `shipping_zipcode` double,
     		    `shipping_charges` double,
     		    PRIMARY KEY (`id`)
-    		    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=63000000";
+    		    ) $wcap_collate AUTO_INCREMENT=63000000";
     		    require_once( ABSPATH . 'wp-admin/includes/upgrade.php');
     		    $wpdb->query( $ac_guest_history_query );
     	    }
@@ -727,14 +734,10 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     	        update_option( 'wcal_security_key', 'qJB0rGtIn5UB1xG03efyCp' );
     	    }
     	    
-    	    $ac_history_lite_table_name = $wpdb->prefix . "ac_abandoned_cart_history_lite";    	    
-    	    $check_table_query          = "SHOW COLUMNS FROM $ac_history_lite_table_name LIKE 'unsubscribe_link'";
-    	    $results                    = $wpdb->get_results( $check_table_query );
-    	    
-    	    if ( count( $results ) == 0 ) {
-    	        $alter_table_query = "ALTER TABLE $ac_history_table_name 
-    	        ADD `unsubscribe_link` enum('0','1') COLLATE utf8_unicode_ci NOT NULL AFTER  `user_type`";
-    	        $wpdb->get_results( $alter_table_query );
+    	   if ( $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}ac_abandoned_cart_history_lite';" ) ) {
+    	        if ( ! $wpdb->get_var( "SHOW COLUMNS FROM `{$wpdb->prefix}ac_abandoned_cart_history_lite` LIKE 'unsubscribe_link';" ) ) {
+    	            $wpdb->query( "ALTER TABLE {$wpdb->prefix}ac_abandoned_cart_history_lite ADD `unsubscribe_link` enum('0','1') COLLATE utf8_unicode_ci NOT NULL AFTER  `user_type`;" );
+    	        }
     	    }
     	}
 	
@@ -974,8 +977,12 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
                     $validate_email_address_string = str_replace ( " " , "+", $encoded_email_address);
         
                     if( isset( $validate_email_id_string ) ) {
-                        $validate_email_id_decode  = $this->wcal_decrypt_validate( $validate_email_id_string );
-                    }
+                        if( function_exists( "mcrypt_encrypt" ) ) {
+                            $validate_email_id_decode  = $this->wcal_decrypt_validate( $validate_email_id_string );                    
+                        } else {
+                            $validate_email_id_decode = base64_decode( $validate_email_id_string );
+                        }
+                    }   
                     $validate_email_address_string = $validate_email_address_string;
                 }
         
@@ -1048,8 +1055,12 @@ if( !class_exists( 'woocommerce_abandon_cart_lite' ) ) {
     	        // it will check if any old email have open the link
     	        if ( preg_match( '/&url=/', $link_decode_test ) ) { 			            
     	            $link_decode = $link_decode_test;
-    	        } else {			            
-    	            $link_decode = $this->wcal_decrypt_validate( $validate_encoded_string );
+    	        } else {
+    	            if( function_exists( "mcrypt_encrypt" ) ) {			            
+    	                $link_decode = $this->wcal_decrypt_validate( $validate_encoded_string );
+    	            } else {
+                        $link_decode = base64_decode( $validate_encoded_string );
+                    }
     	        }
     	        
     	        if ( !preg_match( '/&url=/', $link_decode ) ) { // This will decrypt more security

@@ -158,6 +158,15 @@ class WC_POS_Admin_Settings_General extends WC_Settings_Page {
 				'checkboxgroup'   => 'start',
 			),
 			array(
+				'title'           => __( 'Connection Status', 'wc_point_of_sale' ),
+				'desc'            => __( 'Disable connection status', 'wc_point_of_sale' ),
+				'desc_tip'        => __( 'Deactivates the connection status from loading in the register.', 'wc_point_of_sale' ),
+				'id'              => 'wc_pos_disable_connection_status',
+				'default'         => 'no',
+				'type'            => 'checkbox',
+				'checkboxgroup'   => 'start',
+			),
+			array(
 				'title'           => __( 'Closing Reports', 'wc_point_of_sale' ),
 				'desc'            => __( 'Display end of day report when closing register.', 'wc_point_of_sale' ),
 				'desc_tip' => __( 'End of day report displayed with total sales when register closes.', 'wc_point_of_sale' ),

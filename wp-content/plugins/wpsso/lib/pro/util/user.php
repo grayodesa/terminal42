@@ -142,7 +142,7 @@ if ( ! class_exists( 'WpssoProUtilUser' ) && class_exists( 'WpssoUser' ) ) {
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'insufficient privileges to save settings for user ID '.$user_id );
-				$this->p->notice->err( 'You have insufficient privileges to save settings for user ID '.$user_id.'.', true );
+				$this->p->notice->err( 'You have insufficient privileges to save settings for user ID '.$user_id.'.' );
 				return false;
 			}
 

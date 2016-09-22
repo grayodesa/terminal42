@@ -38,6 +38,26 @@ class wfUtils {
 			}
 		}
 	}
+	public static function makeDuration($secs) {
+		$months = floor($secs / (86400 * 30));
+		$days = floor($secs / 86400);
+		$hours = floor($secs / 3600);
+		$minutes = floor($secs / 60);
+		if($months) {
+			$days -= $months * 30;
+			return self::pluralize($months, 'month', $days, 'day');
+		} else if($days) {
+			$hours -= $days * 24;
+			return self::pluralize($days, 'day', $hours, 'hour');
+		} else if($hours) {
+			$minutes -= $hours * 60;
+			return self::pluralize($hours, 'hour', $minutes, 'minute');
+		} else if($minutes) {
+			return self::pluralize($minutes, 'minute');
+		} else {
+			return self::pluralize($secs, 'second');
+		}
+	}
 	public static function pluralize($m1, $t1, $m2 = false, $t2 = false) {
 		if($m1 != 1) {
 			$t1 = $t1 . 's';

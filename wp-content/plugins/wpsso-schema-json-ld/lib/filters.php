@@ -122,7 +122,7 @@ if ( ! class_exists( 'WpssoJsonFilters' ) ) {
 
 			if ( ! empty( $message ) )
 				$this->p->notice->warn( '<em>'.__( 'This notice is only shown to users with Administrative privileges.',
-					'wpsso-schema-json-ld' ).'</em><p>'.$message.'</p>', true, true, $dismiss_id, true );
+					'wpsso-schema-json-ld' ).'</em><p>'.$message.'</p>', true, $dismiss_id, true );
 		}
 
 		public function filter_option_type( $type, $key ) {

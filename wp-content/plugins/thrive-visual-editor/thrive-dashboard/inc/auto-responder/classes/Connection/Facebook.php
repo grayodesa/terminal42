@@ -195,7 +195,7 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 				$comment = __( 'Error! The Facebook link provided is invalid', TVE_DASH_TRANSLATE_DOMAIN );
 			}
 		} else {
-			$comment = __( 'Your Facebook connection expired. Click VALIDATE CONNECTION under Social Media Integration to reactivate it!', TVE_DASH_TRANSLATE_DOMAIN );
+			$comment = __( 'Your Facebook connection expired. Go to API Connections to reactivate it!', TVE_DASH_TRANSLATE_DOMAIN );
 		}
 
 		return $comment;

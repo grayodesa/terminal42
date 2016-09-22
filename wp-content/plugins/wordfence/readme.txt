@@ -2,8 +2,8 @@
 Contributors: mmaunder 
 Tags: security, secure, security plugin, wordpress security, login security, firewall, malware, antivirus, web application firewall, block hackers, country blocking, block hackers
 Requires at least: 3.9
-Tested up to: 4.6.0
-Stable tag: 6.1.14
+Tested up to: 4.6.1
+Stable tag: 6.1.17
 
 Secure your website with the Wordfence security plugin for WordPress.  Wordfence provides free enterprise-class WordPress security, protecting your website from hacks and malware.
 
@@ -199,6 +199,28 @@ Secure your website with Wordfence.
 5. If you're technically minded, this is the under-the-hood view of Wordfence Security options where you can fine-tune your security settings.
 
 == Changelog ==
+
+= 6.1.17 =
+* Fix: Replaced calls to json_decode with our own implentation for hosts without the JSON extension enabled.
+
+= 6.1.16 =
+* Improvement: Now performing malware scanning on all uploaded files in real-time.
+* Improvement: Added Web Application Firewall activity to Wordfence summary email.
+* Fix: Now using 503 response code in the page displayed when an IP is locked out.
+* Fix: `wflogs` directory is now correctly removed on uninstall.
+* Fix: Fixed recently introduced bug which caused the Whitelisted 404 URLs feature to no longer work.
+* Fix: Added try/catch to uncaught exception thrown when pinging the API key.
+* Improvement: Improved performance of the Live Traffic page in Firefox.
+* Improvement: Updated GeoIP database.
+
+= 6.1.15 =
+* Improvement: Removed file-based config caching, added support for caching via WordPress's object cache.
+* Improvement: Whitelisted Uptime Robot's IP range.
+* Fix: Notify users if suPHP_ConfigPath is in their WAF setup, and prompt to update Extended Protection.
+* Fix: Fixed bug with allowing logins on admin accounts that are not fully activated with invalid 2FA codes when 2FA is required for all admins.
+* Fix: Removed usage of `wp_get_sites()` which was deprecated in WordPress 4.6.
+* Fix: Fixed PHP notice from `Undefined index: url` with custom/premium plugins.
+* Improvement: Converted the banned URLs input to a textarea.
 
 = 6.1.14 =
 * Improvement: Support downloading a file of 2FA recovery codes.

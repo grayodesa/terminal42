@@ -123,6 +123,7 @@ class WC_Pos_Receipts {
 			'print_number_items'           => 'yes',
 			'items_label'                  => __( 'Number of Items', 'wc_point_of_sale' ),
 			'print_barcode'                => 'yes',
+			'show_image_product'           => 'no',
 			'print_tax_number'             => 'no',
 			'tax_number_label'             => __( 'Tax Number', 'wc_point_of_sale' ),
 			'header_text'                  => '',
@@ -192,9 +193,10 @@ class WC_Pos_Receipts {
 						<div id="postbox-container-2" class="postbox-container">
 							<div class="meta-box-sortables">
 								<div class="postbox ">
-									<div class="handlediv" title="Click to toggle">
-										<br>
-									</div>
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
 									<h3 class="hndle">
 										<span><?php _e( 'General Details', 'wc_point_of_sale' ); ?></span>
 									</h3>
@@ -412,14 +414,23 @@ class WC_Pos_Receipts {
 												<input type="checkbox" id="receipt_print_barcode" value="yes" name="receipt_print_barcode" <?php echo ($receipt_options['print_barcode'] == 'yes')? 'checked="checked"' : ''; ?>>
 											</td>
 										</tr>
+										<tr>
+											<td>
+												<label class="receipt_labels" for="receipt_show_image_product"><?php _e( 'Print Product Image', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<input type="checkbox" id="receipt_show_image_product" value="yes" name="receipt_show_image_product" <?php echo ($receipt_options['show_image_product'] == 'yes')? 'checked="checked"' : ''; ?>>
+											</td>
+										</tr>
 									</table>
 
 									</div>
 								</div>
 								<div class="postbox ">
-									<div class="handlediv" title="Click to toggle">
-										<br>
-									</div>
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
 									<h3 class="hndle">
 										<span><?php _e( 'Customer Details', 'wc_point_of_sale' ); ?></span>
 									</h3>
@@ -493,173 +504,210 @@ class WC_Pos_Receipts {
 									</div>
 								</div>
 								<div class="postbox ">
-								<div class="handlediv" title="Click to toggle">
-									<br>
-								</div>
-								<h3 class="hndle">
-									<span><?php _e( 'Style', 'wc_point_of_sale' ); ?></span>
-								</h3>
-								<div class="inside">
-								<table id="receipt_style">
-									<tr>
-										<td>
-											<label class="receipt_labels" for="text_size"><?php _e( 'Text Size', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="text_size" name="text_size" class="wc_pos_receipt">
-												<option value="normal" <?php selected('nomal', $receipt_options['text_size'], true ); ?> ><?php _e( 'Normal', 'wc_point_of_sale' ); ?></option>
-												<option value="small" <?php selected('small', $receipt_options['text_size'], true ); ?>><?php _e( 'Small', 'wc_point_of_sale' ); ?></option>
-												<option value="large" <?php selected('large', $receipt_options['text_size'], true ); ?>><?php _e( 'Large', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<label class="receipt_labels" for="title_position"><?php _e( 'Title Position', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="title_position" name="title_position" class="wc_pos_receipt" >
-												<option value="left" <?php selected('left', $receipt_options['title_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
-												<option value="center" <?php selected('center', $receipt_options['title_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
-												<option value="right" <?php selected('right', $receipt_options['title_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<label class="receipt_labels" for="logo_size"><?php _e( 'Logo Size', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="logo_size" name="logo_size" class="wc_pos_receipt" >
-												<option value="normal" <?php selected('nomal', $receipt_options['logo_size'], true ); ?> ><?php _e( 'Normal', 'wc_point_of_sale' ); ?></option>
-												<option value="small" <?php selected('small', $receipt_options['logo_size'], true ); ?>><?php _e( 'Small', 'wc_point_of_sale' ); ?></option>
-												<option value="large" <?php selected('large', $receipt_options['logo_size'], true ); ?>><?php _e( 'Large', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-									<tr class="show_receipt_print_outlet_contact_details">
-										<td>
-											<label class="receipt_labels" for="logo_position"><?php _e( 'Logo Position', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="logo_position" name="logo_position" class="wc_pos_receipt" >
-												<option value="left" <?php selected('left', $receipt_options['logo_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
-												<option value="center" <?php selected('center', $receipt_options['logo_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
-												<option value="right" <?php selected('right', $receipt_options['logo_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-									<tr class="show_receipt_print_outlet_contact_details">
-										<td>
-											<label class="receipt_labels" for="contact_position"><?php _e( 'Address & Contact Position', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="contact_position" name="contact_position"  class="wc_pos_receipt">
-												<option value="left" <?php selected('left', $receipt_options['contact_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
-												<option value="center" <?php selected('center', $receipt_options['contact_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
-												<option value="right" <?php selected('right', $receipt_options['contact_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-									<tr class="show_receipt_print_outlet_contact_details">
-										<td>
-											<label class="receipt_labels" for="tax_number_position"><?php _e( 'Tax Number Position', 'wc_point_of_sale' ); ?></label>
-										</td>
-										<td>
-											<select type="text" id="tax_number_position" name="tax_number_position" class="wc_pos_receipt" >
-												<option value="left" <?php selected('left', $receipt_options['tax_number_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
-												<option value="center" <?php selected('center', $receipt_options['tax_number_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
-												<option value="right" <?php selected('right', $receipt_options['tax_number_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
-											</select>
-										</td>
-									</tr>
-								</table>
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h3 class="hndle">
+										<span><?php _e( 'Style', 'wc_point_of_sale' ); ?></span>
+									</h3>
+									<div class="inside">
+									<table id="receipt_style">
+										<tr>
+											<td>
+												<label class="receipt_labels" for="text_size"><?php _e( 'Text Size', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="text_size" name="text_size" class="wc_pos_receipt">
+													<option value="normal" <?php selected('nomal', $receipt_options['text_size'], true ); ?> ><?php _e( 'Normal', 'wc_point_of_sale' ); ?></option>
+													<option value="small" <?php selected('small', $receipt_options['text_size'], true ); ?>><?php _e( 'Small', 'wc_point_of_sale' ); ?></option>
+													<option value="large" <?php selected('large', $receipt_options['text_size'], true ); ?>><?php _e( 'Large', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label class="receipt_labels" for="title_position"><?php _e( 'Title Position', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="title_position" name="title_position" class="wc_pos_receipt" >
+													<option value="left" <?php selected('left', $receipt_options['title_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
+													<option value="center" <?php selected('center', $receipt_options['title_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
+													<option value="right" <?php selected('right', $receipt_options['title_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label class="receipt_labels" for="logo_size"><?php _e( 'Logo Size', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="logo_size" name="logo_size" class="wc_pos_receipt" >
+													<option value="normal" <?php selected('nomal', $receipt_options['logo_size'], true ); ?> ><?php _e( 'Normal', 'wc_point_of_sale' ); ?></option>
+													<option value="small" <?php selected('small', $receipt_options['logo_size'], true ); ?>><?php _e( 'Small', 'wc_point_of_sale' ); ?></option>
+													<option value="large" <?php selected('large', $receipt_options['logo_size'], true ); ?>><?php _e( 'Large', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr class="show_receipt_print_outlet_contact_details">
+											<td>
+												<label class="receipt_labels" for="logo_position"><?php _e( 'Logo Position', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="logo_position" name="logo_position" class="wc_pos_receipt" >
+													<option value="left" <?php selected('left', $receipt_options['logo_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
+													<option value="center" <?php selected('center', $receipt_options['logo_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
+													<option value="right" <?php selected('right', $receipt_options['logo_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr class="show_receipt_print_outlet_contact_details">
+											<td>
+												<label class="receipt_labels" for="contact_position"><?php _e( 'Address & Contact Position', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="contact_position" name="contact_position"  class="wc_pos_receipt">
+													<option value="left" <?php selected('left', $receipt_options['contact_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
+													<option value="center" <?php selected('center', $receipt_options['contact_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
+													<option value="right" <?php selected('right', $receipt_options['contact_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+										<tr class="show_receipt_print_outlet_contact_details">
+											<td>
+												<label class="receipt_labels" for="tax_number_position"><?php _e( 'Tax Number Position', 'wc_point_of_sale' ); ?></label>
+											</td>
+											<td>
+												<select type="text" id="tax_number_position" name="tax_number_position" class="wc_pos_receipt" >
+													<option value="left" <?php selected('left', $receipt_options['tax_number_position'], true ); ?> ><?php _e( 'Left', 'wc_point_of_sale' ); ?></option>
+													<option value="center" <?php selected('center', $receipt_options['tax_number_position'], true ); ?>><?php _e( 'Center', 'wc_point_of_sale' ); ?></option>
+													<option value="right" <?php selected('right', $receipt_options['tax_number_position'], true ); ?>><?php _e( 'Right', 'wc_point_of_sale' ); ?></option>
+												</select>
+											</td>
+										</tr>
+									</table>
 
+									</div>
 								</div>
-							</div>
-							</div>
-							<div class="postbox ">
-								<h3 class="hndle">
-									<label  class="receipt_labels" for="receipt_header_text"><?php _e( 'Header Text', 'wc_point_of_sale' ); ?></label>
-								</h3>
-								<div class="inside">
-									<div class="postarea edit-form-section">
+								<div class="postbox ">
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h3 class="hndle">
+										<label  class="receipt_labels" for="receipt_header_text"><?php _e( 'Header Text', 'wc_point_of_sale' ); ?></label>
+									</h3>
+									<div class="inside">
+										<div class="postarea edit-form-section">
 
-										<?php wp_editor( $receipt_options['header_text'], 'receipt_header_text', array(
-												'dfw' => false,
-												'editor_height' => 200,
-												'media_buttons' => false,
-												'textarea_name' => 'receipt_header_text',
-												'tinymce' => array(
-													'resize' => false,
-													'add_unload_trigger' => false,
-												),
-											) ); ?>
-								  </div>
+											<?php wp_editor( $receipt_options['header_text'], 'receipt_header_text', array(
+													'dfw' => false,
+													'editor_height' => 200,
+													'media_buttons' => false,
+													'textarea_name' => 'receipt_header_text',
+													'tinymce' => array(
+														'resize' => false,
+														'add_unload_trigger' => false,
+													),
+												) ); ?>
+									  </div>
+									</div>
 								</div>
-							</div>
-							<div class="postbox ">
-								<h3 class="hndle">
-									<label  class="receipt_labels" for="receipt_footer_text"><?php _e( 'Footer Text', 'wc_point_of_sale' ); ?></label>
-								</h3>
-								<div class="inside">
-									<div class="postarea edit-form-section">
 
-										<?php wp_editor( $receipt_options['footer_text'], 'receipt_footer_text', array(
-												'dfw' => false,
-												'editor_height' => 200,
-												'media_buttons' => false,
-												'textarea_name' => 'receipt_footer_text',
-												'tinymce' => array(
-													'resize' => false,
-													'add_unload_trigger' => false,
-												),
-											) ); ?>
-								  </div>
+								<div class="postbox ">
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h3 class="hndle">
+										<label  class="receipt_labels" for="receipt_footer_text"><?php _e( 'Footer Text', 'wc_point_of_sale' ); ?></label>
+									</h3>
+									<div class="inside">
+										<div class="postarea edit-form-section">
+
+											<?php wp_editor( $receipt_options['footer_text'], 'receipt_footer_text', array(
+													'dfw' => false,
+													'editor_height' => 200,
+													'media_buttons' => false,
+													'textarea_name' => 'receipt_footer_text',
+													'tinymce' => array(
+														'resize' => false,
+														'add_unload_trigger' => false,
+													),
+												) ); ?>
+									  </div>
+									</div>
 								</div>
 							</div>
+							
+							
 
 						</div><!-- /postbox-container-2 -->
 						<div id="postbox-container-1" class="postbox-container">
-							<div class="postbox ">
-								<h3 class="hndle">
-									<label class="receipt_labels" for="receipt_logo"><?php _e( 'Receipt Logo', 'wc_point_of_sale' ); ?></label>
-								</h3>
-								<div class="inside">
-									<p class="hide-if-no-js">
-										<?php $receipt_logo_style = (!$receipt_options['logo']) ? 'style="display: none;"' : ''; ?>
-											<a class="set_receipt_logo" id="set_receipt_logo_img" href="#" title="<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo $receipt_logo_style; ?> >
-												<?php $attachment_image_logo = wp_get_attachment_image_src( $receipt_options['logo'], 'full' ); ?>
-												<img src="<?php echo $attachment_image_logo[0] ?>" style="max-height: 60px;">
-											</a>
-											<input type="hidden" name="receipt_logo" id="receipt_logo" value="<?php echo $receipt_options['logo']; ?>">
-											<a class="remove_receipt_logo" href="#" title="<?php _e( 'Remove Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo $receipt_logo_style; ?> >
-												<?php _e( 'Remove Receipt Logo', 'wc_point_of_sale' ); ?>
-											</a>
-											<a class="set_receipt_logo" id="set_receipt_logo_text" href="#" title="<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo ($receipt_options['logo']) ? 'style="display: none;"' : ''; ?> >
-												<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>
-											</a>
-											<p class="description"><?php _e( 'Recommend logo height to width ratio is 1:4 i.e. 70px height and 280px width..', 'wc_point_of_sale' ); ?></p>
-									</p>
-								</div>
-
-							</div>
-							<div class="postbox ">
-								<h3 class="hndle">
-									<label class="receipt_labels" for="receipt_logo"><?php _e( 'Preview', 'wc_point_of_sale' ); ?></label>
-
-								</h3>
-								<div class="inside">
-								<?php 
-									require_once( WC_POS()->plugin_path().'/includes/views/html-print-receipt-preview.php' );
-								?>
-								</div>
-								<div id="major-publishing-actions">
-									<div id="publishing-action">
-										<span class="spinner"></span>
-										<input type="submit" accesskey="p" value="Save" class="button button-primary button-large" id="save_receipt">
+							<div class="meta-box-sortables">
+								<div class="postbox ">
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h3 class="hndle">
+										<label class="receipt_labels" for="receipt_logo"><?php _e( 'Receipt Logo', 'wc_point_of_sale' ); ?></label>
+									</h3>
+									<div class="inside">
+										<p class="hide-if-no-js">
+											<?php $receipt_logo_style = (!$receipt_options['logo']) ? 'style="display: none;"' : ''; ?>
+												<a class="set_receipt_logo" id="set_receipt_logo_img" href="#" title="<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo $receipt_logo_style; ?> >
+													<?php $attachment_image_logo = wp_get_attachment_image_src( $receipt_options['logo'], 'full' ); ?>
+													<img src="<?php echo $attachment_image_logo[0] ?>" style="max-height: 60px;">
+												</a>
+												<input type="hidden" name="receipt_logo" id="receipt_logo" value="<?php echo $receipt_options['logo']; ?>">
+												<a class="remove_receipt_logo" href="#" title="<?php _e( 'Remove Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo $receipt_logo_style; ?> >
+													<?php _e( 'Remove Receipt Logo', 'wc_point_of_sale' ); ?>
+												</a>
+												<a class="set_receipt_logo" id="set_receipt_logo_text" href="#" title="<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>" <?php echo ($receipt_options['logo']) ? 'style="display: none;"' : ''; ?> >
+													<?php _e( 'Set Receipt Logo', 'wc_point_of_sale' ); ?>
+												</a>
+												<p class="description"><?php _e( 'Recommend logo height to width ratio is 1:4 i.e. 70px height and 280px width..', 'wc_point_of_sale' ); ?></p>
+										</p>
 									</div>
-									<div class="clear"></div>
+
+								</div>
+								<div class="postbox ">
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h3 class="hndle">
+										<label class="receipt_labels" for="receipt_logo"><?php _e( 'Preview', 'wc_point_of_sale' ); ?></label>
+
+									</h3>
+									<div class="inside">
+									<?php 
+										require_once( WC_POS()->plugin_path().'/includes/views/html-print-receipt-preview.php' );
+									?>
+									</div>
+									<div id="major-publishing-actions">
+										<div id="publishing-action">
+											<span class="spinner"></span>
+											<input type="submit" accesskey="p" value="Save" class="button button-primary button-large" id="save_receipt">
+										</div>
+										<div class="clear"></div>
+									</div>
+								</div>
+								<div class="postbox pos_receipt_custom_css">
+									<button type="button" class="handlediv button-link" aria-expanded="true">
+										<span class="screen-reader-text"><?php _e( 'Click to toggle' ); ?> </span>
+										<span class="toggle-indicator" aria-hidden="true"></span>
+									</button>
+									<h2 class="hndle">
+										<label  class="receipt_labels" for="receipt_custom_css"><?php _e( 'CSS', 'wc_point_of_sale' ); ?></label>
+									</h2>
+									<div class="inside">
+										<p class="description">
+											<?php _e('Customise the look and feel of your receipts using custom CSS. This will only applied when the receipt is being printed.', 'wc_point_of_sale'); ?>
+										</p>
+										<textarea name="receipt_custom_css" id="receipt_custom_css"><?php echo $receipt_options['custom_css']; ?></textarea>
+									</div>
 								</div>
 							</div>
 						</div><!-- /postbox-container-1 -->
@@ -714,6 +762,7 @@ class WC_Pos_Receipts {
 			'print_number_items'           => isset($_POST['receipt_print_number_items']) ? $_POST['receipt_print_number_items'] : '',
 			'items_label'                  => isset($_POST['receipt_items_label']) ? $_POST['receipt_items_label'] : '',
 			'print_barcode'                => isset($_POST['receipt_print_barcode']) ? $_POST['receipt_print_barcode'] : '',
+			'show_image_product'           => isset($_POST['receipt_show_image_product']) ? $_POST['receipt_show_image_product'] : '',
 			'print_tax_number'             => isset($_POST['receipt_print_tax_number']) ? $_POST['receipt_print_tax_number'] : '',
 			'tax_number_label'             => isset($_POST['receipt_tax_number_label']) ? $_POST['receipt_tax_number_label'] : '',
 			'header_text'                  => isset($_POST['receipt_header_text']) ? wpautop($_POST['receipt_header_text']) : '',
@@ -734,6 +783,7 @@ class WC_Pos_Receipts {
 			'customer_email_label'         => isset($_POST['receipt_customer_email_label']) ? $_POST['receipt_customer_email_label'] : '',
 			'print_customer_ship_address'  => isset($_POST['receipt_print_customer_ship_address']) ? $_POST['receipt_print_customer_ship_address'] : '',
 			'customer_ship_address_label'  => isset($_POST['receipt_customer_ship_address_label']) ? $_POST['receipt_customer_ship_address_label'] : '',
+			'custom_css'                   => isset($_POST['receipt_custom_css']) ? $_POST['receipt_custom_css'] : '',
 		);
 		$table_name = $wpdb->prefix . "wc_poin_of_sale_receipts";
 		if(isset($_POST['receipt_ID']) && !empty($_POST['receipt_ID'])){

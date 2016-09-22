@@ -166,11 +166,10 @@ if ( ! class_exists( 'WpssoProUtilCoAuthors' ) ) {
 
 		// don't check guest author custom post types (the permalink is not accessible)
 		public function filter_check_post_header( $enabled, $post_id, $post_obj ) {
-			if ( $enabled &&	// don't bother if already disabled
-				isset( $post_obj->post_type ) && 
-					$post_obj->post_type === 'guest-author' )
-						return false;
-			else return $enabled;
+			if ( $enabled && isset( $post_obj->post_type ) && 
+				$post_obj->post_type === 'guest-author' )
+					return false;
+			return $enabled;
 		}
 
 		// guest author custom post types don't have content

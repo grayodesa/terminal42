@@ -54,4 +54,5 @@ return array(
 	'inactive'                           => __( 'inactive', TVE_DASH_TRANSLATE_DOMAIN ),
 	'default_message_send_email_wp'      => __( 'A new lead has been added!', TVE_DASH_TRANSLATE_DOMAIN ),
 	'default_message_split_test_ends_wp' => __( 'A Thrive Leads split test recently ended. [link]Click here to see the results[/link]', TVE_DASH_TRANSLATE_DOMAIN ),
+	'add_new_action'                     => __( 'Add New Action', TVE_DASH_TRANSLATE_DOMAIN ),
 );

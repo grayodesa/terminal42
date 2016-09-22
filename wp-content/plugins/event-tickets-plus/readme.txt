@@ -3,8 +3,8 @@
 Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, shane.pearlman, thatdudebutch,  zbtirrell
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, Shopp, EDD, WPEC, WP-eCommerce, WPEC Tickets, Shopp Tickets, Easy Digital Downloads, EDDTickets
 Requires at least: 3.9
-Tested up to: 4.6
-Stable tag: 4.2.5
+Tested up to: 4.6.1
+Stable tag: 4.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,15 +142,27 @@ Our Premium Plugins:
 
 == Changelog ==
 
+= [4.2.7] 2016-09-15 =
+
+* Fix - Improve the My Tickets (order-tickets.php) template logic to work with all ticketing providers (our thanks go out to Maksem who highlighted this problem)
+* Fix - Stop logic for dealing with recurring events from impacting other post types
+* Fix - Ensure ticket meta functions as expected with the EDD ticket provider
+* Tweak - Share "tickets unavailable" messaging across ticketing providers to prevent unnecessary duplication
+
+= [4.2.6] 2016-08-31 =
+
+* Fix - Resolved conflict with WooCommerce Memberships plugin that would cause ticket prices to be erroneously discounted while editing them (Initially reported by @foxfirecr8 - thank you!)
+* Fix - Improved the logic handling attendee meta data collection to avoid instances where a large number of tickets would cause data loss (Thank you to @FRANK for his help in reporting this)
+
 = [4.2.5] 2016-08-17 =
 
-* Fix - Resolved warnings during WPEC checkouts that prevented proper page redirection after ticket purchases (props to @sewhouston in the support forums for reporting this!) [65111]
-* Tweak - Allow for basic HTML tag support in attendee meta fields (Shout out to @lpoindexter for reporting this on in the forums.) [46454]
+* Fix - Resolved warnings during WPEC checkouts that prevented proper page redirection after ticket purchases (props to @sewhouston in the support forums for reporting this!)
+* Tweak - Allow for basic HTML tag support in attendee meta fields (Shout out to @lpoindexter for reporting this on in the forums.)
 
 = [4.2.4] 2016-08-03 =
 
 * Fix - Avoid Organizer and Venue being unset when updating a WooCommerce managed event ticket in WooCommerce
-* Fix - Limit the potential for race conditions leading to duplicate "human readable" IDs [63489]
+* Fix - Limit the potential for race conditions leading to duplicate "human readable" IDs
 
 = [4.2.3] 2016-07-20 =
 
@@ -163,7 +175,7 @@ Our Premium Plugins:
 * Fix - Ensure continued compatibility with WooCommerce
 * Fix - Ensure continued compatibility with WP E-Commerce
 * Fix - Made sure a SKU will be automatically generated for WooCommerce tickets if not provided.
-* Fix - Resolve issue where "Don't list me on attendees public attendees list" is visible even when "Hide attendees list" is checked in admin [63039]
+* Fix - Resolve issue where "Don't list me on attendees public attendees list" is visible even when "Hide attendees list" is checked in admin
 
 = [4.2.1] 2016-06-22 =
 

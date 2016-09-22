@@ -15,6 +15,7 @@ class TVE_Dash_Product_LicenseManager {
 	const TU_TAG = 'tu';
 	const THO_TAG = 'tho';
 	const TVO_TAG = 'tvo';
+	const TQB_TAG = 'tqb';
 
 	const TAG_FOCUS = 'focusblog';
 	const TAG_LUXE = 'luxe';

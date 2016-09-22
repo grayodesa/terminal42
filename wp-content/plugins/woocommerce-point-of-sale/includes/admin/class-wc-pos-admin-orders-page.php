@@ -29,7 +29,7 @@ class WC_POS_Admin_Orders_Page {
       add_action( 'wp_trash_post', array($this, 'delete_tile'), 10 );
       add_filter( 'manage_edit-shop_order_columns', array( $this, 'add_order_type_column'), 9999);            
       add_action( 'manage_shop_order_posts_custom_column', array( $this, 'display_order_type_column'), 2 );
-      add_action( 'restrict_manage_posts', array( $this, 'restrict_manage_orders' ), 5 );
+      add_action( 'restrict_manage_posts', array( $this, 'restrict_manage_orders' ), 5 );            
     }
     /**
      * Change the Guest in to Walk in Customer
@@ -84,7 +84,7 @@ class WC_POS_Admin_Orders_Page {
             }
     }
 
-     function restrict_manage_orders($value='')
+    public function restrict_manage_orders($value='')
     {
         global $woocommerce, $typenow;
         if ( 'shop_order' != $typenow ) {
@@ -136,6 +136,8 @@ class WC_POS_Admin_Orders_Page {
         }
         
     }
+
+
 
 }
 

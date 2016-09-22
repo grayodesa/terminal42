@@ -2,7 +2,7 @@
 /**
  * Renders the WooCommerce tickets table/form
  *
- * @version 4.2
+ * @version 4.2.7
  *
  * @var bool $global_stock_enabled
  * @var bool $must_login
@@ -11,6 +11,7 @@ global $woocommerce;
 
 $is_there_any_product         = false;
 $is_there_any_product_to_sell = false;
+$unavailability_messaging     = is_callable( array( $this, 'do_not_show_tickets_unavailable_message' ) );
 
 ob_start();
 ?>
@@ -131,17 +132,21 @@ ob_start();
 $content = ob_get_clean();
 if ( $is_there_any_product ) {
 	echo $content;
-} else {
-	$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
 
-	// if there isn't an unavailability message, bail
-	if ( ! $unavailability_message ) {
-		return;
+	// @todo remove safeguard in 4.3 or later
+	if ( $unavailability_messaging ) {
+		// If we have rendered tickets there is generally no need to display a 'tickets unavailable' message
+		// for this post
+		$this->do_not_show_tickets_unavailable_message();
 	}
+} else {
+	// @todo remove safeguard in 4.3 or later
+	if ( $unavailability_messaging ) {
+		$unavailability_message = $this->get_tickets_unavailable_message( $tickets );
 
-	?>
-	<div class="tickets-unavailable">
-		<?php echo esc_html( $unavailability_message ); ?>
-	</div>
-	<?php
+		// if there isn't an unavailability message, bail
+		if ( ! $unavailability_message ) {
+			return;
+		}
+	}
 }

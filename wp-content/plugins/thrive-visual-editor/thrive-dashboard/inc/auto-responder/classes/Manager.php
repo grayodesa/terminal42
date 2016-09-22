@@ -39,6 +39,7 @@ class Thrive_Dash_List_Manager {
 		'mailchimp'        => 'Thrive_Dash_List_Connection_Mailchimp',
 		'mailerlite'       => 'Thrive_Dash_List_Connection_MailerLite',
 		'mailpoet'         => 'Thrive_Dash_List_Connection_MailPoet',
+		'mailrelay'        => 'Thrive_Dash_List_Connection_MailRelay',
 		'mautic'           => 'Thrive_Dash_List_Connection_Mautic',
 		'ontraport'        => 'Thrive_Dash_List_Connection_Ontraport',
 		'recaptcha'        => 'Thrive_Dash_List_Connection_ReCaptcha',
@@ -51,13 +52,15 @@ class Thrive_Dash_List_Manager {
 		'wordpress'        => 'Thrive_Dash_List_Connection_Wordpress',
 
 		/* notification manger - these are now included in the dashboard - services for email notifications */
-		'mandrill'         => 'Thrive_Dash_List_Connection_Mandrill',
-		'postmark'         => 'Thrive_Dash_List_Connection_Postmark',
-		'sparkpost'        => 'Thrive_Dash_List_Connection_SparkPost',
-		'mailgun'          => 'Thrive_Dash_List_Connection_Mailgun',
 		'awsses'           => 'Thrive_Dash_List_Connection_Awsses',
-		'sendinblueemail'  => 'Thrive_Dash_List_Connection_SendinblueEmail',
+		'mailgun'          => 'Thrive_Dash_List_Connection_Mailgun',
+		'mandrill'         => 'Thrive_Dash_List_Connection_Mandrill',
+		'mailrelayemail'   => 'Thrive_Dash_List_Connection_MailRelayEmail',
+		'postmark'         => 'Thrive_Dash_List_Connection_Postmark',
 		'sendgridemail'    => 'Thrive_Dash_List_Connection_SendGridEmail',
+		'sendinblueemail'  => 'Thrive_Dash_List_Connection_SendinblueEmail',
+		'sparkpost'        => 'Thrive_Dash_List_Connection_SparkPost',
+
 	);
 
 	private static $_available = array();

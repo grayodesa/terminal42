@@ -58,6 +58,11 @@ class MC4WP_Field_Formatter {
 			}
 		}
 
+        $value = trim( $value );
+        if( empty( $value ) ) {
+            return $value;
+        }
+
 		// always use slashes as delimiter, so next part works
         $value = str_replace( array( '.', '-' ), '/', $value );
 
@@ -90,6 +95,11 @@ class MC4WP_Field_Formatter {
 				$value = join( '/', $value );
 			}
 		}
+
+        $value = trim( $value );
+        if( empty( $value ) ) {
+            return $value;
+        }
 
 		return (string) date('Y-m-d', strtotime( $value ) );
 	}

@@ -12,7 +12,11 @@
 		<span><?php echo __( 'Email subject line:', TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
 		<span>
 			<strong>
-				<#= item.get('message').get('subject') #>
+				<# if(item.get('message').get('subject').length >= 20){ #>
+					<#= item.get('message').get('subject').substring(0, 17) #>...
+				<# }else{ #>
+					<#= item.get('message').get('subject') #>
+				<# } #>
 			</strong>
 		</span>
 	</div>

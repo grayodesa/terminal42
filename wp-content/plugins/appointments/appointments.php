@@ -3,7 +3,7 @@
 Plugin Name: Appointments+
 Description: Lets you accept appointments from front end and manage or create them from admin side
 Plugin URI: http://premium.wpmudev.org/project/appointments-plus/
-Version: 1.9.1
+Version: 1.9.4
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org/
 Textdomain: appointments
@@ -32,16 +32,12 @@ if ( !class_exists( 'Appointments' ) ) {
 
 class Appointments {
 
-	public $version = "1.9.1";
+	public $version = "1.9.4";
 	public $db_version;
 
 	public $timetables = array();
 
 	public $local_time;
-	public $wh_table;
-	public $exceptions_table;
-	public $app_table;
-	public $workers_table;
 	/** @var bool|Appointments_Google_Calendar  */
 	public $gcal_api = false;
 	public $locale_error;
@@ -49,7 +45,6 @@ class Appointments {
 	public $datetime_format;
 	public $log_file;
 	public $salt;
-	public $plugin_dir;
 	public $worker;
 	public $location;
 	public $service;
@@ -86,7 +81,6 @@ class Appointments {
 			$this->timetables = array();
 		}
 
-		$this->plugin_dir = plugin_dir_path(__FILE__);
 		$this->plugin_url = plugins_url(basename(dirname(__FILE__)));
 
 		// Read all options at once
@@ -137,15 +131,17 @@ class Appointments {
 		}
 
 		// Widgets
-		require_once( $this->plugin_dir . '/includes/widgets.php' );
+		require_once( appointments_plugin_dir() . 'includes/widgets.php' );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
 		// Buddypress
-		require_once($this->plugin_dir . '/includes/class_app_buddypress.php');
-		if (class_exists('App_BuddyPress')) App_BuddyPress::serve();
+		require_once( appointments_plugin_dir() . 'includes/class_app_buddypress.php');
+		if ( class_exists( 'App_BuddyPress' ) ) {
+			App_BuddyPress::serve();
+		}
 
 		// Membership2 Integration
-		$m2_integration = $this->plugin_dir . '/includes/class_app_membership2.php';
+		$m2_integration = appointments_plugin_dir() . 'includes/class_app_membership2.php';
 		if ( file_exists( $m2_integration ) ) {
 			require_once $m2_integration;
 		}
@@ -165,21 +161,13 @@ class Appointments {
 		$this->membership_active = false;
 		add_action( 'plugins_loaded', array( &$this, 'check_membership_plugin') );
 
-		// Marketpress integration
-		$this->marketpress_active = $this->mp = false;
-		$this->mp_posts = array();
-		add_action( 'plugins_loaded', array( &$this, 'check_marketpress_plugin') );
 
 		add_action('init', array($this, 'get_gcal_api'), 10);
 
 		// Database variables
 		global $wpdb;
 		$this->db 					= &$wpdb;
-		$this->wh_table 			= $wpdb->prefix . "app_working_hours";
-		$this->exceptions_table 	= $wpdb->prefix . "app_exceptions";
 		$this->services_table 		= $wpdb->prefix . "app_services";
-		$this->workers_table 		= $wpdb->prefix . "app_workers";
-		$this->app_table 			= $wpdb->prefix . "app_appointments";
 		$this->transaction_table 	= $wpdb->prefix . "app_transactions";
 		$this->cache_table 			= $wpdb->prefix . "app_cache";
 		// DB version
@@ -245,7 +233,7 @@ class Appointments {
 
 	function get_gcal_api() {
 		if ( false === $this->gcal_api && ! defined( 'APP_GCAL_DISABLE' ) ) {
-			require_once $this->plugin_dir . '/includes/class-app-gcal.php';
+			require_once appointments_plugin_dir() . 'includes/class-app-gcal.php';
 			$this->gcal_api = new Appointments_Google_Calendar();
 		}
 		return $this->gcal_api;
@@ -450,24 +438,12 @@ class Appointments {
 
 	/**
 	 * Return a row from exceptions table, i.e. days we are working or having holiday
+	 * @deprecated since 1.9.2
 	 * @return object
 	 */
 	function get_exception( $l, $w, $stat ) {
-		$exception = null;
-		$exceptions = wp_cache_get( 'exceptions_'. $l . '_' . $w );
-		if ( false === $exceptions ) {
-			$exceptions = $this->db->get_results( $this->db->prepare("SELECT * FROM {$this->exceptions_table} WHERE worker=%d AND location=%d", $w, $l) );
-			wp_cache_set( 'exceptions_'. $l . '_' . $w, $exceptions );
-		}
-		if ( $exceptions ) {
-			foreach ( $exceptions as $e ) {
-				if ( $e->status == $stat ) {
-					$exception = $e;
-					break;
-				}
-			}
-		}
-		return $exception;
+		_deprecated_function( __FUNCTION__, '1.9.2', 'appointments_get_worker_exceptions()' );
+		return appointments_get_worker_exceptions( $w, $stat, $l );
 	}
 
 	/**
@@ -722,7 +698,11 @@ class Appointments {
 		else
 			$worker_price = 0;
 
-		$price = $service_obj->price + $worker_price;
+		$price = 0;
+		if ( $service_obj ) {
+			$price = $service_obj->price + $worker_price;
+		}
+
 
 		/**
 		 * Filter allows other plugins or integrations to apply a discount to
@@ -983,11 +963,12 @@ class Appointments {
 
 	/**
 	 * Converts number of seconds to hours:mins acc to the WP time format setting
-	 * @param integer secs Seconds
-	 * @param string $forced_format Forcing the return timestamp format
-	 * @return string
+	 * @param integer $secs Seconds
+	 * @param bool $forced_format
+	 * @param bool $do_i18n
+	 * @return bool|int|string
 	 */
-	function secs2hours( $secs, $forced_format=false ) {
+	function secs2hours( $secs, $forced_format=false, $do_i18n = true ) {
 		$min = (int)($secs / 60);
 		$hours = "00";
 		if ( $min < 60 )
@@ -1001,8 +982,18 @@ class Appointments {
 				$mins = "0" . $mins;
 			$hours_min = $hours . ":" . $mins;
 		}
-		if (!empty($forced_format)) $hours_min = date_i18n($forced_format, strtotime($hours_min . ":00"));
-		else if ($this->time_format) $hours_min = date_i18n($this->time_format, strtotime($hours_min . ":00")); // @TODO: TEST THIS THOROUGHLY!!!!
+		if (!empty($forced_format)) $hours_min = strtotime($hours_min . ":00");
+		else if ($this->time_format) $hours_min = strtotime($hours_min . ":00"); // @TODO: TEST THIS THOROUGHLY!!!!
+
+		if( $do_i18n ) {
+			$hours_min = date_i18n( $this->time_format, $hours_min );
+		}
+		elseif ( $forced_format ) {
+			$hours_min = date( $forced_format, $hours_min );
+		}
+		else {
+			$hours_min = date( $this->time_format, $hours_min );
+		}
 
 		return $hours_min;
 	}
@@ -1013,7 +1004,8 @@ class Appointments {
 	 */
 	function time_base() {
 		$default = array( 10,15,30,60,90,120 );
-		$a = $this->options["additional_min_time"];
+		$options = appointments_get_options();
+		$a = $options["additional_min_time"];
 		// Additional time bases
 		if ( isset( $a ) && $a && is_numeric( $a ) )
 			$default[] = $a;
@@ -1258,7 +1250,10 @@ class Appointments {
 		if ( !$page )
 			return $text;
 
-		$text = $page->post_content;
+		$text = get_the_excerpt( $page_id );
+		if ( empty( $text ) ) {
+			$text = $page->post_content;
+		}
 
 		$text = strip_shortcodes( $text );
 
@@ -2100,7 +2095,7 @@ class Appointments {
 		if ( !$w )
 			$w = $this->worker;
 		$is_working_day = false;
-		$result = $this->get_exception( $this->location, $w, 'open' );
+		$result = appointments_get_worker_exceptions( $w, 'open', $this->location );
 		if ( $result != null  && strpos( $result->days, date( 'Y-m-d', $ccs ) ) !== false )
 			$is_working_day = true;
 
@@ -2117,7 +2112,7 @@ class Appointments {
 		if ( !$w )
 			$w = $this->worker;
 		$is_holiday = false;
-		$result = $this->get_exception( $this->location, $w, 'closed' );
+		$result = appointments_get_worker_exceptions( $w, 'closed', $this->location );
 		if ( $result != null  && strpos( $result->days, date( 'Y-m-d', $ccs ) ) !== false )
 			$is_holiday = true;
 
@@ -2189,12 +2184,15 @@ class Appointments {
 	 * @since 1.2.2
 	 */
 	function is_working( $ccs, $cse, $w ) {
-		if ( $this->is_exceptional_working_day( $ccs, $cse, $w ) )
+		if ( $this->is_exceptional_working_day( $ccs, $cse, $w ) ) {
 			return true;
-		if ( $this->is_holiday( $ccs, $cse, $w ) )
+		}
+		if ( $this->is_holiday( $ccs, $cse, $w ) ) {
 			return false;
-		if ( $this->is_break( $ccs, $cse, $w ) )
+		}
+		if ( $this->is_break( $ccs, $cse, $w ) ) {
 			return false;
+		}
 
 		return true;
 	}
@@ -2405,14 +2403,18 @@ class Appointments {
 			if ( $apps ) {
 				foreach ( $apps as $app ) {
 					//if ( $start >= strtotime( $app->start ) && $end <= strtotime( $app->end ) ) return true;
-					if ($period->contains($app->start, $app->end)) return true;
+					if ( $period->contains( $app->start, $app->end ) ) {
+						return true;
+					}
 				}
 			}
 		}
 
 		// If we're here, no worker is set or (s)he's not busy by default. Let's go for quick filter trip.
 		$is_busy = apply_filters('app-is_busy', false, $period, $capacity);
-		if ($is_busy) return true;
+		if ( $is_busy ) {
+			return true;
+		}
 
 		// If we are here, no preference is selected (provider_id=0) or selected provider is not busy. There are 2 cases here:
 		// 1) There are several providers: Look for reserve apps for the workers giving this service.
@@ -2447,25 +2449,29 @@ class Appointments {
 				// Remove duplicates
 				$apps = $this->array_unique_object_by_ID( $apps );
 			}
-		}
-		else
+		} else {
 			$apps = $this->get_reserve_apps_by_worker( $this->location, 0, $week );
+		}
+
+
 
 		$n = 0;
 		foreach ( $apps as $app ) {
-// @FIX: this will allow for "only one service and only one provider per time slot"
-if ($this->worker && $this->service && ($app->service != $this->service)) {
-	continue;
-	// This is for the following scenario:
-	// 1) any number of providers per service
-	// 2) any number of services
-	// 3) only one service and only one provider per time slot:
-	// 	- selecting one provider+service makes this provider and selected service unavailable in a time slot
-	// 	- other providers are unaffected, other services are available
-}
-// End @FIX
+			// @FIX: this will allow for "only one service and only one provider per time slot"
+			if ($this->worker && $this->service && ($app->service != $this->service)) {
+				continue;
+				// This is for the following scenario:
+				// 1) any number of providers per service
+				// 2) any number of services
+				// 3) only one service and only one provider per time slot:
+				// 	- selecting one provider+service makes this provider and selected service unavailable in a time slot
+				// 	- other providers are unaffected, other services are available
+			}
+			// End @FIX
 			//if ( $start >= strtotime( $app->start ) && $end <= strtotime( $app->end ) ) $n++;
-			if ($period->contains($app->start, $app->end)) $n++;
+			if ( $period->contains( $app->start, $app->end ) ) {
+				$n ++;
+			}
 		}
 
 		if ( $n >= $this->available_workers( $start, $end ) )
@@ -2743,25 +2749,12 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 	/**
 	 * Check if Marketpress plugin is active
 	 * @Since 1.0.1
+	 *
+	 * @deprecated
 	 */
 	function check_marketpress_plugin() {
 		global $mp;
-		if ( class_exists('MarketPress') && is_object( $mp ) ) {
-			$this->marketpress_active = true;
-			// Also check if it is activated
-			if ( isset( $this->options["use_mp"] ) && $this->options["use_mp"] ) {
-				$this->mp = true;
-				if (defined('MP_VERSION') && version_compare(MP_VERSION, '3.0', '>=')) {
-					require_once('includes/class_app_mp_bridge.php');
-					App_MP_Bridge::serve();
-				} else {
-					require_once('includes/class_app_mp_bridge_legacy.php');
-					App_MP_Bridge_Legacy::serve();
-				}
-				return true;
-			}
-		}
-		return false;
+		return class_exists('MarketPress') && is_object( $mp );
 	}
 
 
@@ -3083,7 +3076,6 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 			'reminder_message'			=> $reminder_message,
 			'log_emails'				=> 'yes',
 			'use_cache'					=> 'no',
-			'use_mp'					=> false,
 			'allow_cancel'				=> 'no',
 			'cancel_page'				=> 0
 		));
@@ -3251,11 +3243,17 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		if ( $expireds && $process_expired ) {
 			foreach ( $expireds as $expired ) {
 				if ( 'pending' == $expired->status || 'reserved' == $expired->status ) {
-					if ('reserved' == $expired->status && strtotime($expired->end) > current_time( 'timestamp' ) ) {
-						$new_status = $expired->status; // Don't shift the GCal apps until they actually expire (end time in past)
+					if ( 'reserved' == $expired->status ) {
+						if ( 'reserved' == $expired->status && strtotime($expired->end) > current_time( 'timestamp' ) ) {
+							$new_status = $expired->status; // Don't shift the GCal apps until they actually expire (end time in past)
+						}
+						else {
+							$new_status = 'completed';
+						}
 					}
 					else {
-						$new_status = 'completed';
+						// Pending
+						$new_status = 'removed';
 					}
 				} else if ( 'confirmed' == $expired->status || 'paid' == $expired->status ) {
 					$new_status = 'completed';
@@ -3327,16 +3325,19 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 
 		if (function_exists('glob') && !(defined('APP_FLAG_NO_GLOB') && APP_FLAG_NO_GLOB)) {
 			$filename = false;
-			$all = glob("{$this->plugin_dir}/js/jquery.datepick-*.js");
+			$dir = appointments_plugin_dir() . 'js/';
+			$all = glob("{$dir}jquery.datepick-*.js");
 			$full_match = preg_quote("{$locale}.js", '/');
 			$partial_match = false;
 			if (substr_count($locale, '-')) {
 				list($main_locale, $rest) = explode('-', $locale, 2);
-				if (!empty($main_locale)) $partial_match = preg_quote("{$main_locale}.js", '/');
+				if ( ! empty( $main_locale ) ) {
+					$partial_match = preg_quote( "{$main_locale}.js", '/' );
+				}
 			}
 
 			foreach ($all as $file) {
-				if (preg_match('/' . $full_match . '$/', $file)) {
+				if ( preg_match( '/' . $full_match . '$/', $file ) ) {
 					$filename = $file;
 					break;
 				} else if ($partial_match && preg_match('/' . $partial_match . '$/', $file)) {
@@ -3348,16 +3349,19 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 				: false
 			;
 		} else {
-			$file = '/js/jquery.datepick-'.$locale.'.js';
-			if ( file_exists( $this->plugin_dir . $file ) )
-				return $file;
+			$dir = appointments_plugin_dir() . 'js/';
+			$file = 'jquery.datepick-'.$locale.'.js';
+			if ( file_exists( $dir . $file ) ) {
+				return '/js/' . $file;
+			}
 
 			if ( substr_count( $locale, '-' ) ) {
 				$l = explode( '-', $locale );
 				$locale = $l[0];
-				$file = '/js/jquery.datepick-'.$locale.'.js';
-				if ( file_exists( $this->plugin_dir . $file ) )
-					return $file;
+				$file = 'jquery.datepick-'.$locale.'.js';
+				$dir = appointments_plugin_dir() . 'js/';
+				if ( file_exists( $dir . $file ) )
+					return '/js/' . $file;
 			}
 		}
 
@@ -3367,11 +3371,13 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 	// Read and return local month names from datepick
 	// Since 1.0.6.1
 	function datepick_local_months() {
-		if ( !$file = $this->datepick_localfile() )
+		if ( ! $file = $this->datepick_localfile() ) {
 			return false;
+		}
 
-		if ( !$file_content = @file_get_contents(  $this->plugin_dir . $file ) )
+		if ( ! $file_content = @file_get_contents( appointments_plugin_dir() . $file ) ) {
 			return false;
+		}
 
 		$file_content = str_replace( array("\r","\n","\t"), '', $file_content );
 
@@ -3389,7 +3395,7 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 		if ( !$file = $this->datepick_localfile() )
 			return false;
 
-		if ( !$file_content = @file_get_contents(  $this->plugin_dir . $file ) )
+		if ( !$file_content = @file_get_contents( appointments_plugin_dir() . $file ) )
 			return false;
 
 		$file_content = str_replace( array("\r","\n","\t"), '', $file_content );
@@ -3666,142 +3672,35 @@ if ($this->worker && $this->service && ($app->service != $this->service)) {
 	 *  @param status: Open (working hours) or close (break hours)
 	 */
 	function working_hour_form( $status='open' ) {
-		//$_old_time_format = $this->time_format;
-		//$this->time_format = "H:i";
-		$_required_format = "H:i";
-
-		$this->get_lsw();
-
-		if ( isset( $this->options["admin_min_time"] ) && $this->options["admin_min_time"] )
-			$min_time = $this->options["admin_min_time"];
-		else
-			$min_time = $this->get_min_time();
-
-		$min_secs = 60 * apply_filters( 'app_admin_min_time', $min_time );
-
-		$wb = appointments_get_worker_working_hours( $status, $this->worker, $this->location );
-		if ( ! $wb ) {
-			$whours = array();
+		$path = _appointments_get_view_path( 'form-working-hours' );
+		if ( is_file( $path ) ) {
+			include $path;
 		}
-		else {
-			$whours = $wb->hours;
-		}
+	}
 
+	/**
+	 * @internal
+	 * @param $name
+	 * @param $min_secs
+	 * @param string $selected
+	 *
+	 * @return string
+	 */
+	public function _time_selector( $name, $min_secs, $selected = '' ) {
+		ob_start();
+		?>
+			<select name="<?php echo esc_attr( $name ); ?>" autocomplete="off">
+				<?php for ( $t = 0; $t < 3600 * 24; $t = $t + $min_secs ): ?>
+					<?php
 
-		$form = '';
-		$form .= '<table class="app-working_hours-workhour_form">';
-		if ( 'open' == $status )
-			$form .= '<tr><th>'.__('Day', 'appointments').'</th><th>'.__('Work?', 'appointments' ).'</th><th>'.__('Start', 'appointments').'</th><th>'.__('End', 'appointments').'</th></tr>';
-		else
-			$form .= '<tr><th>'.__('Day', 'appointments').'</th><th>'.__('Give break?','appointments').'</th><th>'.__('Start','appointments').'</th><th>'.__('End','appointments').'</th></tr>';
-		foreach ( $this->weekdays() as $day_label => $day ) {
-			if (!empty($whours[$day]['active']) && is_array($whours[$day]['active'])) {
-				$total_whour_segments = count($whours[$day]['active']) - 1;
-				// We have multiple breaks for today.
-				foreach ($whours[$day]['active'] as $idx => $active) {
-					$form .= '<tr ' . ($idx > 0 ? 'class="app-repeated"' : '') . '><td>';
-					if (0 == $idx) $form .= $day_label;
-					$form .= '</td>';
-					$form .= '<td>';
-					$form .= '<select name="'.$status.'['.$day.'][active][' . $idx . ']" autocomplete="off">';
-					if ( 'yes' == $active )
-						$s = " selected='selected'";
-					else $s = '';
-					$form .= '<option value="no">'.__('No', 'appointments').'</option>';
-					$form .= '<option value="yes"'.$s.'>'.__('Yes', 'appointments').'</option>';
-					$form .= '</select>';
-					$form .= '</td>';
-					$form .= '<td>';
-					$form .= '<select name="'.$status.'['.$day.'][start][' . $idx . ']">';
-					for ( $t=0; $t<3600*24; $t=$t+$min_secs ) {
-						$dhours = esc_attr($this->secs2hours($t, $_required_format)); // Hours in 08:30 format - escape, because they're values now.
+						$dhours = $this->secs2hours( $t, 'H:i', false ); // Hours in 08:30 format - escape, because they're values now.
 						$shours = $this->secs2hours($t);
-						if ( isset($whours[$day]['start'][$idx]) && strtotime($dhours) == strtotime($whours[$day]['start'][$idx]) )
-							$s = "selected='selected'";
-						else $s = '';
-
-						$form .= "<option {$s} value='{$dhours}'>";
-						$form .= $shours;
-						$form .= '</option>';
-					}
-					$form .= '</select>';
-					$form .= '</td>';
-
-					$form .= '<td>';
-					$form .= '<select name="'.$status.'['.$day.'][end][' . $idx . ']" autocomplete="off">';
-					for ( $t=$min_secs; $t<=3600*24; $t=$t+$min_secs ) {
-						$dhours = esc_attr($this->secs2hours($t, $_required_format)); // Hours in 08:30 format - escape, because they're values now.
-						$shours = $this->secs2hours($t);
-						if ( isset($whours[$day]['end'][$idx]) && strtotime($dhours) == strtotime($whours[$day]['end'][$idx]) )
-							$s = "selected='selected'";
-						else $s = '';
-
-						$form .= "<option {$s} value='{$dhours}'>";
-						$form .= $shours;
-						$form .= '</option>';
-					}
-					$form .= '</select>';
-					if ('closed' == $status && $idx == 0 && 'yes' == $active) $form .= '&nbsp;<a href="#add_break" class="app-add_break" title="' . esc_attr(__('Add break', 'appointments')) . '"><span>' . __('Add break', 'appointments') . '</span></a>';
-					$form .= '</td>';
-
-					$form .= '</tr>';
-				}
-			} else {
-				// Oh, it's just one break.
-				$form .= '<tr><td>';
-				$form .= $day_label;
-				$form .= '</td>';
-				$form .= '<td>';
-				$form .= '<select name="'.$status.'['.$day.'][active]" autocomplete="off">';
-				if ( isset($whours[$day]['active']) && 'yes' == $whours[$day]['active'] )
-					$s = " selected='selected'";
-				else $s = '';
-				$form .= '<option value="no">'.__('No', 'appointments').'</option>';
-				$form .= '<option value="yes"'.$s.'>'.__('Yes', 'appointments').'</option>';
-				$form .= '</select>';
-				$form .= '</td>';
-				$form .= '<td>';
-				$form .= '<select name="'.$status.'['.$day.'][start]" autocomplete="off">';
-				for ( $t=0; $t<3600*24; $t=$t+$min_secs ) {
-					$dhours = esc_attr($this->secs2hours($t, $_required_format)); // Hours in 08:30 format - escape, because they're values now.
-					$shours = $this->secs2hours($t);
-					if ( isset($whours[$day]['start']) && strtotime($dhours) == strtotime($whours[$day]['start']) )
-						$s = "selected='selected'";
-					else $s = '';
-
-					$form .= "<option {$s} value='{$dhours}'>";
-					$form .= $shours;
-					$form .= '</option>';
-				}
-				$form .= '</select>';
-				$form .= '</td>';
-
-				$form .= '<td>';
-				$form .= '<select name="'.$status.'['.$day.'][end]" autocomplete="off">';
-				for ( $t=$min_secs; $t<=3600*24; $t=$t+$min_secs ) {
-					$dhours = esc_attr($this->secs2hours($t, $_required_format)); // Hours in 08:30 format - escape, because they're values now.
-					$shours = $this->secs2hours($t);
-					if ( isset($whours[$day]['end']) && strtotime($dhours) == strtotime($whours[$day]['end']) )
-						$s = " selected='selected'";
-					else $s = '';
-
-					$form .= "<option {$s} value='{$dhours}'>";
-					$form .= $shours;
-					$form .= '</option>';
-				}
-				$form .= '</select>';
-				if ('closed' == $status && isset($whours[$day]['active']) && 'yes' == $whours[$day]['active']) $form .= '&nbsp;<a href="#add_break" class="app-add_break" title="' . esc_attr(__('Add break', 'appointments')) . '"><span>' . __('Add break', 'appointments') . '</span></a>';
-				$form .= '</td>';
-
-				$form .= '</tr>';
-			}
-		}
-
-		$form .= '</table>';
-
-		//$this->time_format = $_old_time_format;
-
-		return $form;
+					?>
+					<option <?php selected( $selected, strtotime( $dhours ) ); ?> value="<?php echo esc_attr( $dhours ); ?>"><?php echo $shours; ?></option>
+				<?php endfor; ?>
+			</select>
+		<?php
+		return ob_get_clean();
 	}
 
 
@@ -4033,7 +3932,7 @@ $appointments->addons_loader->load_active_addons();
 
 
 if (is_admin()) {
-	require_once APP_PLUGIN_DIR . '/includes/support/class_app_tutorial.php';
+	require_once APP_PLUGIN_DIR . '/includes/class-app-tutorial.php';
 	App_Tutorial::serve();
 
 	require_once APP_PLUGIN_DIR . '/includes/support/class_app_admin_help.php';
@@ -4086,7 +3985,6 @@ function appointments_plugin_url() {
 }
 
 function appointments_plugin_dir() {
-	global $appointments;
 	return trailingslashit( plugin_dir_path( __FILE__ ) );
 }
 

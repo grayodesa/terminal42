@@ -74,7 +74,7 @@ if ( ! class_exists( 'WpssoProAdminGeneral' ) ) {
 			'<td>'.$form->get_input( 'og_def_vid_url', 'wide' ).'</td>';
 
 			$table_rows['og_def_vid_on_index'] = '<tr class="hide_in_basic">'.
-			$form->get_th_html( _x( 'Use Default Video on Indexes',
+			$form->get_th_html( _x( 'Use Default Video on Archive',
 				'option label', 'wpsso' ), null, 'og_def_vid_on_index' ).
 			'<td>'.$form->get_checkbox( 'og_def_vid_on_index' ).'</td>';
 

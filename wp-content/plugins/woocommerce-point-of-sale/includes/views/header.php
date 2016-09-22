@@ -36,26 +36,30 @@ register_admin_color_schemes();
 <head>
 	<meta http-equiv="Content-Type" name="viewport" content="<?php bloginfo('html_type'); ?>; charset=<?php echo get_option('blog_charset'); ?>, width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 	<title><?php echo $title; ?></title>
-<?php
-remove_all_actions('admin_enqueue_scripts') ;
-/********************************************/
-wp_enqueue_style( 'colors' );
-wp_enqueue_style( 'ie' );
-/********************************************/
+	<?php
+	remove_all_actions('admin_enqueue_scripts') ;
+	/********************************************/
+	wp_enqueue_style( 'wp-auth-check' );
+	wp_enqueue_style( 'colors' );
+	wp_enqueue_style( 'ie' );
+	/********************************************/
+	wp_enqueue_script( 'heartbeat' );
 
-$admin_body_class = preg_replace('/[^a-z0-9_-]+/i', '-', $hook_suffix);
-?>
-<script type="text/javascript">
-    var pos_register_data = <?php echo json_encode($data) ?>;
-    var polyfilter_scriptpath = '<?php echo str_replace('\\', '/', WC_POS()->plugin_assets_path()); ?>/js/register/modal/';
+	$admin_body_class = preg_replace('/[^a-z0-9_-]+/i', '-', $hook_suffix);
 	
-	addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
-	var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>',
-	adminpage = '<?php echo $admin_body_class; ?>',
-	thousandsSeparator = '<?php echo addslashes( $wp_locale->number_format['thousands_sep'] ); ?>',
-	decimalPoint = '<?php echo addslashes( $wp_locale->number_format['decimal_point'] ); ?>',
-	isRtl = <?php echo (int) is_rtl(); ?>;
-</script>
+	?>
+	<script type="text/javascript">
+	    var current_cashier_id    = <?php echo json_encode(get_current_user_id()) ?>;
+	    var pos_register_data     = <?php echo json_encode($data) ?>;
+	    var polyfilter_scriptpath = '<?php echo str_replace('\\', '/', WC_POS()->plugin_assets_path()); ?>/js/register/modal/';
+		
+		addLoadEvent = function(func){if(typeof jQuery!="undefined")jQuery(document).ready(func);else if(typeof wpOnload!='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
+		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>',
+		adminpage = '<?php echo $admin_body_class; ?>',
+		thousandsSeparator = '<?php echo addslashes( $wp_locale->number_format['thousands_sep'] ); ?>',
+		decimalPoint = '<?php echo addslashes( $wp_locale->number_format['decimal_point'] ); ?>',
+		isRtl = <?php echo (int) is_rtl(); ?>;
+	</script>
 <?php
 
 do_action( 'pos_admin_enqueue_scripts');

@@ -150,6 +150,9 @@
 .select2-search {
   margin-bottom: 1px; }
 
+.tvd-input-field select#tvu_load_template.tvd-invalid + span + label:after {
+  top: 25px; }
+
 .tvd-input-field select.tvd-invalid + span + label:after {
   content: attr(data-error);
   color: #ef3131;

@@ -139,7 +139,7 @@ tribe_event_tickets_plus.meta.event = tribe_event_tickets_plus.meta.event || {};
 	/**
 	 * Event to handle the submission action
 	 *
-	 * Validates required meta fields and stores meta data into cookies
+	 * Validates required meta fields and stores meta data
 	 */
 	my.event.handle_submission = function( e ) {
 		if ( ! my.validate_submission() ) {
@@ -153,56 +153,6 @@ tribe_event_tickets_plus.meta.event = tribe_event_tickets_plus.meta.event || {};
 			}, 300 );
 			return;
 		}
-
-		var $meta_groups = $( '.tribe-event-tickets-plus-meta' );
-
-		$meta_groups.each( function() {
-			var $group = $( this );
-			var ticket_id = $group.data( 'ticket-id' );
-			var $attendees = $group.find( '.tribe-event-tickets-plus-meta-attendee' );
-
-			if ( ! $attendees.length ) {
-				return;
-			}
-
-			var data = $attendees.find( 'input, select, textarea' ).serialize();
-
-			var key = 'tribe-event-tickets-plus-meta-' + ticket_id;
-
-			var current = $.cookie( key );
-
-			current = current ? $.deparam( current ) : null;
-
-			if ( current && current.hasOwnProperty( 'tribe-tickets-meta' ) ) {
-				data = $.deparam( data );
-
-				if (
-					current.hasOwnProperty( 'tribe-tickets-meta' )
-					&& data.hasOwnProperty( 'tribe-tickets-meta' )
-					&& 'undefined' !== typeof current['tribe-tickets-meta'][ ticket_id ]
-					&& 'undefined' !== typeof data['tribe-tickets-meta'][ ticket_id ]
-				) {
-					data['tribe-tickets-meta'][ ticket_id ].forEach( function( el, index, collection ) {
-						current['tribe-tickets-meta'][ ticket_id ].push( el );
-					} );
-
-					data = $.param( current );
-				}
-			} else {
-				$.removeCookie( key );
-			}
-
-			// $.param does some weird stuff when converting a non-0 indexed array
-			data = data.replace( /(tribe-tickets-meta\%5B\%5D\=\&)+/, '' );
-
-			// $.param does some weird stuff when converting a non-0 indexed array
-			data = data.replace( new RegExp( '(tribe-tickets-meta\%5B' + ticket_id + '\%5D\%5B\%5D\=\&)+' ), '' );
-
-			$.cookie( key, data, {
-				expires: 1,
-				path: '/'
-			} );
-		} );
 	};
 
 	$( function() {

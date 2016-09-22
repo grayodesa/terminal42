@@ -74,15 +74,24 @@ class wordfenceScanner {
 		if(! (is_array($sigData) && isset($sigData['rules'])) ){
 			throw new Exception("Wordfence could not get the attack signature patterns from the scanning server.");
 		}
+		
+		try { wfWAF::getInstance()->setMalwareSignatures(array()); } catch (Exception $e) { /* Ignore */ }
 
 		if (is_array($sigData['rules'])) {
+			$wafPatterns = array();
 			foreach ($sigData['rules'] as $key => $signatureRow) {
 				list(, , $pattern) = $signatureRow;
+				$logOnly = (isset($signatureRow[5]) && !empty($signatureRow[5])) ? $signatureRow[5] : false;
 				if (@preg_match('/' . $pattern . '/i', null) === false) {
 					wordfence::status(1, 'error', "A regex Wordfence received from it's servers is invalid. The pattern is: " . esc_html($pattern));
 					unset($sigData['rules'][$key]);
 				}
+				else if (!$logOnly) {
+					$wafPatterns[] = $pattern;
+				}
 			}
+			
+			try { wfWAF::getInstance()->setMalwareSignatures($wafPatterns); } catch (Exception $e) { /* Ignore */ }
 		}
 
 		$extra = wfConfig::get('scan_include_extra');

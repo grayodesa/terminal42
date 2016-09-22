@@ -170,7 +170,10 @@ class WC_Pos_API {
 		$parent_image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_data['id'] ), 'shop_thumbnail' );
 		$product_data['thumbnail_src'] = $parent_image ? current($parent_image) : wc_placeholder_img_src();	
 		
-		$product_data['post_meta'] = get_post_meta($product->id);
+		$scan_field = get_option('woocommerce_pos_register_scan_field');
+		if( $scan_field ){
+			$product_data['post_meta'][$scan_field][] = get_post_meta($product->id, $scan_field, true);
+		}
 
 		$product_data['points_earned'] = '';
 		$product_data['points_max_discount'] = '';
@@ -184,7 +187,9 @@ class WC_Pos_API {
 				$image = wp_get_attachment_image_src( get_post_thumbnail_id( $variation['id'] ), 'shop_thumbnail' );
 				$product_data['variations'][$key]['thumbnail_src'] = $image ? current($image) : $product_data['thumbnail_src'];
 
-				$product_data['variations'][$key]['post_meta'] = get_post_meta($variation['id']);
+				if( $scan_field ){
+					$product_data['variations'][$key]['post_meta'][$scan_field][] = get_post_meta($variation['id'], $scan_field, true);
+				}
 				
 				$product_data['variations'][$key]['points_earned'] = '';
 				if( isset( $GLOBALS['wc_points_rewards'] ) ){
@@ -195,10 +200,6 @@ class WC_Pos_API {
 			}
 		}
 
-
-		/*foreach($removeKeys as $key) {
-			unset($product_data[$key]);
-		}*/
 		return $product_data;
 	}
 	private static function get_product_max_discount( $product ) {
@@ -340,7 +341,6 @@ class WC_Pos_API {
 				'number'    => 1,
 				'status'    => $status
 			) );
-			var_dump($latest_notes);
 
 			$latest_note = current( $latest_notes );
 

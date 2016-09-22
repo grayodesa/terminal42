@@ -5,10 +5,16 @@ class Tribe__Tickets_Plus__Meta {
 	const ENABLE_META_KEY = '_tribe_tickets_meta_enabled';
 	const META_KEY = '_tribe_tickets_meta';
 
+
 	private $path;
 	private $meta_fieldset;
 	private $rsvp_meta;
 	private $render;
+
+	/**
+	 * @var Tribe__Tickets_Plus__Meta__Storage
+	 */
+	protected $storage;
 
 	/**
 	 * @var Tribe__Tickets_Plus__Meta__Export
@@ -32,7 +38,14 @@ class Tribe__Tickets_Plus__Meta {
 		return $instance;
 	}
 
-	public function __construct( $path = null ) {
+	/**
+	 * Tribe__Tickets_Plus__Meta constructor.
+	 *
+	 * @param string                                   $path
+	 * @param Tribe__Tickets_Plus__Meta__Storage|null $storage An instance of the meta storage handler.
+	 */
+	public function __construct( $path = null, Tribe__Tickets_Plus__Meta__Storage $storage = null ) {
+		$this->storage = $storage ? $storage : new Tribe__Tickets_Plus__Meta__Storage();
 
 		if ( ! is_null( $path ) ) {
 			$this->path = trailingslashit( $path );
@@ -420,23 +433,7 @@ class Tribe__Tickets_Plus__Meta {
 	 * @return array
 	 */
 	public function get_meta_cookie_data( $product_id ) {
-		$key = "tribe-event-tickets-plus-meta-{$product_id}";
-
-		if ( ! isset( $_COOKIE[ $key ] ) ) {
-			return array();
-		}
-
-		$data = $_COOKIE[ $key ];
-		$data = urldecode( $data );
-		parse_str( $data, $data );
-
-		if ( ! isset( $data['tribe-tickets-meta'] ) ) {
-			return array();
-		}
-
-		$data = $data['tribe-tickets-meta'];
-
-		return $data;
+		return $this->storage->get_meta_data_for($product_id);
 	}
 
 	/**
@@ -487,13 +484,7 @@ class Tribe__Tickets_Plus__Meta {
 	 * @param int $product_id Commerce product ID
 	 */
 	public function clear_meta_cookie_data( $product_id ) {
-		$key = "tribe-event-tickets-plus-meta-{$product_id}";
-
-		if ( ! isset( $_COOKIE[ $key ] ) ) {
-			return;
-		}
-
-		setcookie( $key, '', time() - 3600, '/' );
+		$this->storage->clear_meta_data_for($product_id);
 	}
 
 	/**

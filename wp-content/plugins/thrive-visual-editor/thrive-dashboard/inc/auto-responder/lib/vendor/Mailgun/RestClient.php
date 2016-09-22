@@ -39,35 +39,12 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 */
 	public function post( $endpointUrl, $postData = array(), $files = array() ) {
 
-		$boundary = base_convert( uniqid( 'boundary', true ), 10, 36 );
-
-		$payload = null;
-		// Iterate through pre-built params and build payload:
-		foreach ( $postData as $key => $value ) {
-			if ( is_array( $value ) ) {
-				$parent_key = $key;
-				foreach ( $value as $key => $value ) {
-					$payload .= '--' . $boundary;
-					$payload .= "\r\n";
-					$payload .= 'Content-Disposition: form-data; name="' . $parent_key . '[' . $key . ']"' . "\r\n\r\n";
-					$payload .= $value;
-					$payload .= "\r\n";
-				}
-			} else {
-				$payload .= '--' . $boundary;
-				$payload .= "\r\n";
-				$payload .= 'Content-Disposition: form-data; name="' . $key . '"' . "\r\n\r\n";
-				$payload .= $value;
-				$payload .= "\r\n";
-			}
-		}
-
 		$response = tve_dash_api_remote_post( $this->url . $endpointUrl, array(
 			'body'      => $postData,
 			'headers'   => array(
 				'User-Agent'    => Thrive_Dash_Api_Mailgun_Api::SDK_USER_AGENT . '/' . Thrive_Dash_Api_Mailgun_Api::SDK_VERSION,
 				'Authorization' => 'Basic ' . base64_encode( Thrive_Dash_Api_Mailgun_Api::API_USER . ':' . $this->apiKey ),
-				'content-type'  => 'multipart/form-data; boundary=' . $boundary
+				'content-type'  => 'application/x-www-form-urlencoded'
 			),
 			'sslverify' => false,
 		) );

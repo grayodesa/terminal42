@@ -2,7 +2,7 @@
 Contributors: ashokrane, pinal.shah, bhavik.kiri, chetnapatel
 Tags: abandon cart, shopping cart abandonment, sales recovery
 Requires at least: 1.3
-Tested up to: 4.5.3
+Tested up to: 4.6.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,7 +44,7 @@ Abandoned Cart PRO plugin enables to do the following additional things:
 
 **Pro Version:**
 
-**[Abandoned Cart Pro for WooCommerce 3.4](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "Abandoned Cart Pro for WooCommerce")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
+**[Abandoned Cart Pro for WooCommerce 3.8](http://www.tychesoftwares.com/store/premium-plugins/woocommerce-abandoned-cart-pro "Abandoned Cart Pro for WooCommerce")** - The PRO version allows you to track products in abandoned carts, create unlimited email templates, track coupons, keep a track of sent emails & much more.
 
 
 **Email Sending Setup:**
@@ -90,6 +90,18 @@ The documentation can be found **[here](https://www.tychesoftwares.com/woocommer
 5. Product Report Tab.
 
 == Changelog ==
+
+= 3.1 =
+
+* New Feature - The email sending logic has been changed. Due to some reason, the abandoned cart remainder emails are not sent to the customers at the time they are intended to be sent, and if after some time, the emails start sending, then multiple email templates whose interval has been reached were all sent together. Now, the plugin will also consider the last abandoned cart reminder email sent time and will keep a time gap between the last email template that was sent & the current email template's time, thereby ensuring emails are not sent together.
+
+* Bug Fixed - The "Alter" table queries have been changed in the plugin. Instead of using get_results(), it now uses the query().
+
+* Bug Fixed - We have used the encryption libraries mcrypt_encrypt, MCRYPT_MODE_CBC, MCRYPT_RIJNDAEL_256 to generate the cart links sent in the abandoned cart reminder emails. Due to this on some servers where these libraries were not enabled, the abandoned cart email notification were not sent to the recipients. This has been fixed. 
+
+* Bug Fixed - Earlier the "InnoDB" table engine type was hardcoded in plugin queries. As a result, the plugins tables were not created where the engine type was other than "InnoDB". This has been fixed.
+
+* Bug Fixed - Some warnings were displayed in the Debug log file. This has been fixed.
 
 = 3.0 =
 

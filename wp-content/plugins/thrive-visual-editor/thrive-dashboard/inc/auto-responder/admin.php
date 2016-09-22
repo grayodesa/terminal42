@@ -188,7 +188,7 @@ function tve_dash_api_api_handle_redirect() {
 	$result = $connection->getAuthorizeUrl();
 
 	$response['success'] = ( filter_var( $result, FILTER_VALIDATE_URL ) ) === false ? false : true;
-	$response['message'] = $result;
+	$response['message'] = $response['success'] == false ? 'An unknown error has occurred' : $result;
 
 	if ( $doing_ajax ) {
 		exit( json_encode( $response ) );

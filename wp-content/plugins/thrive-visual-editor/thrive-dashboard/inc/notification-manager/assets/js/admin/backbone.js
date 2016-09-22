@@ -1148,11 +1148,11 @@ TD_NM.views = TD_NM.views || {};
 			events: {
 				'click .tvd-nm-delete-yes': 'yes'
 			},
-			yes: function () {
+			yes: function ( event ) {
+				var $btn = $( event.currentTarget ), self = this;
+				this.btnLoading( $btn );
 				TVE_Dash.showLoader();
-				var self = this;
 				this.model.destroy( {
-					wait: true, // wait for server response before removing the model from collection
 					success: function () {
 						TVE_Dash.success( TD_NM.t.success_delete );
 					},
@@ -1287,7 +1287,8 @@ TD_NM.views = TD_NM.views || {};
 					} );
 
 					self.gotoStep( 0 );
-
+					/*Remove the no connection warning on button*/
+					$( '#td-nm-email-services i' ).removeClass( 'tvd-nm-warning-sign' );
 					TVE_Dash.success( TD_NM.t.connection_established );
 				} ).error( function ( response ) {
 					TVE_Dash.err( response.responseJSON.error );
@@ -1343,7 +1344,6 @@ TD_NM.views = TD_NM.views || {};
 				if ( $( '.tvd-nm-delete-yes' ).is( ':visible' ) ) {
 					$( '.tvd-nm-delete-yes' ).focus().click();
 				}
-				return false;
 			}
 		} );
 
@@ -2080,6 +2080,9 @@ TD_NM.views = TD_NM.views || {};
 			events: {
 				'click .tvd-card': 'add_new_action'
 			},
+			add_custom_text: function ( text ) {
+				this.$el.find( '.tvd-nm-new-button-header-text' ).html( text );
+			},
 			add_new_action: function () {
 
 				this.modal( TD_NM.views.ModalAddAction, {
@@ -2162,6 +2165,7 @@ TD_NM.views = TD_NM.views || {};
 				} );
 
 				this.$( '#tvd-nm-actions-wrapper' ).append( new_button.render().$el );
+				new_button.add_custom_text( TD_NM.t.add_new_action );
 			},
 			render_notification_action_buttons: function () {
 				var action_buttons = new TD_NM.views.NotificationActionButtons( {
@@ -2350,7 +2354,7 @@ TD_NM.views = TD_NM.views || {};
 		TD_NM.views.SummaryItemCustomScript = TD_NM.views.SummaryItem.extend( {
 			specific_class: '',
 			className: function () {
-				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action ' + this.specific_class;
+				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action td-nm-equal-width-action ' + this.specific_class;
 			},
 			template: TVE_Dash.tpl( 'summaries/items/actions/custom-script' ),
 			render: function () {
@@ -2372,7 +2376,7 @@ TD_NM.views = TD_NM.views || {};
 		TD_NM.views.SummaryItemSendEmailNotification = TD_NM.views.SummaryItem.extend( {
 			specific_class: '',
 			className: function () {
-				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action ' + this.specific_class;
+				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action td-nm-equal-width-action ' + this.specific_class;
 			},
 			template: TVE_Dash.tpl( 'summaries/items/actions/send-email-notification' ),
 			render: function () {
@@ -2418,7 +2422,7 @@ TD_NM.views = TD_NM.views || {};
 		TD_NM.views.SummaryItemWordpressNotification = TD_NM.views.SummaryItem.extend( {
 			specific_class: 'tvd-nm-action-wp',
 			className: function () {
-				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action ' + this.specific_class;
+				return 'tvd-card tvd-white tvd-small tvd-valign-wrapper tvd-nm-summary-item-action tvd-nm-action td-nm-equal-width-action ' + this.specific_class;
 			},
 			template: TVE_Dash.tpl( 'summaries/items/actions/wordpress-notification' ),
 			render: function () {

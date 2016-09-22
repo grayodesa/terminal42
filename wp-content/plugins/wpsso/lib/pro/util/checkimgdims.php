@@ -63,14 +63,14 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 					$this->p->debug->log( 'exiting early: image ID '.$pid.' rejected - '.$size_text.' too small for the '.$size_name.
 						' ('.$size_info['width'].'x'.$size_info['height'].( $is_cropped ? ' cropped' : '' ).') image size' );
 
-				if ( is_admin() ) {
+				if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 					$media_lib = __( 'Media Library', 'wpsso' );
 					$size_label = $this->p->util->get_image_size_label( $size_name );
 					$dismiss_id = 'wp_'.$pid.'_'.$img_width.'x'.$img_height.'_'.$size_name.'_'.$size_info['width'].'x'.$size_info['height'].'_rejected';
 					$required_text = '<b>'.$size_label.'</b> ('.$size_info['width'].'x'.$size_info['height'].
 						( $is_cropped ? ' <i>'.__( 'cropped', 'wpsso' ).'</i>' : '' ).')';
 					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', array( 'size_label' => $size_label ) );
-					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $size_text, $required_text ).' '.$reject_notice, false, true, $dismiss_id, true );
+					$this->p->notice->warn( sprintf( __( '%1$s image ID %2$s ignored &mdash; the resulting image of %3$s is too small for the required %4$s image dimensions.', 'wpsso' ), $media_lib, $pid, $size_text, $required_text ).' '.$reject_notice, true, $dismiss_id, true );
 				}
 
 				return false;	// exit early
@@ -112,12 +112,12 @@ if ( ! class_exists( 'WpssoProUtilCheckImgDims' ) ) {
 			if ( $this->p->debug->enabled )
 				$this->p->debug->log( 'content image rejected: width / height missing or too small for '.$size_name );
 
-			if ( is_admin() ) {
+			if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 				$size_label = $this->p->util->get_image_size_label( $size_name );
 				$dismiss_id = 'content_'.$og_image_url.'_'.$size_name.'_rejected';
 				$required_text = '<b>'.$size_label.'</b> ('.$size_name.')';
 				$data_wp_pid_msg = $content_passed ? '' : ' '.sprintf( __( '%1$s includes an additional \'data-wp-pid\' attribute for Media Library images &mdash; if this image was selected from the Media Library before %1$s was activated, try removing and adding the image back to your content.', 'wpsso' ), $this->p->cf['plugin'][$lca]['short'] );
-				$this->p->notice->warn( sprintf( __( 'Image %1$s in content ignored &mdash; the image width / height is too small for the required %2$s image dimensions.', 'wpsso' ), $og_image_url, $required_text ).$data_wp_pid_msg, false, true, $dismiss_id, true );
+				$this->p->notice->warn( sprintf( __( 'Image %1$s in content ignored &mdash; the image width / height is too small for the required %2$s image dimensions.', 'wpsso' ), $og_image_url, $required_text ).$data_wp_pid_msg, true, $dismiss_id, true );
 			}
 
 			return false;

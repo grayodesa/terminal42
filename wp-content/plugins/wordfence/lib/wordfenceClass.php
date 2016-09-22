@@ -79,8 +79,6 @@ class wordfence {
 		// Remove the admin user list so it can be regenerated if Wordfence is reactivated.
 		wfConfig::set_ser('adminUserList', false);
 
-		wfConfig::clearDiskCache();
-
 		if (!WFWAF_SUBDIRECTORY_INSTALL) {
 			wfWAFConfig::set('wafDisabled', true);
 		}
@@ -88,6 +86,7 @@ class wordfence {
 		if(wfConfig::get('deleteTablesOnDeact')){
 			$schema = new wfSchema();
 			$schema->dropAll();
+			wfConfig::updateTableExists();
 			foreach(array('wordfence_version', 'wordfenceActivated') as $opt){
 				delete_option($opt);
 			}
@@ -171,44 +170,49 @@ class wordfence {
 	}
 	public static function dailyCron(){
 		$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-		$keyData = $api->call('ping_api_key');
-		if(isset($keyData['_isPaidKey']) && $keyData['_isPaidKey']){
-			$keyExpDays = $keyData['_keyExpDays'];
-			$keyIsExpired = $keyData['_expired'];
-			if (!empty($keyData['_autoRenew'])) {
-				if ($keyExpDays > 12) {
-					wfConfig::set('keyAutoRenew10Sent', '');
-				} else if ($keyExpDays <= 12 && $keyExpDays > 0 && !wfConfig::get('keyAutoRenew10Sent')) {
-					wfConfig::set('keyAutoRenew10Sent', 1);
-					$email = "Your Premium Wordfence API Key is set to auto-renew in 10 days.";
-					self::alert($email, "$email To update your API key settings please visit http://www.wordfence.com/zz9/dashboard", false);
-				}
-			} else {
-				if($keyExpDays > 15){
-					wfConfig::set('keyExp15Sent', '');
-					wfConfig::set('keyExp7Sent', '');
-					wfConfig::set('keyExp2Sent', '');
-					wfConfig::set('keyExp1Sent', '');
-					wfConfig::set('keyExpFinalSent', '');
-				} else if($keyExpDays <= 15 && $keyExpDays > 0){
-					if($keyExpDays <= 15 && $keyExpDays >= 11 && (! wfConfig::get('keyExp15Sent'))){
-						wfConfig::set('keyExp15Sent', 1);
-						self::keyAlert("Your Premium Wordfence API Key expires in less than 2 weeks.");
-					} else if($keyExpDays <= 7 && $keyExpDays >= 4 && (! wfConfig::get('keyExp7Sent'))){
-						wfConfig::set('keyExp7Sent', 1);
-						self::keyAlert("Your Premium Wordfence API Key expires in less than a week.");
-					} else if($keyExpDays == 2 && (! wfConfig::get('keyExp2Sent'))){
-						wfConfig::set('keyExp2Sent', 1);
-						self::keyAlert("Your Premium Wordfence API Key expires in 2 days.");
-					} else if($keyExpDays == 1 && (! wfConfig::get('keyExp1Sent'))){
-						wfConfig::set('keyExp1Sent', 1);
-						self::keyAlert("Your Premium Wordfence API Key expires in 1 day.");
+		try {
+			$keyData = $api->call('ping_api_key');
+			if(isset($keyData['_isPaidKey']) && $keyData['_isPaidKey']){
+				$keyExpDays = $keyData['_keyExpDays'];
+				$keyIsExpired = $keyData['_expired'];
+				if (!empty($keyData['_autoRenew'])) {
+					if ($keyExpDays > 12) {
+						wfConfig::set('keyAutoRenew10Sent', '');
+					} else if ($keyExpDays <= 12 && $keyExpDays > 0 && !wfConfig::get('keyAutoRenew10Sent')) {
+						wfConfig::set('keyAutoRenew10Sent', 1);
+						$email = "Your Premium Wordfence API Key is set to auto-renew in 10 days.";
+						self::alert($email, "$email To update your API key settings please visit http://www.wordfence.com/zz9/dashboard", false);
 					}
-				} else if($keyIsExpired && (! wfConfig::get('keyExpFinalSent')) ){
-					wfConfig::set('keyExpFinalSent', 1);
-					self::keyAlert("Your Wordfence Premium API Key has Expired!");
+				} else {
+					if($keyExpDays > 15){
+						wfConfig::set('keyExp15Sent', '');
+						wfConfig::set('keyExp7Sent', '');
+						wfConfig::set('keyExp2Sent', '');
+						wfConfig::set('keyExp1Sent', '');
+						wfConfig::set('keyExpFinalSent', '');
+					} else if($keyExpDays <= 15 && $keyExpDays > 0){
+						if($keyExpDays <= 15 && $keyExpDays >= 11 && (! wfConfig::get('keyExp15Sent'))){
+							wfConfig::set('keyExp15Sent', 1);
+							self::keyAlert("Your Premium Wordfence API Key expires in less than 2 weeks.");
+						} else if($keyExpDays <= 7 && $keyExpDays >= 4 && (! wfConfig::get('keyExp7Sent'))){
+							wfConfig::set('keyExp7Sent', 1);
+							self::keyAlert("Your Premium Wordfence API Key expires in less than a week.");
+						} else if($keyExpDays == 2 && (! wfConfig::get('keyExp2Sent'))){
+							wfConfig::set('keyExp2Sent', 1);
+							self::keyAlert("Your Premium Wordfence API Key expires in 2 days.");
+						} else if($keyExpDays == 1 && (! wfConfig::get('keyExp1Sent'))){
+							wfConfig::set('keyExp1Sent', 1);
+							self::keyAlert("Your Premium Wordfence API Key expires in 1 day.");
+						}
+					} else if($keyIsExpired && (! wfConfig::get('keyExpFinalSent')) ){
+						wfConfig::set('keyExpFinalSent', 1);
+						self::keyAlert("Your Wordfence Premium API Key has Expired!");
+					}
 				}
 			}
+		}
+		catch(Exception $e){
+			wordfence::status(4, 'error', "Could not verify Wordfence API Key: " . $e->getMessage());
 		}
 
 		$wfdb = new wfDB();
@@ -290,6 +294,24 @@ class wordfence {
 
 		$schema = new wfSchema();
 		$schema->createAll(); //if not exists
+		
+		/** @var wpdb $wpdb */
+		global $wpdb;
+		
+		//6.1.15
+		$configTable = "{$wpdb->base_prefix}wfConfig";
+		$hasAutoload = $wpdb->get_col($wpdb->prepare(<<<SQL
+SELECT * FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA=DATABASE()
+AND COLUMN_NAME='autoload'
+AND TABLE_NAME=%s
+SQL
+			, $configTable));
+		if (!$hasAutoload) {
+			$wpdb->query("ALTER TABLE {$configTable} ADD COLUMN autoload ENUM('no', 'yes') NOT NULL DEFAULT 'yes'");
+			$wpdb->query("UPDATE {$configTable} SET autoload = 'no' WHERE name = 'wfsd_engine' OR name LIKE 'wordfence_chunked_%'");
+		}
+		
 		wfConfig::setDefaults(); //If not set
 
 		$restOfSite = wfConfig::get('cbl_restOfSiteBlocked', 'notset');
@@ -328,7 +350,6 @@ class wordfence {
 		$db = new wfDB();
 
 		if($db->columnExists('wfHits', 'HTTPHeaders')){ //Upgrade from 3.0.4
-			global $wpdb;
 			$prefix = $wpdb->base_prefix;
 			$count = $db->querySingle("select count(*) as cnt from $prefix"."wfHits");
 			if($count > 20000){
@@ -343,9 +364,7 @@ class wordfence {
 			wfConfig::set('isPaid', '');
 		}
 		//End upgrade from 1.5.6
-
-		/** @var wpdb $wpdb */
-		global $wpdb;
+		
 		$prefix = $wpdb->base_prefix;
 		$db->queryWriteIgnoreError("alter table $prefix"."wfConfig modify column val longblob");
 		$db->queryWriteIgnoreError("alter table $prefix"."wfBlocks add column permanent tinyint UNSIGNED default 0");
@@ -503,6 +522,23 @@ SQL
 
 		if (!$hasAttackLogTimeIndex) {
 			$wpdb->query("ALTER TABLE $hitsTable ADD INDEX `attackLogTime` (`attackLogTime`)");
+		}
+		
+		//6.1.16
+		$allowed404s = wfConfig::get('allowed404s', '');
+		if (!wfConfig::get('allowed404s6116Migration', false)) {
+			if (!preg_match('/(?:^|\b)browserconfig\.xml(?:\b|$)/i', $allowed404s)) {
+				if (strlen($allowed404s) > 0) {
+					$allowed404s .= "\n";
+				}
+				$allowed404s .= "/browserconfig.xml";
+				wfConfig::set('allowed404s', $allowed404s);
+			}
+			
+			wfConfig::set('allowed404s6116Migration', 1);
+		}
+		if (wfConfig::get('email_summary_interval') == 'biweekly') {
+			wfConfig::set('email_summary_interval', 'weekly');
 		}
 
 		//Must be the final line
@@ -1024,6 +1060,7 @@ SQL
 					'homeURL'        => home_url(),
 					'whitelistedIPs' => (string) wfConfig::get('whitelisted'),
 					'howGetIPs'      => (string) wfConfig::get('howGetIPs'),
+					'other_WFNet'    => wfConfig::get('other_WFNet', true), 
 				);
 				foreach ($configDefaults as $key => $value) {
 					$waf->getStorageEngine()->setConfig($key, $value);
@@ -1236,7 +1273,23 @@ SQL
 			is_object($userDat) &&
 			get_class($userDat) == 'WP_User';
 		if ($checkTwoFactor) {
-			if (isset($_POST['wordfence_authFactor']) && $_POST['wordfence_authFactor']) { //User authenticated with name and password, 2FA code ready to check
+			$twoFactorRecord = false;
+			$hasActivatedTwoFactorUser = false;
+			foreach ($twoFactorUsers as &$t) {
+				if ($t[3] == 'activated') {
+					$userID = $t[0];
+					$testUser = get_user_by('ID', $userID);
+					if (is_object($testUser) && wfUtils::isAdmin($testUser)) {
+						$hasActivatedTwoFactorUser = true;
+					}
+					
+					if ($userID == $userDat->ID) {
+						$twoFactorRecord = &$t;
+					}
+				}
+			}
+			
+			if (isset($_POST['wordfence_authFactor']) && $_POST['wordfence_authFactor'] && $twoFactorRecord) { //User authenticated with name and password, 2FA code ready to check
 				$userID = $userDat->ID;
 				
 				if (get_class($authUser) == 'WP_User' && $authUser->ID == $userID) {
@@ -1258,103 +1311,30 @@ SQL
 					return self::processBruteForceAttempt(self::$authError, $username, $passwd);
 				}
 				
-				foreach ($twoFactorUsers as &$t) {
-					if ($t[0] == $userDat->ID && $t[3] == 'activated') {
-						if (isset($t[5])) { //New method TOTP
-							$mode = $t[5];
-							$code = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_authFactor']);
-							
-							$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-							try {
-								$codeResult = $api->call('twoFactorTOTP_verify', array(), array('totpid' => $t[6], 'code' => $code, 'mode' => $mode));
-								
-								if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
-									break;
-								} //No longer a paid key, let them sign in without two factor
-								if (isset($codeResult['ok']) && $codeResult['ok']) {
-									break;
-								} //Everything's good, let the sign in continue
-								else {
-									if (get_class($authUser) == 'WP_User' && $authUser->ID == $userID) { //Using the old method of appending the code to the password
-										if ($mode == 'authenticator') {
-											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code from your authenticator app to the end of your password (e.g., <code>wf123456</code>).'));
-										}
-										else {
-											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code sent to your phone to the end of your password (e.g., <code>wf123456</code>).'));
-										}
-									}
-									else {
-										$loginNonce = wfWAFUtils::random_bytes(20);
-										if ($loginNonce === false) { //Should never happen but is technically possible
-											self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
-											return self::$authError;
-										}
-										
-										$loginNonce = bin2hex($loginNonce);
-										update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
-										update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
-										
-										if ($mode == 'authenticator') {
-											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated by your authenticator app. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-										}
-										else {
-											self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated sent to your phone. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-										}
-									}
-									return self::processBruteForceAttempt(self::$authError, $username, $passwd);
-								}
-							}
-							catch (Exception $e) {
-								if (self::isDebugOn()) {
-									error_log('TOTP validation error: ' . $e->getMessage());
-								}
-								break;
-							} // Couldn't connect to noc1, let them sign in since the password was correct.
+				if (isset($twoFactorRecord[5])) { //New method TOTP
+					$mode = $twoFactorRecord[5];
+					$code = preg_replace('/[^a-f0-9]/i', '', $_POST['wordfence_authFactor']);
+					
+					$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+					try {
+						$codeResult = $api->call('twoFactorTOTP_verify', array(), array('totpid' => $twoFactorRecord[6], 'code' => $code, 'mode' => $mode));
+						
+						if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+							//No longer a paid key, let them sign in without two factor
 						}
-						else { //Old method phone authentication
-							$authFactor = $_POST['wordfence_authFactor'];
-							if (strlen($authFactor) == 4) {
-								$authFactor = 'wf' . $authFactor;
-							}
-							if ($authFactor == $t[2] && $t[4] > time()) { // Set this 2FA code to expire in 30 seconds (for other plugins hooking into the auth process)
-								$t[4] = time() + 30;
-								wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
-							}
-							else if ($authFactor == $t[2]) {
-								$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-								try {
-									$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]));
-									
-									if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
-										break;
-									} //No longer a paid key, let them sign in without two factor
-									if (isset($codeResult['ok']) && $codeResult['ok']) {
-										$t[2] = $codeResult['code'];
-										$t[4] = time() + 1800; //30 minutes until code expires
-										wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
-										
-										$loginNonce = wfWAFUtils::random_bytes(20);
-										if ($loginNonce === false) { //Should never happen but is technically possible
-											self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
-											return self::$authError;
-										}
-										
-										$loginNonce = bin2hex($loginNonce);
-										update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
-										update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
-										
-										self::$authError = new WP_Error('twofactor_required', __('<strong>CODE EXPIRED. CHECK YOUR PHONE:</strong> The code you entered has expired. Codes are only valid for 30 minutes for security reasons. We have sent you a new code. Please sign in using your username, password, and the new code we sent you.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-										return self::$authError;
-									}
-									else {
-										break;
-									} //No new code was received. Let them sign in with the expired code.
+						else if (isset($codeResult['ok']) && $codeResult['ok']) {
+							//Everything's good, let the sign in continue
+						} 
+						else {
+							if (get_class($authUser) == 'WP_User' && $authUser->ID == $userID) { //Using the old method of appending the code to the password
+								if ($mode == 'authenticator') {
+									self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code from your authenticator app to the end of your password (e.g., <code>wf123456</code>).'));
 								}
-								catch (Exception $e) {
-									break;
-								} // Couldn't connect to noc1, let them sign in since the password was correct.
+								else {
+									self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: Please sign in again and add a space, the letters <code>wf</code>, and the code sent to your phone to the end of your password (e.g., <code>wf123456</code>).'));
+								}
 							}
-							else { //Bad code, so cancel the login and return an error to user.
+							else {
 								$loginNonce = wfWAFUtils::random_bytes(20);
 								if ($loginNonce === false) { //Should never happen but is technically possible
 									self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
@@ -1365,10 +1345,77 @@ SQL
 								update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
 								update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
 								
-								self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter your password and the code we sent to your phone. The code should start with \'wf\' and should be four characters (e.g., wfAB12).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-								return self::processBruteForceAttempt(self::$authError, $username, $passwd);
+								if ($mode == 'authenticator') {
+									self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated by your authenticator app. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+								}
+								else {
+									self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter the code generated sent to your phone. The code should be a six digit number (e.g., 123456).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+								}
 							}
+							return self::processBruteForceAttempt(self::$authError, $username, $passwd);
 						}
+					}
+					catch (Exception $e) {
+						if (self::isDebugOn()) {
+							error_log('TOTP validation error: ' . $e->getMessage());
+						}
+					} // Couldn't connect to noc1, let them sign in since the password was correct.
+				}
+				else { //Old method phone authentication
+					$authFactor = $_POST['wordfence_authFactor'];
+					if (strlen($authFactor) == 4) {
+						$authFactor = 'wf' . $authFactor;
+					}
+					if ($authFactor == $twoFactorRecord[2] && $twoFactorRecord[4] > time()) { // Set this 2FA code to expire in 30 seconds (for other plugins hooking into the auth process)
+						$twoFactorRecord[4] = time() + 30;
+						wfConfig::set_ser('twoFactorUsers', $twoFactorUsers);
+					}
+					else if ($authFactor == $twoFactorRecord[2]) {
+						$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+						try {
+							$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $twoFactorRecord[1]));
+							
+							if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+								//No longer a paid key, let them sign in without two factor
+							} 
+							else if (isset($codeResult['ok']) && $codeResult['ok']) {
+								$twoFactorRecord[2] = $codeResult['code'];
+								$twoFactorRecord[4] = time() + 1800; //30 minutes until code expires
+								wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
+								
+								$loginNonce = wfWAFUtils::random_bytes(20);
+								if ($loginNonce === false) { //Should never happen but is technically possible
+									self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
+									return self::$authError;
+								}
+								
+								$loginNonce = bin2hex($loginNonce);
+								update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+								update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+								
+								self::$authError = new WP_Error('twofactor_required', __('<strong>CODE EXPIRED. CHECK YOUR PHONE:</strong> The code you entered has expired. Codes are only valid for 30 minutes for security reasons. We have sent you a new code. Please sign in using your username, password, and the new code we sent you.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+								return self::$authError;
+							}
+							
+							//else: No new code was received. Let them sign in with the expired code.
+						}
+						catch (Exception $e) {
+							// Couldn't connect to noc1, let them sign in since the password was correct.
+						} 
+					}
+					else { //Bad code, so cancel the login and return an error to user.
+						$loginNonce = wfWAFUtils::random_bytes(20);
+						if ($loginNonce === false) { //Should never happen but is technically possible
+							self::$authError = new WP_Error('twofactor_required', __('<strong>AUTHENTICATION FAILURE</strong>: A temporary failure was encountered while trying to log in. Please try again.'));
+							return self::$authError;
+						}
+						
+						$loginNonce = bin2hex($loginNonce);
+						update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+						update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+						
+						self::$authError = new WP_Error('twofactor_invalid', __('<strong>INVALID CODE</strong>: You need to enter your password and the code we sent to your phone. The code should start with \'wf\' and should be four characters (e.g., wfAB12).') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+						return self::processBruteForceAttempt(self::$authError, $username, $passwd);
 					}
 				}
 				delete_user_meta($userDat->ID, '_wf_twoFactorNonce');
@@ -1377,77 +1424,21 @@ SQL
 			}
 			else if (get_class($authUser) == 'WP_User') { //User authenticated with name and password, prompt for the 2FA code
 				//Verify at least one administrator has 2FA enabled
-				$requireAdminTwoFactor = false;
-				foreach ($twoFactorUsers as &$t) {
-					$userID = $t[0];
-					$testUser = get_user_by('ID', $userID);
-					if (is_object($testUser) && wfUtils::isAdmin($testUser) && $t[3] == 'activated') {
-						$requireAdminTwoFactor = true;
-						break;
-					}
-				}
-				$requireAdminTwoFactor = $requireAdminTwoFactor && wfConfig::get('loginSec_requireAdminTwoFactor');
+				$requireAdminTwoFactor = $hasActivatedTwoFactorUser && wfConfig::get('loginSec_requireAdminTwoFactor');
 				
-				foreach ($twoFactorUsers as &$t) {
-					if ($t[0] == $userDat->ID && $t[3] == 'activated') { //Yup, enabled, so require the code
+				if ($twoFactorRecord) {
+					if ($twoFactorRecord[0] == $userDat->ID && $twoFactorRecord[3] == 'activated') { //Yup, enabled, so require the code
 						$loginNonce = wfWAFUtils::random_bytes(20);
 						if ($loginNonce === false) { //Should never happen but is technically possible, allow login
 							$requireAdminTwoFactor = false;
-							break;
 						}
-						
-						$loginNonce = bin2hex($loginNonce);
-						update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
-						update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
-						
-						if (isset($t[5])) { //New method TOTP authentication
-							if ($t[5] == 'authenticator') {
-								if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
-									$retries = get_option('limit_login_retries', array());
-									$ip = limit_login_get_address();
-									
-									if (!is_array($retries)) {
-										$retries = array();
-									}
-									if (isset($retries[$ip]) && is_int($retries[$ip])) {
-										$retries[$ip]--;
-									}
-									else {
-										$retries[$ip] = 0;
-									}
-									update_option('limit_login_retries', $retries);
-								}
-								
-								$allowSeparatePrompt = ini_get('output_buffering') > 0;
-								if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
-									self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-									return self::$authError;
-								}
-								else {
-									self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
-									return self::$authError;
-								}
-							}
-							else {
-								//Phone TOTP
-								$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-								try {
-									$codeResult = $api->call('twoFactorTOTP_sms', array(), array('totpid' => $t[6]));
-									if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
-										$requireAdminTwoFactor = false;
-										break; //Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
-									}
-								}
-								catch (Exception $e) {
-									if (self::isDebugOn()) {
-										error_log('TOTP SMS error: ' . $e->getMessage());
-									}
-									$requireAdminTwoFactor = false;
-									// Couldn't connect to noc1, let them sign in since the password was correct.
-									break;
-								}
-								
-								if (isset($codeResult['ok']) && $codeResult['ok']) {
+						else {
+							$loginNonce = bin2hex($loginNonce);
+							update_user_meta($userDat->ID, '_wf_twoFactorNonce', $loginNonce);
+							update_user_meta($userDat->ID, '_wf_twoFactorNonceTime', time());
+							
+							if (isset($twoFactorRecord[5])) { //New method TOTP authentication
+								if ($twoFactorRecord[5] == 'authenticator') {
 									if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
 										$retries = get_option('limit_login_retries', array());
 										$ip = limit_login_get_address();
@@ -1466,70 +1457,117 @@ SQL
 									
 									$allowSeparatePrompt = ini_get('output_buffering') > 0;
 									if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
-										self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+										self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
 										return self::$authError;
 									}
 									else {
-										self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
+										self::$authError = new WP_Error('twofactor_required', __('<strong>CODE REQUIRED</strong>: Please check your authenticator app for the current code. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
 										return self::$authError;
 									}
-								}
-								else { //oops, our API returned an error.
-									$requireAdminTwoFactor = false;
-									break; //Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
-								}
-							}
-						}
-						else { //Old method phone authentication
-							$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
-							try {
-								$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $t[1]));
-								if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
-									$requireAdminTwoFactor = false;
-									break; //Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
-								}
-							}
-							catch (Exception $e) {
-								$requireAdminTwoFactor = false;
-								// Couldn't connect to noc1, let them sign in since the password was correct.
-								break;
-							}
-							
-							if (isset($codeResult['ok']) && $codeResult['ok']) {
-								$t[2] = $codeResult['code'];
-								$t[4] = time() + 1800; //30 minutes until code expires
-								wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
-								
-								if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
-									$retries = get_option('limit_login_retries', array());
-									$ip = limit_login_get_address();
-									
-									if (!is_array($retries)) {
-										$retries = array();
-									}
-									if (isset($retries[$ip]) && is_int($retries[$ip])) {
-										$retries[$ip]--;
-									}
-									else {
-										$retries[$ip] = 0;
-									}
-									update_option('limit_login_retries', $retries);
-								}
-								
-								$allowSeparatePrompt = ini_get('output_buffering') > 0;
-								if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
-									self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
-									return self::$authError;
 								}
 								else {
-									self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space and the code to the end of your password (e.g., <code>wfABCD</code>).'));
-									return self::$authError;
+									//Phone TOTP
+									$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+									try {
+										$codeResult = $api->call('twoFactorTOTP_sms', array(), array('totpid' => $twoFactorRecord[6]));
+										if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+											$requireAdminTwoFactor = false;
+											//Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
+										}
+										else {
+											if (isset($codeResult['ok']) && $codeResult['ok']) {
+												if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
+													$retries = get_option('limit_login_retries', array());
+													$ip = limit_login_get_address();
+													
+													if (!is_array($retries)) {
+														$retries = array();
+													}
+													if (isset($retries[$ip]) && is_int($retries[$ip])) {
+														$retries[$ip]--;
+													}
+													else {
+														$retries[$ip] = 0;
+													}
+													update_option('limit_login_retries', $retries);
+												}
+												
+												$allowSeparatePrompt = ini_get('output_buffering') > 0;
+												if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+													self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+													return self::$authError;
+												}
+												else {
+													self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space, the letters <code>wf</code>, and the code to the end of your password (e.g., <code>wf123456</code>).'));
+													return self::$authError;
+												}
+											}
+											else { //oops, our API returned an error.
+												$requireAdminTwoFactor = false;
+												//Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
+											}
+										}
+									}
+									catch (Exception $e) {
+										if (self::isDebugOn()) {
+											error_log('TOTP SMS error: ' . $e->getMessage());
+										}
+										$requireAdminTwoFactor = false;
+										// Couldn't connect to noc1, let them sign in since the password was correct.
+									}
 								}
 							}
-							else { //oops, our API returned an error.
-								$requireAdminTwoFactor = false;
-								break; //Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
-							}
+							else { //Old method phone authentication
+								$api = new wfAPI(wfConfig::get('apiKey'), wfUtils::getWPVersion());
+								try {
+									$codeResult = $api->call('twoFactor_verification', array(), array('phone' => $twoFactorRecord[1]));
+									if (isset($codeResult['notPaid']) && $codeResult['notPaid']) {
+										$requireAdminTwoFactor = false;
+										//Let them sign in without two factor if their API key has expired or they're not paid and for some reason they have this set up.
+									}
+									else {
+										if (isset($codeResult['ok']) && $codeResult['ok']) {
+											$twoFactorRecord[2] = $codeResult['code'];
+											$twoFactorRecord[4] = time() + 1800; //30 minutes until code expires
+											wfConfig::set_ser('twoFactorUsers', $twoFactorUsers); //save the code the user needs to enter and return an error.
+											
+											if (self::hasGDLimitLoginsMUPlugin() && function_exists('limit_login_get_address')) {
+												$retries = get_option('limit_login_retries', array());
+												$ip = limit_login_get_address();
+												
+												if (!is_array($retries)) {
+													$retries = array();
+												}
+												if (isset($retries[$ip]) && is_int($retries[$ip])) {
+													$retries[$ip]--;
+												}
+												else {
+													$retries[$ip] = 0;
+												}
+												update_option('limit_login_retries', $retries);
+											}
+											
+											$allowSeparatePrompt = ini_get('output_buffering') > 0;
+											if (wfConfig::get('loginSec_enableSeparateTwoFactor') && $allowSeparatePrompt) {
+												self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Enter it below to sign in.') . '<!-- wftwofactornonce:' . $userDat->ID . '/' . $loginNonce . ' -->');
+												return self::$authError;
+											}
+											else {
+												self::$authError = new WP_Error('twofactor_required', __('<strong>CHECK YOUR PHONE</strong>: A code has been sent to your phone and will arrive within 30 seconds. Please sign in again and add a space and the code to the end of your password (e.g., <code>wfABCD</code>).'));
+												return self::$authError;
+											}
+										}
+										else { //oops, our API returned an error.
+											$requireAdminTwoFactor = false;
+											//Let them sign in without two factor because the API is broken and we don't want to lock users out of their own systems.
+										}
+									}
+								}
+								catch (Exception $e) {
+									$requireAdminTwoFactor = false;
+									// Couldn't connect to noc1, let them sign in since the password was correct.
+								}
+							} //end: Old method phone authentication
 						}
 					}
 				}
@@ -2247,6 +2285,11 @@ SQL
 		}
 		return array('ok' => 1);
 	}
+	public static function ajax_suPHPWAFUpdateChoice_callback() {
+		$choice = $_POST['choice'];
+		wfConfig::set('suPHPWAFUpdateChoice', '1');
+		return array('ok' => 1);
+	}
 	public static function ajax_removeFromCache_callback(){
 		$id = $_POST['id'];
 		$link = get_permalink($id);
@@ -2610,6 +2653,9 @@ SQL
 			$reload = 'reload';
 		}
 		$regenerateHtaccess = false;
+		if (isset($opts['bannedURLs'])) {
+			$opts['bannedURLs'] = preg_replace('/[\n\r]+/',',', $opts['bannedURLs']);
+		}
 		if(wfConfig::get('bannedURLs', false) != $opts['bannedURLs']){
 			$regenerateHtaccess = true;
 		}
@@ -3974,7 +4020,7 @@ HTML;
 			'activityLogUpdate', 'ticker', 'loadIssues', 'updateIssueStatus', 'deleteIssue', 'updateAllIssues',
 			'reverseLookup', 'unlockOutIP', 'loadBlockRanges', 'unblockRange', 'blockIPUARange', 'whois', 'unblockIP',
 			'blockIP', 'permBlockIP', 'loadStaticPanel', 'saveConfig', 'downloadHtaccess', 'checkFalconHtaccess',
-			'updateConfig', 'saveCacheConfig', 'removeFromCache', 'autoUpdateChoice', 'adminEmailChoice', 'saveCacheOptions', 'clearPageCache',
+			'updateConfig', 'saveCacheConfig', 'removeFromCache', 'autoUpdateChoice', 'adminEmailChoice', 'suPHPWAFUpdateChoice', 'saveCacheOptions', 'clearPageCache',
 			'getCacheStats', 'clearAllBlocked', 'killScan', 'saveCountryBlocking', 'saveScanSchedule', 'tourClosed',
 			'welcomeClosed', 'startTourAgain', 'downgradeLicense', 'addTwoFactor', 'twoFacActivate', 'twoFacDel',
 			'loadTwoFactor', 'loadAvgSitePerf', 'sendTestEmail', 'addCacheExclusion', 'removeCacheExclusion',
@@ -4038,8 +4084,25 @@ HTML;
 			}
 		}
 		else {
+			if (!(!empty($_REQUEST['wafAction']) && $_REQUEST['wafAction'] == 'updateSuPHPConfig') && !wfConfig::get('suPHPWAFUpdateChoice')) {
+				if (is_multisite()) {
+					add_action('network_admin_notices', 'wordfence::wafCheckOutdatedConfiguration');
+				} else {
+					add_action('admin_notices', 'wordfence::wafCheckOutdatedConfiguration');
+				}
+			}
+			
 			if (!empty($_GET['wafAction'])) {
 				switch ($_GET['wafAction']) {
+					case 'updateSuPHPConfig':
+						if (isset($_REQUEST['updateReady'])) {
+							check_admin_referer('wfWAFUpdateSuPHPConfig', 'wfnonce');
+							$helper = new wfWAFAutoPrependHelper('apache-suphp');
+							if (!empty($_REQUEST['downloadBackup'])) {
+								$helper->downloadBackups(!empty($_REQUEST['backupIndex']) ? absint($_REQUEST['backupIndex']) : 0);
+							}
+						}
+						break;
 					case 'removeAutoPrepend':
 						if (isset($_REQUEST['serverConfiguration'])) {
 							check_admin_referer('wfWAFRemoveAutoPrepend', 'wfnonce');
@@ -4066,6 +4129,14 @@ HTML;
 				add_action('network_admin_notices', 'wordfence::wafAutoPrependRemoved');
 			} else {
 				add_action('admin_notices', 'wordfence::wafAutoPrependRemoved');
+			}
+		}
+		
+		if (!empty($_REQUEST['updateComplete']) && wp_verify_nonce($_REQUEST['updateComplete'], 'wfWAFUpdateComplete')) {
+			if (is_multisite()) {
+				add_action('network_admin_notices', 'wordfence::wafUpdateSuccessful');
+			} else {
+				add_action('admin_notices', 'wordfence::wafUpdateSuccessful');
 			}
 		}
 	}
@@ -4259,6 +4330,122 @@ HTML;
 					check_admin_referer('wfDismissAutoPrependNotice', 'nonce');
 					wfConfig::set('dismissAutoPrependNotice', 1);
 
+					break;
+				
+				case 'updateSuPHPConfig':
+					if (!isset($_REQUEST['updateComplete']) || !$_REQUEST['updateComplete']) {
+						$wfnonce = wp_create_nonce('wfWAFUpdateSuPHPConfig');
+						$adminURL = network_admin_url('admin.php?page=WordfenceWAF&wafAction=updateSuPHPConfig');
+						$helper = new wfWAFAutoPrependHelper('apache-suphp');
+						if (!isset($_REQUEST['confirmedBackup'])) {
+							if (($backups = $helper->getFilesNeededForBackup()) && empty($_REQUEST['confirmedBackup'])) {
+								$wafActionContent = '
+	<h3>Wordfence Web Application Firewall Update</h3>
+	<p>The Wordfence Web Application Firewall for Apache suPHP servers has been improved, and your configuration needs to be updated to continue receiving the best protection. Please download a backup copy of the following files before we make the necessary changes:</p>';
+								$wafActionContent .= '<ul>';
+								foreach ($backups as $index => $backup) {
+									$wafActionContent .= '<li><a class="button" onclick="wfWAFConfirmBackup(' . $index . ');" href="' .
+										esc_url(add_query_arg(array(
+											'downloadBackup'      => 1,
+											'updateReady'		  => 1,
+											'backupIndex'         => $index,
+											'wfnonce'             => $wfnonce,
+										), $adminURL)) . '">Download ' . esc_html(basename($backup)) . '</a></li>';
+								}
+								$jsonBackups = json_encode(array_map('basename', $backups));
+								$adminURL = esc_url($adminURL);
+								$wafActionContent .= "</ul>
+	<form action='$adminURL' method='post'>
+	<input type='hidden' name='wfnonce' value='$wfnonce'>
+	<input type='hidden' value='1' name='confirmedBackup'>
+	<button id='confirmed-backups' disabled class='button button-primary' type='submit'>Continue</button>
+	</form>
+	<script>
+	var wfWAFBackups = $jsonBackups;
+	var wfWAFConfirmedBackups = [];
+	function wfWAFConfirmBackup(index) {
+		wfWAFBackups[index] = false;
+		var confirmed = true;
+		for (var i = 0; i < wfWAFBackups.length; i++) {
+			if (wfWAFBackups[i] !== false) {
+				confirmed = false;
+			}
+		}
+		if (confirmed) {
+			document.getElementById('confirmed-backups').disabled = false;
+		}
+	}
+	</script>";
+								$htaccessPath = $helper->getHtaccessPath();
+								$htaccess = @file_get_contents($htaccessPath);
+								if ($htaccess && preg_match('/(# Wordfence WAF.*?# END Wordfence WAF)/is', $htaccess, $matches)) {
+									$wafSection = $matches[1];
+									$wafSection = preg_replace('#(<IfModule\s+mod_suphp\.c>\s+suPHP_ConfigPath\s+\S+\s+</IfModule>)#i', '', $wafSection);
+									$wafActionContent .= "<br>
+	<h3>Alternate method:</h3>
+	<p>We've also included instructions to manually perform the change if you are unable to do it automatically, or if file permissions prevent this change.</p>
+	<p>You will need to replace the equivalent section from your .htaccess with the following:</p>
+	<pre class='wf-pre'>" . htmlentities($wafSection) . "</pre>";
+								}
+								
+								break;
+							}
+						}
+						else {
+							check_admin_referer('wfWAFUpdateSuPHPConfig', 'wfnonce');
+							$allow_relaxed_file_ownership = true;
+							
+							ob_start();
+							if (false === ($credentials = request_filesystem_credentials($adminURL, '', false, ABSPATH,
+									array('version', 'locale'), $allow_relaxed_file_ownership))
+							) {
+								$wafActionContent = ob_get_clean();
+								break;
+							}
+							
+							if (!WP_Filesystem($credentials, ABSPATH, $allow_relaxed_file_ownership)) {
+								// Failed to connect, Error and request again
+								request_filesystem_credentials($adminURL, '', true, ABSPATH, array('version', 'locale'),
+									$allow_relaxed_file_ownership);
+								$wafActionContent = ob_get_clean();
+								break;
+							}
+							
+							if ($wp_filesystem->errors->get_error_code()) {
+								foreach ($wp_filesystem->errors->get_error_messages() as $message)
+									show_message($message);
+								$wafActionContent = ob_get_clean();
+								break;
+							}
+							ob_end_clean();
+							
+							$htaccessPath = $helper->getHtaccessPath();
+							$htaccess = @file_get_contents($htaccessPath);
+							if ($htaccess && preg_match('/(# Wordfence WAF.*?# END Wordfence WAF)/is', $htaccess, $matches)) {
+								$wafSection = $matches[1];
+								$wafSection = preg_replace('#(<IfModule\s+mod_suphp\.c>\s+suPHP_ConfigPath\s+\S+\s+</IfModule>)#i', '', $wafSection);
+								$htaccess = preg_replace('/# Wordfence WAF.*?# END Wordfence WAF/is', $wafSection, $htaccess);
+								if (!$wp_filesystem->put_contents($htaccessPath, $htaccess)) {
+									$wafActionContent = '<p>We were unable to make changes to the .htaccess file. It\'s
+					possible WordPress cannot write to the .htaccess file because of file permissions, which may have been
+					set by another security plugin, or you may have set them manually. Please verify the permissions allow
+					the web server to write to the file, and retry the update.</p>';
+									break;
+								}
+								
+								$adminURL = json_encode(esc_url_raw(network_admin_url('admin.php?page=WordfenceWAF&wafAction=updateSuPHPConfig&updateComplete=' . wp_create_nonce('wfWAFUpdateComplete'))));
+								$wafActionContent = "<script>
+	document.location.href=$adminURL;
+	</script>";
+								break;
+							}
+							
+							$wafActionContent = '<p>We were unable to make changes to the .htaccess file. It\'s
+					possible WordPress cannot write to the .htaccess file because of file permissions, which may have been
+					set by another security plugin, or you may have set them manually. Please verify the permissions allow
+					the web server to write to the file, and retry the update.</p>';
+						}
+					}
 					break;
 
 				case 'configureAutoPrepend':
@@ -5098,8 +5285,8 @@ HTML
 			wp_enqueue_style('wordfence-activity-report-widget', wfUtils::getBaseURL() . 'css/activity-report-widget.css', '', WORDFENCE_VERSION);
 			$report_date_range = 'week';
 			switch (wfConfig::get('email_summary_interval')) {
-				case 'biweekly':
-					$report_date_range = '2 weeks';
+				case 'daily':
+					$report_date_range = 'day';
 					break;
 
 				case 'monthly':
@@ -5723,7 +5910,94 @@ to your httpd.conf if using Apache, or find documentation on how to disable dire
 		if ($waf->getStorageEngine()->getConfig('attackDataKey', false) === false) {
 			$waf->getStorageEngine()->setConfig('attackDataKey', mt_rand(0, 0xfff));
 		}
+		
+		//Send alert email if needed
+		if (wfConfig::get('wafAlertOnAttacks')) {
+			$alertInterval = wfConfig::get('wafAlertInterval', 0);
+			$cutoffTime = max(time() - $alertInterval, wfConfig::get('wafAlertLastSendTime'));
+			$wafAlertWhitelist = wfConfig::get('wafAlertWhitelist', '');
+			$wafAlertWhitelist = preg_split("/[,\r\n]+/", $wafAlertWhitelist);
+			foreach ($wafAlertWhitelist as $index => &$entry) {
+				$entry = trim($entry);
+				if (!preg_match('/^(?:\d{1,3}(?:\.|$)){4}/', $entry) && !preg_match('/^((?:[\da-f]{1,4}(?::|)){0,8})(::)?((?:[\da-f]{1,4}(?::|)){0,8})$/i', $entry)) {
+					unset($wafAlertWhitelist[$index]);
+					continue;
+				}
+				
+				$packed = @wfUtils::inet_pton($entry);
+				if ($packed === false) {
+					unset($wafAlertWhitelist[$index]);
+					continue;
+				}
+				$entry = bin2hex($packed);
+			}
+			$wafAlertWhitelist = array_filter($wafAlertWhitelist);
+			$attackData = $wpdb->get_results($wpdb->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->base_prefix}wfHits
+	WHERE action = 'blocked:waf' " .
+	(count($wafAlertWhitelist) ? "AND HEX(IP) NOT IN (" . implode(", ", array_fill(0, count($wafAlertWhitelist), '%s')) . ")" : "") 
+	. "AND attackLogTime > %.6f
+	ORDER BY attackLogTime DESC
+	LIMIT 10", array_merge($wafAlertWhitelist, array($cutoffTime))));
+			$attackCount = $wpdb->get_var('SELECT FOUND_ROWS()');
+			if ($attackCount >= wfConfig::get('wafAlertThreshold')) {
+				$durationMessage = wfUtils::makeDuration($alertInterval);
+				$message = <<<ALERTMSG
+The Wordfence Web Application Firewall has blocked {$attackCount} attacks over the last {$durationMessage}. Below is a sample of these recent attacks:
 
+
+ALERTMSG;
+				$attackTable = array();
+				$dateMax = $ipMax = $countryMax = 0;
+				foreach ($attackData as $row) {
+					$row->longDescription = "Blocked for " . $row->actionDescription;
+					
+					$actionData = json_decode($row->actionData, true);
+					if (!is_array($actionData) || !isset($actionData['paramKey']) || !isset($actionData['paramValue'])) {
+						continue;
+					}
+					
+					$paramKey = base64_decode($actionData['paramKey']);
+					$paramValue = base64_decode($actionData['paramValue']);
+					if (strlen($paramValue) > 100) {
+						$paramValue = substr($paramValue, 0, 100) . chr(2026);
+					}
+					
+					if (preg_match('/([a-z0-9_]+\.[a-z0-9_]+)(?:\[(.+?)\](.*))?/i', $paramKey, $matches)) {
+						switch ($matches[1]) {
+							case 'request.queryString':
+								$row->longDescription = "Blocked for " . $row->actionDescription . ' in query string: ' . $matches[2] . '=' . $paramValue;
+								break;
+							case 'request.body':
+								$row->longDescription = "Blocked for " . $row->actionDescription . ' in POST body: ' . $matches[2] . '=' . $paramValue;
+								break;
+							case 'request.cookie':
+								$row->longDescription = "Blocked for " . $row->actionDescription . ' in cookie: ' . $matches[2] . '=' . $paramValue;
+								break;
+							case 'request.fileNames':
+								$row->longDescription = "Blocked for a " . $row->actionDescription . ' in file: ' . $matches[2] . '=' . $paramValue;
+								break;
+						}
+					}
+					
+					$date = date_i18n('F j, Y g:ia', floor($row->attackLogTime)); $dateMax = max(strlen($date), $dateMax);
+					$ip = wfUtils::inet_ntop($row->IP); $ipMax = max(strlen($ip), $ipMax);
+					$country = wfUtils::countryCode2Name(wfUtils::IP2Country($ip)); $country = (empty($country) ? 'Unknown' : $country); $countryMax = max(strlen($country), $countryMax); 
+					$attackTable[] = array('date' => $date, 'IP' => $ip, 'country' => $country, 'message' => $row->longDescription);
+				}
+				
+				foreach ($attackTable as $row) {
+					$date = str_pad($row['date'], $dateMax + 2);
+					$ip = str_pad($row['IP'] . " ({$row['country']})", $ipMax + $countryMax + 8);
+					$attackMessage = $row['message'];
+					$message .= $date . $ip . $attackMessage . "\n";
+				}
+
+				self::alert('Increased Attack Rate', $message, false);
+				wfConfig::set('wafAlertLastSendTime', time());
+			}
+		}
+
+		//Send attack data
 		$limit = 500;
 		$lastSendTime = wfConfig::get('lastAttackDataSendTime');
 		$attackData = $wpdb->get_results($wpdb->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->base_prefix}wfHits
@@ -5732,7 +6006,7 @@ AND attackLogTime > %.6f
 LIMIT %d", $lastSendTime, $limit));
 		$totalRows = $wpdb->get_var('SELECT FOUND_ROWS()');
 
-		if ($attackData) {
+		if ($attackData && wfConfig::get('other_WFNet', true)) {
 			$response = wp_remote_get(sprintf(WFWAF_API_URL_SEC . "waf-rules/%d.txt", $waf->getStorageEngine()->getConfig('attackDataKey')));
 
 			if (!is_wp_error($response)) {
@@ -5806,6 +6080,9 @@ LIMIT %d", $lastSendTime, $limit));
 			} else {
 				self::scheduleSendAttackData(time() + 7200);
 			}
+		}
+		else if (!wfConfig::get('other_WFNet', true)) {
+			wfConfig::set('lastAttackDataSendTime', time());
 		}
 
 		self::trimWfHits();
@@ -5985,6 +6262,22 @@ as your web server or CGI/FastCGI interface, you may need to wait a few minutes 
 configuration files are sometimes cached. You also may need to select a different server configuration in order to
 complete this step, but wait for a few minutes before trying. You can try refreshing this page. </p></div>';
 		}
+	}
+	
+	public static function wafCheckOutdatedConfiguration() {
+		//suPHP_ConfigPath check
+		$htaccess = @file_get_contents(get_home_path() . '.htaccess');
+		if ($htaccess && preg_match('/(# Wordfence WAF.*?# END Wordfence WAF)/is', $htaccess, $matches)) {
+			$wafSection = $matches[1];
+			if (preg_match('#<IfModule\s+mod_suphp\.c>\s+suPHP_ConfigPath\s+\S+\s+</IfModule>#i', $wafSection)) {
+				$url= network_admin_url('admin.php?page=WordfenceWAF&wafAction=updateSuPHPConfig');
+				echo '<div class="notice notice-warning" id="wordfenceSuPHPUpdateWarning"><p>Your configuration for the Wordfence Firewall needs an update to continue operating optimally:&nbsp;<a class="button button-small" href="' . esc_url($url) . '">Click here to update</a> <a class="button button-small wf-dismiss-link" href="#" onclick="wordfenceExt.suPHPWAFUpdateChoice(\'no\'); return false;">Dismiss</a></p></div>';
+			}
+		}
+	}
+	
+	public static function wafUpdateSuccessful() {
+		echo '<div class="updated is-dismissible"><p>The update was successful!</p></div>';
 	}
 
 	public static function getWAFBootstrapPath() {

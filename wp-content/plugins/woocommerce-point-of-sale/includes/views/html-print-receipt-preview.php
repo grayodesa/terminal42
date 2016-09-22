@@ -55,6 +55,19 @@
 		text-align: left;
 		width: 40%;
 	}
+	table.receipt_items tr .column-product-image {
+		text-align: center;
+	    white-space: nowrap;
+	    width: 52px;
+	}
+	table.receipt_items .column-product-image img{
+		height: auto;
+	    margin: 0;
+	    max-height: 40px;
+	    max-width: 40px;
+	    vertical-align: middle;
+	    width: auto;
+	}
 	table.receipt_items thead tr {
 		border-bottom: 2px solid #000;
 	}
@@ -170,6 +183,7 @@
         <thead>
             <tr>
                 <th><?php _e( 'Qty', 'wc_point_of_sale' ); ?></th>
+                <th class="column-product-image"></th>
                 <th><?php _e( 'Product', 'wc_point_of_sale' ); ?></th>
                 <th><?php _e( 'Cost', 'wc_point_of_sale' ); ?></th>
                 <th><?php _e( 'Total', 'wc_point_of_sale' ); ?></th>
@@ -178,6 +192,9 @@
         <tbody>
             <tr>
                 <td>2</td>
+                <td class="column-product-image">
+                	<?php echo wc_placeholder_img(); ?>
+                </td>
                 <td><strong>PHONE – Mobile Phone</strong><br><span class="attribute_receipt_value">Size: 32GB</span><br><span class="attribute_receipt_value">Colour: Silver</span></td>
                 <td>£59.00</td>
                 <td>£118.00</td>
@@ -185,36 +202,42 @@
         </tbody>
          <tfoot>
             <tr>
+            	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                     Subtotal
                 </th>
                 <td>£118.00</td>
             </tr>
             <tr>
+            	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                     VAT <span id="print-tax_label">(Tax)</span>
                 </th>
                 <td>£23.60</td>
             </tr>
             <tr>
+            	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                     Payment Type <span id="print-payment_label">Sales</span>
                 </th>
                 <td>£141.60</td>
             </tr>
             <tr>
+            	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                     <span id="print-total_label">Total</span>
                 </th>
                 <td>£141.60</td>
             </tr>
              <tr>
+             	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                     Change
                 </th>
                 <td>£0.00</td>
             </tr>
              <tr id="print_number_items">
+             	<th class="column-product-image"></th>
                 <th scope="row" colspan="3">
                    <span id="print-items_label">Number of Items</span>
                 </th>

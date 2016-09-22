@@ -148,7 +148,7 @@ class wfScanEngine {
 	}
 	public function fork(){
 		wordfence::status(4, 'info', "Entered fork()");
-		if(wfConfig::set_ser('wfsd_engine', $this, true)){
+		if(wfConfig::set_ser('wfsd_engine', $this, true, wfConfig::DONT_AUTOLOAD)){
 			wordfence::status(4, 'info', "Calling startScan(true)");
 			self::startScan(true);
 		} //Otherwise there was an error so don't start another scan.
@@ -158,7 +158,9 @@ class wfScanEngine {
 		$this->i->emailNewIssues();
 	}
 	public function submitMetrics() {
-		$this->api->call('record_scan_metrics', array(), array('metrics' => $this->metrics));
+		if (wfConfig::get('other_WFNet', true)) {
+			$this->api->call('record_scan_metrics', array(), array('metrics' => $this->metrics));
+		}
 	}
 	private function doScan(){
 		while(sizeof($this->jobList) > 0){

@@ -480,11 +480,11 @@ TD_NM.views = TD_NM.views || {};
 			events: {
 				'click .tvd-nm-delete-yes': 'yes'
 			},
-			yes: function () {
+			yes: function ( event ) {
+				var $btn = $( event.currentTarget ), self = this;
+				this.btnLoading( $btn );
 				TVE_Dash.showLoader();
-				var self = this;
 				this.model.destroy( {
-					wait: true, // wait for server response before removing the model from collection
 					success: function () {
 						TVE_Dash.success( TD_NM.t.success_delete );
 					},
@@ -619,7 +619,8 @@ TD_NM.views = TD_NM.views || {};
 					} );
 
 					self.gotoStep( 0 );
-
+					/*Remove the no connection warning on button*/
+					$( '#td-nm-email-services i' ).removeClass( 'tvd-nm-warning-sign' );
 					TVE_Dash.success( TD_NM.t.connection_established );
 				} ).error( function ( response ) {
 					TVE_Dash.err( response.responseJSON.error );

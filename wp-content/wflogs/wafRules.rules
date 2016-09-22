@@ -116,11 +116,107 @@ if (match('/simple-ads-manager[\/]+sam-ajax-loader\.php/', request.path) and mat
 if (match('/gwolle\-gb[\/]+frontend[\/]+captcha[\/]+ajaxresponse\.php/', request.path) and match('/.*/', request.queryString.abspath)):
 	block(id=17, category='rfi', description='Gwolle Guestbook <= 1.5.3 - Remote File Inclusion', whitelist=0)
 
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and ((currentUserIsNot('administrator', server.empty) and md5Equals('9074dbf9b7e456eb88fbc7230567f54b', request.body.action, request.queryString.action)) or (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and currentUserIsNot('contributor', server.empty) and (md5Equals('49e2f0e45d9672ef2125965277c49344', request.body.action, request.queryString.action) or md5Equals('32d93c4d8c0a9367f2da487238b141cc', request.body.action, request.queryString.action))))):
+	block(id=19, category='sde', description='FB1612')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and md5Equals('5c9fefc9f24ecfd74addc2eaff8481fc', request.body.action, request.queryString.action) and (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and currentUserIsNot('contributor', server.empty))):
+	block(id=20, category='auth-bypass', description='FB1677')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and equals('nf_async_upload', request.body.action, request.queryString.action) and currentUserIsNot('administrator', server.empty)):
+	block(id=21, category='file_upload', description='Ninja Forms <= 2.9.42 - Arbitrary File Upload')
+
+if (notEquals('', request.body.nf2to3) and notEquals('', request.body.update_ninja_forms_settings) and notEquals('', request.body.ninja_forms) and currentUserIsNot('administrator', server.empty)):
+	block(id=22, category='auth-bypass', description='Ninja Forms <= 2.9.42: Missing Authentication Check')
+
+if (notEquals('', request.body.nf2to3) and (notEquals('', request.body.nf_export_form, request.queryString.nf_export_form) or equals('nf_import_form', request.fileNames)) and currentUserIsNot('administrator', server.empty)):
+	block(id=23, category='auth-bypass', description='Ninja Forms <= 2.9.42: Missing Authentication Check')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and match('/^CF[0-9a-f]+$/i', request.body.form) and (md5Equals('91718ce4540ea4492190efd99f7fa6c2', request.body.action, request.queryString.action) or md5Equals('ab202c0ef9012b9b64798d6361419609', request.body.action, request.queryString.action))):
+	block(id=24, category='sde', description='FB1679')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and md5Equals('82268713c6ea5aec38c946035be94678', request.body.action, request.queryString.action)):
+	block(id=25, category='auth-bypass', description='FB1706')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and md5Equals('2d46446beaeec1c0fd44fbbe228b0c21', request.body.action, request.queryString.action)):
+	block(id=26, category='auth-bypass', description='FB1709')
+
+if (match('/\/wp\-admin[\/]+admin\.php/i', request.path) and ((md5Equals('8fe5104833b48c11b4c6a3e611e3f544', request.queryString.page) and lengthGreaterThan('0', request.body.page)) or (md5Equals('d2cb1ebf7e72e3749053af2966d8946c', request.queryString.page) and lengthGreaterThan('0', request.body.page)) or (md5Equals('2767cc3ede7592a47bd6657e3799565c', request.queryString.page) and lengthGreaterThan('0', request.body.page)) or (md5Equals('cce3df80f07d36b56db4376a4802d6c2', request.queryString.page) and lengthGreaterThan('0', request.body.page)))):
+	block(id=27, category='xss', description='FB1686')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and md5Equals('69301e541e806abf94827302f94bb4cc', request.body.action, request.queryString.action) and notMatch('/^[0-9]+$/', request.body.post_id)):
+	block(id=28, category='sqli', description='FB1688')
+
+if (equals('mainwp-setup', request.body.page, request.queryString.page) and currentUserIsNot('administrator', server.empty)):
+	block(id=29, category='xss', description='WPMain Stored XSS <= 3.1.2')
+
+if (lengthGreaterThan('0', request.md5Body['3448147ad57606b48fc7a2d1bf946c3f']) and (currentUserIsNot('administrator', server.empty) or notMatch('/^\d+$/', request.md5Body['3448147ad57606b48fc7a2d1bf946c3f']) or (lengthGreaterThan('0', request.md5Body['64adec2d588253e23e718034b1ad140d']) and notMatch('/^\d+$/', request.md5Body['64adec2d588253e23e718034b1ad140d'])) or (lengthGreaterThan('0', request.md5Body.ab494af1a5663f82e0b8b11723b87867) and notMatch('/^\d+$/', request.md5Body.ab494af1a5663f82e0b8b11723b87867)))):
+	block(id=31, category='file_upload', description='FB1787')
+
+if (match('/\/wp\-admin[\/]+options\.php/i', request.path) and notMatch('/^#?[0-9a-f]+$/i', request.md5Body['9b5354ddf005f69745b19155d2b64725']) and lengthGreaterThan('0', request.md5Body['9b5354ddf005f69745b19155d2b64725'])):
+	block(id=32, category='xss', description='FB1778')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and ((md5Equals('46f5a89acb206a7f58db187e45fa2a4d', request.body.action) and notMatch('/^(?:country|city)$/ix', request.md5Body['5fc75f82e79d75efb9716109034a3209'])))):
+	block(id=33, category='sqli', description='FB1673-1')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and ((md5Equals('b33c30f8f27dd4a25de0da3f7be5afad', request.body.action) and match('/[^-:0-9]/', request.md5Body['1e3c6aaf636066719ec996aca10b440c'])))):
+	block(id=34, category='xss', description='FB1673-2')
+
+if (equals('Y', request.body.kentopvc_hidden) and (notMatch('/^1?$/', request.body.kento_pvc_hide) or notMatch('/^1?$/', request.body.kento_pvc_uniq) or match(xssRegex, request.body.kento_pvc_today_text) or match(xssRegex, request.body.kento_pvc_total_text) or match(xssRegex, request.body.kento_pvc_numbers_lang) or notMatch('/^1?$/', request.body.kento_pvc_posttype))):
+	block(id=35, category='xss', description='Kento Post View Counter Stored XSS <= 2.8')
+
+if ((match('#/wp\-mobile\-detector[/]+resize\.php#i', request.path) or match('#/wp\-mobile\-detector[/]+timthumb\.php#i', request.path)) and ((lengthGreaterThan('0', request.body.src) and notMatch('/\.(?:png|gif|jpg|jpeg|jif|jfif|svg)$/i', request.body.src)) or (lengthGreaterThan('0', request.queryString.src) and notMatch('/\.(?:png|gif|jpg|jpeg|jif|jfif|svg)$/i', request.queryString.src)))):
+	block(id=36, category='file_upload', description='WP Mobile Detector <= 3.5 - Arbitrary File Upload')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and (currentUserIsNot('administrator', server.empty) or (lengthGreaterThan('0', request.body.id) and notMatch('/^[0-9]+$/', request.body.id))) and equals('populate_download_edit_form', request.body.action, request.queryString.action)):
+	block(id=37, category='sqli', description='Double Opt-In for Download <= 2.0.9 - SQL Injection')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and md5Equals('9082302c5211de15622f1cfab357f521', request.body.action, request.queryString.action)):
+	block(id=38, category='sde', description='FB1822')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and md5Equals('002138689cdae4fcd6e725bf66e38b7e', request.body.action, request.queryString.action)):
+	block(id=39, category='sde', description='FB1823')
+
+if (match('#wp\-admin/+options\-general.php$#i', server.script_filename) and md5Equals('dab0846b692865a1f9885ed20d7fd2f7', request.body.page, request.queryString.page) and match('/["\$]/', request.md5Body['93da65a9fd0004d9477aeac024e08e15']['0eb9b3af2e4a00837a1b1a854c9ea18c']['03ae7ca473a366eb6398f7d6239152fa'], request.md5QueryString['93da65a9fd0004d9477aeac024e08e15']['0eb9b3af2e4a00837a1b1a854c9ea18c']['03ae7ca473a366eb6398f7d6239152fa']) and md5Equals('c4ca4238a0b923820dcc509a6f75849b', request.md5Body['93da65a9fd0004d9477aeac024e08e15']['0eb9b3af2e4a00837a1b1a854c9ea18c']['5d0bebf298375c590cd3d8f06528d232'], request.md5QueryString['93da65a9fd0004d9477aeac024e08e15']['0eb9b3af2e4a00837a1b1a854c9ea18c']['5d0bebf298375c590cd3d8f06528d232']) and md5Equals('0eb9b3af2e4a00837a1b1a854c9ea18c', request.md5Body.e7f8cbd87d347be881cba92dad128518, request.md5QueryString.e7f8cbd87d347be881cba92dad128518)):
+	block(id=40, category='rce', description='FB1832')
+
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and equals('rbs_gallery', request.queryString.action, request.body.action) and currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and currentUserIsNot('contributor', server.empty)):
+	block(id=41, category='auth-bypass', description='Robo Gallery <= 2.0.14 - Auth Bypass')
+
+if (match('#/wp\-admin[/]+admin\-ajax\.php#i', request.path) and currentUserIsNot('administrator', server.empty) and md5Equals('53ce229902e6621b2723cbb0908123f7', request.body.action, request.queryString.action) and md5Equals('0c0c8667d3d4f9c86cbc49e0e345e206', request.body.type, request.queryString.type)):
+	block(id=42, category='file-download', description='FB1915')
+
+if (lengthGreaterThan('0', request.md5QueryString['932d0cf39a5aa4fc1c3faddaf42e8325']) and notMatch('/^[0-9]*$/', request.md5QueryString['58f627ddac2040609edf8ccd8c406fef'])):
+	block(id=43, category='lfi', description='FB1878')
+
+if (match('#/wp\-admin/#i', request.path) and currentUserIsNot('administrator', server.empty) and (md5Equals('c12e6c914ed9a7bbeca851684096ac94', request.body.action, request.queryString.action) or md5Equals('eadf52d0c96eb78634b8d939a66fb96f', request.body.action, request.queryString.action) or md5Equals('affcac9194a01c0146937eac49f5bd9f', request.body.action, request.queryString.action))):
+	block(id=44, category='auth-bypass', description='FB1879')
+
+if (currentUserIsNot('administrator', server.empty) and (identical('', request.md5Body.c4e0bb93e05f5345cde016b6825a904c) or lengthGreaterThan('0', request.md5Body.c4e0bb93e05f5345cde016b6825a904c))):
+	block(id=45, category='auth-bypass', description='FB1798')
+
+if (match('/\/wp\-admin[\/]+admin\-ajax\.php/i', request.path) and currentUserIsNot('administrator', server.empty) and (md5Equals('44a896976080543c93e1cf8ac2c3c49f', request.body.action, request.queryString.action) or md5Equals('a15a50b6c91bb753e728ffa0cc2911de', request.body.action, request.queryString.action))):
+	block(id=46, category='auth-bypass', description='FB1810')
+
+if (match('#/wp\-admin/admin\-ajax\.php$#i', server.script_filename) and currentUserIsNot('administrator', server.empty) and md5Equals('df4b4806fa32e25f927721199f290e61', request.body.action, request.queryString.action)):
+	block(id=47, category='priv-esc', description='FB2070')
+
+if ((match('/Abonti|aggregator|AhrefsBot|asterias|BDCbot|BLEXBot|BuiltBotTough|Bullseye|BunnySlippers|ca\-crawler|CCBot|Cegbfeieh|CheeseBot|CherryPicker|CopyRightCheck|cosmos|Crescent|discobot|DittoSpyder|DotBot|Download Ninja|EasouSpider|EmailCollector|EmailSiphon|EmailWolf|EroCrawler|Exabot|ExtractorPro|Fasterfox|FeedBooster|Foobot|Genieo|grub\-client|Harvest|hloader|httplib|HTTrack|humanlinks|ieautodiscovery|InfoNaviRobot|IstellaBot|Java\/1\.|JennyBot|k2spider|Kenjin Spider|Keyword Density\/0\.9|larbin|LexiBot|libWeb|libwww|LinkextractorPro|linko|LinkScan\/8\.1a Unix|LinkWalker|LNSpiderguy|lwp\-trivial|magpie|Mata Hari|MaxPointCrawler|MegaIndex|Microsoft URL Control|MIIxpc|Mippin|Missigua Locator|Mister PiX|MJ12bot|moget|MSIECrawler|NetAnts|NICErsPRO|Niki\-Bot|NPBot|Nutch|Offline Explorer|Openfind|panscient\.com|PHP\/5\.\{|ProPowerBot\/2\.14|ProWebWalker|Python\-urllib|QueryN Metasearch|RepoMonkey|RMA|SemrushBot|SeznamBot|SISTRIX|sitecheck\.Internetseer\.com|SiteSnagger|SnapPreviewBot|Sogou|SpankBot|spanner|spbot|Spinn3r|suzuran|Szukacz\/1\.4|Teleport|Telesoft|The Intraformant|TheNomad|TightTwatBot|Titan|toCrawl\/UrlDispatcher|True_Robot|turingos|TurnitinBot|UbiCrawler|UnisterBot|URLy Warning|VCI|WBSearchBot|Web Downloader\/6\.9|Web Image Collector|WebAuto|WebBandit|WebCopier|WebEnhancer|WebmasterWorldForumBot|WebReaper|WebSauger|Website Quester|Webster Pro|WebStripper|WebZip|Wotbox|wsr\-agent|WWW\-Collector\-E|Xenu|Zao|Zeus|ZyBORG|coccoc|Incutio|lmspider|memoryBot|SemrushBot|serf|Unknown|uptime files/i', request.headers['User-Agent']) and match(xssRegex, request.headers['User-Agent'])) or (match('/semalt\.com|kambasoft\.com|savetubevideo\.com|buttons\-for\-website\.com|sharebutton\.net|soundfrost\.org|srecorder\.com|softomix\.com|softomix\.net|myprintscreen\.com|joinandplay\.me|fbfreegifts\.com|openmediasoft\.com|zazagames\.org|extener\.org|openfrost\.com|openfrost\.net|googlsucks\.com|best\-seo\-offer\.com|buttons\-for\-your\-website\.com|www\.Get\-Free\-Traffic\-Now\.com|best\-seo\-solution\.com|buy\-cheap\-online\.info|site3\.free\-share\-buttons\.com|webmaster\-traffic\.co/i', request.headers.Referer) and match(xssRegex, request.headers.Referer))):
+	block(id=48, category='xss', description='All in One SEO Pack 2.3.6.1 - Persistent XSS')
+
+if (match('/sitemap_.*?<.*?(:?_\d+)?\.xml(:?\.gz)?/i', request.path)):
+	block(id=49, category='xss', description='FB2183')
+
 if (match('/\/(?:timthumb\.php|img\.php)/i', request.path) and match('/[^A-Za-z0-9\-\.\_:\/\?\&\+\;\=]/', request.queryString.src) and lengthGreaterThan('0', request.queryString.webshot)):
 	block(id=64, category='rce', description='TimThumb <= 2.8.13 - Remote Code Execution')
 
 if (match('/\/(?:timthumb\.php|img\.php)/i', request.path) and notMatch('_^[^\?]+?\.(?:jpg|jpeg|gif|png)(?:\?[a-z0-9\-\_\.\~%\!\$&\'\(\)\*\+,;\=\:@\/\?]*)?$_iu', request.queryString.src) and lengthGreaterThan('0', request.queryString.src) and (lengthLessThan('1', request.queryString.webshot) or equals('0', request.queryString.webshot))):
 	block(id=63, category='rfd', description='TimThumb <= 1.33 - Remote File Download')
+
+if (currentUserIsNot('administrator', server.empty) and match('/^(?:wysija_)+campaigns/i', request.body.page, request.queryString.page) and (equals('themes', request.body.action, request.queryString.action) or equals('themeupload', request.body.action, request.queryString.action))):
+	block(id=65, category='file_upload', description='MailPoet <= 2.6.7 - Arbitrary File Upload')
+
+if (currentUserIsNot('administrator', server.empty) and currentUserIsNot('editor', server.empty) and currentUserIsNot('author', server.empty) and filePatternsMatch('', request.fileNames)):
+	block(id=68, category='file_upload', description='Malicious File Upload (Patterns)')
 
 if (matchCount(sqliRegex, request.body, request.queryString)):
 	failSQLi(id=3, category='sqli', score=40, description='SQL Injection')

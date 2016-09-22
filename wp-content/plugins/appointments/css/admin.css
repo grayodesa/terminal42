@@ -112,5 +112,15 @@ div.appointments-settings .subsubsub a:focus {
 	display:block;
 }
 
+/** WORKING HOURS PAGE **/
+body.appointments_page_app_settings .appointments-settings-tab-working_hours table.widefat {
+	background:transparent;
+	border:none;
+}
 
-/* 373982-1466660320-au */
+body.appointments_page_app_settings .appointments-settings-tab-working_hours table.widefat th {
+	font-weight:bold;
+}
+
+
+/* 373982-1474006452-au */

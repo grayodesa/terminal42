@@ -140,7 +140,7 @@ class URE_View {
             $cap_id = $capability['inner'];
             if (!$user_is_ure_admin) { 
                 if (isset($ure_caps[$cap_id]) || 
-                    ($this->multisite && $cap_id=='manage_network_plugins')) { 
+                    ($multisite && $cap_id=='manage_network_plugins')) { 
                     // exclude URE caps if user does not have full access to URE
                     continue;
                 }
@@ -183,7 +183,7 @@ class URE_View {
                 }
             }                        
             $class = 'class="' . implode(' ', $classes) .'"';
-            $cap_id_esc = str_replace(' ', URE_SPACE_REPLACER, $cap_id);
+            $cap_id_esc = URE_Capability::escape($cap_id);
             $cap_html = '<div id="ure_cap_div_'. $cap_id_esc .'" '. $class .'><input type="checkbox" name="' . $cap_id_esc . '" id="' . 
                     $cap_id_esc . '" value="' . $cap_id .'" '. $checked . ' ' . $disabled . ' ' . $onclick_for_admin . 
                     'class="ure-cap-cb">';

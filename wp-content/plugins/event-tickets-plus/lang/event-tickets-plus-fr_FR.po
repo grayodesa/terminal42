@@ -82,10 +82,10 @@ msgstr ""
 msgid "Event Tickets Plus lets you sell tickets to events, collect custom attendee information, and more!"
 msgstr ""
 
-#: src/views/eddtickets/tickets.php:93 src/views/shopptickets/tickets.php:70
+#: src/views/eddtickets/tickets.php:94 src/views/shopptickets/tickets.php:71
 #: src/views/tickets-plus/attendee-list-checkbox-rsvp.php:12
 #: src/views/tickets-plus/attendee-list-checkbox-tickets.php:18
-#: src/views/wootickets/tickets.php:105 src/views/wpectickets/tickets.php:75
+#: src/views/wootickets/tickets.php:106 src/views/wpectickets/tickets.php:77
 msgid "Don't list me on the public attendee list"
 msgstr "Ne pas m'afficher dans la liste des participants publique"
 
@@ -153,7 +153,7 @@ msgstr "Voir détails"
 msgid "Hide details"
 msgstr "Cacher détails"
 
-#: src/Tribe/Meta/Render.php:89 src/admin-views/meta.php:30
+#: src/Tribe/Meta/Render.php:97 src/admin-views/meta.php:30
 msgid "Attendee Information"
 msgstr "Information au sujet des participants"
 
@@ -253,7 +253,7 @@ msgstr "Veuillez remplir tous les champs requis"
 msgid "Attendee"
 msgstr "Participant"
 
-#: src/views/eddtickets/tickets.php:60 src/views/wootickets/tickets.php:74
+#: src/views/eddtickets/tickets.php:61 src/views/wootickets/tickets.php:75
 msgid "%1$s available"
 msgstr "%1$s disponible"
 
@@ -333,7 +333,7 @@ msgstr ""
 msgid "WooCommerce Support"
 msgstr ""
 
-#: src/Tribe/Meta.php:512
+#: src/Tribe/Meta.php:503
 msgid "This ticket has custom Attendee Information fields"
 msgstr "Ce billet contient des informations supplémentaires personnalisées sur les participants"
 
@@ -528,41 +528,41 @@ msgstr "Sujet e-mail billets"
 msgid "Enter the subject line for the tickets receipt email"
 msgstr "Entrez le sujet pour l'accusé des billets e-mail"
 
-#: src/Tribe/Commerce/EDD/Main.php:164 src/Tribe/Commerce/Loader.php:105
+#: src/Tribe/Commerce/EDD/Main.php:155 src/Tribe/Commerce/Loader.php:105
 #: src/Tribe/Commerce/Loader.php:120
 msgid "Easy Digital Downloads"
 msgstr "Téléchargements Digitaux Faciles"
 
-#: src/Tribe/Commerce/EDD/Main.php:481
-#: src/Tribe/Commerce/WooCommerce/Main.php:741
+#: src/Tribe/Commerce/EDD/Main.php:472
+#: src/Tribe/Commerce/WooCommerce/Main.php:762
 msgid "You'll receive your tickets in another email."
 msgstr "Vous recevrez vos billets dans un autre e-mail."
 
-#: src/Tribe/Commerce/EDD/Main.php:922 src/Tribe/Commerce/WPEC/Main.php:755
-#: src/Tribe/Commerce/WooCommerce/Main.php:1431
+#: src/Tribe/Commerce/EDD/Main.php:916 src/Tribe/Commerce/WPEC/Main.php:757
+#: src/Tribe/Commerce/WooCommerce/Main.php:1457
 msgid "(deleted)"
 msgstr "(supprimé)"
 
-#: src/Tribe/Commerce/EDD/Main.php:1097
-#: src/Tribe/Commerce/WooCommerce/Main.php:1678
+#: src/Tribe/Commerce/EDD/Main.php:1091
+#: src/Tribe/Commerce/WooCommerce/Main.php:1705
 msgid "Event sales report"
 msgstr "Rapport de ventes des événements"
 
-#: src/Tribe/Commerce/EDD/Main.php:1155 src/Tribe/Commerce/Shopp/Main.php:1121
-#: src/Tribe/Commerce/WPEC/Main.php:1026
-#: src/Tribe/Commerce/WooCommerce/Main.php:1724
+#: src/Tribe/Commerce/EDD/Main.php:1149 src/Tribe/Commerce/Shopp/Main.php:1122
+#: src/Tribe/Commerce/WPEC/Main.php:1028
+#: src/Tribe/Commerce/WooCommerce/Main.php:1753
 msgid "This is a ticket for the event:"
 msgstr "Ceci est un billet pour l'événement:"
 
-#: src/Tribe/Commerce/EDD/Main.php:1230
+#: src/Tribe/Commerce/EDD/Main.php:1224
 msgid "%s ticket is sold out"
 msgstr "%s billet n'est plus disponible"
 
-#: src/Tribe/Commerce/EDD/Main.php:1233
+#: src/Tribe/Commerce/EDD/Main.php:1227
 msgid "Sorry! Only %d tickets remaining for %s"
 msgstr "Désolé! Plus que %d billets restants pour %s"
 
-#: src/Tribe/Commerce/EDD/Main.php:1274
+#: src/Tribe/Commerce/EDD/Main.php:1268
 msgid "Print Ticket"
 msgstr "Impression du billet"
 
@@ -582,23 +582,23 @@ msgstr "Shopp"
 msgid "To begin using Tickets Plus, please install and activate the latest version of <a href=\"%s\" class=\"thickbox\" title=\"%s\">%s</a>."
 msgstr ""
 
-#: src/Tribe/Commerce/Shopp/Main.php:996
+#: src/Tribe/Commerce/Shopp/Main.php:997
 msgid "Unknown item"
 msgstr "Article inconnu"
 
-#: src/Tribe/Commerce/Shopp/Main.php:1111
+#: src/Tribe/Commerce/Shopp/Main.php:1112
 msgid "Event"
 msgstr "Evénement"
 
-#: src/Tribe/Commerce/Shopp/Main.php:1192 src/Tribe/Commerce/WPEC/Main.php:1085
+#: src/Tribe/Commerce/Shopp/Main.php:1193 src/Tribe/Commerce/WPEC/Main.php:1087
 msgid "Resend Tickets"
 msgstr "Recommencer l'envoi de billets"
 
-#: src/Tribe/Commerce/Shopp/Main.php:1230
+#: src/Tribe/Commerce/Shopp/Main.php:1231
 msgid "Email containing tickets (sent by ShoppTickets)"
 msgstr "E-mail des billets (envoyé par ShoppTickets)"
 
-#: src/Tribe/Commerce/Shopp/Main.php:1272
+#: src/Tribe/Commerce/Shopp/Main.php:1273
 msgid "Your tickets from %s"
 msgstr "Vos billets de %s"
 
@@ -606,34 +606,34 @@ msgstr "Vos billets de %s"
 msgid "Your tickets"
 msgstr "Vos billets"
 
-#: src/Tribe/Commerce/WPEC/Main.php:625
+#: src/Tribe/Commerce/WPEC/Main.php:627
 msgid "We're sorry but there was insufficient inventory to completely fulfill your order! We have added as many tickets as we could, but we recommend reviewing your order (below) in case you need to make some further adjustments."
 msgstr "Nous sommes désolés mais le stock est insuffisant pour satisfaire votre commande. Nous avons ajouté autant de billets que nous le pouvions, mais nous vous recommandons de consulter votre commande (ci-dessous) au cas où vous ayiez besoin de procéder à quelques ajustements."
 
-#: src/Tribe/Commerce/WPEC/Main.php:819
-#: src/Tribe/Commerce/WooCommerce/Main.php:1500
+#: src/Tribe/Commerce/WPEC/Main.php:821
+#: src/Tribe/Commerce/WooCommerce/Main.php:1526
 msgid "In trash (was %s)"
 msgstr "Dans la corbeille (il y avait %s)"
 
-#: src/Tribe/Commerce/WPEC/Main.php:825
-#: src/Tribe/Commerce/WooCommerce/Main.php:1506
+#: src/Tribe/Commerce/WPEC/Main.php:827
+#: src/Tribe/Commerce/WooCommerce/Main.php:1532
 msgid "Deleted"
 msgstr "Supprimé"
 
-#: src/Tribe/Commerce/WPEC/Main.php:872
-#: src/Tribe/Commerce/WooCommerce/Main.php:1554
+#: src/Tribe/Commerce/WPEC/Main.php:874
+#: src/Tribe/Commerce/WooCommerce/Main.php:1581
 msgid "Unknown"
 msgstr "Inconnus"
 
-#: src/Tribe/Commerce/WPEC/Main.php:1090
+#: src/Tribe/Commerce/WPEC/Main.php:1092
 msgid "&nbsp; [Sent]"
 msgstr "&nbsp; [Envoyé]"
 
 #: src/Tribe/CSV_Importer/Column_Names.php:68
 #: src/Tribe/CSV_Importer/Rows.php:52
 #: src/Tribe/Commerce/WooCommerce/Email.php:15
-#: src/views/eddtickets/tickets.php:17 src/views/shopptickets/tickets.php:81
-#: src/views/wootickets/tickets.php:18 src/views/wpectickets/tickets.php:94
+#: src/views/eddtickets/tickets.php:18 src/views/shopptickets/tickets.php:82
+#: src/views/wootickets/tickets.php:19 src/views/wpectickets/tickets.php:96
 msgid "Tickets"
 msgstr "Billets"
 
@@ -649,7 +649,7 @@ msgstr "Sujet"
 msgid "Defaults to <code>%s</code>"
 msgstr "Par défaut <code>%s</code>"
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:1701
+#: src/Tribe/Commerce/WooCommerce/Main.php:1730
 msgid "Report"
 msgstr "Rapport"
 
@@ -707,25 +707,25 @@ msgstr "Actuellement, WooTickets n'apparaitra qu'une fois sur le front-end par �
 msgid "Currently, WPECTickets will only show up on the frontend once per full event. For PRO users this means the same ticket will appear across all events in the series. Please configure your events accordingly."
 msgstr "Actuellement, WPECTickets n'apparaitra qu'une fois sur le front-end par événement complet. Pour les utilisateurs PRO les billets apparaitront sur tous les événements de la série. Veuillez configurer vos événements."
 
-#: src/views/shopptickets/tickets.php:41 src/views/wpectickets/tickets.php:46
+#: src/views/shopptickets/tickets.php:42 src/views/wpectickets/tickets.php:48
 msgid "%1$s out of %2$s available"
 msgstr "%1$s de %2$s disponible(s)"
 
-#: src/views/eddtickets/tickets.php:69 src/views/shopptickets/tickets.php:47
-#: src/views/wootickets/tickets.php:84
+#: src/views/eddtickets/tickets.php:70 src/views/shopptickets/tickets.php:48
+#: src/views/wootickets/tickets.php:85
 msgid "Out of stock!"
 msgstr "Plus en stock!"
 
-#: src/views/eddtickets/tickets.php:112 src/views/shopptickets/tickets.php:89
-#: src/views/wootickets/tickets.php:121 src/views/wpectickets/tickets.php:107
+#: src/views/eddtickets/tickets.php:113 src/views/shopptickets/tickets.php:90
+#: src/views/wootickets/tickets.php:122 src/views/wpectickets/tickets.php:109
 msgid "Add to cart"
 msgstr "Ajouter au panier"
 
-#: src/views/wpectickets/tickets.php:30
+#: src/views/wpectickets/tickets.php:32
 msgid "Quantity"
 msgstr "Quantité"
 
-#: src/views/wpectickets/tickets.php:52
+#: src/views/wpectickets/tickets.php:54
 msgid "Sold Out"
 msgstr "Tous les billets ont été vendus"
 

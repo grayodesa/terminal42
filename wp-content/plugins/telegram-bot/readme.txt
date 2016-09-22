@@ -1,6 +1,6 @@
 === Telegram Bot & Channel ===
 Contributors: Milmor
-Version:	1.4.2
+Version:	1.7.1
 Stable tag:	trunk
 Author:		Marco Milesi
 Author URI:   https://profiles.wordpress.org/milmor/
@@ -11,47 +11,50 @@ Tested up to: 4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Stream your content to Telegram, create commands and build beautiful bots. Compatible with Zapier
+Complete plugin to create commands and build interactive bots for Telegram. Compatible with Zapier
 
 == Description ==
 
 Bots are simply Telegram accounts operated by software and they have AI features. With this plugin you can do anything: teach, play, search, broadcast, remind, connect, integrate with other services, or even pass commands to the Internet of Things.
 
-This plugin allows you to create a Telegram Bot to your WordPress website and send content to your subscribers or a Channel you own.
+This plugin allows you to create a Telegram Bot with your WordPress website and send content to your subscribers, groups or channel.
 
-https://www.youtube.com/watch?v=frdub3fTdqk
+https://www.youtube.com/watch?v=jdQkFRYAoR0
+
+> Please consider a [donation](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=F2JK36SCXKTE2) to make the plugin even better.
 
 = Bot Features =
-* Instant replies (we use secure webhooks)
-* Custom keyboards
-* Support private chats, groups and channels
-* Create unlimited commands. You can set your own responders for /$commands
+* Instant replies (on secure webhooks)
+* **Custom keyboards**
+* Instant send of new **posts/pages/post_types** with configurable template
+* Supports chats, groups, supergroups and channels
+* Create unlimited commands with replies (you can include other shortcodes)
 * Create alias for commands
-* Add shortcodes to /$commands replies
 * View and manage your subscribers
+* **Get and dynamically reply to users geolocation** with harvesine algorithm
 * Send manual messages
 * Create custom applicatons with **/$command $var1 $var2** format
 * Add php to /$commands (requires [Insert Php](https://wordpress.org/plugins/insert-php
 * **[Zapier](https://zapier.com)** integrated! You can create integrations with services you use!
-* Automatically send your news (requires [Zapier](https://zapier.com))
 
 = Channel Features =
 * Stream your content to your Telegram channel
 
-**Note:** your bot should be administrator of your channel for sending messages
+**Note:** your bot must be administrator of your channel for sending messages
 
 **Warning:** due to Telegram limitation you need **SSL certificate** to manage a Telegram Bot. If you don't have one, register at [wptele.ga](https://wptele.ga) as a second step after installing the plugin. The service is free!
 
 = Zapier = 
 Zapier makes it easy to automate tasks between web apps. For example:
 
-* send a news published on your website (based on RSS)
+* send a news published on a website (based on RSS)
 * send the weather to your subscribers, every day
 * inform users when you upload an image on Instagram
-
-and much more… With 400+ Zapier Apps supported! More info on [wptele.ga/?p=442](https://wptele.ga/?p=442).
+* and much more… With 400+ Zapier Apps supported! More info on [wptele.ga/?p=442](https://wptele.ga/?p=442).
 
 https://www.youtube.com/watch?v=14aEV0_FHFk
+
+https://www.youtube.com/watch?v=frdub3fTdqk
 
 = Examples =
 * **[CosenzApp_bot](http://telegram.me/CosenzApp_bot)** (italian) - Guide for Cosenza city 
@@ -62,10 +65,7 @@ You can add your translations here: [translate.wordpress.org](https://translate.
 If you want to be translation editor for your locale, please send your username and language code (eg. it_IT) to milesimarco@outlook.com
 
 = Support =
-Give a look to our [faqs](https://wordpress.org/plugins/telegram-bot/faq/) or ask for [support](https://wordpress.org/support/plugin/telegram-bot). If you like this plugin, please leave a [review](https://wordpress.org/support/view/plugin-reviews/telegram-bot) or give us feedback so we can improve it!
-
-= Contributors =
-* Icon "Message" by Flaticon from Freepik (CC BY 3.0)
+Give a look to our [faqs](https://wordpress.org/plugins/telegram-bot/faq/) or ask for [support](https://wordpress.org/support/plugin/telegram-bot). If you like this plugin, please leave a [review](https://wordpress.org/support/view/plugin-reviews/telegram-bot) or feedback so we can improve it!
 
 == Installation ==
 This section describes how to install the plugin and get it working.
@@ -86,6 +86,11 @@ This section describes how to install the plugin and get it working.
 
 = What is Zapier and how do i integrate it? =
 [wptele.ga/?p=442](https://wptele.ga/?p=442)
+
+= How to enable debug mode? =
+If you are a developer, or just want a more complete "Telegram > Log" enable WP_DEBUG mode.
+The plugin debug mode also allows to explore Telegram users and groups as standard posts. This let you to check custom fields for each users and modify them in real time. You'll notice a new column (= Telegram id for the user) in Subscribers and Groups page.
+We don't suggest to keep WP_DEBUG if not for testing purposes.
 
 = How to set up dynamic replies? =
 The best way to integrate and add functions is to create another plugin.
@@ -127,7 +132,19 @@ function telegramcustom_parse( $telegram_user_id, $text ) {
 ?>`
 
 = How to set up dynamic keyboards? =
-You can start from the previous plugin created, and add the following filter:
+You can send custom keyboards directly in php. Every keyboard can be set only when you send a message, and is kept in the client side until another keyboard is sent (in another message). You can also change this behaviour by setting the $one_time_keyboard true or false.
+
+`telegram_sendmessage( $telegram_user_id, 'Hello from the other side!'); //Message with no keyboard (or with default one if set in plugin options)
+telegram_sendmessage( $telegram_user_id, 'Hello from the other side!', telegram_build_reply_markup( '11,12,13;21,22', true )); //Message with custom keyboard`
+
+Here is the details of telegram_build_reply_markup (an array is returned):
+`telegram_build_reply_markup(
+ '11,12,13;21,22', //The keyboard template (eg. 2 row, 3 columns for the first one and two columns for the second one
+ true, // $one_time_keyboard (optional) (default false = kept until a new keyboard is sent) (true = kept until the user send something to the bot)
+ true // $resize_keyboard (optional) (default true)
+);`
+
+You can also alter keyboards for commands defined in the **admin area**. Start from the previous custom plugin created, and add the following filter:
 
 `add_filter( 'telegram_get_reply_markup_filter', 'telegram_get_reply_markup_filter_custom', 1 );
 
@@ -147,6 +164,93 @@ function telegram_get_reply_markup_filter_custom( $id ) {
     }
 }`
 
+= How to get user location? =
+It's easy, with harvesine algorithm (one-point radius) or standard geolocation (4-points).
+These snippets only cover the harvesine algorithm, that is simple and supported by the plugin. To use the standard 4-points geolocation it's enough to do some php-calc with basic if-then structures.
+
+You can start from the previous custom plugin created, and add the following action:
+
+`add_action('telegram_parse_location','telegramcustom_c_parse_location', 10, 3);
+
+function telegramcustom_c_parse_location ( $telegram_user_id, $lat, $long  ) {
+
+  if ( telegram_location_haversine_check ( 45.85, 9.70, $lat, $long, 20 ) ) {
+    telegram_sendmessage( $telegram_user_id, 'Inside the radius');
+  }
+
+}`
+
+The examples sends a "Inside the radius" message when the user is inside the **20-meters** radius centered in 45.85 Lat, 9.70 Long.
+
+You have two developer functions to use:
+
+`//Check if point is within a distance (max_distance required)
+$boolean = telegram_location_haversine_check ( $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $max_distance, $min_distance = 0, $earthRadius = 6371000);
+
+//Calculate the distance
+$int = telegram_location_haversine_distance ( $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000);`
+
+The first function returns a boolean (true/false) depending on given parameters. Please note that $min_distance and $earthRadius are optional.
+The second one returns a int (in meters) of the distance. $earthRadius optional.
+
+Both the functions calculates distances on meters. If you want another type of result, just change the $earthRadius.
+
+= How to get user photos? =
+We've written simple functions to let developers build everything.
+Photos are saved in **/wp-content/uploads/telegram-bot/'.$plugin_post_id.'/'.$file_name** where $plugin_post_id is the custom post type id associated with the Telegram subscription (ex. '24') and $file_name is time().$extension
+
+`<?php
+/*
+Plugin Name: Telegram Bot & Channel (Custom)
+Description: My Custom Telegram Plugin
+Author: My name
+Version: 1
+*/
+
+add_action('telegram_parse_photo','telegramcustom_parse_photo', 10, 2);
+
+function telegramcustom_parse_photo ( $telegram_user_id, $photo  ) {
+
+ $plugin_post_id = telegram_getid( $telegram_user_id );
+
+ if ( !$plugin_post_id ) {
+  return;
+ }
+
+ /*
+  Here is the dynamic processing and how to reply.
+  You can:
+   - use if, switch and everything that works in php
+   - check if $text is made of multiple words (create an array from $text)
+   - customize and code other actions (ex. create WordPress post is $telegram_user_id is your id)
+ */
+ 
+ /*
+   $photo[2]['file_id'] is only one of available sizes. You should make sure that this size exist, or check for another size.
+   $photo[1]['file_id'] has lower resolution
+ */
+ $url = telegram_download_file( $telegram_user_id, $photo[2]['file_id'] ); //Fetch and save photo to your server
+ 
+ if ( $url ) { //$url is the local url because photo is already saved
+
+  //You can save the entry in your db
+  global $wpdb;
+  $arr = array( 'telegram_id' => $telegram_user_id, 'plugin_post_id' => $plugin_post_id, 'url' => $url );
+  
+  $wpdb->insert(
+   $wpdb->prefix . 'your_table_name_that_must_already_exist', $arr, array( '%s' )
+  );
+
+  //Or save it as custom field and use it for a Finite State Machine
+  update_post_meta( $plugin_post_id, 'telegram_custom_last_photo_received', $url );
+
+  telegram_sendmessage( $telegram_user_id, 'Photo received. Thank you!');
+}
+
+?>`
+
+Another example, that is a "emergency bot" created for the mid-italy earthquake (24 august 2016) is available on [GitHub](https://github.com/milesimarco/terremotocentroitalia-bot-telegram/)
+
 == Screenshots ==
 1. plugin dashboard
 2. subscribers list
@@ -156,8 +260,41 @@ function telegram_get_reply_markup_filter_custom( $id ) {
 6. plugin options
 7. website registration on [wptele.ga](https://wptele.ga) (if you don't have SSL)
 8. example from [CosenzApp_bot](http://telegram.me/CosenzApp_bot)
+9. send to telegram function for all post types
 
 == Changelog ==
+
+= 1.7.1 16.09.2016 =
+* Improved telegram_sendmessage() with ability to define custom keyboards via php
+* Added function to build a reply_markup that can be used as third parameter in telegram_sendmessage()
+* More dev-info in our faqs!
+
+= 1.7 14.09.2016 =
+* Added php function to get and save incoming files. More info in our faqs!
+* We're planning a **free** server upgrade for non-SSL users. Stay tuned: the best is yet to come!
+* Minor changes
+
+= 1.6.1 27.08.2016 =
+* Added nopaging => true in "telegram_sendmessagetoall" function to force website post_limit override
+
+= 1.6 26.08.2016 =
+* Added harvesine algorithm for radial geolocation. Check the faqs for more informations
+* Added a complete debug mode for developers to extend the plugin via custom fields. Check the faqs for more informations
+* Readme changes
+
+= 1.5.2 25.08.2016 =
+* Fix for some persian environments
+* Performance improvements
+* Switched debug_mode trigger. Now you have to enable WP_DEBUG if you want to fire the plugin debug mode.
+
+= 1.5.1 23.08.2016 =
+* Critical fix for "Insert_PHP" parsing (and similar) caused by oembed conflict (thanks @websurfertech)
+
+= 1.5 23.08.2016 =
+* Added instant send when publishing new content with configurable template
+* This version changes the sendmessage function because WordPress now turned post links to title automatically.
+* Please test your dynamic commands if you extended the plugin via php
+* Minor improvements
 
 = 1.4.2 17.08.2016 =
 * Minor bugfix

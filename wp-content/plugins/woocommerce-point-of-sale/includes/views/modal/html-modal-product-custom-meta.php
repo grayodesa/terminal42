@@ -1,4 +1,4 @@
-<div class="md-modal full-width md-dynamicmodal" id="modal-add_product_custom_meta">
+<div class="md-modal full-width md-dynamicmodal md-close-by-overlay" id="modal-add_product_custom_meta">
     <div class="md-content">
         <h1><?php _e('Edit product', 'wc_point_of_sale'); ?> "<span id="original_product_title"></span>" <span class="md-close"></span></h1>
         <div>

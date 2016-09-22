@@ -306,7 +306,7 @@ class TD_NM_Admin {
 
 			foreach ( $results as $post ) {
 				$post_meta_value = get_post_meta( $post['post_id'], 'td_nm_wordpress_notification', true );
-				printf( '<div data-key="%1$s" class="%2$s"><p>%3$s</p></div>', $post['post_id'], 'notice notice-error td_nm_wordpress_notice is-dismissible', $post_meta_value['message'] );
+				printf( '<div data-key="%1$s" class="%2$s"><p>%3$s</p></div>', $post['post_id'], 'notice notice-success td_nm_wordpress_notice is-dismissible', $post_meta_value['message'] );
 			}
 		}
 	}

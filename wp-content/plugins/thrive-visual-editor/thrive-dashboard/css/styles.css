@@ -2693,6 +2693,9 @@ table.tvd-collection {
 .tvd-margin-top-big {
   margin-top: 5rem; }
 
+.tvd-margin-top-bigger {
+  margin-top: 2rem; }
+
 .tvd-margin-top-normal {
   margin-top: 1rem; }
 
@@ -9716,6 +9719,9 @@ time picker styles
 
 .select2-search {
   margin-bottom: 1px; }
+
+.tvd-input-field select#tvu_load_template.tvd-invalid + span + label:after {
+  top: 25px; }
 
 .tvd-input-field select.tvd-invalid + span + label:after {
   content: attr(data-error);

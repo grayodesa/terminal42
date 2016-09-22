@@ -126,7 +126,12 @@ function openModal(modalid, openwin) {
 	}
 }
 function closeModal(modalid) {
-	var modal = document.querySelector( '#'+modalid );
+	var modal;
+	if( typeof modalid != 'undefined')
+		modal = document.querySelector( '#'+modalid );
+	else
+		modal = document.querySelector( '.md-modal.md-show' );
+
 	if( modal != null ){
 		classie.remove( modal, 'md-show' );
 		var missing = modal.querySelector( '#missing-attributes-select' );
@@ -203,5 +208,11 @@ jQuery(document).ready(function($) {
 			$('#payment_method_' + selected_payment_method).attr('checked', 'checked');
 		}
 	return false;
+	});
+	$('.md-overlay').click(function(event) {
+		var $active = $('.md-modal.md-show');
+		if( $active.hasClass('md-close-by-overlay')){
+			closeModal();
+		}
 	});
 });

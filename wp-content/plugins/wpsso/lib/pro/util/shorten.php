@@ -163,7 +163,7 @@ if ( ! class_exists( 'WpssoProUtilShorten' ) ) {
 			if ( $this->svc[$service] === false ) {
 				if ( is_admin() )
 					$this->p->notice->err( sprintf( __( 'Incomplete and/or missing %s service API credentials for URL shortening.',
-						'wpsso' ), $this->p->cf['form']['shorteners'][$service] ), true );
+						'wpsso' ), $this->p->cf['form']['shorteners'][$service] ) );
 				if ( $this->p->debug->enabled )
 					$this->p->debug->log( 'incomplete / missing '.$service.' credentials for shortening' );
 			}

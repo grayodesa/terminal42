@@ -486,9 +486,8 @@ function tve_social_fetch_count( $url, $for = null ) {
  * @return int
  */
 function tve_social_fetch_count_fb_share( $url ) {
-	$data = _tve_social_helper_get_json( 'http://graph.facebook.com/?id=' . rawurlencode( $url ) );
-
-	return empty( $data['shares'] ) ? 0 : (int) $data['shares'];
+	/* not nice but the idea would be to use same function */
+	return tve_dash_fetch_share_count_facebook( $url );
 }
 
 /**

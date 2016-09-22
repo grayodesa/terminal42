@@ -12,14 +12,14 @@ class Thrive_Dash_Api_SparkPost {
 	/**
 	 * Default config values. Passed in values will override these.
 	 */
-	private static $apiDefaults = [
+	private static $apiDefaults = array(
 		'host'      => 'api.sparkpost.com',
 		'protocol'  => 'https',
 		'port'      => 443,
 		'strictSSL' => true,
 		'key'       => '',
-		'version'   => 'v1'
-	];
+		'version'   => 'v1',
+	);
 
 	/**
 	 * Sets up httpAdapter and config
@@ -67,10 +67,10 @@ class Thrive_Dash_Api_SparkPost {
 	 * Merges passed in headers with default headers for http requests
 	 */
 	public function getHttpHeaders() {
-		$defaultOptions = [
+		$defaultOptions = array(
 			'Authorization' => $this->config['key'],
 			'Content-Type'  => 'application/json',
-		];
+		);
 
 		return $defaultOptions;
 	}

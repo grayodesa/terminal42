@@ -76,18 +76,21 @@ class Thrive_Dash_Api_ActiveCampaign {
 	}
 
 	/**
-	 * subscribe contact to a list
+	 *  subscribe contact to a list
 	 *
-	 * @see http://www.activecampaign.com/api/example.php?call=contact_add
-	 *
-	 * TODO: maybe grow the list parameters to include all
-	 *
-	 * @param string $email
+	 * @param $list_id
+	 * @param $email
 	 * @param string $firstName
 	 * @param string $lastName
 	 * @param string $phone
+	 * @param int $form_id
+	 * @param string $organizationName
+	 * @param array $tags
+	 * @param null $ip
 	 *
 	 * @throws Thrive_Dash_Api_ActiveCampaign_Exception
+	 *
+	 * @return array
 	 */
 	public function addSubscriber( $list_id, $email, $firstName = '', $lastName = '', $phone = '', $form_id = 0, $organizationName = '', $tags = array(), $ip = null ) {
 		$body = array(
@@ -98,11 +101,11 @@ class Thrive_Dash_Api_ActiveCampaign {
 			'status[' . $list_id . ']'            => 1
 		);
 
-		if(!empty($firstName) ) {
+		if ( ! empty( $firstName ) ) {
 			$body['first_name'] = $firstName;
 		}
 
-		if(!empty($lastName) ) {
+		if ( ! empty( $lastName ) ) {
 			$body['last_name'] = $lastName;
 		}
 
@@ -127,6 +130,55 @@ class Thrive_Dash_Api_ActiveCampaign {
 		return $this->call( 'contact_sync', array(), $body, 'POST' );
 	}
 
+	public function updateSubscriber( $contact, $list_id, $email, $firstName = '', $lastName = '', $phone = '', $form_id = 0, $organizationName = '', $tags = array(), $ip = null ) {
+
+		$body = array(
+			'id'                                  => $contact['subscriberid'],
+			'email'                               => $email,
+			'phone'                               => $phone,
+			'instantresponders[' . $list_id . ']' => 1,
+		);
+
+		if ( ! empty( $contact['lists'] ) ) {
+			foreach ( $contact['lists'] as $id => $list ) {
+				$body[ 'p[' . $id . ']' ]               = $id;
+				$body[ 'status[' . $id . ']' ]          = $list['status'];
+				$body[ 'first_name_list[' . $id . ']' ] = $list['first_name'];
+				$body[ 'last_name_list[' . $id . ']' ]  = $list['last_name'];
+			}
+		}
+
+		if ( ! in_array( $list_id, $contact['lists'] ) ) {
+			$body[ 'p[' . $list_id . ']' ]               = $list_id;
+			$body[ 'status[' . $list_id . ']' ]          = 1;
+			$body[ 'first_name_list[' . $list_id . ']' ] = $firstName;
+			$body[ 'last_name_list[' . $list_id . ']' ]  = $lastName;
+		}
+
+		foreach ( $contact['fields'] as $id => $field ) {
+			$body[ 'field[' . $id . ', ' . $field['dataid'] . ']' ] = $field['val'];
+		}
+
+		if ( ! empty( $firstName ) ) {
+			$body[ 'first_name_list[' . $list_id . ']' ] = $firstName;
+			$body['first_name'] = $firstName;
+		}
+
+		if ( ! empty( $lastName ) ) {
+			$body[ 'last_name_list[' . $list_id . ']' ] = $lastName;
+			$body['last_name'] = $lastName;
+		}
+
+		if ( ! empty( $contact['tags'] ) ) {
+			$body['tags'] = implode( ',', $contact['tags'] );
+		}
+		if ( $body['tags'] !== $tags ) {
+			$body['tags'] = $body['tags'] . ',' . $tags;
+		}
+
+		return $this->call( 'contact_edit', array(), $body, 'POST' );
+	}
+
 	/**
 	 * perform a webservice call
 	 *
@@ -135,9 +187,13 @@ class Thrive_Dash_Api_ActiveCampaign {
 	 * ActiveCampaign requires some of the params be sent by query string and others via POST body
 	 * by default, api_key, api_action and api_output are sent via query string
 	 *
-	 * @param string $apiAction by default, this is sent via query string
-	 * @param array $bodyParams body request parameters
-	 * @param string $method GET or POST
+	 * @param $apiAction
+	 * @param array $queryStringParams
+	 * @param array $bodyParams
+	 * @param string $method
+	 *
+	 * @return array
+	 * @throws Thrive_Dash_Api_ActiveCampaign_Exception
 	 */
 	public function call( $apiAction, $queryStringParams = array(), $bodyParams = array(), $method = 'GET' ) {
 		$queryStringParams['api_key']    = $this->_apiKey;
@@ -181,7 +237,7 @@ class Thrive_Dash_Api_ActiveCampaign {
 			throw new Thrive_Dash_Api_ActiveCampaign_Exception( 'Unknown problem with the API request. Response was:' . $body );
 		}
 
-		if ( isset( $data['result_code'] ) && empty( $data['result_code'] ) ) {
+		if ( isset( $data['result_code'] ) && empty( $data['result_code'] ) && $apiAction !== 'contact_view_email' ) {
 			throw new Thrive_Dash_Api_ActiveCampaign_Exception( 'API Error: ' . isset( $data['result_message'] ) ? $data['result_message'] : (int) $data['result_code'] );
 		}
 

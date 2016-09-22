@@ -1,4 +1,4 @@
-=== WordPress Social Sharing Optimization - Improves Editing / Publishing / Shared Content ===
+=== WPSSO - Complete Meta Tags and Schema Markup for Social Sharing Optimization & SEO ===
 Plugin Name: WordPress Social Sharing Optimization (WPSSO)
 Plugin Slug: wpsso
 Text Domain: wpsso
@@ -11,36 +11,19 @@ Tags: amp, bbPress, buddypress, e-commerce, easy digital downloads, edd, faceboo
 Contributors: jsmoriss
 Requires At Least: 3.1
 Tested Up To: 4.6
-Stable Tag: 3.34.1-1
+Stable Tag: 3.35.1-1
 
-Fast, light-weight, comprehensive plugin to automatically generate social meta tags + Schema markup for Google Search and social sharing.
+Automatically create complete and accurate meta tags and Schema markup for Social Sharing Optimization (SSO) and SEO.
 
 == Description ==
 
-<p><img src="https://surniaulula.github.io/wpsso/assets/icon-256x256.png" style="width:33%;min-width:128px;max-width:256px;height:auto;float:left;margin:10px 60px 40px 0;" />
-<strong>WPSSO adds <em>complete</em> and <em>accurate</em> meta tags and Schema markup</strong> &mdash;</p>
+<p><img src="https://surniaulula.github.io/wpsso/assets/icon-256x256.png" style="width:33%;min-width:128px;max-width:256px;height:auto;float:left;margin:10px 60px 40px 0;" /><strong>WPSSO creates <em>complete</em> and <em>accurate</em> meta tags and Schema markup.</strong></p>
 
-<blockquote>
-<p>Google and social websites use a wide variety of meta tags and Schema markup standards provided by WPSSO (<a href="http://ogp.me/">Facebook / Open Graph</a>, <a href="https://business.pinterest.com/en/rich-pins">Pinterest Rich Pin</a>, <a href="https://dev.twitter.com/cards/overview">Twitter Card</a> meta tags and <a href="https://developers.google.com/search/docs/guides/intro-structured-data">Schema / Structured Data / Rich Snippet</a> markup) to describe &amp; display your content correctly &mdash; including titles, descriptions, hashtags, images, videos, ecommerce product details, author profile / authorship, publisher name, ratings, event details, and much more.</li></ul></p>
-</blockquote>
+<p><strong>WPSSO uses your <em>existing</em> content to generate meta tags and Schema markup</strong> &mdash; there's no need to manually enter / configure any additional settings or values.</p>
 
-<p><strong>WPSSO uses <em>existing</em> content to generate meta tags and Schema markup</strong> &mdash;</p>
+<p><strong>WPSSO provides all the information search engines and social websites need</strong> &mdash; improving <em>Google Search ranking</em>, <em>social engagement</em> and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more.</p>
 
-<blockquote>
-<p>There's no need to manually enter / configure any additional settings or values.</p>
-</blockquote>
-
-<p><strong>Social meta tags and Schema markup are the cornerstone of social SEO</strong> &mdash;</p>
-
-<blockquote>
-<p>WPSSO provides all the information social websites need, improving <em>Google Search ranking</em>, <em>social engagement</em>, and <em>click-through-rates</em> on Facebook, Google+, Twitter, Pinterest, LinkedIn, and many more. <strong>WPSSO includes special support and optimization features specifically for Pinterest</strong> to avoid incompatible meta tags and Schema markup.</p>
-</blockquote>
-
-<p><strong>Additional meta tags and markup for 3rd party plugins and services</strong> &mdash;</p>
-
-<blockquote>
-<p>WPSSO Pro retrieves information from a wide range of sources <em>automatically</em>, including All in One SEO Pack, bbPress, BuddyPress, Co-Authors Plus, Easy Digital Downloads, HeadSpace2 SEO, NextGEN Gallery, MarketPress - WordPress eCommerce, Polylang, rtMedia for WordPress (BuddyPress and bbPress), The Events Calendar, The SEO Framework, WooCommerce, WP e-Commerce, WordPress REST API, Yoast SEO (aka WordPress SEO), Yotpo Social Reviews for WooCommerce, along with service APIs like Bitly, Facebook Embedded Videos, Google URL Shortener, Gravatar, Ow.ly, Slideshare, TinyURL, Vimeo, Wistia, Your Own URL Shortener (YOURLS), and YouTube.</p>
-</blockquote>
+<p><strong>WPSSO also includes special support and optimization features for Pinterest</strong> &mdash; avoiding conflicts between incompatible Pinterest and Facebook Open Graph meta tags.</p>
 
 = Quick List of Features =
 
@@ -355,47 +338,58 @@ Follow Surnia Ulula on [Google+](https://plus.google.com/+SurniaUlula/?rel=autho
 
 = Changelog / Release Notes =
 
-**Version 3.34.1-1 (2016/08/20)**
+**Version 3.35.2-dev1 (TBD)**
 
 Official announcement: N/A
 
 * *New Features*
 	* None
 * *Improvements*
-	* Added a new "link rel shortlink" meta tag with the shortened sharing URL or post shortlink.
+	* Added the 'weibo:article:create_at' and 'weibo:article:update_at' meta tags for Weibo.
+	* Added the 'twitter:player:stream' and 'twitter:player:stream:content_type' meta tags for Facebook (video/mp4) embeded videos.
+	* Changed 'article:published_time' and 'article:modified_time' values to GMT instead of the local timezone.
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Added the post ID argument to `wp_get_shortlink()` for more reliable results.
-	* Added new SucomNoDebug and SucomNoNotice classes.
-	* Added new filters to manage auto-disabling of canonical and description meta tags when an SEO plugin is detected:
-		* 'wpsso_add_meta_name_canonical' ( $bool )
-		* 'wpsso_add_meta_name_description' ( $bool )
+	* Updated minimum PHP version required from v5.1 to v5.2.
 
-**Version 3.34.0-1 (2016/08/18)**
+**Version 3.35.1-1 (2016/09/15)**
 
 Official announcement: N/A
 
 * *New Features*
-	* Added support for Facebook embedded iframe videos (Pro version).
+	* None
 * *Improvements*
-	* Added support for Schema http://schema.org/AutomotiveBusiness sub-types (AutoDealer, AutoRental, AutoRepair, etc.).
-	* Added Co-Authors Plus authors and guests (with Facebook URLs) to the Open Graph article:author meta tags.
-	* Added the first (top) Co-Authors Plus author ID as the post / page author (Pro version).
-	* Added a check and warnings for conflicting settings in the Squirrly SEO plugin.
+	* None
+* *Bugfixes*
+	* Fixed an undefined og:image value when adding an og:image:secure_url meta tag.
+* *Developer Notes*
+	* None
+
+**Version 3.35.0-1 (2016/09/10)**
+
+Official announcement: N/A
+
+* *New Features*
+	* None
+* *Improvements*
+	* Refactored the SucomNotice class to improve performance.
+	* Changed from using the post permalink to a shortlink when checking for duplicate meta tags.
+	* Added a maximum (success) count of 6 when checking for duplicate meta tags.
+	* Added a notice for a missing Open Graph description meta tag.
+	* Moved the "Version Information" side box from all SSO settings pages to only the SSO Update Manager settings page.
 * *Bugfixes*
 	* None
 * *Developer Notes*
-	* Added a `$src_id` argument to the WpssoUtil `get_sharing_url()` method and its filters.
-	* Removed the '$use_post' argument in the json data filters.
+	* Replaced the `register_uninstall_hook()` function call with an uninstall.php file.
 
 == Upgrade Notice ==
 
-= 3.34.1-1 =
+= 3.35.1-1 =
 
-(2016/08/20) Added a new "link rel shortlink" meta tag. Added new filters to manage auto-disabling of canonical and description meta tags.
+(2016/09/15) Fixed an undefined og:image value when adding an og:image:secure_url meta tag.
 
-= 3.34.0-1 =
+= 3.35.0-1 =
 
-(2016/08/18) Added support for Facebook embedded iframe videos (Pro version). Added support for Schema Automotive Business sub-types.
+(2016/09/10) Refactored the SucomNotice class to improve performance. Changed to a shortlink when checking for duplicate meta tags. Added a maximum count when checking for duplicate meta tags. Added a notice for a missing Open Graph description meta tag.
 

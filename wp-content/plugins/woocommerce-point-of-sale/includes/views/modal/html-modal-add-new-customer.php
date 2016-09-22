@@ -4,12 +4,12 @@ $checkout = new WC_Checkout();
 if( isset($checkout->checkout_fields['order']) ){
     unset($checkout->checkout_fields['order']['order_comments']);    
 }
-//var_dump($checkout->checkout_fields);
+
 $a = isset($checkout->checkout_fields['order']) ? count($checkout->checkout_fields['order']) : 0;
 $o = isset($checkout->checkout_fields['pos_custom_order']) ? count($checkout->checkout_fields['pos_custom_order']) : 0;
 $c = isset($checkout->checkout_fields['pos_acf']) ? count($checkout->checkout_fields['pos_acf']) : 0;
 ?>
-<div class="md-modal full-width md-dynamicmodal" id="modal-order_customer">
+<div class="md-modal full-width md-dynamicmodal md-close-by-overlay" id="modal-order_customer">
     <div class="md-content woocommerce">
         <h1><?php _e('Customer Details', 'wc_point_of_sale'); ?><span class="md-close"></span></h1>
         <h2 class="nav-tab-wrapper woo-nav-tab-wrapper">

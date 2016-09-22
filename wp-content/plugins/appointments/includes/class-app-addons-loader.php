@@ -75,19 +75,20 @@ class Appointments_Addons_Loader {
 			foreach ( $all as $addon_file ) {
 				$addon = new Appointments_Addon( $addon_file );
 				if ( ! $addon->error ) {
-					$addons[ $addon_file ] = $addon;
+					$addons[ $addon->slug ] = $addon;
 				}
 
 			}
-			$this->addons = $addons;
+
+			/**
+			 * Filter the list of found addons (active or not)
+			 *
+			 * @param array $addons
+			 */
+			$this->addons = apply_filters( 'appointments_addons', $addons );
 		}
 
-		/**
-		 * Filter the list of found addons (active or not)
-		 *
-		 * @param array $addons
-		 */
-		return apply_filters( 'appointments_addons', $this->addons );
+		return $this->addons;
 	}
 
 	/**

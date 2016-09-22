@@ -184,6 +184,12 @@ class wfWAFWordPress extends wfWAF {
 	public function isIPBlocked($ip) {
 		return false;
 	}
+	
+	public function uninstall() {
+		parent::uninstall();
+		@unlink(rtrim(WFWAF_LOG_PATH . '/') . '/.htaccess');
+		@rmdir(WFWAF_LOG_PATH);
+	}
 
 	/**
 	 * @return wfWAFRunException

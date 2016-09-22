@@ -6,9 +6,7 @@
         $columns['sdate'] ='Subscribe Date';
         unset($columns['cb']);
         unset($columns['date']);
-        if (!telegram_option('debug')) {
-            unset($columns['title']);
-        }
+
         return $columns;
     }
     add_filter('manage_edit-telegram_subscribers_columns', 't_subscribers_columns');
@@ -17,7 +15,7 @@
         $columns['sdate'] ='Subscribe Date';
         unset($columns['cb']);
         unset($columns['date']);
-        if (!telegram_option('debug')) {
+        if ( defined('WP_DEBUG') && false === WP_DEBUG) {
             unset($columns['title']);
         }
         return $columns;

@@ -78,13 +78,13 @@ msgstr "Галереи"
 msgid "More links"
 msgstr "Другие ссылки"
 
-#: inc/widgets.php:88
-msgid "More quotes"
-msgstr "Другие цитаты"
-
 #: inc/widgets.php:91 taxonomy-post_format.php:45
 msgid "Links"
 msgstr "Ссылки"
+
+#: inc/widgets.php:88
+msgid "More quotes"
+msgstr "Другие цитаты"
 
 #: inc/widgets.php:87 taxonomy-post_format.php:42
 msgid "Quotes"
@@ -206,13 +206,13 @@ msgstr "Используйте <a href=\"%1$s\">метку</a>, чтобы по�
 msgid "Featured Content"
 msgstr "Избранное содержимое"
 
-#: inc/customizer.php:44 inc/customizer.php:45
-msgid "May only be visible on wide screens."
-msgstr "Может отображаться только на широком экране."
-
 #: inc/customizer.php:47 inc/customizer.php:48
 msgid "Background may only be visible on wide screens."
 msgstr "Фон может отображаться только на широком экране."
+
+#: inc/customizer.php:44 inc/customizer.php:45
+msgid "May only be visible on wide screens."
+msgstr "Может отображаться только на широком экране."
 
 #: inc/customizer.php:40
 msgid "Display Site Title &amp; Tagline"

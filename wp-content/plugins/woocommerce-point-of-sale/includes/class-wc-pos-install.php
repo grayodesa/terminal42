@@ -245,6 +245,7 @@ class WC_POS_Install {
             print_number_items text DEFAULT '' NOT NULL,
             items_label text DEFAULT '' NOT NULL,
             print_barcode varchar(255) DEFAULT '' NOT NULL,
+            show_image_product varchar(255) DEFAULT '' NOT NULL,
             print_tax_number varchar(255) DEFAULT '' NOT NULL,
             tax_number_label text DEFAULT '' NOT NULL,
             print_order_notes varchar(255) DEFAULT '' NOT NULL,
@@ -264,6 +265,7 @@ class WC_POS_Install {
             logo_position enum( 'left', 'center', 'right' ) DEFAULT 'left',
             contact_position enum( 'left', 'center', 'right' ) DEFAULT 'left',
             tax_number_position enum( 'left', 'center', 'right' ) DEFAULT 'left',
+            custom_css text DEFAULT '' NOT NULL,
             PRIMARY KEY  (ID)
     )" . $collate;
             dbDelta($sql);

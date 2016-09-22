@@ -69,13 +69,13 @@ class wfScan {
 		wfUtils::iniSet('display_errors','On');
 		self::status(4, 'info', "Setting up scanRunning and starting scan");
 		if($isFork){
-			$scan = wfConfig::get_ser('wfsd_engine', false);
+			$scan = wfConfig::get_ser('wfsd_engine', false, false);
 			if($scan){
 				self::status(4, 'info', "Got a true deserialized value back from 'wfsd_engine' with type: " . gettype($scan));
-				wfConfig::set('wfsd_engine', '', true);
+				wfConfig::set('wfsd_engine', '', wfConfig::DONT_AUTOLOAD);
 			} else {
 				self::status(2, 'error', "Scan can't continue - stored data not found after a fork. Got type: " . gettype($scan));
-				wfConfig::set('wfsd_engine', '', true);
+				wfConfig::set('wfsd_engine', '', wfConfig::DONT_AUTOLOAD);
 				exit();
 			}
 		} else {

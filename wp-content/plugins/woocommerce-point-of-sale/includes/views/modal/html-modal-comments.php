@@ -1,4 +1,4 @@
-<div class="md-modal full-width md-dynamicmodal" id="modal-order_comments">
+<div class="md-modal full-width md-dynamicmodal md-close-by-overlay" id="modal-order_comments">
     <div class="md-content">
         <h1><?php _e('Notes', 'wc_point_of_sale'); ?><span class="md-close close-order-comments"></span></h1>
         <div>

@@ -6,10 +6,7 @@
  * @package  WoocommercePointOfSale/views
  * @since    0.1
  */
-?>
 
-<div class="wrap" id="wc-pos-registers-edit">
-<?php 
 $admin_url = get_admin_url(get_current_blog_id(), '/');
 if(isset($_SERVER['HTTP_REFERER'])){
     $ref = $_SERVER['HTTP_REFERER'];
@@ -17,7 +14,9 @@ if(isset($_SERVER['HTTP_REFERER'])){
         $admin_url = str_replace('https://', 'http://', $admin_url);
     }
 }
- ?>
+?>
+
+<div class="wrap" id="wc-pos-registers-edit">
     <h2>
         <?php echo $data['name']; ?>
         <a class="button tips" href="<?php echo $admin_url; ?>admin.php?page=wc_pos_registers" id="go_back_register" data-tip="<?php _e('Return To Registers', 'wc_point_of_sale'); ?>"><?php _e('Back', 'wc_point_of_sale'); ?></a>
@@ -31,11 +30,16 @@ if(isset($_SERVER['HTTP_REFERER'])){
 
         <button class="button ladda-button tips" data-spinner-color="#6d6d6d" id="sync_data" data-tip='<span id="last_sync_time"></span>'><span class="ladda-label"></span><?php _e('Sync', 'wc_point_of_sale'); ?></button>
         
-        <div class="button offline-ui-up" id="offline_indication">
-            <div class="offline-ui-content"></div>
-            <a class="offline-ui-retry" href=""></a>
-        </div>
-
+        <?php
+        if( get_option('wc_pos_disable_connection_status', 'no') != 'yes' ){
+            ?>
+            <div class="button offline-ui-up" id="offline_indication">
+                <div class="offline-ui-content"></div>
+                <a class="offline-ui-retry" href=""></a>
+            </div>
+            <?php
+        }
+        ?>
         
         <a class="button button-primary tips" style="float:right;" href="<?php echo $admin_url; ?>admin.php?page=wc_pos_registers&amp;close=<?php echo $data['ID']; ?>" id="close_register" data-tip="<?php _e('Close Register', 'wc_point_of_sale'); ?>">
         </a>
@@ -124,7 +128,6 @@ if(isset($_SERVER['HTTP_REFERER'])){
                                                     if(isset($detail_data['default_shipping_method']) && $detail_data['default_shipping_method'] != ''){
                                                         $chosen_method = $detail_data['default_shipping_method'];
                                                         $shipping_methods = WC()->shipping->load_shipping_methods();
-                                                        #var_dump($shipping_methods);
                                                     ?>
                                                         <select name="shipping_method[0]" data-index="0" id="shipping_method_0" class="shipping_method">
                                                         <option value="no_shipping" <?php selected( 'no_shipping', $chosen_method ); ?> data-cost="0"><?php _e('No Shipping','wc_point_of_sale' ); ?></option>
@@ -318,10 +321,14 @@ if(isset($_SERVER['HTTP_REFERER'])){
     </div>       
 
 </div>
+<?php
+#var_dump($data);
+?>
 <script>
-    var note_request  = <?php echo isNoteRequest( $data['ID'] ); ?>;
+    var change_user   = <?php echo json_encode( isChangeUserAfterSale( $data['ID'] ) ); ?>;
+    var note_request  = <?php echo json_encode( isNoteRequest( $data['ID'] ) ); ?>;
     var print_receipt = <?php echo json_encode( isPrintReceipt( $data['ID'] ) ); ?>;
-    var email_receipt = <?php echo json_encode( isEmailReceipt( $data['ID'] ) ); ?>;
+    var email_receipt = <?php echo absint( $data['settings']['email_receipt'] ); ?>;
     
 </script>
 <style>

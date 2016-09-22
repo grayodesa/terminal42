@@ -5,7 +5,7 @@
 ?>
 
 <script type="text/template" id="tmpl-missing-attributes">
-	<table>
+	<table class="missing-attributes-table">
 		<tbody>
 			{{#each attr}}
 			<tr>

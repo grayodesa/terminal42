@@ -422,7 +422,11 @@ TVE_Dash.views = TVE_Dash.views || {};
 
 			$root.add( $inputs ).not( '.tvd-skip-modal-save' ).off( 'keyup.tvd-save' ).on( 'keyup.tvd-save', function ( e ) {
 				if ( e.which === 13 ) {
-					$root.find( '.tvd-modal-submit' ).filter( ':visible' ).first().click();
+					if ( this.tagName.toLowerCase() === 'textarea' ) {
+						event.preventDefault();
+					} else {
+						$root.find( '.tvd-modal-submit' ).filter( ':visible' ).first().click();
+					}
 					return false;
 				}
 			} );

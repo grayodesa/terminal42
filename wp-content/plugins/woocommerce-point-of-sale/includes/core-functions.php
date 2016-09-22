@@ -38,6 +38,10 @@ function pos_receipts_admin_page()
 {
 	return isset($_GET['page']) && $_GET['page'] == 'wc_pos_receipts' ;
 }
+function pos_barcodes_admin_page()
+{
+	return isset($_GET['page']) && $_GET['page'] == 'wc_pos_barcodes' ;
+}
 function pos_settings_admin_page()
 {
 	return isset($_GET['page']) && $_GET['page'] == 'wc_pos_settings' ;
@@ -309,6 +313,14 @@ function set_outlet_taxable_address($address){
       return $address;
   }
 }
+function isChangeUserAfterSale($register_id = 0)
+{	
+	if($register_id){
+		$register_data = WC_POS()->register()->get_data($register_id);
+	    return $register_data[0]['settings']['change_user'] ? true : false;
+	}
+	return false;
+}
 function isPrintReceipt($register_id = 0)
 {	
 	if($register_id){
@@ -321,7 +333,7 @@ function isNoteRequest($register_id = 0)
 {	
 	if($register_id){
 		$register_data = WC_POS()->register()->get_data($register_id);
-	    return $register_data[0]['settings']['note_request'];
+	    return $register_data[0]['settings']['note_request'] ? true : false;
 	}
 	return false;
 }
@@ -596,7 +608,6 @@ function pos_term_relationships()
 					$ordering = WC()->query->get_catalog_ordering_args();
 					break;
 			}
-			#var_dump($ordering);
 			$args       = array(
 				'posts_per_page' => -1,
 				'post_type' => 'product',
@@ -1002,4 +1013,46 @@ function pos_get_custom_order_fields()
 		}
 	}
 	return $custom_fields;
+}
+
+
+function pos_close_register($register_id = 0)
+{
+	global $wpdb;
+
+	if( $register_id ){
+		$table_name = $wpdb->prefix . "wc_poin_of_sale_registers";
+        $db_data = $wpdb->get_results("SELECT * FROM $table_name WHERE ID = $register_id");
+
+        if ( $db_data && 0 != ($user_id = get_current_user_id()) ){
+            $row = $db_data[0];
+            
+            $lock_user = $row->_edit_last;
+            if($lock_user == $user_id){
+                $now = current_time( 'mysql' );    
+                $data['closed']     = $now;
+                $data['_edit_last'] = $user_id;
+                $wpdb->update( $table_name, $data, array( 'ID' => $register_id ) );                
+                return true;
+            }
+        }
+	}
+	return false;
+}
+
+function pos_logout($register_id = 0)
+{
+	global $wpdb;
+	if( $register_id ){
+		$data = WC_POS()->register()->get_data($register_id);
+		if( $data ){
+			$data = $data[0];
+			if( $data['settings']['change_user'] ){
+				pos_close_register($register_id);
+				wp_logout();
+				return true;
+			}
+		}
+	}
+	return false;
 }

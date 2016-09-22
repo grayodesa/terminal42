@@ -82,15 +82,6 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets_Plus__Tick
 	public $checkin_key = '_tribe_eddticket_checkedin';
 
 	/**
-	 * Meta key that relates Attendees and Products.
-	 *
-	 * @deprecated use of the ATTENDEE_OBJECT class constant is preferred
-	 *
-	 * @var string
-	 */
-	public static $attendee_product_key = '_tribe_eddticket_product';
-
-	/**
 	 * Meta key that relates Attendees and Orders.
 	 *
 	 * @deprecated use of the ATTENDEE_OBJECT class constant is preferred
@@ -673,7 +664,8 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets_Plus__Tick
 	public function front_end_tickets_form( $content ) {
 		$post = $GLOBALS['post'];
 
-		if ( ! empty( $post->post_parent ) ) {
+		// For recurring events (child instances only), default to loading tickets for the parent event
+		if ( ! empty( $post->post_parent ) && function_exists( 'tribe_is_recurring_event' ) && tribe_is_recurring_event( $post->ID ) ) {
 			$post = get_post( $post->post_parent );
 		}
 
@@ -695,6 +687,8 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets_Plus__Tick
 	 * Grabs the submitted front end tickets form and adds the products to the cart.
 	 */
 	public function process_front_end_tickets_form() {
+		parent::process_front_end_tickets_form();
+
 		// We're only interested in EDD Tickets submissions
 		if ( ! isset( $_GET['eddtickets_process'] ) || empty( $_POST['product_id'] ) ) {
 			return;
@@ -1164,7 +1158,7 @@ class Tribe__Tickets_Plus__Commerce__EDD__Main extends Tribe__Tickets_Plus__Tick
 	 * @return string
 	 */
 	public function get_price_html( $product ) {
-		return edd_price( $product );
+		return edd_price( $product, false );
 	}
 
 	/**

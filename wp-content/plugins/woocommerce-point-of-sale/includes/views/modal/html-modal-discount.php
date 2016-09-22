@@ -1,4 +1,4 @@
-<div class="md-modal md-dynamicmodal md-menu" id="modal-order_discount">
+<div class="md-modal md-dynamicmodal md-menu md-close-by-overlay" id="modal-order_discount">
     <div class="media-frame-menu">
         <div class="media-menu">
             <a href="#discount_tab" class="active discount_modal"><?php _e('Discount', 'woocommerce'); ?></a>

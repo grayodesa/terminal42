@@ -5,14 +5,15 @@
  * Text Domain: wpsso-um
  * Domain Path: /languages
  * Plugin URI: http://surniaulula.com/extend/plugins/wpsso-um/
+ * Assets URI: https://surniaulula.github.io/wpsso-um/assets/
  * Author: JS Morisset
  * Author URI: http://surniaulula.com/
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl.txt
  * Description: WPSSO extension to provide updates for the WordPress Social Sharing Optimization (WPSSO) Pro plugin and its Pro extensions.
  * Requires At Least: 3.1
- * Tested Up To: 4.5.3
- * Version: 1.5.6-1
+ * Tested Up To: 4.6
+ * Version: 1.5.7-1
  * 
  * Version Numbers: {major}.{minor}.{bugfix}-{stage}{level}
  *
@@ -42,7 +43,7 @@ if ( ! class_exists( 'WpssoUm' ) ) {
 		private static $text_domain = 'wpsso-um';
 		private static $req_short = 'WPSSO';
 		private static $req_name = 'WordPress Social Sharing Optimization (WPSSO)';
-		private static $req_min_version = '3.33.5-1';
+		private static $req_min_version = '3.35.0-1';
 		private static $req_has_min_ver = true;
 
 		public static function &get_instance() {
@@ -55,8 +56,8 @@ if ( ! class_exists( 'WpssoUm' ) ) {
 
 			require_once ( dirname( __FILE__ ).'/lib/config.php' );
 			WpssoUmConfig::set_constants( __FILE__ );
-			WpssoUmConfig::require_libs( __FILE__ );		// includes the register.php class library
-			$this->reg = new WpssoUmRegister();			// activate, deactivate, uninstall hooks
+			WpssoUmConfig::require_libs( __FILE__ );	// includes the register.php class library
+			$this->reg = new WpssoUmRegister();		// activate, deactivate, uninstall hooks
 
 			if ( is_admin() ) {
 				load_plugin_textdomain( 'wpsso-um', false, 'wpsso-um/languages/' );
@@ -143,7 +144,7 @@ if ( ! class_exists( 'WpssoUm' ) ) {
 						if ( $this->p->debug->enabled ) {
 							$this->p->debug->log( 'requesting update check for '.$ext );
 							$this->p->notice->inf( 'Performing an update check for the '.$info['name'].' plugin.',
-								true, true, __FUNCTION__.'_'.$ext.'_update_check', true );
+								true, __FUNCTION__.'_'.$ext.'_update_check', true );
 						}
 						$this->update->check_for_updates( $ext, false, false );	// $notice = false, $use_cache = false
 					}
@@ -160,7 +161,7 @@ if ( ! class_exists( 'WpssoUm' ) ) {
 					self::$req_min_version.' or newer ('.$have_version.' installed)' );
 
 			if ( is_admin() )
-				$this->p->notice->err( sprintf( __( 'The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed).', 'wpsso-um' ), $info['name'], $info['version'], self::$req_short, self::$req_min_version, $have_version ), true );
+				$this->p->notice->err( sprintf( __( 'The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed).', 'wpsso-um' ), $info['name'], $info['version'], self::$req_short, self::$req_min_version, $have_version ) );
 		}
 
 		// minimum value is 12 hours for the constant, 24 hours otherwise

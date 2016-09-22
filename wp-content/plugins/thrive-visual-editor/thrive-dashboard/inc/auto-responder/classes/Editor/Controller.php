@@ -24,12 +24,14 @@ class Thrive_Dash_List_Editor_Controller {
 	 * get a request parameter
 	 *
 	 * @param string $key
-	 * @param null $default
+	 * @param null   $default
 	 *
 	 * @return mixed
 	 */
 	protected function _param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] :
+		return isset( $_POST[ $key ] )
+			? $_POST[ $key ]
+			:
 			( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
 	}
 
@@ -37,7 +39,7 @@ class Thrive_Dash_List_Editor_Controller {
 	 * render a view with $data
 	 *
 	 * @param string $file
-	 * @param mixed $data
+	 * @param mixed  $data
 	 *
 	 * @return string the rendered content
 	 */
@@ -127,10 +129,10 @@ class Thrive_Dash_List_Editor_Controller {
 						'show_order'           => true
 					), $this->_param( 'api_fields_order', array() ) ),
 					'connection_config'   => $connection_config,
-					'show_submit_options' => apply_filters( 'tve_autoresponder_show_submit', true )
+					'show_submit_options' => apply_filters( 'tve_autoresponder_show_submit', true ),
+					'custom_messages'     => $custom_messages,
 				);
 				$content  = $this->_view( 'dashboard-api', $data );
-
 
 				$response['stripped_code']      = '';
 				$response['elements']           = $this->_param( 'api_fields' ) ? $this->_param( 'api_fields' ) : $renderer->getApiFields();

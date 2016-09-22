@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WPSSO Schema JSON-LD Markup (WPSSO JSON) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.10.1-1\n"
+"Project-Id-Version: WPSSO Schema JSON-LD Markup (WPSSO JSON) 1.10.3-1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpsso-schema-json-"
 "ld\n"
 "POT-Creation-Date: 2016-MO-DA HO:MI+ZONE\n"
@@ -21,8 +21,8 @@ msgstr ""
 #: lib/config-gettext-extract.php:4
 msgctxt "plugin description"
 msgid ""
-"WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, "
-"Organization, Place, Product, etc.) for Google and Pinterest."
+"WPSSO extension to add complete Schema JSON-LD markup (Article, Event, "
+"Organization, Place / Business, Product, Recipe, and more)."
 msgstr ""
 
 #: lib/filters.php:120
@@ -335,8 +335,8 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"WPSSO extension to add complete Schema JSON-LD markup (BlogPosting, Article, "
-"Place, Product, etc.) for Google and Pinterest."
+"WPSSO extension to add complete Schema JSON-LD markup (Article, Event, "
+"Organization, Place / Business, Product, Recipe, and more)."
 msgstr ""
 
 #. Author of the plugin/theme

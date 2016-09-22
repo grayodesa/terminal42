@@ -13,7 +13,7 @@
  * Description: WPSSO extension to provide Pinterest Place, Facebook / Open Graph Location, Schema Local Business + Local SEO meta tags.
  * Requires At Least: 3.1
  * Tested Up To: 4.6
- * Version: 2.1.0-1
+ * Version: 2.1.1-1
  * 
  * Version Numbers: {major}.{minor}.{bugfix}-{stage}{level}
  *
@@ -40,7 +40,7 @@ if ( ! class_exists( 'WpssoPlm' ) ) {
 		private static $instance = null;
 		private static $req_short = 'WPSSO';
 		private static $req_name = 'WordPress Social Sharing Optimization (WPSSO)';
-		private static $req_min_version = '3.34.0-1';
+		private static $req_min_version = '3.35.0-1';
 		private static $req_has_min_ver = true;
 
 		public static function &get_instance() {
@@ -53,12 +53,12 @@ if ( ! class_exists( 'WpssoPlm' ) ) {
 
 			require_once ( dirname( __FILE__ ).'/lib/config.php' );
 			WpssoPlmConfig::set_constants( __FILE__ );
-			WpssoPlmConfig::require_libs( __FILE__ );
+			WpssoPlmConfig::require_libs( __FILE__ );	// includes the register.php class library
 			$this->reg = new WpssoPlmRegister();		// activate, deactivate, uninstall hooks
 
 			if ( is_admin() ) {
 				load_plugin_textdomain( 'wpsso-plm', false, 'wpsso-plm/languages/' );
-				add_action( 'admin_init', array( &$this, 'check_for_wpsso' ) );
+				add_action( 'admin_init', array( &$this, 'required_check' ) );
 			}
 
 			add_filter( 'wpsso_get_config', array( &$this, 'wpsso_get_config' ), 20, 2 );
@@ -67,12 +67,12 @@ if ( ! class_exists( 'WpssoPlm' ) ) {
 			add_action( 'wpsso_init_plugin', array( &$this, 'wpsso_init_plugin' ), 20 );
 		}
 
-		public function check_for_wpsso() {
+		public function required_check() {
 			if ( ! class_exists( 'Wpsso' ) )
-				add_action( 'all_admin_notices', array( __CLASS__, 'wpsso_missing_notice' ) );
+				add_action( 'all_admin_notices', array( __CLASS__, 'required_notice' ) );
 		}
 
-		public static function wpsso_missing_notice( $deactivate = false ) {
+		public static function required_notice( $deactivate = false ) {
 			$info = WpssoPlmConfig::$cf['plugin']['wpssoplm'];
 
 			if ( $deactivate === true ) {
@@ -137,7 +137,7 @@ if ( ! class_exists( 'WpssoPlm' ) ) {
 					self::$req_min_version.' or newer ('.$have_version.' installed)' );
 
 			if ( is_admin() )
-				$this->p->notice->err( sprintf( __( 'The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed).', 'wpsso-plm' ), $info['name'], $info['version'], self::$req_short, self::$req_min_version, $have_version ), true );
+				$this->p->notice->err( sprintf( __( 'The %1$s extension version %2$s requires the use of %3$s version %4$s or newer (version %5$s is currently installed).', 'wpsso-plm' ), $info['name'], $info['version'], self::$req_short, self::$req_min_version, $have_version ) );
 		}
 	}
 

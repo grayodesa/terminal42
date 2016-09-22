@@ -307,8 +307,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 			$img_height = -1;
 			$img_cropped = empty( $size_info['crop'] ) ? 0 : 1;	// get_size_info() returns false, true, or an array
 
-			if ( $this->p->is_avail['media']['ngg'] === true && 
-				strpos( $pid, 'ngg-' ) === 0 ) {
+			if ( $this->p->is_avail['media']['ngg'] === true && strpos( $pid, 'ngg-' ) === 0 ) {
 
 				if ( ! empty( $this->p->m['media']['ngg'] ) )
 					return self::reset_image_src_info( $this->p->m['media']['ngg']->get_image_src( $pid, 
@@ -317,8 +316,9 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					if ( $this->p->debug->enabled )
 						$this->p->debug->log( 'ngg module is not available: image ID '.$attr_value.' ignored' ); 
 
-					if ( is_admin() )
+					if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 						$this->p->notice->err( sprintf( __( 'The NextGEN Gallery integration module provided by %1$s is required to read information for image ID %2$s.', 'wpsso' ), $this->p->cf['plugin'][$lca]['short'].' Pro', $pid ) ); 
+					}
 
 					return self::reset_image_src_info(); 
 				}
@@ -741,7 +741,7 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					$this->p->debug->log( 'using default video url = '.$embed_url );
 
 				// fallback to video url if necessary
-				$og_video = $this->get_video_info( $embed_url, 0, 0, $check_dupes, true );
+				$og_video = $this->get_video_info( $embed_url, 0, 0, $check_dupes, true );	// $fallback = true
 				if ( ! empty( $og_video ) && 
 					$this->p->util->push_max( $og_ret, $og_video, $num ) ) 
 						return $og_ret;
@@ -908,7 +908,6 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 			$lca =& $this->p->cf['lca'];
 			$min =& $this->p->cf['head']['limit_min'];
 			$max =& $this->p->cf['head']['limit_max'];
-			$save_msg = false;
 
 			if ( strpos( $size_name, $lca.'-' ) !== 0 )	// only check our own sizes
 				return true;
@@ -965,12 +964,13 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					$this->p->debug->log( 'exiting early: '.strtolower( $src_name ).' image '.$img_name.' rejected - '.
 						$img_width.'x'.$img_height.' aspect ratio is equal to/or greater than '.$max_ratio.':1' );
 
-				if ( is_admin() ) {
+				if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 					$size_label = $this->p->util->get_image_size_label( $size_name );
 					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', 
 						array( 'size_label' => $size_label, 'hard_limit' => true ) );
-					$this->p->notice->err( sprintf( __( '%1$s image %2$s ignored &mdash; the resulting image of %3$s has an <strong>aspect ratio equal to/or greater than %4$d:1 allowed by the %5$s standard</strong>.', 'wpsso' ), $src_name, $img_name, $img_width.'x'.$img_height, $max_ratio, $std_name ).' '.$reject_notice, $save_msg );
+					$this->p->notice->err( sprintf( __( '%1$s image %2$s ignored &mdash; the resulting image of %3$s has an <strong>aspect ratio equal to/or greater than %4$d:1 allowed by the %5$s standard</strong>.', 'wpsso' ), $src_name, $img_name, $img_width.'x'.$img_height, $max_ratio, $std_name ).' '.$reject_notice );
 				}
+
 				return false;
 			}
 
@@ -982,12 +982,13 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					$this->p->debug->log( 'exiting early: '.strtolower( $src_name ).' image '.$img_name.' rejected - '.
 						$img_width.'x'.$img_height.' smaller than minimum '.$min_width.'x'.$min_height.' for '.$size_name );
 
-				if ( is_admin() ) {
+				if ( $this->p->notice->is_admin_pre_notices() ) {	// skip if notices already shown
 					$size_label = $this->p->util->get_image_size_label( $size_name );
 					$reject_notice = $this->p->msgs->get( 'notice-image-rejected', 
 						array( 'size_label' => $size_label, 'hard_limit' => true ) );
-					$this->p->notice->err( sprintf( __( '%1$s image %2$s ignored &mdash; the resulting image of %3$s is <strong>smaller than the minimum of %4$s allowed by the %5$s standard</strong>.', 'wpsso' ), $src_name, $img_name, $img_width.'x'.$img_height, $min_width.'x'.$min_height, $std_name ).' '.$reject_notice, $save_msg );
+					$this->p->notice->err( sprintf( __( '%1$s image %2$s ignored &mdash; the resulting image of %3$s is <strong>smaller than the minimum of %4$s allowed by the %5$s standard</strong>.', 'wpsso' ), $src_name, $img_name, $img_width.'x'.$img_height, $min_width.'x'.$min_height, $std_name ).' '.$reject_notice );
 				}
+
 				return false;
 			}
 
@@ -1023,11 +1024,12 @@ if ( ! class_exists( 'WpssoMedia' ) ) {
 					$ret = false;
 			else $ret = true;
 
-			if ( $this->p->debug->enabled )
+			if ( $this->p->debug->enabled ) {
 				$this->p->debug->log( 'full size image of '.$full_width.'x'.$full_height.( $upscale_multiplier !== 1 ? 
 					' ('.$upscale_full_width.'x'.$upscale_full_height.' upscaled by '.$upscale_multiplier.')' : '' ).
 					( $ret ? ' sufficient' : ' too small' ).' to create size '.$size_info['width'].'x'.$size_info['height'].
 					( $img_cropped ? ' cropped' : '' ) );
+			}
 
 			return $ret;
 		}

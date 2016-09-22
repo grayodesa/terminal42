@@ -72,7 +72,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		$api = $this->getApi();
 
 		try {
-			$raw = $api->getLists();
+			$api->call( 'account_view', array() );
 
 			return true;
 		} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
@@ -190,25 +190,57 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		/** @var Thrive_Dash_Api_ActiveCampaign $api */
 		$api = $this->getApi();
 
+		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+
 		try {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
-
-			$api->addSubscriber(
-				$list_identifier,
-				$arguments['email'],
-				$first_name,
-				$last_name,
-				empty( $arguments['phone'] ) ? '' : $arguments['phone'],
-				empty( $arguments['activecampaign_form'] ) ? 0 : $arguments['activecampaign_form'],
-				'',
-				trim( $arguments['activecampaign_tags'], ',' ) );
-
-			return true;
-
+			$contact = $api->call( 'contact_view_email', array( 'email' => $arguments['email'] ) );
 		} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
 			return $e->getMessage();
 		} catch ( Exception $e ) {
 			return $e->getMessage();
+		}
+
+		if ( isset( $contact['result_code'] ) && empty( $contact['result_code'] ) ) {
+			try {
+
+				$api->addSubscriber(
+					$list_identifier,
+					$arguments['email'],
+					$first_name,
+					$last_name,
+					empty( $arguments['phone'] ) ? '' : $arguments['phone'],
+					empty( $arguments['activecampaign_form'] ) ? 0 : $arguments['activecampaign_form'],
+					'',
+					trim( $arguments['activecampaign_tags'], ',' ) );
+
+				return true;
+
+			} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
+				return $e->getMessage();
+			} catch ( Exception $e ) {
+				return $e->getMessage();
+			}
+		} else {
+			try {
+				$api->updateSubscriber(
+					$contact,
+					$list_identifier,
+					$arguments['email'],
+					$first_name,
+					$last_name,
+					empty( $arguments['phone'] ) ? '' : $arguments['phone'],
+					empty( $arguments['activecampaign_form'] ) ? 0 : $arguments['activecampaign_form'],
+					'',
+					trim( $arguments['activecampaign_tags'], ',' )
+				);
+
+				return true;
+
+			} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
+				return $e->getMessage();
+			} catch ( Exception $e ) {
+				return $e->getMessage();
+			}
 		}
 	}
 

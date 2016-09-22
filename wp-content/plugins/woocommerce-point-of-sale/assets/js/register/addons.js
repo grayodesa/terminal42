@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
                         firstLineOnly: false,
                         success: ADDONS.goodCardScan,
                         error: ADDONS.badCardScan,
-                        debug: true,
+                        debug: false,
                         prefixCharacter: ';'
                     });
                 }
@@ -342,16 +342,25 @@ jQuery(document).ready(function($) {
                     return false;
                 break;
                 case 'authorize_net_aim':
-                    var expires = {
-                        month : jQuery('#wc-authorize-net-aim-exp-month' ).val(),
-                        year  : jQuery('#wc-authorize-net-aim-exp-year' ).val(),
-                    };
-                    var data = {
-                        'wc-authorize-net-aim-account-number'   : jQuery('#wc-authorize-net-aim-account-number').val(),
-                        'input-text js-wc-payment-gateway-csc'  : jQuery('#wc-authorize-net-aim-csc').length ? jQuery('#wc-authorize-net-aim-csc').val() : '',
-                        'wc-authorize-net-aim-exp-month' : parseInt( expires['month'] ) || 0,
-                        'wc-authorize-net-aim-exp-year'  : parseInt( expires['year'] ) || 0
-                    };
+                	var data = {};
+                	if( jQuery('#wc-authorize-net-aim-expiry').length ){
+                		data = {
+	                        'wc-authorize-net-aim-account-number' : jQuery('#wc-authorize-net-aim-account-number').val(),
+	                        'wc-authorize-net-aim-expiry'         : jQuery('#wc-authorize-net-aim-expiry').val(),
+	                        'wc-authorize-net-aim-csc'            : jQuery('#wc-authorize-net-aim-csc').val()
+	                    };
+                	}else{
+	                    var expires = {
+	                        month : jQuery('#wc-authorize-net-aim-exp-month' ).val(),
+	                        year  : jQuery('#wc-authorize-net-aim-exp-year' ).val(),
+	                    };
+	                    data = {
+	                        'wc-authorize-net-aim-account-number'   : jQuery('#wc-authorize-net-aim-account-number').val(),
+	                        'input-text js-wc-payment-gateway-csc'  : jQuery('#wc-authorize-net-aim-csc').length ? jQuery('#wc-authorize-net-aim-csc').val() : '',
+	                        'wc-authorize-net-aim-exp-month' : parseInt( expires['month'] ) || 0,
+	                        'wc-authorize-net-aim-exp-year'  : parseInt( expires['year'] ) || 0
+	                    };                		
+                	}
                     if( typeof cart.order.create_post == 'undefined'){
                         cart.order.create_post = [];
                     }
@@ -438,13 +447,22 @@ jQuery(document).ready(function($) {
                     APP.processPayment(cart, true);
                     return false;
                 break;
+                case 'nmi':
+                    var data = {
+                        'nmi-card-number' : jQuery('#nmi-card-number').val(),
+                        'nmi-card-expiry' : jQuery('#nmi-card-expiry').val(),
+                        'nmi-card-cvc'    : jQuery('#nmi-card-cvc').length ? jQuery('#nmi-card-cvc').val() : '',
+                    };
+                    if( typeof cart.order.create_post == 'undefined'){
+                        cart.order.create_post = [];
+                    }
+                    cart.order.create_post.push( data );
+                    APP.processPayment(cart, true);
+                    return false;
+                break;
                 default:
                     var $wrap = $('#modal-order_payment .popup_section').filter('#'+payment_method);
                     if( $('.wc-credit-card-form-card-number', $wrap).length ){
-
-                        $('.wc-credit-card-form-card-number', $wrap).val(cardData.account);
-                        $('.wc-credit-card-form-card-expiry', $wrap).val(cardData.exp_month+'/'+cardData.s_exp_year);
-                        $('.wc-credit-card-form-card-cvc', $wrap).focus();
                         var data = {
                             'wc-credit-card-form-card-number' : jQuery('.wc-credit-card-form-card-number', $wrap).val(),
                             'wc-credit-card-form-card-expiry' : jQuery('.wc-credit-card-form-card-expiry', $wrap).val(),

@@ -1,3 +1,22 @@
+2016-09-13 - 1.9.4
+-------------------------------
+- Fix: Working hours were saved with wrong time format
+
+2016-08-30 - 1.9.3
+-------------------------------
+- Fix: Error when MarketPress is installed
+
+2016-08-29 - 1.9.2
+-------------------------------
+- New: GCal setting: Overwrite Google Calendar Title and Description
+- Fix: Service Providers excerpt pulling post content
+- Fix: Editing booked appointment hides the one currently opened
+- Fix: Location data missing in Confirmation Table
+- Fix: Sorting and ordering appointments in app_my_appointments shortcode
+- Fix: Responsive issues in Appointments list
+- Fix: [MarketPress] Remove an Appointment from shopping cart when appointment status changes
+- Fix: Pending appointments changing to completed when they expires
+
 2016-06-22 - 1.9.1
 -------------------------------
 - Fix: Google Calendar appointments were remove instead of been set to completed status when time passed by
@@ -669,4 +688,4 @@ V1.0.0:
 - Initial release
 
 
-373982-1466660320-au
+373982-1474006452-au

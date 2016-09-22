@@ -1,0 +1,122 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce theme v1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-05-29 15:32+0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;"
+"_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: ru\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "Authorize payment of WebMoney"
+msgstr "Разрешить оплату WebMoney"
+
+msgid "Choose your purses"
+msgstr "Укажите ваши кошельки"
+
+msgid "Log %s events, such as IPN requests, inside <code>woocommerce/logs/%s.txt</code>"
+msgstr "Журнал событий, таких как запросы/ответы на/от сервера %s, внутри документа <code>woocommerce/logs/%s.txt</code>"
+
+msgid "The ruble"
+msgstr "Рублёвый"
+
+msgid "The Hryvnia"
+msgstr "Гривневый"
+
+msgid "The Dollar"
+msgstr "Долларовый"
+
+msgid "The Belarusian ruble"
+msgstr "Белорусский рублёвый"
+
+msgid "Exchange rate concerning Hryvnia"
+msgstr "Курс валют относительно гривны"
+
+msgid "Dollar"
+msgstr "Доллар"
+
+msgid "Ruble"
+msgstr "Рубль"
+
+msgid "Default"
+msgstr "По умолчанию"
+
+msgid "The page on which the client if payment for some reason wasn't executed will return"
+msgstr "Страница на которую вернется клиент, если не был выполнен платеж по каким-то причинам"
+
+msgid "Reference"
+msgstr "Справка"
+
+msgid "Page on which the answer will come from the server"
+msgstr "Страница на которую придет ответ от сервера"
+
+msgid "The page on which the client will return"
+msgstr "Страница на которую вернется клиент"
+
+msgid "Testing mode"
+msgstr "Режим тестирования"
+
+msgid "is absent"
+msgstr "отсутствует"
+
+msgid "All test payments service will mimic successful implementation"
+msgstr "Для всех тестовых платежей сервис будет имитировать успешное выполнение"
+
+msgid "All test payments service will simulate the execution of the error (payment is not executed)"
+msgstr "Для всех тестовых платежей сервис будет имитировать выполнение с ошибкой (платеж не выполнен)"
+
+msgid "About 80% of the requests for payment are met successfully, and 20% - are not met"
+msgstr "Около 80% запросов на платеж будут выполнены успешно, а 20% - не выполнены"
+
+msgid "Test/Working modes"
+msgstr "Тестовый/Рабочий режимы"
+
+msgid "Operating mode"
+msgstr "Рабочий режим"
+
+msgid "Test mode"
+msgstr "Тестовый режим"
+
+msgid "Method of formation of the control signature"
+msgstr "Метод формирования контрольной подписи"
+
+msgid ""
+"Clear the check here if you want to redirect to the site WM occurred immediately after clicking on the \"Checkout / "
+"Place Order\", bypassing the additional stage of transition to a page with a form."
+msgstr ""
+"Снимите здесь галочку, если Вы хотите чтобы перенаправление на сайт WM происходил сразу же, после нажатия на кнопку "
+"\"Оформить/Разместить заказ\", минуя дополнительный этап перехода на страницу с формой."
+
+msgid "Language of the page of payment Russian?"
+msgstr "Язык страницы оплаты русский?"
+
+msgid ""
+"If you set the option, then going to pay for the site WebMoney village will be in Russian, otherwise - in English."
+msgstr ""
+"Если установить опцию, то при переходе для оплаты на сайт WebMoney станица будет на русском языке, иначе - на "
+"английском."
+
+msgid ""
+"Payment Order #%s done by WebMoney<br /> Internal account number in the system WebMoney Transfer: %s<br /> Extension "
+"payment system WebMoney Transfer: %s<br /> Date and time of payment: %s<br /> Purse buyer - %s<br /> WMId buyer - '%s'"
+msgstr ""
+"Оплата заказа #%s по WebMoney выполнена<br />Внутренний номер счета в системе WebMoney Transfer: %s<br />Внутренний "
+"номер платежа в системе WebMoney Transfer: %s<br />Дата и время выполнения платежа: %s<br />Кошелек покупателя - "
+"%s<br />WMId покупателя - '%s'"
+
+msgid "Payment order #%s executed."
+msgstr "Оплата заказа #%s выполнена."
+
+msgid "Thanks for your order. We are redirecting you to handle the payment of the order c using Webmoney."
+msgstr "Спасибо за заказ. Мы перенаправляем Вас для проведения оплаты заказа c помощью Webmoney."

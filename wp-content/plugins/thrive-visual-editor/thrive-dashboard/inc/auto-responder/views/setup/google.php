@@ -1,4 +1,7 @@
-<h2 class="tvd-card-title"><?php echo $this->getTitle() ?></h2>
+<h2 class="tvd-card-title">
+	<?php echo $this->getTitle() ?>
+	<a href="//fast.wistia.net/embed/iframe/mf6yx17kj5?popover=true" class="wistia-popover[height=450,playerColor=2bb914,width=800]"><span class="tvd-icon-play"></span></a>
+</h2>
 <div class="tvd-row">
 	<form class="tvd-col tvd-s12">
 		<input type="hidden" name="api" value="<?php echo $this->getKey() ?>"/>

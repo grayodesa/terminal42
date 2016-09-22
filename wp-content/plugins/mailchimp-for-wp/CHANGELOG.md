@@ -1,6 +1,34 @@
 Changelog
 =========
 
+#### 4.0.4 - September 7, 2016
+
+**Improvements**
+
+- Allow re-running previous migrations by visiting a certain admin URL.
+- Do not show checkboxes option for fields that only accept a single value.
+- Write field specific errors to debug log when MailChimp denies a sign-up request.
+- Write to debug log when custom integrations can not find an EMAIL field.
+- Differentiate between connection & authorization errors when testing connection to MailChimp.
+- Bump limit of number of MailChimp lists to fetch from 100 to 500.
+
+
+#### 4.0.3 - August 24, 2016
+
+**Fixes**
+
+- Ninja Forms integration not working when using PayPal integration.
+
+**Improvements**
+
+- Show connection errors on MailChimp settings page.
+
+**Additions**
+
+- Add pre-checked option to Ninja Forms integration.
+- You can now [conditionally hide fields or elements](https://mc4wp.com/kb/conditional-fields-elements/) using the `data-show-if` attribute.
+
+
 #### 4.0.2 - August 10, 2016
 
 **Fixes**

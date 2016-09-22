@@ -34,7 +34,7 @@ class Thrive_Dash_Api_ConvertKit {
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
 	public function getForms() {
-		$forms = $this->_call( '/forms' );
+		$forms = $this->_call( 'forms' );
 
 		if ( isset( $forms['error_message'] ) ) {
 			throw new Thrive_Dash_Api_ConvertKit_Exception( $forms['error_message'] );
@@ -79,7 +79,6 @@ class Thrive_Dash_Api_ConvertKit {
 	 */
 	protected function _call( $path, $args = array(), $method = "GET" ) {
 		$url = $this->build_request_url( $path, $args );
-
 		//build parameters depending on the send method type
 		if ( $method == 'GET' ) {
 			$request = tve_dash_api_remote_get( $url, $args );

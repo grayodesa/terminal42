@@ -2463,6 +2463,16 @@
 				var self = this;
 				jQuery('.wfTimeAgo-timestamp').each(function(idx, elem) {
 					var el = jQuery(elem);
+					var testEl = el;
+					if (typeof jQuery === "function" && testEl instanceof jQuery) {
+						testEl = testEl[0];
+					}
+
+					var rect = testEl.getBoundingClientRect();
+					if (!(rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth))) {
+						return;
+					}
+					
 					var timestamp = el.data('wfctime');
 					if (!timestamp) {
 						timestamp = el.attr('data-timestamp');
